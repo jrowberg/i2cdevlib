@@ -1,0 +1,15 @@
+The I2C Device Library (i2cdevlib) is a collection of uniform and well-documented
+classes to provide simple and intuitive interfaces to I2C devices. Each device is
+built to make use of the generic "i2cdev" class, which abstracts the I2C bit- and
+byte-level communication away from each specific device class, making it easy to
+keep the device class clean while providing a simple way to modify just one class
+to port the I2C communication code onto different platforms (Arduino, PIC, simple
+bit-banging, etc.).
+
+The code is written to support the Arduino/Wiring implementation, but it may be
+useful in other circumstances. The "I2CdevDemo.pde" file is an Arduino IDE sketch
+that demonstrates some basic usage of the generic and specific classes.
+
+Documentation for each class is created using Doxygen-style comments placed in
+each class definition file, based on the information available in each device's
+datasheet.
