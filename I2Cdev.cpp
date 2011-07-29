@@ -26,17 +26,7 @@ THE SOFTWARE.
 ===============================================
 */
 
-#ifndef LUFA
-    #include "WProgram.h"
-#endif
-
 #include "I2Cdev.h"
-
-#ifdef round
-    #undef round
-#endif
-
-//#define I2CDEV_SERIAL_DEBUG
 
 /** Default constructor.
  * Note that you MUST specifically set the device address to make anything work
@@ -89,7 +79,7 @@ uint8_t I2Cdev::readBits(uint8_t address, uint8_t bitStart, uint8_t length) {
  * @return Byte value read from device
  */
 uint8_t I2Cdev::readByte(uint8_t address) {
-    uint8_t b;
+    uint8_t b = 0;
     readBytes(address, 1, &b);
     return b;
 }
@@ -117,7 +107,8 @@ void I2Cdev::readBytes(uint8_t address, uint8_t length, uint8_t *data) {
     Wire.beginTransmission(deviceAddress);
     Wire.requestFrom(deviceAddress, length);    // request 6 bytes from device
 
-    for (uint8_t i = 0; Wire.available(); i++) {
+    uint8_t i = 0;
+    for (; Wire.available(); i++) {
         data[i] = Wire.receive();
         #ifdef I2CDEV_SERIAL_DEBUG
             Serial.print(data[i], HEX);
@@ -128,7 +119,9 @@ void I2Cdev::readBytes(uint8_t address, uint8_t length, uint8_t *data) {
     Wire.endTransmission();
 
     #ifdef I2CDEV_SERIAL_DEBUG
-        Serial.println("done.");
+        Serial.print("done (");
+        Serial.print(i);
+        Serial.println(" read).");
     #endif
 }
 
@@ -185,7 +178,7 @@ void I2Cdev::writeBytes(uint8_t address, uint8_t length, uint8_t* data) {
     #ifdef I2CDEV_SERIAL_DEBUG
         Serial.print("I2C (0x");
         Serial.print(deviceAddress, HEX);
-        Serial.print(") w ");
+        Serial.print(") writing ");
         Serial.print(length, HEX);
         Serial.print(" bytes to 0x");
         Serial.print(address, HEX);

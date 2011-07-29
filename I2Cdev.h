@@ -29,17 +29,29 @@ THE SOFTWARE.
 #ifndef _I2CDEV_H_
 #define _I2CDEV_H_
 
-#ifdef LUFA
+// -----------------------------------------------------------------------------
+// I2C interface implementation setting
+// -----------------------------------------------------------------------------
+#define I2CDEV_IMPLEMENTATION       I2CDEV_ARDUINO_WIRE
+
+// -----------------------------------------------------------------------------
+// I2C interface implementation options
+// -----------------------------------------------------------------------------
+#define I2CDEV_RAW                  1
+#define I2CDEV_ARDUINO_WIRE         2
+
+// -----------------------------------------------------------------------------
+// Arduino-style "Serial.print" debug constant (uncomment to enable)
+// -----------------------------------------------------------------------------
+//#define I2CDEV_SERIAL_DEBUG
+
+#ifdef LUFA_ARDUINO_WRAPPER
     #include "ArduinoWrapper.h"
-#endif
-
-#ifndef LUFA
-    #include <Wire.h>
-    #include "WProgram.h"
-#endif
-
-#ifdef round
-    #undef round
+#else
+    #if (I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE)
+        #include <Wire.h>
+        #include "WProgram.h"
+    #endif
 #endif
 
 class I2Cdev {

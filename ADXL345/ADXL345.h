@@ -30,16 +30,6 @@ THE SOFTWARE.
 #ifndef _ADXL345_H_
 #define _ADXL345_H_
 
-#ifdef LUFA
-    #include "ArduinoWrapper.h"
-#endif
-#ifndef LUFA
-    #include "WProgram.h"
-#endif
-#ifdef round
-    #undef round
-#endif
-
 #include "I2Cdev.h"
 
 #define ADXL345_ADDRESS_ALT_LOW     0x53 // alt address pin low (GND)

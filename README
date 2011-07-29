@@ -1,18 +1,20 @@
-The I2C Device Library (i2cdevlib) is a collection of uniform and well-documented classes to provide simple and intuitive interfaces to I2C devices. Each device is built to make use of the generic "i2cdev" class, which abstracts the I2C bit- and byte-level communication away from each specific device class, making it easy to keep the device class clean while providing a simple way to modify just one class to port the I2C communication code onto different platforms (Arduino, PIC, simplebit-banging, etc.).
+The I2C Device Library (i2cdevlib) is a collection of uniform and well-documented classes to provide simple and intuitive interfaces to I2C devices. Each device is built to make use of the generic "i2cdev" class, which abstracts the I2C bit- and byte-level communication away from each specific device class, making it easy to keep the device class clean while providing a simple way to modify just one class to port the I2C communication code onto different platforms (Arduino, PIC, simple bit-banging, etc.).
 
 The code is written to support the Arduino/Wiring implementation, but it may be useful in other circumstances. The "I2CdevDemo.pde" file is an Arduino IDE sketch that demonstrates some basic usage of the generic and specific classes.
 
 Documentation for each class is created using Doxygen-style comments placed in each class definition file, based on the information available in each device's datasheet.
 
+To use the library, just place the I2Cdev .cpp/.h source files and any device library .cpp/.h source files in the same folder as your sketch (or a suitable place relative to your avr-gcc project), and include just the device library headers that you need. Arduino users will also need to include <Wire.h> in your main sketch source file. Create a single device object (e.g. "ADXL345 accel();"), place any appropriate init function calls in your setup() routine (e.g. "accel.initialize();"), and off you go! See the I2CDevDemo.pde example sketch for reference.
+
 CURRENT COMPLETED DEVICE LIBRARIES:
 ===================================
 - Analog Devices ADXL345 3-axis accelerometer
+- InvenSense ITG-3200 3-axis gyroscope
 
 UPCOMING DEVICE LIBRARIES:
 ==========================
-- InvenSense ITG-3200 3-axis gyroscope
-- InvenSense MPU-6050 6-axis accelerometer/gyroscope combo
 - Honeywell HMC5883L 3-axis magnetometer
 - Texas Instruments TCA6424A 24-bit I/O expander
+- InvenSense MPU-6050 6-axis accelerometer/gyroscope combo
 
 Want something that isn't on the list? Request it, or fork the code and contribute! Better yet, send me a device on a breakout board to test the code during development. No guarantees on how fast I can get it done, but I'd love to make this the biggest I2C device library around.
