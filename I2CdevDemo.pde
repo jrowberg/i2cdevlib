@@ -27,13 +27,16 @@ THE SOFTWARE.
 */
 
 #include <Wire.h>
+
+//#define I2CDEV_SERIAL_DEBUG
+
 #include "ADXL345.h"
 #include "ITG3200.h"
-//#include "HMC5883L.h"
+#include "HMC5883L.h"
 
 ADXL345 accelerometer;
 ITG3200 gyroscope;
-//HMC5883L magnetometer;
+HMC5883L magnetometer;
 
 int16_t ax, ay, az;
 int16_t gx, gy, gz;
@@ -52,16 +55,16 @@ void setup() {
     // initialize all devices
     accelerometer.initialize();
     gyroscope.initialize();
-    //magnetometer.initialize();
+    magnetometer.initialize();
 
     pinMode(LED_PIN, OUTPUT);
 }
 
 void loop() {
-    // read measurements from accel, gryo, and compass
+    // read measurements from accel, gryo, and magnetometer
     accelerometer.getAcceleration(&ax, &ay, &az);
     gyroscope.getRotation(&gx, &gy, &gz);
-    //magnetometer.getDirection(&mx, &my, &mz);
+    magnetometer.getHeading(&mx, &my, &mz);
   
     Serial.print("a/g/m:\t");
     Serial.print(ax); Serial.print("\t");

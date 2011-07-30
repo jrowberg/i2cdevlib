@@ -6,14 +6,14 @@ Documentation for each class is created using Doxygen-style comments placed in e
 
 To use the library, just place the I2Cdev .cpp/.h source files and any device library .cpp/.h source files in the same folder as your sketch (or a suitable place relative to your avr-gcc project), and include just the device library headers that you need. Arduino users will also need to include <Wire.h> in your main sketch source file. Create a single device object (e.g. "ADXL345 accel();"), place any appropriate init function calls in your setup() routine (e.g. "accel.initialize();"), and off you go! See the I2CDevDemo.pde example sketch for reference.
 
-CURRENT COMPLETED DEVICE LIBRARIES:
-===================================
+COMPLETED DEVICE LIBRARIES:
+===========================
 - Analog Devices ADXL345 3-axis accelerometer
 - InvenSense ITG-3200 3-axis gyroscope
+- Honeywell HMC5883L 3-axis magnetometer
 
 UPCOMING DEVICE LIBRARIES:
 ==========================
-- Honeywell HMC5883L 3-axis magnetometer
 - Texas Instruments TCA6424A 24-bit I/O expander
 - InvenSense MPU-6050 6-axis accelerometer/gyroscope combo
 
