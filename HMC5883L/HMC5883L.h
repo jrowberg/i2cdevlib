@@ -101,6 +101,7 @@ class HMC5883L {
         HMC5883L(uint8_t address);
         
         void initialize();
+        bool testConnection();
 
         // CONFIG_A register
         uint8_t getSampleAveraging();
@@ -134,7 +135,7 @@ class HMC5883L {
         uint8_t getIDC();
 
     private:
-        I2Cdev device;
+        uint8_t devAddr;
         uint8_t buffer[6];
         uint8_t mode;
 };

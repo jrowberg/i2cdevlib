@@ -91,6 +91,7 @@ class TCA6424A {
         TCA6424A(uint8_t address);
         
         void initialize();
+        bool testConnection();
         
         // INPUT* registers (x0h - x2h)
         bool readPin(uint16_t pin);
@@ -129,7 +130,7 @@ class TCA6424A {
         void setAllDirection(uint8_t bank0, uint8_t bank1, uint8_t bank2);
 
     private:
-        I2Cdev device;
+        uint8_t devAddr;
         uint8_t buffer[3];
 };
 

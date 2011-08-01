@@ -28,8 +28,6 @@ THE SOFTWARE.
 
 #include <Wire.h>
 
-//#define I2CDEV_SERIAL_DEBUG
-
 #include "ADXL345.h"
 #include "ITG3200.h"
 #include "HMC5883L.h"
@@ -51,19 +49,26 @@ void setup() {
     
     // initialize serial communication
     Serial.begin(38400);
-
+    
     // initialize all devices
+    Serial.println("Initializing I2C devices...");
     accelerometer.initialize();
     gyroscope.initialize();
     magnetometer.initialize();
+    Serial.println("...done.");
+    
+    Serial.println("Testing device connections...");
+    //Serial.println(accelerometer.testConnection() ? "ADXL345 connection successful" : "ADXL345 connection failed");
+    //Serial.println(gyroscope.testConnection() ? "ITG3200 connection successful" : "ITG3200 connection failed");
+    Serial.println(magnetometer.testConnection() ? "HMC5883L connection successful" : "HMC5883L connection failed");
 
     pinMode(LED_PIN, OUTPUT);
 }
 
 void loop() {
     // read measurements from accel, gryo, and magnetometer
-    accelerometer.getAcceleration(&ax, &ay, &az);
-    gyroscope.getRotation(&gx, &gy, &gz);
+    //accelerometer.getAcceleration(&ax, &ay, &az);
+    //gyroscope.getRotation(&gx, &gy, &gz);
     magnetometer.getHeading(&mx, &my, &mz);
   
     Serial.print("a/g/m:\t");

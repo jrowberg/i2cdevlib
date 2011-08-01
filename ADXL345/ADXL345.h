@@ -166,6 +166,7 @@ class ADXL345 {
         ADXL345(uint8_t address);
 
         void initialize();
+        bool testConnection();
 
         // DEVID register
         uint8_t getDeviceID();
@@ -350,7 +351,7 @@ class ADXL345 {
         uint8_t getFIFOLength();
 
     private:
-        I2Cdev device;
+        uint8_t devAddr;
         uint8_t buffer[6];
 };
 

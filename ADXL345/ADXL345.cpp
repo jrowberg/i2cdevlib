@@ -33,7 +33,7 @@ THE SOFTWARE.
  * @see ADXL345_DEFAULT_ADDRESS
  */
 ADXL345::ADXL345() {
-    device.setDeviceAddress(ADXL345_DEFAULT_ADDRESS);
+    devAddr = ADXL345_DEFAULT_ADDRESS;
 }
 
 /** Specific address constructor.
@@ -43,7 +43,7 @@ ADXL345::ADXL345() {
  * @see ADXL345_ADDRESS_ALT_HIGH
  */
 ADXL345::ADXL345(uint8_t address) {
-    device.setDeviceAddress(address);
+    devAddr = address;
 }
 
 /** Power on and prepare for general usage.
@@ -52,9 +52,17 @@ ADXL345::ADXL345(uint8_t address) {
  * less demanding mode of operation.
  */
 void ADXL345::initialize() {
-    device.writeByte(ADXL345_RA_POWER_CTL, 0); // reset all power settings
+    I2Cdev::writeByte(devAddr, ADXL345_RA_POWER_CTL, 0); // reset all power settings
     setAutoSleepEnabled(true);
     setMeasureEnabled(true);
+}
+
+/** Verify the I2C connection.
+ * Make sure the device is connected and responds as expected.
+ * @return True if connection is valid, false otherwise
+ */
+bool ADXL345::testConnection() {
+    return getDeviceID() == 0xE5;
 }
 
 // DEVID register
@@ -65,7 +73,8 @@ void ADXL345::initialize() {
  * @see ADXL345_RA_DEVID
  */
 uint8_t ADXL345::getDeviceID() {
-    return device.readByte(ADXL345_RA_DEVID);
+    I2Cdev::readByte(devAddr, ADXL345_RA_DEVID, buffer);
+    return buffer[0];
 }
 
 // THRESH_TAP register
@@ -80,7 +89,8 @@ uint8_t ADXL345::getDeviceID() {
  * @see ADXL345_RA_THRESH_TAP
  */
 uint8_t ADXL345::getTapThreshold() {
-    return device.readByte(ADXL345_RA_THRESH_TAP);
+    I2Cdev::readByte(devAddr, ADXL345_RA_THRESH_TAP, buffer);
+    return buffer[0];
 }
 /** Set tap threshold.
   * @param threshold Tap magnitude threshold (scaled at 62.5 mg/LSB)
@@ -88,7 +98,7 @@ uint8_t ADXL345::getTapThreshold() {
   * @see getTapThreshold()
   */
 void ADXL345::setTapThreshold(uint8_t threshold) {
-    device.writeByte(ADXL345_RA_THRESH_TAP, threshold);
+    I2Cdev::writeByte(devAddr, ADXL345_RA_THRESH_TAP, threshold);
 }
 
 // OFS* registers
@@ -109,9 +119,10 @@ void ADXL345::setTapThreshold(uint8_t threshold) {
  * @see ADXL345_RA_OFSZ
  */
 void ADXL345::getOffset(int8_t* x, int8_t* y, int8_t* z) {
-    *x = device.readByte(ADXL345_RA_OFSX);
-    *y = device.readByte(ADXL345_RA_OFSY);
-    *z = device.readByte(ADXL345_RA_OFSZ);
+    I2Cdev::readBytes(devAddr, ADXL345_RA_OFSX, 3, buffer);
+    *x = buffer[0];
+    *y = buffer[1];
+    *z = buffer[2];
 }
 /** Set axis offsets.
  * @param x X axis offset value
@@ -123,9 +134,9 @@ void ADXL345::getOffset(int8_t* x, int8_t* y, int8_t* z) {
  * @see ADXL345_RA_OFSZ
  */
 void ADXL345::setOffset(int8_t x, int8_t y, int8_t z) {
-    device.writeByte(ADXL345_RA_OFSX, x);
-    device.writeByte(ADXL345_RA_OFSY, y);
-    device.writeByte(ADXL345_RA_OFSZ, z);
+    I2Cdev::writeByte(devAddr, ADXL345_RA_OFSX, x);
+    I2Cdev::writeByte(devAddr, ADXL345_RA_OFSY, y);
+    I2Cdev::writeByte(devAddr, ADXL345_RA_OFSZ, z);
 }
 /** Get X axis offset.
  * @return X axis offset value
@@ -133,7 +144,8 @@ void ADXL345::setOffset(int8_t x, int8_t y, int8_t z) {
  * @see ADXL345_RA_OFSX
  */
 int8_t ADXL345::getOffsetX() {
-    return device.readByte(ADXL345_RA_OFSX);
+    I2Cdev::readByte(devAddr, ADXL345_RA_OFSX, buffer);
+    return buffer[0];
 }
 /** Set X axis offset.
  * @param x X axis offset value
@@ -141,7 +153,7 @@ int8_t ADXL345::getOffsetX() {
  * @see ADXL345_RA_OFSX
  */
 void ADXL345::setOffsetX(int8_t x) {
-    device.writeByte(ADXL345_RA_OFSX, x);
+    I2Cdev::writeByte(devAddr, ADXL345_RA_OFSX, x);
 }
 /** Get Y axis offset.
  * @return Y axis offset value
@@ -149,7 +161,8 @@ void ADXL345::setOffsetX(int8_t x) {
  * @see ADXL345_RA_OFSY
  */
 int8_t ADXL345::getOffsetY() {
-    return device.readByte(ADXL345_RA_OFSY);
+    I2Cdev::readByte(devAddr, ADXL345_RA_OFSY, buffer);
+    return buffer[0];
 }
 /** Set Y axis offset.
  * @param y Y axis offset value
@@ -157,7 +170,7 @@ int8_t ADXL345::getOffsetY() {
  * @see ADXL345_RA_OFSY
  */
 void ADXL345::setOffsetY(int8_t y) {
-    device.writeByte(ADXL345_RA_OFSY, y);
+    I2Cdev::writeByte(devAddr, ADXL345_RA_OFSY, y);
 }
 /** Get Z axis offset.
  * @return Z axis offset value
@@ -165,7 +178,8 @@ void ADXL345::setOffsetY(int8_t y) {
  * @see ADXL345_RA_OFSZ
  */
 int8_t ADXL345::getOffsetZ() {
-    return device.readByte(ADXL345_RA_OFSZ);
+    I2Cdev::readByte(devAddr, ADXL345_RA_OFSZ, buffer);
+    return buffer[0];
 }
 /** Set Z axis offset.
  * @param z Z axis offset value
@@ -173,7 +187,7 @@ int8_t ADXL345::getOffsetZ() {
  * @see ADXL345_RA_OFSZ
  */
 void ADXL345::setOffsetZ(int8_t z) {
-    device.writeByte(ADXL345_RA_OFSZ, z);
+    I2Cdev::writeByte(devAddr, ADXL345_RA_OFSZ, z);
 }
 
 // DUR register
@@ -187,7 +201,8 @@ void ADXL345::setOffsetZ(int8_t z) {
  * @see ADXL345_RA_DUR
  */
 uint8_t ADXL345::getTapDuration() {
-    return device.readByte(ADXL345_RA_DUR);
+    I2Cdev::readByte(devAddr, ADXL345_RA_DUR, buffer);
+    return buffer[0];
 }
 /** Set tap duration.
  * @param duration Tap duration (scaled at 625 us/LSB)
@@ -195,7 +210,7 @@ uint8_t ADXL345::getTapDuration() {
  * @see ADXL345_RA_DUR
  */
 void ADXL345::setTapDuration(uint8_t duration) {
-    device.writeByte(ADXL345_RA_DUR, duration);
+    I2Cdev::writeByte(devAddr, ADXL345_RA_DUR, duration);
 }
 
 // LATENT register
@@ -210,7 +225,8 @@ void ADXL345::setTapDuration(uint8_t duration) {
  * @see ADXL345_RA_LATENT
  */
 uint8_t ADXL345::getDoubleTapLatency() {
-    return device.readByte(ADXL345_RA_LATENT);
+    I2Cdev::readByte(devAddr, ADXL345_RA_LATENT, buffer);
+    return buffer[0];
 }
 /** Set tap duration.
  * @param latency Tap latency (scaled at 1.25 ms/LSB)
@@ -218,7 +234,7 @@ uint8_t ADXL345::getDoubleTapLatency() {
  * @see ADXL345_RA_LATENT
  */
 void ADXL345::setDoubleTapLatency(uint8_t latency) {
-    device.writeByte(ADXL345_RA_LATENT, latency);
+    I2Cdev::writeByte(devAddr, ADXL345_RA_LATENT, latency);
 }
 
 // WINDOW register
@@ -233,7 +249,8 @@ void ADXL345::setDoubleTapLatency(uint8_t latency) {
  * @see ADXL345_RA_WINDOW
  */
 uint8_t ADXL345::getDoubleTapWindow() {
-    return device.readByte(ADXL345_RA_WINDOW);
+    I2Cdev::readByte(devAddr, ADXL345_RA_WINDOW, buffer);
+    return buffer[0];
 }
 /** Set double tap window.
  * @param window Double tap window (scaled at 1.25 ms/LSB)
@@ -241,7 +258,7 @@ uint8_t ADXL345::getDoubleTapWindow() {
  * @see ADXL345_RA_WINDOW
  */
 void ADXL345::setDoubleTapWindow(uint8_t window) {
-    device.writeByte(ADXL345_RA_WINDOW, window);
+    I2Cdev::writeByte(devAddr, ADXL345_RA_WINDOW, window);
 }
 
 // THRESH_ACT register
@@ -256,7 +273,8 @@ void ADXL345::setDoubleTapWindow(uint8_t window) {
  * @see ADXL345_RA_THRESH_ACT
  */
 uint8_t ADXL345::getActivityThreshold() {
-    return device.readByte(ADXL345_RA_THRESH_ACT);
+    I2Cdev::readByte(devAddr, ADXL345_RA_THRESH_ACT, buffer);
+    return buffer[0];
 }
 /** Set activity threshold.
  * @param threshold Activity threshold (scaled at 62.5 mg/LSB)
@@ -264,7 +282,7 @@ uint8_t ADXL345::getActivityThreshold() {
  * @see ADXL345_RA_THRESH_ACT
  */
 void ADXL345::setActivityThreshold(uint8_t threshold) {
-    device.writeByte(ADXL345_RA_THRESH_ACT, threshold);
+    I2Cdev::writeByte(devAddr, ADXL345_RA_THRESH_ACT, threshold);
 }
 
 // THRESH_INACT register
@@ -279,7 +297,8 @@ void ADXL345::setActivityThreshold(uint8_t threshold) {
  * @see ADXL345_RA_THRESH_INACT
  */
 uint8_t ADXL345::getInactivityThreshold() {
-    return device.readByte(ADXL345_RA_THRESH_INACT);
+    I2Cdev::readByte(devAddr, ADXL345_RA_THRESH_INACT, buffer);
+    return buffer[0];
 }
 /** Set inactivity threshold.
  * @param threshold Inctivity threshold (scaled at 62.5 mg/LSB)
@@ -287,7 +306,7 @@ uint8_t ADXL345::getInactivityThreshold() {
  * @see ADXL345_RA_THRESH_INACT
  */
 void ADXL345::setInactivityThreshold(uint8_t threshold) {
-    device.writeByte(ADXL345_RA_THRESH_INACT, threshold);
+    I2Cdev::writeByte(devAddr, ADXL345_RA_THRESH_INACT, threshold);
 }
 
 // TIME_INACT register
@@ -307,7 +326,8 @@ void ADXL345::setInactivityThreshold(uint8_t threshold) {
  * @see ADXL345_RA_TIME_INACT
  */
 uint8_t ADXL345::getInactivityTime() {
-    return device.readByte(ADXL345_RA_TIME_INACT);
+    I2Cdev::readByte(devAddr, ADXL345_RA_TIME_INACT, buffer);
+    return buffer[0];
 }
 /** Set inactivity time.
  * @param time Inactivity time (scaled at 1 sec/LSB)
@@ -315,7 +335,7 @@ uint8_t ADXL345::getInactivityTime() {
  * @see ADXL345_RA_TIME_INACT
  */
 void ADXL345::setInactivityTime(uint8_t time) {
-    device.writeByte(ADXL345_RA_TIME_INACT, time);
+    I2Cdev::writeByte(devAddr, ADXL345_RA_TIME_INACT, time);
 }
 
 // ACT_INACT_CTL register
@@ -345,7 +365,8 @@ void ADXL345::setInactivityTime(uint8_t time) {
  * @see ADXL345_AIC_ACT_AC_BIT
  */
 bool ADXL345::getActivityAC() {
-    return device.readBit(ADXL345_RA_ACT_INACT_CTL, ADXL345_AIC_ACT_AC_BIT);
+    I2Cdev::readBit(devAddr, ADXL345_RA_ACT_INACT_CTL, ADXL345_AIC_ACT_AC_BIT, buffer);
+    return buffer[0];
 }
 /** Set activity AC/DC coupling.
  * @param enabled Activity AC/DC coupling (TRUE for AC, FALSE for DC)
@@ -354,7 +375,7 @@ bool ADXL345::getActivityAC() {
  * @see ADXL345_AIC_ACT_AC_BIT
  */
 void ADXL345::setActivityAC(bool enabled) {
-    device.writeBit(ADXL345_RA_ACT_INACT_CTL, ADXL345_AIC_ACT_AC_BIT, enabled);
+    I2Cdev::writeBit(devAddr, ADXL345_RA_ACT_INACT_CTL, ADXL345_AIC_ACT_AC_BIT, enabled);
 }
 /** Get X axis activity monitoring inclusion.
  * For all "get[In]Activity*Enabled()" methods: a setting of 1 enables x-, y-,
@@ -372,7 +393,8 @@ void ADXL345::setActivityAC(bool enabled) {
  * @see ADXL345_AIC_ACT_X_BIT
  */
 bool ADXL345::getActivityXEnabled() {
-    return device.readBit(ADXL345_RA_ACT_INACT_CTL, ADXL345_AIC_ACT_X_BIT);
+    I2Cdev::readBit(devAddr, ADXL345_RA_ACT_INACT_CTL, ADXL345_AIC_ACT_X_BIT, buffer);
+    return buffer[0];
 }
 /** Set X axis activity monitoring inclusion.
  * @param enabled X axis activity monitoring inclusion value
@@ -382,7 +404,7 @@ bool ADXL345::getActivityXEnabled() {
  * @see ADXL345_AIC_ACT_X_BIT
  */
 void ADXL345::setActivityXEnabled(bool enabled) {
-    device.writeBit(ADXL345_RA_ACT_INACT_CTL, ADXL345_AIC_ACT_X_BIT, enabled);
+    I2Cdev::writeBit(devAddr, ADXL345_RA_ACT_INACT_CTL, ADXL345_AIC_ACT_X_BIT, enabled);
 }
 /** Get Y axis activity monitoring.
  * @return Y axis activity monitoring enabled value
@@ -392,7 +414,8 @@ void ADXL345::setActivityXEnabled(bool enabled) {
  * @see ADXL345_AIC_ACT_Y_BIT
  */
 bool ADXL345::getActivityYEnabled() {
-    return device.readBit(ADXL345_RA_ACT_INACT_CTL, ADXL345_AIC_ACT_Y_BIT);
+    I2Cdev::readBit(devAddr, ADXL345_RA_ACT_INACT_CTL, ADXL345_AIC_ACT_Y_BIT, buffer);
+    return buffer[0];
 }
 /** Set Y axis activity monitoring inclusion.
  * @param enabled Y axis activity monitoring inclusion value
@@ -402,7 +425,7 @@ bool ADXL345::getActivityYEnabled() {
  * @see ADXL345_AIC_ACT_Y_BIT
  */
 void ADXL345::setActivityYEnabled(bool enabled) {
-    device.writeBit(ADXL345_RA_ACT_INACT_CTL, ADXL345_AIC_ACT_Y_BIT, enabled);
+    I2Cdev::writeBit(devAddr, ADXL345_RA_ACT_INACT_CTL, ADXL345_AIC_ACT_Y_BIT, enabled);
 }
 /** Get Z axis activity monitoring.
  * @return Z axis activity monitoring enabled value
@@ -412,7 +435,8 @@ void ADXL345::setActivityYEnabled(bool enabled) {
  * @see ADXL345_AIC_ACT_Z_BIT
  */
 bool ADXL345::getActivityZEnabled() {
-    return device.readBit(ADXL345_RA_ACT_INACT_CTL, ADXL345_AIC_ACT_Z_BIT);
+    I2Cdev::readBit(devAddr, ADXL345_RA_ACT_INACT_CTL, ADXL345_AIC_ACT_Z_BIT, buffer);
+    return buffer[0];
 }
 /** Set Z axis activity monitoring inclusion.
  * @param enabled Z axis activity monitoring inclusion value
@@ -422,7 +446,7 @@ bool ADXL345::getActivityZEnabled() {
  * @see ADXL345_AIC_ACT_Z_BIT
  */
 void ADXL345::setActivityZEnabled(bool enabled) {
-    device.writeBit(ADXL345_RA_ACT_INACT_CTL, ADXL345_AIC_ACT_Z_BIT, enabled);
+    I2Cdev::writeBit(devAddr, ADXL345_RA_ACT_INACT_CTL, ADXL345_AIC_ACT_Z_BIT, enabled);
 }
 /** Get inactivity AC/DC coupling.
  * @return Inctivity coupling (0 = DC, 1 = AC)
@@ -431,7 +455,8 @@ void ADXL345::setActivityZEnabled(bool enabled) {
  * @see ADXL345_AIC_INACT_AC_BIT
  */
 bool ADXL345::getInactivityAC() {
-    return device.readBit(ADXL345_RA_ACT_INACT_CTL, ADXL345_AIC_INACT_AC_BIT);
+    I2Cdev::readBit(devAddr, ADXL345_RA_ACT_INACT_CTL, ADXL345_AIC_INACT_AC_BIT, buffer);
+    return buffer[0];
 }
 /** Set inctivity AC/DC coupling.
  * @param enabled Inactivity AC/DC coupling (TRUE for AC, FALSE for DC)
@@ -440,7 +465,7 @@ bool ADXL345::getInactivityAC() {
  * @see ADXL345_AIC_INACT_AC_BIT
  */
 void ADXL345::setInactivityAC(bool enabled) {
-    device.writeBit(ADXL345_RA_ACT_INACT_CTL, ADXL345_AIC_INACT_AC_BIT, enabled);
+    I2Cdev::writeBit(devAddr, ADXL345_RA_ACT_INACT_CTL, ADXL345_AIC_INACT_AC_BIT, enabled);
 }
 /** Get X axis inactivity monitoring.
  * @return Y axis inactivity monitoring enabled value
@@ -450,7 +475,8 @@ void ADXL345::setInactivityAC(bool enabled) {
  * @see ADXL345_AIC_INACT_X_BIT
  */
 bool ADXL345::getInactivityXEnabled() {
-    return device.readBit(ADXL345_RA_ACT_INACT_CTL, ADXL345_AIC_INACT_X_BIT);
+    I2Cdev::readBit(devAddr, ADXL345_RA_ACT_INACT_CTL, ADXL345_AIC_INACT_X_BIT, buffer);
+    return buffer[0];
 }
 /** Set X axis activity monitoring inclusion.
  * @param enabled X axis inactivity monitoring inclusion value
@@ -460,7 +486,7 @@ bool ADXL345::getInactivityXEnabled() {
  * @see ADXL345_AIC_INACT_X_BIT
  */
 void ADXL345::setInactivityXEnabled(bool enabled) {
-    device.writeBit(ADXL345_RA_ACT_INACT_CTL, ADXL345_AIC_INACT_X_BIT, enabled);
+    I2Cdev::writeBit(devAddr, ADXL345_RA_ACT_INACT_CTL, ADXL345_AIC_INACT_X_BIT, enabled);
 }
 /** Get Y axis inactivity monitoring.
  * @return Y axis inactivity monitoring enabled value
@@ -470,7 +496,8 @@ void ADXL345::setInactivityXEnabled(bool enabled) {
  * @see ADXL345_AIC_INACT_Y_BIT
  */
 bool ADXL345::getInactivityYEnabled() {
-    return device.readBit(ADXL345_RA_ACT_INACT_CTL, ADXL345_AIC_INACT_Y_BIT);
+    I2Cdev::readBit(devAddr, ADXL345_RA_ACT_INACT_CTL, ADXL345_AIC_INACT_Y_BIT, buffer);
+    return buffer[0];
 }
 /** Set Y axis inactivity monitoring inclusion.
  * @param enabled Y axis inactivity monitoring inclusion value
@@ -480,7 +507,7 @@ bool ADXL345::getInactivityYEnabled() {
  * @see ADXL345_AIC_INACT_Y_BIT
  */
 void ADXL345::setInactivityYEnabled(bool enabled) {
-    device.writeBit(ADXL345_RA_ACT_INACT_CTL, ADXL345_AIC_INACT_Y_BIT, enabled);
+    I2Cdev::writeBit(devAddr, ADXL345_RA_ACT_INACT_CTL, ADXL345_AIC_INACT_Y_BIT, enabled);
 }
 /** Get Z axis inactivity monitoring.
  * @return Z axis inactivity monitoring enabled value
@@ -490,7 +517,8 @@ void ADXL345::setInactivityYEnabled(bool enabled) {
  * @see ADXL345_AIC_INACT_Z_BIT
  */
 bool ADXL345::getInactivityZEnabled() {
-    return device.readBit(ADXL345_RA_ACT_INACT_CTL, ADXL345_AIC_INACT_Z_BIT);
+    I2Cdev::readBit(devAddr, ADXL345_RA_ACT_INACT_CTL, ADXL345_AIC_INACT_Z_BIT, buffer);
+    return buffer[0];
 }
 /** Set Z axis inactivity monitoring inclusion.
  * @param enabled Z axis activity monitoring inclusion value
@@ -500,7 +528,7 @@ bool ADXL345::getInactivityZEnabled() {
  * @see ADXL345_AIC_INACT_Z_BIT
  */
 void ADXL345::setInactivityZEnabled(bool enabled) {
-    device.writeBit(ADXL345_RA_ACT_INACT_CTL, ADXL345_AIC_INACT_Z_BIT, enabled);
+    I2Cdev::writeBit(devAddr, ADXL345_RA_ACT_INACT_CTL, ADXL345_AIC_INACT_Z_BIT, enabled);
 }
 
 // THRESH_FF register
@@ -516,7 +544,8 @@ void ADXL345::setInactivityZEnabled(bool enabled) {
  * @see ADXL345_RA_THRESH_FF
  */
 uint8_t ADXL345::getFreefallThreshold() {
-    return device.readByte(ADXL345_RA_THRESH_FF);
+    I2Cdev::readByte(devAddr, ADXL345_RA_THRESH_FF, buffer);
+    return buffer[0];
 }
 /** Set freefall threshold value.
  * @param threshold Freefall threshold value (scaled at 62.5 mg/LSB)
@@ -524,7 +553,7 @@ uint8_t ADXL345::getFreefallThreshold() {
  * @see ADXL345_RA_THRESH_FF
  */
 void ADXL345::setFreefallThreshold(uint8_t threshold) {
-    device.writeByte(ADXL345_RA_THRESH_FF, threshold);
+    I2Cdev::writeByte(devAddr, ADXL345_RA_THRESH_FF, threshold);
 }
 
 // TIME_FF register
@@ -540,7 +569,8 @@ void ADXL345::setFreefallThreshold(uint8_t threshold) {
  * @see ADXL345_RA_TIME_FF
  */
 uint8_t ADXL345::getFreefallTime() {
-    return device.readByte(ADXL345_RA_TIME_FF);
+    I2Cdev::readByte(devAddr, ADXL345_RA_TIME_FF, buffer);
+    return buffer[0];
 }
 /** Set freefall time value.
  * @param threshold Freefall time value (scaled at 5 ms/LSB)
@@ -548,7 +578,7 @@ uint8_t ADXL345::getFreefallTime() {
  * @see ADXL345_RA_TIME_FF
  */
 void ADXL345::setFreefallTime(uint8_t time) {
-    device.writeByte(ADXL345_RA_TIME_FF, time);
+    I2Cdev::writeByte(devAddr, ADXL345_RA_TIME_FF, time);
 }
 
 // TAP_AXES register
@@ -563,7 +593,8 @@ void ADXL345::setFreefallTime(uint8_t time) {
  * @see ADXL345_TAPAXIS_SUP_BIT
  */
 bool ADXL345::getTapAxisSuppress() {
-    return device.readBit(ADXL345_RA_TAP_AXES, ADXL345_TAPAXIS_SUP_BIT);
+    I2Cdev::readBit(devAddr, ADXL345_RA_TAP_AXES, ADXL345_TAPAXIS_SUP_BIT, buffer);
+    return buffer[0];
 }
 /** Set double-tap fast-movement suppression.
  * @param enabled Double-tap fast-movement suppression value
@@ -572,7 +603,7 @@ bool ADXL345::getTapAxisSuppress() {
  * @see ADXL345_TAPAXIS_SUP_BIT
  */
 void ADXL345::setTapAxisSuppress(bool enabled) {
-    device.writeBit(ADXL345_RA_TAP_AXES, ADXL345_TAPAXIS_SUP_BIT, enabled);
+    I2Cdev::writeBit(devAddr, ADXL345_RA_TAP_AXES, ADXL345_TAPAXIS_SUP_BIT, enabled);
 }
 /** Get double-tap fast-movement suppression.
  * A setting of 1 in the TAP_X enable bit enables x-axis participation in tap
@@ -584,7 +615,8 @@ void ADXL345::setTapAxisSuppress(bool enabled) {
  * @see ADXL345_TAPAXIS_X_BIT
  */
 bool ADXL345::getTapAxisXEnabled() {
-    return device.readBit(ADXL345_RA_TAP_AXES, ADXL345_TAPAXIS_X_BIT);
+    I2Cdev::readBit(devAddr, ADXL345_RA_TAP_AXES, ADXL345_TAPAXIS_X_BIT, buffer);
+    return buffer[0];
 }
 /** Set tap detection X axis inclusion.
  * @param enabled X axis tap detection enabled value
@@ -593,7 +625,7 @@ bool ADXL345::getTapAxisXEnabled() {
  * @see ADXL345_TAPAXIS_X_BIT
  */
 void ADXL345::setTapAxisXEnabled(bool enabled) {
-    device.writeBit(ADXL345_RA_TAP_AXES, ADXL345_TAPAXIS_X_BIT, enabled);
+    I2Cdev::writeBit(devAddr, ADXL345_RA_TAP_AXES, ADXL345_TAPAXIS_X_BIT, enabled);
 }
 /** Get tap detection Y axis inclusion.
  * A setting of 1 in the TAP_Y enable bit enables y-axis participation in tap
@@ -605,7 +637,8 @@ void ADXL345::setTapAxisXEnabled(bool enabled) {
  * @see ADXL345_TAPAXIS_Y_BIT
  */
 bool ADXL345::getTapAxisYEnabled() {
-    return device.readBit(ADXL345_RA_TAP_AXES, ADXL345_TAPAXIS_Y_BIT);
+    I2Cdev::readBit(devAddr, ADXL345_RA_TAP_AXES, ADXL345_TAPAXIS_Y_BIT, buffer);
+    return buffer[0];
 }
 /** Set tap detection Y axis inclusion.
  * @param enabled Y axis tap detection enabled value
@@ -614,7 +647,7 @@ bool ADXL345::getTapAxisYEnabled() {
  * @see ADXL345_TAPAXIS_Y_BIT
  */
 void ADXL345::setTapAxisYEnabled(bool enabled) {
-    device.writeBit(ADXL345_RA_TAP_AXES, ADXL345_TAPAXIS_Y_BIT, enabled);
+    I2Cdev::writeBit(devAddr, ADXL345_RA_TAP_AXES, ADXL345_TAPAXIS_Y_BIT, enabled);
 }
 /** Get tap detection Z axis inclusion.
  * A setting of 1 in the TAP_Z enable bit enables z-axis participation in tap
@@ -626,7 +659,8 @@ void ADXL345::setTapAxisYEnabled(bool enabled) {
  * @see ADXL345_TAPAXIS_Z_BIT
  */
 bool ADXL345::getTapAxisZEnabled() {
-    return device.readBit(ADXL345_RA_TAP_AXES, ADXL345_TAPAXIS_Z_BIT);
+    I2Cdev::readBit(devAddr, ADXL345_RA_TAP_AXES, ADXL345_TAPAXIS_Z_BIT, buffer);
+    return buffer[0];
 }
 /** Set tap detection Z axis inclusion.
  * @param enabled Z axis tap detection enabled value
@@ -635,7 +669,7 @@ bool ADXL345::getTapAxisZEnabled() {
  * @see ADXL345_TAPAXIS_Z_BIT
  */
 void ADXL345::setTapAxisZEnabled(bool enabled) {
-    device.writeBit(ADXL345_RA_TAP_AXES, ADXL345_TAPAXIS_Z_BIT, enabled);
+    I2Cdev::writeBit(devAddr, ADXL345_RA_TAP_AXES, ADXL345_TAPAXIS_Z_BIT, enabled);
 }
 
 // ACT_TAP_STATUS register
@@ -653,7 +687,8 @@ void ADXL345::setTapAxisZEnabled(bool enabled) {
  * @see ADXL345_TAPSTAT_ACTX_BIT
  */
 bool ADXL345::getActivitySourceX() {
-    return device.readBit(ADXL345_RA_ACT_TAP_STATUS, ADXL345_TAPSTAT_ACTX_BIT);
+    I2Cdev::readBit(devAddr, ADXL345_RA_ACT_TAP_STATUS, ADXL345_TAPSTAT_ACTX_BIT, buffer);
+    return buffer[0];
 }
 /** Get Y axis activity source flag.
  * @return Y axis activity source flag
@@ -662,7 +697,8 @@ bool ADXL345::getActivitySourceX() {
  * @see ADXL345_TAPSTAT_ACTY_BIT
  */
 bool ADXL345::getActivitySourceY() {
-    return device.readBit(ADXL345_RA_ACT_TAP_STATUS, ADXL345_TAPSTAT_ACTY_BIT);
+    I2Cdev::readBit(devAddr, ADXL345_RA_ACT_TAP_STATUS, ADXL345_TAPSTAT_ACTY_BIT, buffer);
+    return buffer[0];
 }
 /** Get Z axis activity source flag.
  * @return Z axis activity source flag
@@ -671,7 +707,8 @@ bool ADXL345::getActivitySourceY() {
  * @see ADXL345_TAPSTAT_ACTZ_BIT
  */
 bool ADXL345::getActivitySourceZ() {
-    return device.readBit(ADXL345_RA_ACT_TAP_STATUS, ADXL345_TAPSTAT_ACTZ_BIT);
+    I2Cdev::readBit(devAddr, ADXL345_RA_ACT_TAP_STATUS, ADXL345_TAPSTAT_ACTZ_BIT, buffer);
+    return buffer[0];
 }
 /** Get sleep mode flag.
  * A setting of 1 in the asleep bit indicates that the part is asleep, and a
@@ -683,7 +720,8 @@ bool ADXL345::getActivitySourceZ() {
  * @see ADXL345_TAPSTAT_ASLEEP_BIT
  */
 bool ADXL345::getAsleep() {
-    return device.readBit(ADXL345_RA_ACT_TAP_STATUS, ADXL345_TAPSTAT_ASLEEP_BIT);
+    I2Cdev::readBit(devAddr, ADXL345_RA_ACT_TAP_STATUS, ADXL345_TAPSTAT_ASLEEP_BIT, buffer);
+    return buffer[0];
 }
 /** Get X axis tap source flag.
  * @return X axis tap source flag
@@ -692,7 +730,8 @@ bool ADXL345::getAsleep() {
  * @see ADXL345_TAPSTAT_TAPX_BIT
  */
 bool ADXL345::getTapSourceX() {
-    return device.readBit(ADXL345_RA_ACT_TAP_STATUS, ADXL345_TAPSTAT_TAPX_BIT);
+    I2Cdev::readBit(devAddr, ADXL345_RA_ACT_TAP_STATUS, ADXL345_TAPSTAT_TAPX_BIT, buffer);
+    return buffer[0];
 }
 /** Get Y axis tap source flag.
  * @return Y axis tap source flag
@@ -701,7 +740,8 @@ bool ADXL345::getTapSourceX() {
  * @see ADXL345_TAPSTAT_TAPY_BIT
  */
 bool ADXL345::getTapSourceY() {
-    return device.readBit(ADXL345_RA_ACT_TAP_STATUS, ADXL345_TAPSTAT_TAPY_BIT);
+    I2Cdev::readBit(devAddr, ADXL345_RA_ACT_TAP_STATUS, ADXL345_TAPSTAT_TAPY_BIT, buffer);
+    return buffer[0];
 }
 /** Get Z axis tap source flag.
  * @return Z axis tap source flag
@@ -710,7 +750,8 @@ bool ADXL345::getTapSourceY() {
  * @see ADXL345_TAPSTAT_TAPZ_BIT
  */
 bool ADXL345::getTapSourceZ() {
-    return device.readBit(ADXL345_RA_ACT_TAP_STATUS, ADXL345_TAPSTAT_TAPZ_BIT);
+    I2Cdev::readBit(devAddr, ADXL345_RA_ACT_TAP_STATUS, ADXL345_TAPSTAT_TAPZ_BIT, buffer);
+    return buffer[0];
 }
 
 // BW_RATE register
@@ -724,7 +765,8 @@ bool ADXL345::getTapSourceZ() {
  * @see ADXL345_BW_LOWPOWER_BIT
  */
 bool ADXL345::getLowPowerEnabled() {
-    return device.readBit(ADXL345_RA_BW_RATE, ADXL345_BW_LOWPOWER_BIT);
+    I2Cdev::readBit(devAddr, ADXL345_RA_BW_RATE, ADXL345_BW_LOWPOWER_BIT, buffer);
+    return buffer[0];
 }
 /** Set low power enabled status.
  * @see getLowPowerEnabled()
@@ -733,7 +775,7 @@ bool ADXL345::getLowPowerEnabled() {
  * @see ADXL345_BW_LOWPOWER_BIT
  */
 void ADXL345::setLowPowerEnabled(bool enabled) {
-    device.writeBit(ADXL345_RA_BW_RATE, ADXL345_BW_LOWPOWER_BIT, enabled);
+    I2Cdev::writeBit(devAddr, ADXL345_RA_BW_RATE, ADXL345_BW_LOWPOWER_BIT, enabled);
 }
 /** Get measurement data rate.
  * These bits select the device bandwidth and output data rate (see Table 7 and
@@ -748,7 +790,8 @@ void ADXL345::setLowPowerEnabled(bool enabled) {
  * @see ADXL345_BW_RATE_LENGTH
  */
 uint8_t ADXL345::getRate() {
-    return device.readBits(ADXL345_RA_BW_RATE, ADXL345_BW_RATE_BIT, ADXL345_BW_RATE_LENGTH);
+    I2Cdev::readBits(devAddr, ADXL345_RA_BW_RATE, ADXL345_BW_RATE_BIT, ADXL345_BW_RATE_LENGTH, buffer);
+    return buffer[0];
 }
 /** Set measurement data rate.
  * 0x7 =  12.5Hz
@@ -762,7 +805,7 @@ uint8_t ADXL345::getRate() {
  * @see ADXL345_BW_RATE_LENGTH
  */
 void ADXL345::setRate(uint8_t rate) {
-    device.writeBits(ADXL345_RA_BW_RATE, ADXL345_BW_RATE_BIT, ADXL345_BW_RATE_LENGTH, rate);
+    I2Cdev::writeBits(devAddr, ADXL345_RA_BW_RATE, ADXL345_BW_RATE_BIT, ADXL345_BW_RATE_LENGTH, rate);
 }
 
 // POWER_CTL register
@@ -788,7 +831,8 @@ void ADXL345::setRate(uint8_t rate) {
  * @see ADXL345_PCTL_LINK_BIT
  */
 bool ADXL345::getLinkEnabled() {
-    return device.readBit(ADXL345_RA_POWER_CTL, ADXL345_PCTL_LINK_BIT);
+    I2Cdev::readBit(devAddr, ADXL345_RA_POWER_CTL, ADXL345_PCTL_LINK_BIT, buffer);
+    return buffer[0];
 }
 /** Set activity/inactivity serial linkage status.
  * @param enabled New link status
@@ -796,7 +840,7 @@ bool ADXL345::getLinkEnabled() {
  * @see ADXL345_PCTL_LINK_BIT
  */
 void ADXL345::setLinkEnabled(bool enabled) {
-    device.writeBit(ADXL345_RA_POWER_CTL, ADXL345_PCTL_LINK_BIT, enabled);
+    I2Cdev::writeBit(devAddr, ADXL345_RA_POWER_CTL, ADXL345_PCTL_LINK_BIT, enabled);
 }
 /** Get auto-sleep enabled status.
  * If the link bit is set, a setting of 1 in the AUTO_SLEEP bit enables the
@@ -830,7 +874,8 @@ void ADXL345::setLinkEnabled(bool enabled) {
  * @see ADXL345_PCTL_AUTOSLEEP_BIT
  */
 bool ADXL345::getAutoSleepEnabled() {
-    return device.readBit(ADXL345_RA_POWER_CTL, ADXL345_PCTL_AUTOSLEEP_BIT);
+    I2Cdev::readBit(devAddr, ADXL345_RA_POWER_CTL, ADXL345_PCTL_AUTOSLEEP_BIT, buffer);
+    return buffer[0];
 }
 /** Set auto-sleep enabled status.
  * @param enabled New auto-sleep status
@@ -839,7 +884,7 @@ bool ADXL345::getAutoSleepEnabled() {
  * @see ADXL345_PCTL_AUTOSLEEP_BIT
  */
 void ADXL345::setAutoSleepEnabled(bool enabled) {
-    device.writeBit(ADXL345_RA_POWER_CTL, ADXL345_PCTL_AUTOSLEEP_BIT, enabled);
+    I2Cdev::writeBit(devAddr, ADXL345_RA_POWER_CTL, ADXL345_PCTL_AUTOSLEEP_BIT, enabled);
 }
 /** Get measurement enabled status.
  * A setting of 0 in the measure bit places the part into standby mode, and a
@@ -850,7 +895,8 @@ void ADXL345::setAutoSleepEnabled(bool enabled) {
  * @see ADXL345_PCTL_MEASURE_BIT
  */
 bool ADXL345::getMeasureEnabled() {
-    return device.readBit(ADXL345_RA_POWER_CTL, ADXL345_PCTL_MEASURE_BIT);
+    I2Cdev::readBit(devAddr, ADXL345_RA_POWER_CTL, ADXL345_PCTL_MEASURE_BIT, buffer);
+    return buffer[0];
 }
 /** Set measurement enabled status.
  * @param enabled Measurement enabled status
@@ -859,7 +905,7 @@ bool ADXL345::getMeasureEnabled() {
  * @see ADXL345_PCTL_MEASURE_BIT
  */
 void ADXL345::setMeasureEnabled(bool enabled) {
-    device.writeBit(ADXL345_RA_POWER_CTL, ADXL345_PCTL_MEASURE_BIT, enabled);
+    I2Cdev::writeBit(devAddr, ADXL345_RA_POWER_CTL, ADXL345_PCTL_MEASURE_BIT, enabled);
 }
 /** Get sleep mode enabled status.
  * A setting of 0 in the sleep bit puts the part into the normal mode of
@@ -882,7 +928,8 @@ void ADXL345::setMeasureEnabled(bool enabled) {
  * @see ADXL345_PCTL_SLEEP_BIT
  */
 bool ADXL345::getSleepEnabled() {
-    return device.readBit(ADXL345_RA_POWER_CTL, ADXL345_PCTL_SLEEP_BIT);
+    I2Cdev::readBit(devAddr, ADXL345_RA_POWER_CTL, ADXL345_PCTL_SLEEP_BIT, buffer);
+    return buffer[0];
 }
 /** Set sleep mode enabled status.
  * @param Sleep mode enabled status
@@ -891,7 +938,7 @@ bool ADXL345::getSleepEnabled() {
  * @see ADXL345_PCTL_SLEEP_BIT
  */
 void ADXL345::setSleepEnabled(bool enabled) {
-    device.writeBit(ADXL345_RA_POWER_CTL, ADXL345_PCTL_SLEEP_BIT, enabled);
+    I2Cdev::writeBit(devAddr, ADXL345_RA_POWER_CTL, ADXL345_PCTL_SLEEP_BIT, enabled);
 }
 /** Get wakeup frequency.
  * These bits control the frequency of readings in sleep mode as described in
@@ -901,7 +948,8 @@ void ADXL345::setSleepEnabled(bool enabled) {
  * @see ADXL345_PCTL_SLEEP_BIT
  */
 uint8_t ADXL345::getWakeupFrequency() {
-    return device.readBits(ADXL345_RA_POWER_CTL, ADXL345_PCTL_WAKEUP_BIT, ADXL345_PCTL_WAKEUP_LENGTH);
+    I2Cdev::readBits(devAddr, ADXL345_RA_POWER_CTL, ADXL345_PCTL_WAKEUP_BIT, ADXL345_PCTL_WAKEUP_LENGTH, buffer);
+    return buffer[0];
 }
 /** Set wakeup frequency.
  * @param frequency Wakeup frequency (0x0 - 0x3, indicating 8/4/2/1Hz respectively)
@@ -910,7 +958,7 @@ uint8_t ADXL345::getWakeupFrequency() {
  * @see ADXL345_PCTL_SLEEP_BIT
  */
 void ADXL345::setWakeupFrequency(uint8_t frequency) {
-    device.writeBits(ADXL345_RA_POWER_CTL, ADXL345_PCTL_WAKEUP_BIT, ADXL345_PCTL_WAKEUP_LENGTH, frequency);
+    I2Cdev::writeBits(devAddr, ADXL345_RA_POWER_CTL, ADXL345_PCTL_WAKEUP_BIT, ADXL345_PCTL_WAKEUP_LENGTH, frequency);
 }
 
 // INT_ENABLE register
@@ -926,7 +974,8 @@ void ADXL345::setWakeupFrequency(uint8_t frequency) {
  * @see ADXL345_INT_DATA_READY_BIT
  */
 bool ADXL345::getIntDataReadyEnabled() {
-    return device.readBit(ADXL345_RA_INT_ENABLE, ADXL345_INT_DATA_READY_BIT);
+    I2Cdev::readBit(devAddr, ADXL345_RA_INT_ENABLE, ADXL345_INT_DATA_READY_BIT, buffer);
+    return buffer[0];
 }
 /** Set DATA_READY interrupt enabled status.
  * @param enabled New interrupt enabled status
@@ -935,7 +984,7 @@ bool ADXL345::getIntDataReadyEnabled() {
  * @see ADXL345_INT_DATA_READY_BIT
  */
 void ADXL345::setIntDataReadyEnabled(bool enabled) {
-    device.writeBit(ADXL345_RA_INT_ENABLE, ADXL345_INT_DATA_READY_BIT, enabled);
+    I2Cdev::writeBit(devAddr, ADXL345_RA_INT_ENABLE, ADXL345_INT_DATA_READY_BIT, enabled);
 }
 /** Set SINGLE_TAP interrupt enabled status.
  * @param enabled New interrupt enabled status
@@ -944,7 +993,8 @@ void ADXL345::setIntDataReadyEnabled(bool enabled) {
  * @see ADXL345_INT_SINGLE_TAP_BIT
  */
 bool ADXL345::getIntSingleTapEnabled() {
-    return device.readBit(ADXL345_RA_INT_ENABLE, ADXL345_INT_SINGLE_TAP_BIT);
+    I2Cdev::readBit(devAddr, ADXL345_RA_INT_ENABLE, ADXL345_INT_SINGLE_TAP_BIT, buffer);
+    return buffer[0];
 }
 /** Set SINGLE_TAP interrupt enabled status.
  * @param enabled New interrupt enabled status
@@ -953,7 +1003,7 @@ bool ADXL345::getIntSingleTapEnabled() {
  * @see ADXL345_INT_SINGLE_TAP_BIT
  */
 void ADXL345::setIntSingleTapEnabled(bool enabled) {
-    device.writeBit(ADXL345_RA_INT_ENABLE, ADXL345_INT_SINGLE_TAP_BIT, enabled);
+    I2Cdev::writeBit(devAddr, ADXL345_RA_INT_ENABLE, ADXL345_INT_SINGLE_TAP_BIT, enabled);
 }
 /** Get DOUBLE_TAP interrupt enabled status.
  * @return Interrupt enabled status
@@ -962,7 +1012,8 @@ void ADXL345::setIntSingleTapEnabled(bool enabled) {
  * @see ADXL345_INT_DOUBLE_TAP_BIT
  */
 bool ADXL345::getIntDoubleTapEnabled() {
-    return device.readBit(ADXL345_RA_INT_ENABLE, ADXL345_INT_DOUBLE_TAP_BIT);
+    I2Cdev::readBit(devAddr, ADXL345_RA_INT_ENABLE, ADXL345_INT_DOUBLE_TAP_BIT, buffer);
+    return buffer[0];
 }
 /** Set DOUBLE_TAP interrupt enabled status.
  * @param enabled New interrupt enabled status
@@ -971,7 +1022,7 @@ bool ADXL345::getIntDoubleTapEnabled() {
  * @see ADXL345_INT_DOUBLE_TAP_BIT
  */
 void ADXL345::setIntDoubleTapEnabled(bool enabled) {
-    device.writeBit(ADXL345_RA_INT_ENABLE, ADXL345_INT_DOUBLE_TAP_BIT, enabled);
+    I2Cdev::writeBit(devAddr, ADXL345_RA_INT_ENABLE, ADXL345_INT_DOUBLE_TAP_BIT, enabled);
 }
 /** Set ACTIVITY interrupt enabled status.
  * @return Interrupt enabled status
@@ -980,7 +1031,8 @@ void ADXL345::setIntDoubleTapEnabled(bool enabled) {
  * @see ADXL345_INT_ACTIVITY_BIT
  */
 bool ADXL345::getIntActivityEnabled() {
-    return device.readBit(ADXL345_RA_INT_ENABLE, ADXL345_INT_ACTIVITY_BIT);
+    I2Cdev::readBit(devAddr, ADXL345_RA_INT_ENABLE, ADXL345_INT_ACTIVITY_BIT, buffer);
+    return buffer[0];
 }
 /** Set ACTIVITY interrupt enabled status.
  * @param enabled New interrupt enabled status
@@ -989,7 +1041,7 @@ bool ADXL345::getIntActivityEnabled() {
  * @see ADXL345_INT_ACTIVITY_BIT
  */
 void ADXL345::setIntActivityEnabled(bool enabled) {
-    device.writeBit(ADXL345_RA_INT_ENABLE, ADXL345_INT_ACTIVITY_BIT, enabled);
+    I2Cdev::writeBit(devAddr, ADXL345_RA_INT_ENABLE, ADXL345_INT_ACTIVITY_BIT, enabled);
 }
 /** Get INACTIVITY interrupt enabled status.
  * @return Interrupt enabled status
@@ -998,7 +1050,8 @@ void ADXL345::setIntActivityEnabled(bool enabled) {
  * @see ADXL345_INT_INACTIVITY_BIT
  */
 bool ADXL345::getIntInactivityEnabled() {
-    return device.readBit(ADXL345_RA_INT_ENABLE, ADXL345_INT_INACTIVITY_BIT);
+    I2Cdev::readBit(devAddr, ADXL345_RA_INT_ENABLE, ADXL345_INT_INACTIVITY_BIT, buffer);
+    return buffer[0];
 }
 /** Set INACTIVITY interrupt enabled status.
  * @param enabled New interrupt enabled status
@@ -1007,7 +1060,7 @@ bool ADXL345::getIntInactivityEnabled() {
  * @see ADXL345_INT_INACTIVITY_BIT
  */
 void ADXL345::setIntInactivityEnabled(bool enabled) {
-    device.writeBit(ADXL345_RA_INT_ENABLE, ADXL345_INT_INACTIVITY_BIT, enabled);
+    I2Cdev::writeBit(devAddr, ADXL345_RA_INT_ENABLE, ADXL345_INT_INACTIVITY_BIT, enabled);
 }
 /** Get FREE_FALL interrupt enabled status.
  * @return Interrupt enabled status
@@ -1016,7 +1069,8 @@ void ADXL345::setIntInactivityEnabled(bool enabled) {
  * @see ADXL345_INT_FREE_FALL_BIT
  */
 bool ADXL345::getIntFreefallEnabled() {
-    return device.readBit(ADXL345_RA_INT_ENABLE, ADXL345_INT_FREE_FALL_BIT);
+    I2Cdev::readBit(devAddr, ADXL345_RA_INT_ENABLE, ADXL345_INT_FREE_FALL_BIT, buffer);
+    return buffer[0];
 }
 /** Set FREE_FALL interrupt enabled status.
  * @param enabled New interrupt enabled status
@@ -1025,7 +1079,7 @@ bool ADXL345::getIntFreefallEnabled() {
  * @see ADXL345_INT_FREE_FALL_BIT
  */
 void ADXL345::setIntFreefallEnabled(bool enabled) {
-    device.writeBit(ADXL345_RA_INT_ENABLE, ADXL345_INT_FREE_FALL_BIT, enabled);
+    I2Cdev::writeBit(devAddr, ADXL345_RA_INT_ENABLE, ADXL345_INT_FREE_FALL_BIT, enabled);
 }
 /** Get WATERMARK interrupt enabled status.
  * @return Interrupt enabled status
@@ -1034,7 +1088,8 @@ void ADXL345::setIntFreefallEnabled(bool enabled) {
  * @see ADXL345_INT_WATERMARK_BIT
  */
 bool ADXL345::getIntWatermarkEnabled() {
-    return device.readBit(ADXL345_RA_INT_ENABLE, ADXL345_INT_WATERMARK_BIT);
+    I2Cdev::readBit(devAddr, ADXL345_RA_INT_ENABLE, ADXL345_INT_WATERMARK_BIT, buffer);
+    return buffer[0];
 }
 /** Set WATERMARK interrupt enabled status.
  * @param enabled New interrupt enabled status
@@ -1043,7 +1098,7 @@ bool ADXL345::getIntWatermarkEnabled() {
  * @see ADXL345_INT_WATERMARK_BIT
  */
 void ADXL345::setIntWatermarkEnabled(bool enabled) {
-    device.writeBit(ADXL345_RA_INT_ENABLE, ADXL345_INT_WATERMARK_BIT, enabled);
+    I2Cdev::writeBit(devAddr, ADXL345_RA_INT_ENABLE, ADXL345_INT_WATERMARK_BIT, enabled);
 }
 /** Get OVERRUN interrupt enabled status.
  * @return Interrupt enabled status
@@ -1052,7 +1107,8 @@ void ADXL345::setIntWatermarkEnabled(bool enabled) {
  * @see ADXL345_INT_OVERRUN_BIT
  */
 bool ADXL345::getIntOverrunEnabled() {
-    return device.readBit(ADXL345_RA_INT_ENABLE, ADXL345_INT_OVERRUN_BIT);
+    I2Cdev::readBit(devAddr, ADXL345_RA_INT_ENABLE, ADXL345_INT_OVERRUN_BIT, buffer);
+    return buffer[0];
 }
 /** Set OVERRUN interrupt enabled status.
  * @param enabled New interrupt enabled status
@@ -1061,7 +1117,7 @@ bool ADXL345::getIntOverrunEnabled() {
  * @see ADXL345_INT_OVERRUN_BIT
  */
 void ADXL345::setIntOverrunEnabled(bool enabled) {
-    device.writeBit(ADXL345_RA_INT_ENABLE, ADXL345_INT_OVERRUN_BIT, enabled);
+    I2Cdev::writeBit(devAddr, ADXL345_RA_INT_ENABLE, ADXL345_INT_OVERRUN_BIT, enabled);
 }
 
 // INT_MAP register
@@ -1075,7 +1131,8 @@ void ADXL345::setIntOverrunEnabled(bool enabled) {
  * @see ADXL345_INT_DATA_READY_BIT
  */
 uint8_t ADXL345::getIntDataReadyPin() {
-    return device.readBit(ADXL345_RA_INT_MAP, ADXL345_INT_DATA_READY_BIT);
+    I2Cdev::readBit(devAddr, ADXL345_RA_INT_MAP, ADXL345_INT_DATA_READY_BIT, buffer);
+    return buffer[0];
 }
 /** Set DATA_READY interrupt pin.
  * @param pin Interrupt pin setting
@@ -1084,7 +1141,7 @@ uint8_t ADXL345::getIntDataReadyPin() {
  * @see ADXL345_INT_DATA_READY_BIT
  */
 void ADXL345::setIntDataReadyPin(uint8_t pin) {
-    device.writeBit(ADXL345_RA_INT_MAP, ADXL345_INT_DATA_READY_BIT, pin);
+    I2Cdev::writeBit(devAddr, ADXL345_RA_INT_MAP, ADXL345_INT_DATA_READY_BIT, pin);
 }
 /** Get SINGLE_TAP interrupt pin.
  * @return Interrupt pin setting
@@ -1093,7 +1150,8 @@ void ADXL345::setIntDataReadyPin(uint8_t pin) {
  * @see ADXL345_INT_SINGLE_TAP_BIT
  */
 uint8_t ADXL345::getIntSingleTapPin() {
-    return device.readBit(ADXL345_RA_INT_MAP, ADXL345_INT_SINGLE_TAP_BIT);
+    I2Cdev::readBit(devAddr, ADXL345_RA_INT_MAP, ADXL345_INT_SINGLE_TAP_BIT, buffer);
+    return buffer[0];
 }
 /** Set SINGLE_TAP interrupt pin.
  * @param pin Interrupt pin setting
@@ -1102,7 +1160,7 @@ uint8_t ADXL345::getIntSingleTapPin() {
  * @see ADXL345_INT_SINGLE_TAP_BIT
  */
 void ADXL345::setIntSingleTapPin(uint8_t pin) {
-    device.writeBit(ADXL345_RA_INT_MAP, ADXL345_INT_SINGLE_TAP_BIT, pin);
+    I2Cdev::writeBit(devAddr, ADXL345_RA_INT_MAP, ADXL345_INT_SINGLE_TAP_BIT, pin);
 }
 /** Get DOUBLE_TAP interrupt pin.
  * @return Interrupt pin setting
@@ -1111,7 +1169,8 @@ void ADXL345::setIntSingleTapPin(uint8_t pin) {
  * @see ADXL345_INT_DOUBLE_TAP_BIT
  */
 uint8_t ADXL345::getIntDoubleTapPin() {
-    return device.readBit(ADXL345_RA_INT_MAP, ADXL345_INT_DOUBLE_TAP_BIT);
+    I2Cdev::readBit(devAddr, ADXL345_RA_INT_MAP, ADXL345_INT_DOUBLE_TAP_BIT, buffer);
+    return buffer[0];
 }
 /** Set DOUBLE_TAP interrupt pin.
  * @param pin Interrupt pin setting
@@ -1120,7 +1179,7 @@ uint8_t ADXL345::getIntDoubleTapPin() {
  * @see ADXL345_INT_DOUBLE_TAP_BIT
  */
 void ADXL345::setIntDoubleTapPin(uint8_t pin) {
-    device.writeBit(ADXL345_RA_INT_MAP, ADXL345_INT_DOUBLE_TAP_BIT, pin);
+    I2Cdev::writeBit(devAddr, ADXL345_RA_INT_MAP, ADXL345_INT_DOUBLE_TAP_BIT, pin);
 }
 /** Get ACTIVITY interrupt pin.
  * @return Interrupt pin setting
@@ -1129,7 +1188,8 @@ void ADXL345::setIntDoubleTapPin(uint8_t pin) {
  * @see ADXL345_INT_ACTIVITY_BIT
  */
 uint8_t ADXL345::getIntActivityPin() {
-    return device.readBit(ADXL345_RA_INT_MAP, ADXL345_INT_ACTIVITY_BIT);
+    I2Cdev::readBit(devAddr, ADXL345_RA_INT_MAP, ADXL345_INT_ACTIVITY_BIT, buffer);
+    return buffer[0];
 }
 /** Set ACTIVITY interrupt pin.
  * @param pin Interrupt pin setting
@@ -1138,7 +1198,7 @@ uint8_t ADXL345::getIntActivityPin() {
  * @see ADXL345_INT_ACTIVITY_BIT
  */
 void ADXL345::setIntActivityPin(uint8_t pin) {
-    device.writeBit(ADXL345_RA_INT_MAP, ADXL345_INT_ACTIVITY_BIT, pin);
+    I2Cdev::writeBit(devAddr, ADXL345_RA_INT_MAP, ADXL345_INT_ACTIVITY_BIT, pin);
 }
 /** Get INACTIVITY interrupt pin.
  * @return Interrupt pin setting
@@ -1147,7 +1207,8 @@ void ADXL345::setIntActivityPin(uint8_t pin) {
  * @see ADXL345_INT_INACTIVITY_BIT
  */
 uint8_t ADXL345::getIntInactivityPin() {
-    return device.readBit(ADXL345_RA_INT_MAP, ADXL345_INT_INACTIVITY_BIT);
+    I2Cdev::readBit(devAddr, ADXL345_RA_INT_MAP, ADXL345_INT_INACTIVITY_BIT, buffer);
+    return buffer[0];
 }
 /** Set INACTIVITY interrupt pin.
  * @param pin Interrupt pin setting
@@ -1156,7 +1217,7 @@ uint8_t ADXL345::getIntInactivityPin() {
  * @see ADXL345_INT_INACTIVITY_BIT
  */
 void ADXL345::setIntInactivityPin(uint8_t pin) {
-    device.writeBit(ADXL345_RA_INT_MAP, ADXL345_INT_INACTIVITY_BIT, pin);
+    I2Cdev::writeBit(devAddr, ADXL345_RA_INT_MAP, ADXL345_INT_INACTIVITY_BIT, pin);
 }
 /** Get FREE_FALL interrupt pin.
  * @return Interrupt pin setting
@@ -1165,7 +1226,8 @@ void ADXL345::setIntInactivityPin(uint8_t pin) {
  * @see ADXL345_INT_FREE_FALL_BIT
  */
 uint8_t ADXL345::getIntFreefallPin() {
-    return device.readBit(ADXL345_RA_INT_MAP, ADXL345_INT_FREE_FALL_BIT);
+    I2Cdev::readBit(devAddr, ADXL345_RA_INT_MAP, ADXL345_INT_FREE_FALL_BIT, buffer);
+    return buffer[0];
 }
 /** Set FREE_FALL interrupt pin.
  * @param pin Interrupt pin setting
@@ -1174,7 +1236,7 @@ uint8_t ADXL345::getIntFreefallPin() {
  * @see ADXL345_INT_FREE_FALL_BIT
  */
 void ADXL345::setIntFreefallPin(uint8_t pin) {
-    device.writeBit(ADXL345_RA_INT_MAP, ADXL345_INT_FREE_FALL_BIT, pin);
+    I2Cdev::writeBit(devAddr, ADXL345_RA_INT_MAP, ADXL345_INT_FREE_FALL_BIT, pin);
 }
 /** Get WATERMARK interrupt pin.
  * @return Interrupt pin setting
@@ -1183,7 +1245,8 @@ void ADXL345::setIntFreefallPin(uint8_t pin) {
  * @see ADXL345_INT_WATERMARK_BIT
  */
 uint8_t ADXL345::getIntWatermarkPin() {
-    return device.readBit(ADXL345_RA_INT_MAP, ADXL345_INT_WATERMARK_BIT);
+    I2Cdev::readBit(devAddr, ADXL345_RA_INT_MAP, ADXL345_INT_WATERMARK_BIT, buffer);
+    return buffer[0];
 }
 /** Set WATERMARK interrupt pin.
  * @param pin Interrupt pin setting
@@ -1192,7 +1255,7 @@ uint8_t ADXL345::getIntWatermarkPin() {
  * @see ADXL345_INT_WATERMARK_BIT
  */
 void ADXL345::setIntWatermarkPin(uint8_t pin) {
-    device.writeBit(ADXL345_RA_INT_MAP, ADXL345_INT_WATERMARK_BIT, pin);
+    I2Cdev::writeBit(devAddr, ADXL345_RA_INT_MAP, ADXL345_INT_WATERMARK_BIT, pin);
 }
 /** Get OVERRUN interrupt pin.
  * @return Interrupt pin setting
@@ -1201,7 +1264,8 @@ void ADXL345::setIntWatermarkPin(uint8_t pin) {
  * @see ADXL345_INT_OVERRUN_BIT
  */
 uint8_t ADXL345::getIntOverrunPin() {
-    return device.readBit(ADXL345_RA_INT_MAP, ADXL345_INT_OVERRUN_BIT);
+    I2Cdev::readBit(devAddr, ADXL345_RA_INT_MAP, ADXL345_INT_OVERRUN_BIT, buffer);
+    return buffer[0];
 }
 /** Set OVERRUN interrupt pin.
  * @param pin Interrupt pin setting
@@ -1210,7 +1274,7 @@ uint8_t ADXL345::getIntOverrunPin() {
  * @see ADXL345_INT_OVERRUN_BIT
  */
 void ADXL345::setIntOverrunPin(uint8_t pin) {
-    device.writeBit(ADXL345_RA_INT_MAP, ADXL345_INT_OVERRUN_BIT, pin);
+    I2Cdev::writeBit(devAddr, ADXL345_RA_INT_MAP, ADXL345_INT_OVERRUN_BIT, pin);
 }
 
 // INT_SOURCE register
@@ -1230,7 +1294,8 @@ void ADXL345::setIntOverrunPin(uint8_t pin) {
  * @see ADXL345_INT_DATA_READY_BIT
  */
 uint8_t ADXL345::getIntDataReadySource() {
-    return device.readBit(ADXL345_RA_INT_SOURCE, ADXL345_INT_DATA_READY_BIT);
+    I2Cdev::readBit(devAddr, ADXL345_RA_INT_SOURCE, ADXL345_INT_DATA_READY_BIT, buffer);
+    return buffer[0];
 }
 /** Get SINGLE_TAP interrupt source flag.
  * @return Interrupt source flag
@@ -1238,7 +1303,8 @@ uint8_t ADXL345::getIntDataReadySource() {
  * @see ADXL345_INT_SINGLE_TAP_BIT
  */
 uint8_t ADXL345::getIntSingleTapSource() {
-    return device.readBit(ADXL345_RA_INT_SOURCE, ADXL345_INT_SINGLE_TAP_BIT);
+    I2Cdev::readBit(devAddr, ADXL345_RA_INT_SOURCE, ADXL345_INT_SINGLE_TAP_BIT, buffer);
+    return buffer[0];
 }
 /** Get DOUBLE_TAP interrupt source flag.
  * @return Interrupt source flag
@@ -1246,7 +1312,8 @@ uint8_t ADXL345::getIntSingleTapSource() {
  * @see ADXL345_INT_DOUBLE_TAP_BIT
  */
 uint8_t ADXL345::getIntDoubleTapSource() {
-    return device.readBit(ADXL345_RA_INT_SOURCE, ADXL345_INT_DOUBLE_TAP_BIT);
+    I2Cdev::readBit(devAddr, ADXL345_RA_INT_SOURCE, ADXL345_INT_DOUBLE_TAP_BIT, buffer);
+    return buffer[0];
 }
 /** Get ACTIVITY interrupt source flag.
  * @return Interrupt source flag
@@ -1254,7 +1321,8 @@ uint8_t ADXL345::getIntDoubleTapSource() {
  * @see ADXL345_INT_ACTIVITY_BIT
  */
 uint8_t ADXL345::getIntActivitySource() {
-    return device.readBit(ADXL345_RA_INT_SOURCE, ADXL345_INT_ACTIVITY_BIT);
+    I2Cdev::readBit(devAddr, ADXL345_RA_INT_SOURCE, ADXL345_INT_ACTIVITY_BIT, buffer);
+    return buffer[0];
 }
 /** Get INACTIVITY interrupt source flag.
  * @return Interrupt source flag
@@ -1262,7 +1330,8 @@ uint8_t ADXL345::getIntActivitySource() {
  * @see ADXL345_INT_INACTIVITY_BIT
  */
 uint8_t ADXL345::getIntInactivitySource() {
-    return device.readBit(ADXL345_RA_INT_SOURCE, ADXL345_INT_INACTIVITY_BIT);
+    I2Cdev::readBit(devAddr, ADXL345_RA_INT_SOURCE, ADXL345_INT_INACTIVITY_BIT, buffer);
+    return buffer[0];
 }
 /** Get FREE_FALL interrupt source flag.
  * @return Interrupt source flag
@@ -1270,7 +1339,8 @@ uint8_t ADXL345::getIntInactivitySource() {
  * @see ADXL345_INT_FREE_FALL_BIT
  */
 uint8_t ADXL345::getIntFreefallSource() {
-    return device.readBit(ADXL345_RA_INT_SOURCE, ADXL345_INT_FREE_FALL_BIT);
+    I2Cdev::readBit(devAddr, ADXL345_RA_INT_SOURCE, ADXL345_INT_FREE_FALL_BIT, buffer);
+    return buffer[0];
 }
 /** Get WATERMARK interrupt source flag.
  * @return Interrupt source flag
@@ -1278,7 +1348,8 @@ uint8_t ADXL345::getIntFreefallSource() {
  * @see ADXL345_INT_WATERMARK_BIT
  */
 uint8_t ADXL345::getIntWatermarkSource() {
-    return device.readBit(ADXL345_RA_INT_SOURCE, ADXL345_INT_WATERMARK_BIT);
+    I2Cdev::readBit(devAddr, ADXL345_RA_INT_SOURCE, ADXL345_INT_WATERMARK_BIT, buffer);
+    return buffer[0];
 }
 /** Get OVERRUN interrupt source flag.
  * @return Interrupt source flag
@@ -1286,7 +1357,8 @@ uint8_t ADXL345::getIntWatermarkSource() {
  * @see ADXL345_INT_OVERRUN_BIT
  */
 uint8_t ADXL345::getIntOverrunSource() {
-    return device.readBit(ADXL345_RA_INT_SOURCE, ADXL345_INT_OVERRUN_BIT);
+    I2Cdev::readBit(devAddr, ADXL345_RA_INT_SOURCE, ADXL345_INT_OVERRUN_BIT, buffer);
+    return buffer[0];
 }
 
 // DATA_FORMAT register
@@ -1300,7 +1372,8 @@ uint8_t ADXL345::getIntOverrunSource() {
  * @see ADXL345_FORMAT_SELFTEST_BIT
  */
 uint8_t ADXL345::getSelfTestEnabled() {
-    return device.readBit(ADXL345_RA_DATA_FORMAT, ADXL345_FORMAT_SELFTEST_BIT);
+    I2Cdev::readBit(devAddr, ADXL345_RA_DATA_FORMAT, ADXL345_FORMAT_SELFTEST_BIT, buffer);
+    return buffer[0];
 }
 /** Set self-test force enabled.
  * @param enabled New self-test force enabled setting
@@ -1309,7 +1382,7 @@ uint8_t ADXL345::getSelfTestEnabled() {
  * @see ADXL345_FORMAT_SELFTEST_BIT
  */
 void ADXL345::setSelfTestEnabled(uint8_t enabled) {
-    device.writeBit(ADXL345_RA_DATA_FORMAT, ADXL345_FORMAT_SELFTEST_BIT, enabled);
+    I2Cdev::writeBit(devAddr, ADXL345_RA_DATA_FORMAT, ADXL345_FORMAT_SELFTEST_BIT, enabled);
 }
 /** Get SPI mode setting.
  * A value of 1 in the SPI bit sets the device to 3-wire SPI mode, and a value
@@ -1319,7 +1392,8 @@ void ADXL345::setSelfTestEnabled(uint8_t enabled) {
  * @see ADXL345_FORMAT_SELFTEST_BIT
  */
 uint8_t ADXL345::getSPIMode() {
-    return device.readBit(ADXL345_RA_DATA_FORMAT, ADXL345_FORMAT_SPIMODE_BIT);
+    I2Cdev::readBit(devAddr, ADXL345_RA_DATA_FORMAT, ADXL345_FORMAT_SPIMODE_BIT, buffer);
+    return buffer[0];
 }
 /** Set SPI mode setting.
  * @param mode New SPI mode setting
@@ -1328,7 +1402,7 @@ uint8_t ADXL345::getSPIMode() {
  * @see ADXL345_FORMAT_SELFTEST_BIT
  */
 void ADXL345::setSPIMode(uint8_t mode) {
-    device.writeBit(ADXL345_RA_DATA_FORMAT, ADXL345_FORMAT_SPIMODE_BIT, mode);
+    I2Cdev::writeBit(devAddr, ADXL345_RA_DATA_FORMAT, ADXL345_FORMAT_SPIMODE_BIT, mode);
 }
 /** Get interrupt mode setting.
  * A value of 0 in the INT_INVERT bit sets the interrupts to active high, and a
@@ -1338,7 +1412,8 @@ void ADXL345::setSPIMode(uint8_t mode) {
  * @see ADXL345_FORMAT_INTMODE_BIT
  */
 uint8_t ADXL345::getInterruptMode() {
-    return device.readBit(ADXL345_RA_DATA_FORMAT, ADXL345_FORMAT_INTMODE_BIT);
+    I2Cdev::readBit(devAddr, ADXL345_RA_DATA_FORMAT, ADXL345_FORMAT_INTMODE_BIT, buffer);
+    return buffer[0];
 }
 /** Set interrupt mode setting.
  * @param mode New interrupt mode setting
@@ -1347,7 +1422,7 @@ uint8_t ADXL345::getInterruptMode() {
  * @see ADXL345_FORMAT_INTMODE_BIT
  */
 void ADXL345::setInterruptMode(uint8_t mode) {
-    device.writeBit(ADXL345_RA_DATA_FORMAT, ADXL345_FORMAT_INTMODE_BIT, mode);
+    I2Cdev::writeBit(devAddr, ADXL345_RA_DATA_FORMAT, ADXL345_FORMAT_INTMODE_BIT, mode);
 }
 /** Get full resolution mode setting.
  * When this bit is set to a value of 1, the device is in full resolution mode,
@@ -1360,7 +1435,8 @@ void ADXL345::setInterruptMode(uint8_t mode) {
  * @see ADXL345_FORMAT_FULL_RES_BIT
  */
 uint8_t ADXL345::getFullResolution() {
-    return device.readBit(ADXL345_RA_DATA_FORMAT, ADXL345_FORMAT_FULL_RES_BIT);
+    I2Cdev::readBit(devAddr, ADXL345_RA_DATA_FORMAT, ADXL345_FORMAT_FULL_RES_BIT, buffer);
+    return buffer[0];
 }
 /** Set full resolution mode setting.
  * @param resolution New full resolution enabled setting
@@ -1369,7 +1445,7 @@ uint8_t ADXL345::getFullResolution() {
  * @see ADXL345_FORMAT_FULL_RES_BIT
  */
 void ADXL345::setFullResolution(uint8_t resolution) {
-    device.writeBit(ADXL345_RA_DATA_FORMAT, ADXL345_FORMAT_FULL_RES_BIT, resolution);
+    I2Cdev::writeBit(devAddr, ADXL345_RA_DATA_FORMAT, ADXL345_FORMAT_FULL_RES_BIT, resolution);
 }
 /** Get data justification mode setting.
  * A setting of 1 in the justify bit selects left-justified (MSB) mode, and a
@@ -1379,7 +1455,8 @@ void ADXL345::setFullResolution(uint8_t resolution) {
  * @see ADXL345_FORMAT_JUSTIFY_BIT
  */
 uint8_t ADXL345::getDataJustification() {
-    return device.readBit(ADXL345_RA_DATA_FORMAT, ADXL345_FORMAT_JUSTIFY_BIT);
+    I2Cdev::readBit(devAddr, ADXL345_RA_DATA_FORMAT, ADXL345_FORMAT_JUSTIFY_BIT, buffer);
+    return buffer[0];
 }
 /** Set data justification mode setting.
  * @param justification New data justification mode
@@ -1388,7 +1465,7 @@ uint8_t ADXL345::getDataJustification() {
  * @see ADXL345_FORMAT_JUSTIFY_BIT
  */
 void ADXL345::setDataJustification(uint8_t justification) {
-    device.writeBit(ADXL345_RA_DATA_FORMAT, ADXL345_FORMAT_JUSTIFY_BIT, justification);
+    I2Cdev::writeBit(devAddr, ADXL345_RA_DATA_FORMAT, ADXL345_FORMAT_JUSTIFY_BIT, justification);
 }
 /** Get data range setting.
  * These bits set the g range as described in Table 21. (That is, 0x0 - 0x3 to
@@ -1399,7 +1476,8 @@ void ADXL345::setDataJustification(uint8_t justification) {
  * @see ADXL345_FORMAT_RANGE_LENGTH
  */
 uint8_t ADXL345::getRange() {
-    return device.readBits(ADXL345_RA_DATA_FORMAT, ADXL345_FORMAT_RANGE_BIT, ADXL345_FORMAT_RANGE_LENGTH);
+    I2Cdev::readBits(devAddr, ADXL345_RA_DATA_FORMAT, ADXL345_FORMAT_RANGE_BIT, ADXL345_FORMAT_RANGE_LENGTH, buffer);
+    return buffer[0];
 }
 /** Set data range setting.
  * @param range Range value (0x0 - 0x3 for 2g/4g/8g/16g)
@@ -1409,7 +1487,7 @@ uint8_t ADXL345::getRange() {
  * @see ADXL345_FORMAT_RANGE_LENGTH
  */
 void ADXL345::setRange(uint8_t range) {
-    return device.writeBits(ADXL345_RA_DATA_FORMAT, ADXL345_FORMAT_RANGE_BIT, ADXL345_FORMAT_RANGE_LENGTH, range);
+    I2Cdev::writeBits(devAddr, ADXL345_RA_DATA_FORMAT, ADXL345_FORMAT_RANGE_BIT, ADXL345_FORMAT_RANGE_LENGTH, range);
 }
 
 // DATA* registers
@@ -1435,7 +1513,7 @@ void ADXL345::setRange(uint8_t range) {
  * @see ADXL345_RA_DATAX0
  */
 void ADXL345::getAcceleration(int16_t* x, int16_t* y, int16_t* z) {
-    device.readBytes(ADXL345_RA_DATAX0, 6, buffer);
+    I2Cdev::readBytes(devAddr, ADXL345_RA_DATAX0, 6, buffer);
     *x = (((int16_t)buffer[1]) << 8) | buffer[0];
     *y = (((int16_t)buffer[3]) << 8) | buffer[2];
     *z = (((int16_t)buffer[5]) << 8) | buffer[4];
@@ -1445,7 +1523,7 @@ void ADXL345::getAcceleration(int16_t* x, int16_t* y, int16_t* z) {
  * @see ADXL345_RA_DATAX0
  */
 int16_t ADXL345::getAccelerationX() {
-    device.readBytes(ADXL345_RA_DATAX0, 2, buffer);
+    I2Cdev::readBytes(devAddr, ADXL345_RA_DATAX0, 2, buffer);
     return (((int16_t)buffer[1]) << 8) | buffer[0];
 }
 /** Get Y-axis accleration measurement.
@@ -1453,7 +1531,7 @@ int16_t ADXL345::getAccelerationX() {
  * @see ADXL345_RA_DATAY0
  */
 int16_t ADXL345::getAccelerationY() {
-    device.readBytes(ADXL345_RA_DATAY0, 2, buffer);
+    I2Cdev::readBytes(devAddr, ADXL345_RA_DATAY0, 2, buffer);
     return (((int16_t)buffer[1]) << 8) | buffer[0];
 }
 /** Get Z-axis accleration measurement.
@@ -1461,7 +1539,7 @@ int16_t ADXL345::getAccelerationY() {
  * @see ADXL345_RA_DATAZ0
  */
 int16_t ADXL345::getAccelerationZ() {
-    device.readBytes(ADXL345_RA_DATAZ0, 2, buffer);
+    I2Cdev::readBytes(devAddr, ADXL345_RA_DATAZ0, 2, buffer);
     return (((int16_t)buffer[1]) << 8) | buffer[0];
 }
 
@@ -1488,7 +1566,8 @@ int16_t ADXL345::getAccelerationZ() {
  * @see ADXL345_FIFO_MODE_LENGTH
  */
 uint8_t ADXL345::getFIFOMode() {
-    return device.readBits(ADXL345_RA_FIFO_CTL, ADXL345_FIFO_MODE_BIT, ADXL345_FIFO_MODE_LENGTH);
+    I2Cdev::readBits(devAddr, ADXL345_RA_FIFO_CTL, ADXL345_FIFO_MODE_BIT, ADXL345_FIFO_MODE_LENGTH, buffer);
+    return buffer[0];
 }
 /** Set FIFO mode.
  * @param mode New FIFO mode
@@ -1498,7 +1577,7 @@ uint8_t ADXL345::getFIFOMode() {
  * @see ADXL345_FIFO_MODE_LENGTH
  */
 void ADXL345::setFIFOMode(uint8_t mode) {
-    device.writeBits(ADXL345_RA_FIFO_CTL, ADXL345_FIFO_MODE_BIT, ADXL345_FIFO_MODE_LENGTH, mode);
+    I2Cdev::writeBits(devAddr, ADXL345_RA_FIFO_CTL, ADXL345_FIFO_MODE_BIT, ADXL345_FIFO_MODE_LENGTH, mode);
 }
 /** Get FIFO trigger interrupt setting.
  * A value of 0 in the trigger bit links the trigger event of trigger mode to
@@ -1508,7 +1587,8 @@ void ADXL345::setFIFOMode(uint8_t mode) {
  * @see ADXL345_FIFO_TRIGGER_BIT
  */
 uint8_t ADXL345::getFIFOTriggerInterruptPin() {
-    return device.readBit(ADXL345_RA_FIFO_CTL, ADXL345_FIFO_TRIGGER_BIT);
+    I2Cdev::readBit(devAddr, ADXL345_RA_FIFO_CTL, ADXL345_FIFO_TRIGGER_BIT, buffer);
+    return buffer[0];
 }
 /** Set FIFO trigger interrupt pin setting.
  * @param interrupt New FIFO trigger interrupt pin setting
@@ -1516,7 +1596,7 @@ uint8_t ADXL345::getFIFOTriggerInterruptPin() {
  * @see ADXL345_FIFO_TRIGGER_BIT
  */
 void ADXL345::setFIFOTriggerInterruptPin(uint8_t interrupt) {
-    device.writeBit(ADXL345_RA_FIFO_CTL, ADXL345_FIFO_TRIGGER_BIT, interrupt);
+    I2Cdev::writeBit(devAddr, ADXL345_RA_FIFO_CTL, ADXL345_FIFO_TRIGGER_BIT, interrupt);
 }
 /** Get FIFO samples setting.
  * The function of these bits depends on the FIFO mode selected (see Table 23).
@@ -1538,7 +1618,8 @@ void ADXL345::setFIFOTriggerInterruptPin(uint8_t interrupt) {
  * @see ADXL345_FIFO_SAMPLES_LENGTH
  */
 uint8_t ADXL345::getFIFOSamples() {
-    return device.readBits(ADXL345_RA_FIFO_CTL, ADXL345_FIFO_SAMPLES_BIT, ADXL345_FIFO_SAMPLES_LENGTH);
+    I2Cdev::readBits(devAddr, ADXL345_RA_FIFO_CTL, ADXL345_FIFO_SAMPLES_BIT, ADXL345_FIFO_SAMPLES_LENGTH, buffer);
+    return buffer[0];
 }
 /** Set FIFO samples setting.
  * @param size New FIFO samples setting (impact depends on FIFO mode setting)
@@ -1549,7 +1630,7 @@ uint8_t ADXL345::getFIFOSamples() {
  * @see ADXL345_FIFO_SAMPLES_LENGTH
  */
 void ADXL345::setFIFOSamples(uint8_t size) {
-    device.writeBits(ADXL345_RA_FIFO_CTL, ADXL345_FIFO_SAMPLES_BIT, ADXL345_FIFO_SAMPLES_LENGTH, size);
+    I2Cdev::writeBits(devAddr, ADXL345_RA_FIFO_CTL, ADXL345_FIFO_SAMPLES_BIT, ADXL345_FIFO_SAMPLES_LENGTH, size);
 }
 
 // FIFO_STATUS register
@@ -1562,7 +1643,8 @@ void ADXL345::setFIFOSamples(uint8_t size) {
  * @see ADXL345_FIFOSTAT_TRIGGER_BIT
  */
 bool ADXL345::getFIFOTriggerOccurred() {
-    return device.readBit(ADXL345_RA_FIFO_CTL, ADXL345_FIFOSTAT_TRIGGER_BIT);
+    I2Cdev::readBit(devAddr, ADXL345_RA_FIFO_CTL, ADXL345_FIFOSTAT_TRIGGER_BIT, buffer);
+    return buffer[0];
 }
 /** Get FIFO length.
  * These bits report how many data values are stored in FIFO. Access to collect
@@ -1571,12 +1653,13 @@ bool ADXL345::getFIFOTriggerOccurred() {
  * level is cleared after any read (single- or multiple-byte) of FIFO. FIFO
  * stores a maximum of 32 entries, which equates to a maximum of 33 entries
  * available at any given time because an additional entry is available at the
- * output filter of the device.
+ * output filter of the I2Cdev::
  * @return Current FIFO length
  * @see ADXL345_RA_FIFO_CTL
  * @see ADXL345_FIFOSTAT_LENGTH_BIT
  * @see ADXL345_FIFOSTAT_LENGTH_LENGTH
  */
 uint8_t ADXL345::getFIFOLength() {
-    return device.readBits(ADXL345_RA_FIFO_CTL, ADXL345_FIFOSTAT_LENGTH_BIT, ADXL345_FIFOSTAT_LENGTH_LENGTH);
+    I2Cdev::readBits(devAddr, ADXL345_RA_FIFO_CTL, ADXL345_FIFOSTAT_LENGTH_BIT, ADXL345_FIFOSTAT_LENGTH_LENGTH, buffer);
+    return buffer[0];
 }

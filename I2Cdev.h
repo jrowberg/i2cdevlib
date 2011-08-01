@@ -43,7 +43,7 @@ THE SOFTWARE.
 // -----------------------------------------------------------------------------
 // Arduino-style "Serial.print" debug constant (uncomment to enable)
 // -----------------------------------------------------------------------------
-//#define I2CDEV_SERIAL_DEBUG
+#define I2CDEV_SERIAL_DEBUG
 
 #ifdef LUFA_ARDUINO_WRAPPER
     #include "ArduinoWrapper.h"
@@ -57,21 +57,14 @@ THE SOFTWARE.
 class I2Cdev {
     public:
         I2Cdev();
-        I2Cdev(uint8_t address);
-        uint8_t readBit(uint8_t address, uint8_t bit);
-        uint8_t readBits(uint8_t address, uint8_t bitStart, uint8_t length);
-        uint8_t readByte(uint8_t address);
-        void readBytes(uint8_t address, uint8_t length, uint8_t *data);
-        void writeBit(uint8_t address, uint8_t bit, uint8_t value);
-        void writeBits(uint8_t address, uint8_t bitStart, uint8_t length, uint8_t value);
-        void writeByte(uint8_t address, uint8_t value);
-        void writeBytes(uint8_t address, uint8_t length, uint8_t *data);
-
-        uint8_t getDeviceAddress();
-        void setDeviceAddress(uint8_t address);
-
-    private:
-        uint8_t deviceAddress;
+        static bool readBit(uint8_t devAddr, uint8_t regAddr, uint8_t bitNum, uint8_t *data);
+        static bool readBits(uint8_t devAddr, uint8_t regAddr, uint8_t bitStart, uint8_t length, uint8_t *data);
+        static bool readByte(uint8_t devAddr, uint8_t regAddr, uint8_t *data);
+        static uint8_t readBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8_t *data);
+        static bool writeBit(uint8_t devAddr, uint8_t regAddr, uint8_t bitNum, uint8_t data);
+        static bool writeBits(uint8_t devAddr, uint8_t regAddr, uint8_t bitStart, uint8_t length, uint8_t data);
+        static bool writeByte(uint8_t devAddr, uint8_t regAddr, uint8_t data);
+        static bool writeBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8_t *data);
 };
 
 #endif /* _I2CDEV_H_ */
