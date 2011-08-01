@@ -1,6 +1,6 @@
 // I2Cdev library collection - ITG3200 I2C device class
 // Based on InvenSense ITG-3200 datasheet rev. 1.4, 3/30/2010 (PS-ITG-3200A-00-01.4)
-// 7/29/2011 by Jeff Rowberg <jeff@rowberg.net>
+// 7/31/2011 by Jeff Rowberg <jeff@rowberg.net>
 // Updates should (hopefully) always be available at https://github.com/jrowberg/i2cdevlib
 
 /* ============================================

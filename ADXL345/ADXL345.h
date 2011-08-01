@@ -1,6 +1,6 @@
 // I2Cdev library collection - ADXL345 I2C device class header file
 // Based on Analog Devices ADXL345 datasheet rev. C, 5/2011
-// 7/25/2011 by Jeff Rowberg <jeff@rowberg.net>
+// 7/31/2011 by Jeff Rowberg <jeff@rowberg.net>
 // Updates should (hopefully) always be available at https://github.com/jrowberg/i2cdevlib
 
 /* ============================================

@@ -1,6 +1,6 @@
 // I2Cdev library collection - ADXL345 I2C device class
 // Based on Analog Devices ADXL345 datasheet rev. C, 5/2011
-// 7/25/2011 by Jeff Rowberg <jeff@rowberg.net>
+// 7/31/2011 by Jeff Rowberg <jeff@rowberg.net>
 // Updates should (hopefully) always be available at https://github.com/jrowberg/i2cdevlib
 
 /* ============================================
@@ -382,9 +382,9 @@ void ADXL345::setActivityAC(bool enabled) {
  * or z-axis participation in detecting activity or inactivity. A setting of 0
  * excludes the selected axis from participation. If all axes are excluded, the
  * function is disabled. For activity detection, all participating axes are
- * logically OR’ed, causing the activity function to trigger when any of the
+ * logically ORï¿½ed, causing the activity function to trigger when any of the
  * participating axes exceeds the threshold. For inactivity detection, all
- * participating axes are logically AND’ed, causing the inactivity function to
+ * participating axes are logically ANDï¿½ed, causing the inactivity function to
  * trigger only if all participating axes are below the threshold for the
  * specified time.
  * @return X axis activity monitoring enabled value

@@ -1,5 +1,5 @@
 // I2C device class (I2Cdev) demonstration Arduino sketch
-// 7/25/2011 by Jeff Rowberg <jeff@rowberg.net>
+// 7/31/2011 by Jeff Rowberg <jeff@rowberg.net>
 // Updates should (hopefully) always be available at https://github.com/jrowberg/i2cdevlib
 
 /* ============================================
@@ -55,11 +55,10 @@ void setup() {
     accelerometer.initialize();
     gyroscope.initialize();
     magnetometer.initialize();
-    Serial.println("...done.");
     
     Serial.println("Testing device connections...");
-    //Serial.println(accelerometer.testConnection() ? "ADXL345 connection successful" : "ADXL345 connection failed");
-    //Serial.println(gyroscope.testConnection() ? "ITG3200 connection successful" : "ITG3200 connection failed");
+    Serial.println(accelerometer.testConnection() ? "ADXL345 connection successful" : "ADXL345 connection failed");
+    Serial.println(gyroscope.testConnection() ? "ITG3200 connection successful" : "ITG3200 connection failed");
     Serial.println(magnetometer.testConnection() ? "HMC5883L connection successful" : "HMC5883L connection failed");
 
     pinMode(LED_PIN, OUTPUT);
@@ -67,8 +66,8 @@ void setup() {
 
 void loop() {
     // read measurements from accel, gryo, and magnetometer
-    //accelerometer.getAcceleration(&ax, &ay, &az);
-    //gyroscope.getRotation(&gx, &gy, &gz);
+    accelerometer.getAcceleration(&ax, &ay, &az);
+    gyroscope.getRotation(&gx, &gy, &gz);
     magnetometer.getHeading(&mx, &my, &mz);
   
     Serial.print("a/g/m:\t");

@@ -1,6 +1,6 @@
 // I2Cdev library collection - Main I2C device class
 // Abstracts bit and byte I2C R/W functions into a convenient class
-// 7/25/2011 by Jeff Rowberg <jeff@rowberg.net>
+// 7/31/2011 by Jeff Rowberg <jeff@rowberg.net>
 
 /* ============================================
 I2Cdev device library code is placed under the MIT license

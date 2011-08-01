@@ -1,6 +1,6 @@
 // I2Cdev library collection - TCA6424A I2C device class header file
 // Based on Texas Instruments TCA6424A datasheet, 9/2010 (document SCPS193B)
-// 7/30/2011 by Jeff Rowberg <jeff@rowberg.net>
+// 7/31/2011 by Jeff Rowberg <jeff@rowberg.net>
 // Updates should (hopefully) always be available at https://github.com/jrowberg/i2cdevlib
 
 /* ============================================
