@@ -48,7 +48,7 @@ I2Cdev::I2Cdev() {
  * @param data Container for single bit value
  * @return Status of read operation (true = success)
  */
-bool I2Cdev::readBit(uint8_t devAddr, uint8_t regAddr, uint8_t bitNum, uint8_t *data) {
+int8_t I2Cdev::readBit(uint8_t devAddr, uint8_t regAddr, uint8_t bitNum, uint8_t *data) {
     uint8_t b;
     uint8_t count = readByte(devAddr, regAddr, &b);
     *data = b & (1 << bitNum);
@@ -62,7 +62,7 @@ bool I2Cdev::readBit(uint8_t devAddr, uint8_t regAddr, uint8_t bitNum, uint8_t *
  * @param data Container for single bit value
  * @return Status of read operation (true = success)
  */
-bool I2Cdev::readBitW(uint8_t devAddr, uint8_t regAddr, uint8_t bitNum, uint16_t *data) {
+int8_t I2Cdev::readBitW(uint8_t devAddr, uint8_t regAddr, uint8_t bitNum, uint16_t *data) {
     uint16_t b;
     uint8_t count = readWord(devAddr, regAddr, &b);
     *data = b & (1 << bitNum);
@@ -77,7 +77,7 @@ bool I2Cdev::readBitW(uint8_t devAddr, uint8_t regAddr, uint8_t bitNum, uint16_t
  * @param data Container for right-aligned value (i.e. '101' read from any bitStart position will equal 0x05)
  * @return Status of read operation (true = success)
  */
-bool I2Cdev::readBits(uint8_t devAddr, uint8_t regAddr, uint8_t bitStart, uint8_t length, uint8_t *data) {
+int8_t I2Cdev::readBits(uint8_t devAddr, uint8_t regAddr, uint8_t bitStart, uint8_t length, uint8_t *data) {
     // 01101001 read byte
     // 76543210 bit numbers
     //    xxx   args: bitStart=4, length=3
@@ -100,9 +100,9 @@ bool I2Cdev::readBits(uint8_t devAddr, uint8_t regAddr, uint8_t bitStart, uint8_
  * @param bitStart First bit position to read (0-15)
  * @param length Number of bits to read (not more than 16)
  * @param data Container for right-aligned value (i.e. '101' read from any bitStart position will equal 0x05)
- * @return Status of read operation (true = success)
+ * @return Status of read operation (1 = success, 0 = failure, -1 = timeout)
  */
-bool I2Cdev::readBitsW(uint8_t devAddr, uint8_t regAddr, uint8_t bitStart, uint8_t length, uint16_t *data) {
+int8_t I2Cdev::readBitsW(uint8_t devAddr, uint8_t regAddr, uint8_t bitStart, uint8_t length, uint16_t *data) {
     // 1101011001101001 read byte
     // fedcba9876543210 bit numbers
     //    xxx           args: bitStart=12, length=3
@@ -126,7 +126,7 @@ bool I2Cdev::readBitsW(uint8_t devAddr, uint8_t regAddr, uint8_t bitStart, uint8
  * @param data Container for byte value read from device
  * @return Status of read operation (true = success)
  */
-bool I2Cdev::readByte(uint8_t devAddr, uint8_t regAddr, uint8_t *data) {
+int8_t I2Cdev::readByte(uint8_t devAddr, uint8_t regAddr, uint8_t *data) {
     return readBytes(devAddr, regAddr, 1, data);
 }
 
@@ -136,7 +136,7 @@ bool I2Cdev::readByte(uint8_t devAddr, uint8_t regAddr, uint8_t *data) {
  * @param data Container for word value read from device
  * @return Status of read operation (true = success)
  */
-bool I2Cdev::readWord(uint8_t devAddr, uint8_t regAddr, uint16_t *data) {
+int8_t I2Cdev::readWord(uint8_t devAddr, uint8_t regAddr, uint16_t *data) {
     return readWords(devAddr, regAddr, 1, data);
 }
 
@@ -147,7 +147,7 @@ bool I2Cdev::readWord(uint8_t devAddr, uint8_t regAddr, uint16_t *data) {
  * @param data Buffer to store read data in
  * @return Number of bytes read (0 indicates failure)
  */
-uint8_t I2Cdev::readBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8_t *data) {
+int8_t I2Cdev::readBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8_t *data) {
     #ifdef I2CDEV_SERIAL_DEBUG
         Serial.print("I2C (0x");
         Serial.print(devAddr, HEX);
@@ -168,13 +168,14 @@ uint8_t I2Cdev::readBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint
     Wire.requestFrom(devAddr, length);
 
     uint32_t t1 = millis();
-    for (; Wire.available() && (readTimeoutMS == 0 || millis() - t1 < readTimeoutMS); count++) {
+    for (; Wire.available() && (readTimeout == 0 || millis() - t1 < I2Cdev::readTimeout); count++) {
         data[count] = Wire.receive();
         #ifdef I2CDEV_SERIAL_DEBUG
             Serial.print(data[count], HEX);
             Serial.print(" ");
         #endif
     }
+    if (readTimeout > 0 && millis() - t1 >= readTimeout && count < length) count = -1; // timeout
 
     Wire.endTransmission();
 
@@ -194,7 +195,7 @@ uint8_t I2Cdev::readBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint
  * @param data Buffer to store read data in
  * @return Number of words read (0 indicates failure)
  */
-uint8_t I2Cdev::readWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint16_t *data) {
+int8_t I2Cdev::readWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint16_t *data) {
     #ifdef I2CDEV_SERIAL_DEBUG
         Serial.print("I2C (0x");
         Serial.print(devAddr, HEX);
@@ -216,7 +217,7 @@ uint8_t I2Cdev::readWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint
 
     uint32_t t1 = millis();
     bool msb = true;
-    for (; Wire.available() && (readTimeoutMS == 0 || millis() - t1 < readTimeoutMS); count++) {
+    for (; Wire.available() && count < length && (readTimeout == 0 || millis() - t1 < readTimeout); count++) {
         if (msb) {
             data[count] = Wire.receive() << 8;
         } else {
@@ -232,6 +233,7 @@ uint8_t I2Cdev::readWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint
         }
         msb = !msb;
     }
+    if (readTimeout > 0 && millis() - t1 >= readTimeout && count < length) count = -1; // timeout
 
     Wire.endTransmission();
 
@@ -424,3 +426,8 @@ bool I2Cdev::writeWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint16
     #endif
     return true; //status == 0;
 }
+
+/** Default timeout value for read operations.
+ * Set this to 0 to disable timeout detection.
+ */
+uint16_t I2Cdev::readTimeout = I2CDEV_DEFAULT_READ_TIMEOUT;
