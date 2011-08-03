@@ -33,10 +33,10 @@ THE SOFTWARE.
 
 #include "I2Cdev.h"
 
-#define ADS1115_ADDRESS_ADDR_GND    0x90 // address pin low (GND)
-#define ADS1115_ADDRESS_ADDR_VDD    0x91 // address pin high (VCC)
-#define ADS1115_ADDRESS_ADDR_SDA    0x92 // address pin tied to SDA pin
-#define ADS1115_ADDRESS_ADDR_SCL    0x93 // address pin tied to SCL pin
+#define ADS1115_ADDRESS_ADDR_GND    0x72 // address pin low (GND)
+#define ADS1115_ADDRESS_ADDR_VDD    0x73 // address pin high (VCC)
+#define ADS1115_ADDRESS_ADDR_SDA    0x74 // address pin tied to SDA pin
+#define ADS1115_ADDRESS_ADDR_SCL    0x75 // address pin tied to SCL pin
 #define ADS1115_DEFAULT_ADDRESS     ADS1115_ADDRESS_ADDR_GND
 
 #define ADS1115_RA_CONVERSION       0x00
