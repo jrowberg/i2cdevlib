@@ -1,6 +1,14 @@
 // I2Cdev library collection - Main I2C device class header file
 // Abstracts bit and byte I2C R/W functions into a convenient class
-// 7/31/2011 by Jeff Rowberg <jeff@rowberg.net>
+// 8/2/2011 by Jeff Rowberg <jeff@rowberg.net>
+//
+// Changelog:
+// 2011-08-02 - added support for 16-bit registers
+//            - fixed incorrect Doxygen comments on some methods
+//            - added timeout value for read operations (thanks mem @ Arduino forums)
+// 2011-07-30 - changed read/write function structures to return success or byte counts
+//            - made all methods static for multi-device memory savings
+// 2011-07-28 - initial release
 
 /* ============================================
 I2Cdev device library code is placed under the MIT license
@@ -37,7 +45,7 @@ THE SOFTWARE.
 // -----------------------------------------------------------------------------
 // I2C interface implementation options
 // -----------------------------------------------------------------------------
-#define I2CDEV_RAW                  1
+#define I2CDEV_RAW                  1 // not implemented yet
 #define I2CDEV_ARDUINO_WIRE         2
 
 // -----------------------------------------------------------------------------
@@ -57,14 +65,26 @@ THE SOFTWARE.
 class I2Cdev {
     public:
         I2Cdev();
+
         static bool readBit(uint8_t devAddr, uint8_t regAddr, uint8_t bitNum, uint8_t *data);
+        static bool readBitW(uint8_t devAddr, uint8_t regAddr, uint8_t bitNum, uint16_t *data);
         static bool readBits(uint8_t devAddr, uint8_t regAddr, uint8_t bitStart, uint8_t length, uint8_t *data);
+        static bool readBitsW(uint8_t devAddr, uint8_t regAddr, uint8_t bitStart, uint8_t length, uint16_t *data);
         static bool readByte(uint8_t devAddr, uint8_t regAddr, uint8_t *data);
+        static bool readWord(uint8_t devAddr, uint8_t regAddr, uint16_t *data);
         static uint8_t readBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8_t *data);
+        static uint8_t readWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint16_t *data);
+
         static bool writeBit(uint8_t devAddr, uint8_t regAddr, uint8_t bitNum, uint8_t data);
+        static bool writeBitW(uint8_t devAddr, uint8_t regAddr, uint8_t bitNum, uint16_t data);
         static bool writeBits(uint8_t devAddr, uint8_t regAddr, uint8_t bitStart, uint8_t length, uint8_t data);
+        static bool writeBitsW(uint8_t devAddr, uint8_t regAddr, uint8_t bitStart, uint8_t length, uint16_t data);
         static bool writeByte(uint8_t devAddr, uint8_t regAddr, uint8_t data);
+        static bool writeWord(uint8_t devAddr, uint8_t regAddr, uint16_t data);
         static bool writeBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8_t *data);
+        static bool writeWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint16_t *data);
+        
+        static const uint16_t readTimeoutMS = 250;
 };
 
 #endif /* _I2CDEV_H_ */
