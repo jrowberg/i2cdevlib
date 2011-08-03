@@ -8,6 +8,7 @@ To use the library, just place the I2Cdev .cpp/.h source files and any device li
 
 COMPLETED DEVICE LIBRARIES:
 ===========================
+- ADS1115 - Texas Instruments ADS1115 16-bit A/D converter
 - ADXL345 - Analog Devices ADXL345 3-axis accelerometer
 - HMC5883L - Honeywell HMC5883L 3-axis magnetometer
 - ITG3200 - InvenSense ITG-3200 3-axis gyroscope

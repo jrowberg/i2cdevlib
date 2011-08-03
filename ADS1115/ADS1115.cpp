@@ -76,7 +76,7 @@ bool ADS1115::testConnection() {
 /** Read differential value based on current MUX configuration.
  * The default MUX setting sets the device to get the differential between the
  * AIN0 and AIN1 pins. There are 8 possible MUX settings, but if you are using
- * all four input pins as single-end touch sensors, then the default option is
+ * all four input pins as single-end voltage sensors, then the default option is
  * not what you want; instead you will need to set the MUX to compare the
  * desired AIN* pin with GND. There are four shortcut methods (getDiff*) to do
  * this conveniently, but you can also do it manually with setMultiplexer()
