@@ -166,7 +166,7 @@ int8_t I2Cdev::readBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8
         Serial.print("...");
     #endif
 
-    uint8_t count = 0;
+    int8_t count = 0;
 
     Wire.beginTransmission(devAddr);
     Wire.send(regAddr);
@@ -215,7 +215,7 @@ int8_t I2Cdev::readWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint1
         Serial.print("...");
     #endif
 
-    uint8_t count = 0;
+    int8_t count = 0;
 
     Wire.beginTransmission(devAddr);
     Wire.send(regAddr);
