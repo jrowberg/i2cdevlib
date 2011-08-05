@@ -222,7 +222,7 @@ int8_t I2Cdev::readWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint1
     Wire.endTransmission();
 
     Wire.beginTransmission(devAddr);
-    Wire.requestFrom(devAddr, length * 2); // length=words, this wants bytes
+    Wire.requestFrom(devAddr, (uint8_t)(length * 2)); // length=words, this wants bytes
 
     uint32_t t1 = millis();
     bool msb = true; // starts with MSB, then LSB
