@@ -225,20 +225,19 @@ int8_t I2Cdev::readWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint1
     Wire.requestFrom(devAddr, length);
 
     uint32_t t1 = millis();
-    bool msb = true;
-    for (; Wire.available() && count < length && (timeout == 0 || millis() - t1 < timeout); count++) {
+    bool msb = true; // starts with MSB, then LSB
+    for (; Wire.available() && count < length && (timeout == 0 || millis() - t1 < timeout);) {
         if (msb) {
+            // first byte is bits 15-8 (MSb=15)
             data[count] = Wire.receive() << 8;
         } else {
+            // second byte is bits 7-0 (LSb=0)
             data[count] |= Wire.receive();
-        }
-        if (!msb) {
-        #ifdef I2CDEV_SERIAL_DEBUG
+            #ifdef I2CDEV_SERIAL_DEBUG
                 Serial.print(data[count], HEX);
                 Serial.print(" ");
-        #endif
-        } else {
-            count--;
+            #endif
+            count++;
         }
         msb = !msb;
     }
