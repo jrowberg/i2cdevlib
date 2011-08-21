@@ -115,7 +115,7 @@ void ITG3200::setDeviceID(uint8_t id) {
  * @see ITG3200_RA_SMPLRT_DIV
  */
 uint8_t ITG3200::getRate() {
-    return I2Cdev::readByte(devAddr, ITG3200_RA_SMPLRT_DIV, buffer);
+    I2Cdev::readByte(devAddr, ITG3200_RA_SMPLRT_DIV, buffer);
     return buffer[0];
 }
 /** Set sample rate.
