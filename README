@@ -8,20 +8,20 @@ To use the library, just place the I2Cdev .cpp/.h source files and any device li
 
 COMPLETED DEVICE LIBRARIES:
 ===========================
-- ADS1115 - Texas Instruments ADS1115 16-bit A/D converter
-- ADXL345 - Analog Devices ADXL345 3-axis accelerometer
+- ADS1115  - Texas Instruments ADS1115 16-bit A/D converter
+- ADXL345  - Analog Devices ADXL345 3-axis accelerometer
+- HMC5843  - Honeywell HMC5843 3-axis magnetometer
 - HMC5883L - Honeywell HMC5883L 3-axis magnetometer
-- ITG3200 - InvenSense ITG-3200 3-axis gyroscope
+- ITG3200  - InvenSense ITG-3200 3-axis gyroscope
 - TCA6424A - Texas Instruments TCA6424A 24-bit I/O expander
 
 IN-PROGRESS DEVICE LIBRARIES:
 =============================
-- MPR121 - Freescale MPR121 12-bit capacitive touch sensor (thanks to Andrew Schamp)
+- MPR121  - Freescale MPR121 12-bit capacitive touch sensor (thanks to Andrew Schamp)
 - MPU6050 - InvenSense MPU-6050 6-axis accelerometer/gyroscope combo (compatible with MPU-6000)
 
 UPCOMING DEVICE LIBRARIES:
 ==========================
-- HMC5843 - Honeywell HMC5843 3-axis magnetometer
 - AK8975 - AKM AK8975 3-axis magnetometer
 
 Want something that isn't on the list? Request it, or fork the code and contribute! Better yet, send me a device on a breakout board to test the code during development. No guarantees on how fast I can get it done, but I'd love to make this the biggest consistent and well-documented I2C device library around.
