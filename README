@@ -17,10 +17,11 @@ COMPLETED DEVICE LIBRARIES:
 IN-PROGRESS DEVICE LIBRARIES:
 =============================
 - MPR121 - Freescale MPR121 12-bit capacitive touch sensor (thanks to Andrew Schamp)
-- MPU6050 - InvenSense MPU-6050 6-axis accelerometer/gyroscope combo
+- MPU6050 - InvenSense MPU-6050 6-axis accelerometer/gyroscope combo (compatible with MPU-6000)
 
 UPCOMING DEVICE LIBRARIES:
 ==========================
-...nothing on the list at the moment!
+- HMC5843 - Honeywell HMC5843 3-axis magnetometer
+- AK8975 - AKM AK8975 3-axis magnetometer
 
 Want something that isn't on the list? Request it, or fork the code and contribute! Better yet, send me a device on a breakout board to test the code during development. No guarantees on how fast I can get it done, but I'd love to make this the biggest consistent and well-documented I2C device library around.
