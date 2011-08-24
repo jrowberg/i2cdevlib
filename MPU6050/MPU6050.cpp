@@ -1,7 +1,11 @@
 // I2Cdev library collection - MPU6050 I2C device class
 // Based on InvenSense MPU-6050 register map document rev. 2.0, 5/19/2011 (RM-MPU-6000A-00)
-// 8/20/2011 by Jeff Rowberg <jeff@rowberg.net>
+// 8/24/2011 by Jeff Rowberg <jeff@rowberg.net>
 // Updates should (hopefully) always be available at https://github.com/jrowberg/i2cdevlib
+
+// NOTE: THIS IS ONLY A PARIAL RELEASE. THIS DEVICE CLASS IS CURRENTLY UNDERGOING ACTIVE
+// DEVELOPMENT AND IS STILL MISSING SOME IMPORTANT FEATURES. PLEASE KEEP THIS IN MIND IF
+// YOU DECIDE TO USE THIS PARTICULAR CODE FOR ANYTHING.
 
 /* ============================================
 I2Cdev device library code is placed under the MIT license
@@ -47,26 +51,17 @@ MPU6050::MPU6050(uint8_t address) {
 }
 
 /** Power on and prepare for general usage.
- * This will activate the gyroscope, so be sure to adjust the power settings
- * after you call this method if you want it to enter standby mode, or another
- * less demanding mode of operation. This also sets the gyroscope to use the
- * X-axis gyro for a clock source. Note that it doesn't have any delays in the
- * routine, which means you might want to add ~50ms to be safe if you happen
- * to need to read gyro data immediately after initialization. The data will
- * flow in either case, but the first reports may have higher error offsets.
+ * This will activate the device and take it out of sleep mode (which must be done
+ * after start-up). This function also sets both the accelerometer and the gyroscope
+ * to their most sensitive settings, namely +/- 2g and +/- 250 degrees/sec, and sets
+ * the clock source to use the X Gyro for reference, which is slightly better than
+ * the default internal clock source.
  */
 void MPU6050::initialize() {
     setClockSource(MPU6050_CLOCK_PLL_XGYRO);
     setFullScaleGyroRange(MPU6050_GYRO_FS_250);
     setFullScaleAccelRange(MPU6050_ACCEL_FS_2);
-    resetGyroscopePath();
-    resetAccelerometerPath();
-    resetTemperaturePath();
-    resetFIFO();
-    resetSensors();
-    setStandbyXAccelEnabled(0);
-    setStandbyYAccelEnabled(0);
-    setStandbyZAccelEnabled(0);
+    setSleepEnabled(false);
 }
 
 /** Verify the I2C connection.
