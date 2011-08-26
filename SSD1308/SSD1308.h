@@ -47,21 +47,18 @@ THE SOFTWARE.
 #define SSD1308_ADDRESS_2 0x3D
 #define SSD1308_DEFAULT_ADDRESS SSD1308_ADDRESS_1
 
-// SSD1308 Commands (from data sheet)
-//#define SET_LOWER_COLUMN_START_ADDRESS  0x00
-//0x00 - 0x0F
-//#define SET_HIGHER_COLUMN_START_ADDRESS 0x00
-//0x10 - 0x1F
-#define SET_MEMORY_ADDRESSING_MODE      0x20
+#define HORIZONTAL_ADDRESSING_MODE 0x00
+#define VERTICAL_ADDRESSING_MODE   0x01
+#define PAGE_ADDRESSING_MODE       0x02
+#define SET_MEMORY_ADDRESSING_MODE 0x20 // takes one byte
 
 #define SET_COLUMN_ADDRESS 0x21 // takes two bytes, start address and end address of display data RAM
 #define SET_PAGE_ADDRESS   0x22 // takes two bytes, start address and end address of display data RAM
 
-// SET_DISPLAY_START_LINE - 0x40-0x7F
-
 #define SET_CONTRAST_FOR_BANK0 0x81 // takes one byte, 0x00 - 0xFF
 
-#define SET_SEGMENT_REMAP // TODO: sort out
+#define SET_SEGMENT_REMAP_0   0xA0 // column address 0 is mapped to SEG0
+#define SET_SEGMENT_REMAP_127 0xA1 // column address 127 is mapped to SEG0
 
 #define SET_ENTIRE_DISPLAY_ON 0xA5 // turns all pixels on, does not affect RAM
 #define SET_DISPLAY_GDDRAM    0xA4 // restores display to contents of RAM
@@ -69,169 +66,150 @@ THE SOFTWARE.
 #define SET_NORMAL_DISPLAY  0xA6 // a data of 1 indicates 'ON'
 #define SET_INVERSE_DISPLAY 0xA7 // a data of 0 indicates 'ON'
 
+#define SET_MULTIPLEX_RATIO 0xA8 // takes one byte, from 16 to 63 (0x
+
+#define EXTERNAL_IREF 0x10
+#define INTERNAL_IREF 0x00
+#define SET_IREF_SELECTION 0xAD // sets internal or external Iref
+
+#define SET_DISPLAY_POWER_OFF 0xAE
+#define SET_DISPLAY_POWER_ON  0xAF
+
 #define COMMAND_MODE 0x80
 #define DATA_MODE 0x40
 
-#define ELE8_ELE11_ELEPROX_TOUCH_STATUS 0x01
+#define PAGE0 0x00
+#define PAGE1 0x01
+#define PAGE2 0x02
+#define PAGE3 0x03
+#define PAGE4 0x04
+#define PAGE5 0x05
+#define PAGE6 0x06
+#define PAGE7 0x07
+#define SET_PAGE_START_ADDRESS 0xB0 // | with a page number to get start address
 
-#define ELE0_7_OOR_STATUS          0x02
-#define ELE8_11_ELEPROX_OOR_STATUS 0x03
+#define SET_DISPLAY_OFFSET 0xD3
 
-#define ELE0_FILTERED_DATA_LSB    0x04
-#define ELE0_FILTERED_DATA_MSB    0x05
-#define ELE1_FILTERED_DATA_LSB    0x06
-#define ELE1_FILTERED_DATA_MSB    0x07
-#define ELE2_FILTERED_DATA_LSB    0x08
-#define ELE2_FILTERED_DATA_MSB    0x09
-#define ELE3_FILTERED_DATA_LSB    0x0A
-#define ELE3_FILTERED_DATA_MSB    0x0B
-#define ELE4_FILTERED_DATA_LSB    0x0C
-#define ELE4_FILTERED_DATA_MSB    0x0D
-#define ELE5_FILTERED_DATA_LSB    0x0E
-#define ELE5_FILTERED_DATA_MSB    0x0F
-#define ELE6_FILTERED_DATA_LSB    0x10
-#define ELE6_FILTERED_DATA_MSB    0x11
-#define ELE7_FILTERED_DATA_LSB    0x12
-#define ELE7_FILTERED_DATA_MSB    0x13
-#define ELE8_FILTERED_DATA_LSB    0x14
-#define ELE8_FILTERED_DATA_MSB    0x15
-#define ELE9_FILTERED_DATA_LSB    0x16
-#define ELE9_FILTERED_DATA_MSB    0x17
-#define ELE10_FILTERED_DATA_LSB   0x18
-#define ELE10_FILTERED_DATA_MSB   0x19
-#define ELE11_FILTERED_DATA_LSB   0x1A
-#define ELE11_FILTERED_DATA_MSB   0x1B
-#define ELEPROX_FILTERED_DATA_LSB 0x1C
-#define ELEPROX_FILTERED_DATA_MSB 0x1D
+#define SET_DISPLAY_CLOCK 0xD5
 
-#define ELE0_BASELINE_VALUE    0x1E
-#define ELE1_BASELINE_VALUE    0x1F
-#define ELE2_BASELINE_VALUE    0x20
-#define ELE3_BASELINE_VALUE    0x21
-#define ELE4_BASELINE_VALUE    0x22
-#define ELE5_BASELINE_VALUE    0x23
-#define ELE6_BASELINE_VALUE    0x24
-#define ELE7_BASELINE_VALUE    0x25
-#define ELE8_BASELINE_VALUE    0x26
-#define ELE9_BASELINE_VALUE    0x27
-#define ELE10_BASELINE_VALUE   0x28
-#define ELE11_BASELINE_VALUE   0x29
-#define ELEPROX_BASELINE_VALUE 0x2A
+#define VCOMH_DESELECT_0_65_CODE 0x00
+#define VCOMH_DESELECT_0_77_CODE 0x20
+#define VCOMH_DESELECT_0_83_CODE 0x30
+#define SET_VCOMH_DESELECT_LEVEL 0xDB
 
-#define MHD_RISING                 0x2B
-#define NHD_AMOUNT_RISING          0x2C
-#define NCL_RISING                 0x2D
-#define FDL_RISING                 0x2E
-#define MHD_FALLING                0x2F
-#define NHD_AMOUNT_FALLING         0x30
-#define NCL_FALLING                0x31
-#define FDL_FALLING                0x32
-#define NHD_AMOUNT_TOUCHED         0x33
-#define NCL_TOUCHED                0x34
-#define FDL_TOUCHED                0x35
-#define ELEPROX_MHD_RISING         0x36
-#define ELEPROX_NHD_AMOUNT_RISING  0x37
-#define ELEPROX_NCL_RISING         0x38
-#define ELEPROX_FDL_RISING         0x39
-#define ELEPROX_MHD_FALLING        0x3A
-#define ELEPROX_NHD_AMOUNT_FALLING 0x3B
-#define ELEPROX_FDL_FALLING        0x3C
-#define ELEPROX_NHD_AMOUNT_TOUCHED 0x3E
-#define ELEPROX_NCL_TOUCHED        0x3F
-#define ELEPROX_FDL_TOUCHED        0x40
+#define NOP 0xE3
 
-#define ELE0_TOUCH_THRESHOLD       0x41
-#define ELE0_RELEASE_THRESHOLD     0x42
-#define ELE1_TOUCH_THRESHOLD       0x43
-#define ELE1_RELEASE_THRESHOLD     0x44
-#define ELE2_TOUCH_THRESHOLD       0x45
-#define ELE2_RELEASE_THRESHOLD     0x46
-#define ELE3_TOUCH_THRESHOLD       0x47
-#define ELE3_RELEASE_THRESHOLD     0x48
-#define ELE4_TOUCH_THRESHOLD       0x49
-#define ELE4_RELEASE_THRESHOLD     0x4A
-#define ELE5_TOUCH_THRESHOLD       0x4B
-#define ELE5_RELEASE_THRESHOLD     0x4C
-#define ELE6_TOUCH_THRESHOLD       0x4D
-#define ELE6_RELEASE_THRESHOLD     0x4E
-#define ELE7_TOUCH_THRESHOLD       0x4F
-#define ELE7_RELEASE_THRESHOLD     0x50
-#define ELE8_TOUCH_THRESHOLD       0x51
-#define ELE8_RELEASE_THRESHOLD     0x52
-#define ELE9_TOUCH_THRESHOLD       0x53
-#define ELE9_RELEASE_THRESHOLD     0x54
-#define ELE10_TOUCH_THRESHOLD      0x55
-#define ELE10_RELEASE_THRESHOLD    0x56
-#define ELE11_TOUCH_THRESHOLD      0x57
-#define ELE11_RELEASE_THRESHOLD    0x58
-#define ELEPROX_TOUCH_THRESHOLD    0x59
-#define ELEPROX_RELEASE_THRESHOLD  0x5A
-#define DEBOUNCE_TOUCH_AND_RELEASE 0x5B
-#define AFE_CONFIGURATION          0x5C
+#define SET_RIGHT_HORIZONTAL_SCROLL 0x26
+#define SET_LEFT_HORIZONTAL_SCROLL  0x27
+#define SET_VERTICAL_RIGHT_HORIZONTAL_SCROLL 0x29
+#define SET_VERTICAL_LEFT_HORIZONTAL_SCROLL  0x2A
 
-#define FILTER_CONFIG    0x5D
-#define ELECTRODE_CONFIG 0x5E
-#define ELE0_CURRENT     0x5F
-#define ELE1_CURRENT     0x60
-#define ELE2_CURRENT     0x61
-#define ELE3_CURRENT     0x62
-#define ELE4_CURRENT     0x63
-#define ELE5_CURRENT     0x64
-#define ELE6_CURRENT     0x65
-#define ELE7_CURRENT     0x66
-#define ELE8_CURRENT     0x67
-#define ELE9_CURRENT     0x68
-#define ELE10_CURRENT    0x69
-#define ELE11_CURRENT    0x6A
-#define ELEPROX_CURRENT  0x6B
+#define SET_DEACTIVATE_SCROLL 0x2E
+#define SET_ACTIVATE_SCROLL 0x2F
 
-#define ELE0_ELE1_CHARGE_TIME   0x6C
-#define ELE2_ELE3_CHARGE_TIME   0x6D
-#define ELE4_ELE5_CHARGE_TIME   0x6E
-#define ELE6_ELE7_CHARGE_TIME   0x6F
-#define ELE8_ELE9_CHARGE_TIME   0x70
-#define ELE10_ELE11_CHARGE_TIME 0x71
-#define ELEPROX_CHARGE_TIME     0x72
+#define SET_VERTICAL_SCROLL_AREA 0xA3
 
-#define GPIO_CONTROL_0           0x73
-#define GPIO_CONTROL_1           0x74
-#define GPIO_DATA                0x75
-#define GPIO_DIRECTION           0x76
-#define GPIO_ENABLE              0x77
-#define GPIO_SET                 0x78
-#define GPIO_CLEAR               0x79
-#define GPIO_TOGGLE              0x7A
-#define AUTO_CONFIG_CONTROL_0    0x7B
-#define AUTO_CONFIG_CONTROL_1    0x7C
-#define AUTO_CONFIG_USL          0x7D
-#define AUTO_CONFIG_LSL          0x7E
-#define AUTO_CONFIG_TARGET_LEVEL 0x7F
-
-// Other Constants
-// these are suggested values from app note 3944
-#define TOUCH_THRESHOLD   0x0F
-#define RELEASE_THRESHOLD 0x0A
-
-class MPR121
+class SSD1308
 {
   public:
-  
-    // constructor
-    // takes a 7-b I2C address to use (0x5A by default, assumes addr pin grounded)
-    MPR121(uint8_t address = MPR121_DEFAULT_ADDRESS);
+    
+      // constructor
+    // takes a 7-b I2C address to use (0x3C by default, assumes D/C# (pin 13) grounded)
+    SSD1308(uint8_t address = SSD1308_DEFAULT_ADDRESS);
 
+    // takes one byte, 0x00-0x0F
+    void setLowerColumnStartAddressForPageAddressingMode(uint8_t address);
+    
+    // takes one byte, 0x10-0x1F
+    void setHigherColumnStartAddressForPageAddressingMode(uint8_t address);
+    
+    // takes two bytes, start address and end address of display data RAM
+    void setColumnAddress(uint8_t start, uint8_t end);
+    
+    // takes two bytes, start address and end address of display data RAM
+    void setPageAddress(uint8_t start, uint8_t end);
+    
+    // takes one byte, PAGE0 - PAGE7
+    void setPageStartForPageAddressingMode(uint8_t page);
+    
+    // takes one byte, 0x40-0x7F
+    void setDisplayStartLine(uint8_t line);
+    
+    // takes one byte, 0x00 (lowest) - 0xFF (highest)
+    void setContrastControl(uint8_t contrast);
+    
+    void setEntireDisplayOn();
+    void setEntireDisplayRAM();
+    void setEntireDisplay(bool on);
+    void setNormalDisplay();
+    void setInverseDisplay();
+    
+    // setMultiplexRatio
+    
+    void setInternalIref();
+    void setExternalIref();
+    
+    void setDisplayOn();
+    void setDisplayOff();
+    void setDisplayPower(bool on);
+    
+    // Set vertical shift by COM from 0 - 63 (0x00 - 0x3F)
+    // set to 0x00 after RESET
+    void setDisplayOffset(uint8_t offset);
+    
+    // divide ratio 0x00-0x0F, value +1 (reset 0x00)
+    // oscillator freq 0x00-0x0F (reset 0x08)
+    void setDisplayClock(uint8_t divideRatio, uint8_t oscFreq);
+    
+    // phase1 0x01-0x0F period of up to 15 DCLK clocks (reset 0x02, 0 is invalid)
+    // phase2 0x01-0x0F period of up to 15 DCLK clocks (reset 0x02, 0 is invalid)
+    void setPrechargePeriod(uint8_t phase1, uint8_t phase2);
+    
+    #define VCOM_DESELECT_0_65 0x00
+    #define VCOM_DESELECT_0_77 0x02
+    #define VCOM_DESELECT_0_83 0x03
+    void setVcomhDeselectLevel(uint8_t level);
+    
+    // command for no operation
+    void nop();
+    
+    #define SCROLL_INTERVAL_5_FRAMES   0x00
+    #define SCROLL_INTERVAL_64_FRAMES  0x01
+    #define SCROLL_INTERVAL_128_FRAMES 0x02
+    #define SCROLL_INTERVAL_256_FRAMES 0x03
+    #define SCROLL_INTERVAL_3_FRAMES   0x04
+    #define SCROLL_INTERVAL_4_FRAMES   0x05
+    #define SCROLL_INTERVAL_25_FRAMES  0x06
+    #define SCROLL_INTERVAL_2_FRAMES   0x07
+    // end_page must not be less than start_page
+    void setContinuousHorizontalScroll(bool left, uint8_t start_page, uint8_t interval, uint8_t end_page);
+    // horizontal scroll by one column per interval
+    // offset = 1 (0x01) to 63 (0x3F)
+    void setContinuousVerticalAndHorizontalScroll(bool left, uint8_t start_page, uint8_t interval, uint8_t end_page, uint8_t offset);
+    
+    // note, after deactivating scrolling, the RAM data needs to be rewritten
+    void deactivateScroll();
+    void activateScroll();
+    
+    void setVerticalScrollArea(uint8_t topRowsFixed, uint8_t scrollRows);
+
+    void setData(uint8_t byte);
+    void setData(uint8_t* dataArray, uint8_t len);
     // write the configuration registers in accordance with the datasheet and app note 3944
-    void initialize();
+//    void initialize();
     
     // returns true if the device is responding on the I2C bus
-    bool testConnection();
+//    bool testConnection();
 
     // getTouchStatus returns the touch status for the given channel (0 - 11)
-    bool getTouchStatus(uint8_t channel);
+//    bool getTouchStatus(uint8_t channel);
     // when not given a channel, returns a bitfield of all touch channels.
-    uint16_t getTouchStatus();
+//    uint16_t getTouchStatus();
 
   private:
+    // sends a single-byte command (given) to device
+    void sendCommand(uint8_t command);
+
     uint8_t m_devAddr; // contains the I2C address of the device
 };
 
