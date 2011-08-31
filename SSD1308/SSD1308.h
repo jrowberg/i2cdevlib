@@ -50,12 +50,13 @@ THE SOFTWARE.
 #define HORIZONTAL_ADDRESSING_MODE 0x00
 #define VERTICAL_ADDRESSING_MODE   0x01
 #define PAGE_ADDRESSING_MODE       0x02
+
 #define SET_MEMORY_ADDRESSING_MODE 0x20 // takes one byte
 
 #define SET_COLUMN_ADDRESS 0x21 // takes two bytes, start address and end address of display data RAM
 #define SET_PAGE_ADDRESS   0x22 // takes two bytes, start address and end address of display data RAM
 
-#define SET_CONTRAST_FOR_BANK0 0x81 // takes one byte, 0x00 - 0xFF
+#define SET_CONTRAST 0x81 // takes one byte, 0x00 - 0xFF
 
 #define SET_SEGMENT_REMAP_0   0xA0 // column address 0 is mapped to SEG0
 #define SET_SEGMENT_REMAP_127 0xA1 // column address 127 is mapped to SEG0
@@ -117,6 +118,17 @@ class SSD1308
     // takes a 7-b I2C address to use (0x3C by default, assumes D/C# (pin 13) grounded)
     SSD1308(uint8_t address = SSD1308_DEFAULT_ADDRESS);
 
+    void initialize();
+    void clearDisplay();
+    void fillDisplay(); // crosshatches    
+    //void setXY(uint8_t, uint8_t y);
+
+    void setHorizontalAddressingMode();
+    void setVerticalAddressingMode();
+    void setPageAddressingMode();
+    
+    void setMemoryAddressingMode(uint8_t mode);
+    
     // takes one byte, 0x00-0x0F
     void setLowerColumnStartAddressForPageAddressingMode(uint8_t address);
     
@@ -193,8 +205,8 @@ class SSD1308
     
     void setVerticalScrollArea(uint8_t topRowsFixed, uint8_t scrollRows);
 
-    void setData(uint8_t byte);
-    void setData(uint8_t* dataArray, uint8_t len);
+    void sendData(uint8_t data);
+    void sendData(uint8_t len, uint8_t* data);
     // write the configuration registers in accordance with the datasheet and app note 3944
 //    void initialize();
     
@@ -209,6 +221,7 @@ class SSD1308
   private:
     // sends a single-byte command (given) to device
     void sendCommand(uint8_t command);
+    void sendCommands(uint8_t len, uint8_t* buf);
 
     uint8_t m_devAddr; // contains the I2C address of the device
 };

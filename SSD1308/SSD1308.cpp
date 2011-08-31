@@ -41,9 +41,84 @@ SSD1308::SSD1308(uint8_t address) :
 {
 }
 
+void SSD1308::initialize() 
+{
+  setHorizontalAddressingMode();
+  clearDisplay();
+}
+
+void SSD1308::clearDisplay()
+{
+  setDisplayOff();
+  setPageAddress(0, 7);      // all pages
+  setColumnAddress(0, 127); // all columns
+  uint8_t data[8] = { 0x00, 0x00, 0x00, 0x00,
+                      0x00, 0x00, 0x00, 0x00 };
+  for (uint8_t page = 0; page < 8; page++)
+  {
+//    setPageAddress(page, page);
+    for (uint8_t block = 0; block < 16; block++)
+    {
+      sendData(8, data);
+    }
+  }
+  setDisplayOn();
+}
+
+void SSD1308::fillDisplay()
+{
+  setPageAddress(0, 7);      // all pages
+  setColumnAddress(0, 127); // all columns
+  uint8_t data[8] = { 0x01, 0x03, 0x07, 0x0f,
+                      0x11, 0x33, 0x77, 0xff };
+  uint8_t b = 0;
+  for (uint8_t page = 0; page < 8; page++)
+  {
+//    setPageAddress(page, page);
+    for (uint8_t block = 0; block < 16; block++)
+    {
+      sendData(8, data);
+    }
+  }
+}
+
 void SSD1308::sendCommand(uint8_t command)
 {
   I2Cdev::writeByte(m_devAddr, COMMAND_MODE, command);
+}
+
+void SSD1308::sendCommands(uint8_t len, uint8_t* commands)
+{
+  I2Cdev::writeBytes(m_devAddr, COMMAND_MODE, len, commands);
+}
+
+void SSD1308::sendData(uint8_t data)
+{
+  I2Cdev::writeByte(m_devAddr, DATA_MODE, data);
+}
+
+void SSD1308::sendData(uint8_t len, uint8_t* data)
+{
+  I2Cdev::writeBytes(m_devAddr, DATA_MODE, len, data);
+}
+
+void SSD1308::setHorizontalAddressingMode()
+{
+  setMemoryAddressingMode(HORIZONTAL_ADDRESSING_MODE); 
+}
+void SSD1308::setVerticalAddressingMode()
+{
+  setMemoryAddressingMode(VERTICAL_ADDRESSING_MODE); 
+}
+void SSD1308::setPageAddressingMode()
+{
+  setMemoryAddressingMode(PAGE_ADDRESSING_MODE); 
+}
+    
+void SSD1308::setMemoryAddressingMode(uint8_t mode)
+{
+  uint8_t cmds[2] = { SET_MEMORY_ADDRESSING_MODE, mode };
+  sendCommands(2, cmds); 
 }
 
 void SSD1308::setDisplayOn()
@@ -63,6 +138,18 @@ void SSD1308::setDisplayPower(bool on)
   } else {
     setDisplayOff();
   }
+}
+
+void SSD1308::setPageAddress(uint8_t start, uint8_t end) 
+{
+  uint8_t data[3] = { SET_PAGE_ADDRESS, start, end };
+  sendCommands(3, data);  
+}
+
+void SSD1308::setColumnAddress(uint8_t start, uint8_t end) 
+{
+  uint8_t data[3] = { SET_COLUMN_ADDRESS, start, end };
+  sendCommands(3, data);  
 }
 
 //void MPR121::initialize()
