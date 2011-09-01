@@ -1,15 +1,16 @@
 // I2Cdev library collection - Main I2C device class
 // Abstracts bit and byte I2C R/W functions into a convenient class
-// 8/3/2011 by Jeff Rowberg <jeff@rowberg.net>
+// 8/31/2011 by Jeff Rowberg <jeff@rowberg.net>
 //
 // Changelog:
-// 2011-08-03 - added optional timeout parameter to read* methods to easily change from default
-// 2011-08-02 - added support for 16-bit registers
-//            - fixed incorrect Doxygen comments on some methods
-//            - added timeout value for read operations (thanks mem @ Arduino forums)
-// 2011-07-30 - changed read/write function structures to return success or byte counts
-//            - made all methods static for multi-device memory savings
-// 2011-07-28 - initial release
+//     2011-08-31 - added support for Arduino 1.0 Wire library (methods are different from 0.x)
+//     2011-08-03 - added optional timeout parameter to read* methods to easily change from default
+//     2011-08-02 - added support for 16-bit registers
+//                - fixed incorrect Doxygen comments on some methods
+//                - added timeout value for read operations (thanks mem @ Arduino forums)
+//     2011-07-30 - changed read/write function structures to return success or byte counts
+//                - made all methods static for multi-device memory savings
+//     2011-07-28 - initial release
 
 /* ============================================
 I2Cdev device library code is placed under the MIT license
@@ -169,7 +170,11 @@ int8_t I2Cdev::readBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8
     int8_t count = 0;
 
     Wire.beginTransmission(devAddr);
+#if (I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO0_WIRE)
     Wire.send(regAddr);
+#elif (I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO1_WIRE)
+    Wire.write(&regAddr, 1);
+#endif
     Wire.endTransmission();
 
     Wire.beginTransmission(devAddr);
@@ -177,7 +182,11 @@ int8_t I2Cdev::readBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8
 
     uint32_t t1 = millis();
     for (; Wire.available() && (timeout == 0 || millis() - t1 < timeout); count++) {
+#if (I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO0_WIRE)
         data[count] = Wire.receive();
+#elif (I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO1_WIRE)
+        data[count] = Wire.read();
+#endif
         #ifdef I2CDEV_SERIAL_DEBUG
             Serial.print(data[count], HEX);
             Serial.print(" ");
@@ -218,7 +227,11 @@ int8_t I2Cdev::readWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint1
     int8_t count = 0;
 
     Wire.beginTransmission(devAddr);
+#if (I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO0_WIRE)
     Wire.send(regAddr);
+#elif (I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO1_WIRE)
+    Wire.write(&regAddr, 1);
+#endif
     Wire.endTransmission();
 
     Wire.beginTransmission(devAddr);
@@ -229,10 +242,18 @@ int8_t I2Cdev::readWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint1
     for (; Wire.available() && count < length && (timeout == 0 || millis() - t1 < timeout);) {
         if (msb) {
             // first byte is bits 15-8 (MSb=15)
+#if (I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO0_WIRE)
             data[count] = Wire.receive() << 8;
+#elif (I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO1_WIRE)
+            data[count] = Wire.read() << 8;
+#endif
         } else {
             // second byte is bits 7-0 (LSb=0)
+#if (I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO0_WIRE)
             data[count] |= Wire.receive();
+#elif (I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO1_WIRE)
+            data[count] |= Wire.read();
+#endif
             #ifdef I2CDEV_SERIAL_DEBUG
                 Serial.print(data[count], HEX);
                 Serial.print(" ");
@@ -381,10 +402,19 @@ bool I2Cdev::writeBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8_
         Serial.print(regAddr, HEX);
         Serial.print("...");
     #endif
+    #if (I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO1_WIRE)
+        uint8_t holder;
+    #endif
     Wire.beginTransmission(devAddr);
     for (uint8_t i = 0; i < length; i++) {
-        Wire.send(regAddr + i);
-        Wire.send(data[i]);
+        #if (I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO0_WIRE)
+            Wire.send(regAddr + i);
+            Wire.send(data[i]);
+        #elif (I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO1_WIRE)
+            holder = regAddr + i;
+            Wire.write(&holder, 1);
+            Wire.write(data + i, 1);
+        #endif
         #ifdef I2CDEV_SERIAL_DEBUG
             Serial.print(data[i], HEX);
             Serial.print(" ");
@@ -416,11 +446,23 @@ bool I2Cdev::writeWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint16
         Serial.print(regAddr, HEX);
         Serial.print("...");
     #endif
+    #if (I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO1_WIRE)
+        uint8_t holder;
+    #endif
     Wire.beginTransmission(devAddr);
     for (uint8_t i = 0; i < length * 2; i++) {
-        Wire.send(regAddr + i);
-        Wire.send((uint8_t)(data[i++] >> 8)); // send MSB
-        Wire.send((uint8_t)data[i]);          // send LSB
+        #if (I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO0_WIRE)
+            Wire.send(regAddr + i);
+            Wire.send((uint8_t)(data[i++] >> 8)); // send MSB
+            Wire.send((uint8_t)data[i]);          // send LSB
+        #elif (I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO1_WIRE)
+            holder = regAddr + i;
+            Wire.write(&holder, 1); // send address
+            holder = (uint8_t)(data[i++] >> 8);
+            Wire.write(&holder, 1); // send MSB
+            holder = (uint8_t)(data[i]);
+            Wire.write(&holder, 1); // send LSB
+        #endif
         #ifdef I2CDEV_SERIAL_DEBUG
             Serial.print(data[i], HEX);
             Serial.print(" ");
