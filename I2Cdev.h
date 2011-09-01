@@ -1,15 +1,16 @@
 // I2Cdev library collection - Main I2C device class header file
 // Abstracts bit and byte I2C R/W functions into a convenient class
-// 8/3/2011 by Jeff Rowberg <jeff@rowberg.net>
+// 8/31/2011 by Jeff Rowberg <jeff@rowberg.net>
 //
 // Changelog:
-// 2011-08-03 - added optional timeout parameter to read* methods to easily change from default
-// 2011-08-02 - added support for 16-bit registers
-//            - fixed incorrect Doxygen comments on some methods
-//            - added timeout value for read operations (thanks mem @ Arduino forums)
-// 2011-07-30 - changed read/write function structures to return success or byte counts
-//            - made all methods static for multi-device memory savings
-// 2011-07-28 - initial release
+//     2011-08-31 - added support for Arduino 1.0 Wire library (methods are different from 0.x)
+//     2011-08-03 - added optional timeout parameter to read* methods to easily change from default
+//     2011-08-02 - added support for 16-bit registers
+//                - fixed incorrect Doxygen comments on some methods
+//                - added timeout value for read operations (thanks mem @ Arduino forums)
+//     2011-07-30 - changed read/write function structures to return success or byte counts
+//                - made all methods static for multi-device memory savings
+//     2011-07-28 - initial release
 
 /* ============================================
 I2Cdev device library code is placed under the MIT license
@@ -41,13 +42,14 @@ THE SOFTWARE.
 // -----------------------------------------------------------------------------
 // I2C interface implementation setting
 // -----------------------------------------------------------------------------
-#define I2CDEV_IMPLEMENTATION       I2CDEV_ARDUINO_WIRE
+#define I2CDEV_IMPLEMENTATION       I2CDEV_ARDUINO1_WIRE
 
 // -----------------------------------------------------------------------------
 // I2C interface implementation options
 // -----------------------------------------------------------------------------
 #define I2CDEV_RAW                  1 // not implemented yet
-#define I2CDEV_ARDUINO_WIRE         2
+#define I2CDEV_ARDUINO0_WIRE        2 // Wire object from Arduino 0.x
+#define I2CDEV_ARDUINO1_WIRE        3 // Wire object from Arduino 1.x
 
 // -----------------------------------------------------------------------------
 // Arduino-style "Serial.print" debug constant (uncomment to enable)
@@ -57,9 +59,9 @@ THE SOFTWARE.
 #ifdef LUFA_ARDUINO_WRAPPER
     #include "ArduinoWrapper.h"
 #else
-    #if (I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE)
+    #if (I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO0_WIRE) || (I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO1_WIRE)
         #include <Wire.h>
-        #include "WProgram.h"
+        #include "Arduino.h"
     #endif
 #endif
 
