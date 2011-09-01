@@ -47,6 +47,15 @@ THE SOFTWARE.
 #define SSD1308_ADDRESS_2 0x3D
 #define SSD1308_DEFAULT_ADDRESS SSD1308_ADDRESS_1
 
+#define ROWS 64
+#define COLUMNS 128
+#define PAGES 8
+#define PAGE_WIDTH (ROWS / 8)
+#define FONT_WIDTH 8
+#define CHARS (COLUMNS / FONT_WIDTH)
+#define MAX_PAGE (PAGES - 1)
+#define MAX_COL (COLUMNS - 1)
+
 #define HORIZONTAL_ADDRESSING_MODE 0x00
 #define VERTICAL_ADDRESSING_MODE   0x01
 #define PAGE_ADDRESSING_MODE       0x02
@@ -121,6 +130,11 @@ class SSD1308
     void initialize();
     void clearDisplay();
     void fillDisplay(); // crosshatches    
+    
+    // x, y is position (x is row (i.e., page), y is character (0-15), starting at top-left)
+    // text will wrap around until it is done.
+    void writeString(uint8_t row, uint8_t col, uint8_t len, const char* txt);
+    
     //void setXY(uint8_t, uint8_t y);
 
     void setHorizontalAddressingMode();
@@ -223,6 +237,8 @@ class SSD1308
     void sendCommand(uint8_t command);
     void sendCommands(uint8_t len, uint8_t* buf);
 
+    void writeChar(char chr);
+    
     uint8_t m_devAddr; // contains the I2C address of the device
 };
 
