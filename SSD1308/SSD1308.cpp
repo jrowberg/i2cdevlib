@@ -83,8 +83,6 @@ void SSD1308::fillDisplay()
 
 void SSD1308::writeChar(char chr)
 {
-  Serial.print("printing character: ");
-  Serial.println(chr);
 //#ifdef SSD1308_USE_FONT
   const uint8_t char_index = chr - 0x20;
   for (uint8_t i = 0; i < 8; i++) {
@@ -94,41 +92,34 @@ void SSD1308::writeChar(char chr)
 //#endif
 }
 
-void SSD1308::writeString(uint8_t row, uint8_t col, uint8_t len, const char * text)
+void SSD1308::writeString(uint8_t row, uint8_t col, uint16_t len, const char * text)
 {
-  Serial.print("printing string: ");
-  Serial.println(text);
-  Serial.print("of length: ");
-  Serial.println(len, DEC);
-  Serial.print("to (row, col): ");
-  Serial.print(row, DEC);
-  Serial.print(", ");
-  Serial.println(col, DEC);
-  
-  const int8_t overflow = (col + len) - 16;
-  uint8_t index = 0;
+  uint16_t index = 0;
   setPageAddress(row, MAX_PAGE);
   const uint8_t col_addr = FONT_WIDTH*col;
   setColumnAddress(col_addr, MAX_COL);
-  Serial.print("set column address to: ");
-  Serial.println(col_addr, DEC);
-  
-  Serial.print("overflow: ");
-  Serial.println(overflow, DEC);
+
   while ((col+index) < CHARS && (index < len)) {
      // write first line, starting at given position
      writeChar(text[index++]);
   }
-  Serial.println("done with first line");
-  Serial.print("index: ");
-  Serial.println(index, DEC);
-  
-  // write remaining lines  
+
+  // write remaining lines
+  // write until the end of memory
+  // then wrap around again from the top.
   if (index + 1 < len) {
     setPageAddress(row + 1, MAX_PAGE);
     setColumnAddress(0, MAX_COL);
+    bool wrapEntireScreen = false;
     while (index + 1 < len) {
        writeChar(text[index++]);
+       // if we've written the last character space on the screen, 
+       // reset the page and column address so that it wraps around from the top again
+       if (!wrapEntireScreen && (row*CHARS + col + index) > 127) {
+         setPageAddress(0, MAX_PAGE);
+         setColumnAddress(0, MAX_COL);
+         wrapEntireScreen = true;
+       }
     }
   }
 }

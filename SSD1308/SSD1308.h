@@ -133,7 +133,7 @@ class SSD1308
     
     // x, y is position (x is row (i.e., page), y is character (0-15), starting at top-left)
     // text will wrap around until it is done.
-    void writeString(uint8_t row, uint8_t col, uint8_t len, const char* txt);
+    void writeString(uint8_t row, uint8_t col, uint16_t len, const char* txt);
     
     //void setXY(uint8_t, uint8_t y);
 
