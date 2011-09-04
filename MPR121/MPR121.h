@@ -8,6 +8,7 @@
 //
 // Changelog:
 // 2011-08-20 - initial release 
+// 2011-09-03 - add callback support
         
 /* ============================================
 I2Cdev device library code is placed under the MIT license
@@ -182,11 +183,19 @@ THE SOFTWARE.
 // these are suggested values from app note 3944
 #define TOUCH_THRESHOLD   0x0F
 #define RELEASE_THRESHOLD 0x0A
+#define NUM_CHANNELS      12
 
 class MPR121
 {
   public:
+    enum EventType {
+      TOUCHED    = 0,
+      RELEASED   = 1,
+      NUM_EVENTS = 2
+    };
   
+    typedef void (*CallbackPtrType)(void);
+    
     // constructor
     // takes a 7-b I2C address to use (0x5A by default, assumes addr pin grounded)
     MPR121(uint8_t address = MPR121_DEFAULT_ADDRESS);
@@ -202,8 +211,15 @@ class MPR121
     // when not given a channel, returns a bitfield of all touch channels.
     uint16_t getTouchStatus();
 
+    void setCallback(uint8_t channel, EventType event, CallbackPtrType callbackPtr);
+    
+    void serviceCallbacks();
+    
   private:
     uint8_t m_devAddr; // contains the I2C address of the device
+    CallbackPtrType m_callbackMap[NUM_CHANNELS][NUM_EVENTS];
+    bool m_prevTouchStatus[NUM_CHANNELS];
+    
 };
 
 #endif
