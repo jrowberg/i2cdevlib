@@ -42,7 +42,7 @@ THE SOFTWARE.
 // -----------------------------------------------------------------------------
 // I2C interface implementation setting
 // -----------------------------------------------------------------------------
-#define I2CDEV_IMPLEMENTATION       I2CDEV_ARDUINO1_WIRE
+#define I2CDEV_IMPLEMENTATION       I2CDEV_ARDUINO0_WIRE
 
 // -----------------------------------------------------------------------------
 // I2C interface implementation options
@@ -59,7 +59,10 @@ THE SOFTWARE.
 #ifdef LUFA_ARDUINO_WRAPPER
     #include "ArduinoWrapper.h"
 #else
-    #if (I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO0_WIRE) || (I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO1_WIRE)
+    #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO0_WIRE
+        #include <Wire.h>
+        #include "WProgram.h"
+    #elif I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO1_WIRE
         #include <Wire.h>
         #include "Arduino.h"
     #endif
