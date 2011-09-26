@@ -1,7 +1,11 @@
 // I2Cdev library collection - HMC5883L I2C device class header file
-// Based on Honeywell HMC5883L datasheet, 10/2010 (Form # 900405 Rev B)
-// 7/31/2011 by Jeff Rowberg <jeff@rowberg.net>
+// Based on Honeywell HMC5883L datasheet, 10/2010 (Form #900405 Rev B)
+// 8/22/2011 by Jeff Rowberg <jeff@rowberg.net>
 // Updates should (hopefully) always be available at https://github.com/jrowberg/i2cdevlib
+//
+// Changelog:
+//     2011-08-22 - small Doxygen comment fixes
+//     2011-07-31 - initial release
 
 /* ============================================
 I2Cdev device library code is placed under the MIT license

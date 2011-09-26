@@ -2,6 +2,9 @@
 // Based on Texas Instruments TCA6424A datasheet, 9/2010 (document SCPS193B)
 // 7/31/2011 by Jeff Rowberg <jeff@rowberg.net>
 // Updates should (hopefully) always be available at https://github.com/jrowberg/i2cdevlib
+//
+// Changelog:
+//     2011-07-31 - initial release
 
 /* ============================================
 I2Cdev device library code is placed under the MIT license

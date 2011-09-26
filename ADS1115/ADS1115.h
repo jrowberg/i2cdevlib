@@ -3,6 +3,9 @@
 // Note that the ADS1115 uses 16-bit registers, not 8-bit registers.
 // 8/2/2011 by Jeff Rowberg <jeff@rowberg.net>
 // Updates should (hopefully) always be available at https://github.com/jrowberg/i2cdevlib
+//
+// Changelog:
+//     2011-08-02 - initial release
 
 /* ============================================
 I2Cdev device library code is placed under the MIT license

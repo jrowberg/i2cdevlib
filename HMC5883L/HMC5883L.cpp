@@ -1,7 +1,11 @@
 // I2Cdev library collection - HMC5883L I2C device class
-// Based on Honeywell HMC5883L datasheet, 10/2010 (Form # 900405 Rev B)
-// 7/31/2011 by Jeff Rowberg <jeff@rowberg.net>
+// Based on Honeywell HMC5883L datasheet, 10/2010 (Form #900405 Rev B)
+// 8/22/2011 by Jeff Rowberg <jeff@rowberg.net>
 // Updates should (hopefully) always be available at https://github.com/jrowberg/i2cdevlib
+//
+// Changelog:
+//     2011-08-22 - small Doxygen comment fixes
+//     2011-07-31 - initial release
 
 /* ============================================
 I2Cdev device library code is placed under the MIT license
@@ -163,7 +167,7 @@ void HMC5883L::setMeasurementBias(uint8_t bias) {
 // CONFIG_B register
 
 /** Get magnetic field gain value.
- * The table below shows nominal gain settings. Use the �Gain� column to convert
+ * The table below shows nominal gain settings. Use the "Gain" column to convert
  * counts to Gauss. Choose a lower gain value (higher GN#) when total field
  * strength causes overflow in one of the data output registers (saturation).
  * The data output range for all settings is 0xF800-0x07FF (-2048 - 2047).
@@ -173,11 +177,11 @@ void HMC5883L::setMeasurementBias(uint8_t bias) {
  * 0     | +/- 0.88 Ga | 1370
  * 1     | +/- 1.3 Ga  | 1090 (Default)
  * 2     | +/- 1.9 Ga  | 820
- * 3     | +/- 2.5     | 660
- * 4     | +/- 4.0     | 440
- * 5     | +/- 4.7     | 390
- * 6     | +/- 5.6     | 330
- * 7     | +/- 8.1     | 230
+ * 3     | +/- 2.5 Ga  | 660
+ * 4     | +/- 4.0 Ga  | 440
+ * 5     | +/- 4.7 Ga  | 390
+ * 6     | +/- 5.6 Ga  | 330
+ * 7     | +/- 8.1 Ga  | 230
  *
  * @return Current magnetic field gain value
  * @see HMC5883L_GAIN_1090
