@@ -147,7 +147,9 @@ void MPU6050::setRate(uint8_t rate) {
  * a sensor data register determined by the value of EXT_SYNC_SET according to
  * the following table.
  *
+ * <pre>
  * EXT_SYNC_SET | FSYNC Bit Location
+ * -------------+-------------------
  * 0            | Input disabled
  * 1            | TEMP_OUT_L[0]
  * 2            | GYRO_XOUT_L[0]
@@ -156,6 +158,7 @@ void MPU6050::setRate(uint8_t rate) {
  * 5            | ACCEL_XOUT_L[0]
  * 6            | ACCEL_YOUT_L[0]
  * 7            | ACCEL_ZOUT_L[0]
+ * </pre>
  *
  * @return FSYNC configuration value
  */
@@ -180,6 +183,7 @@ void MPU6050::setExternalFrameSync(uint8_t sync) {
  * Rate greater than 1kHz, the same accelerometer sample may be output to the
  * FIFO, DMP, and sensor registers more than once.
  *
+ * <pre>
  *          |   ACCELEROMETER    |           GYROSCOPE
  * DLPF_CFG | Bandwidth | Delay  | Bandwidth | Delay  | Sample Rate
  * ---------+-----------+--------+-----------+--------+-------------
@@ -191,6 +195,7 @@ void MPU6050::setExternalFrameSync(uint8_t sync) {
  * 5        | 10Hz      | 13.8ms | 10Hz      | 13.4ms | 1kHz
  * 6        | 5Hz       | 19.0ms | 5Hz       | 18.6ms | 1kHz
  * 7        |   -- Reserved --   |   -- Reserved --   | Reserved
+ * </pre>
  *
  * @return DLFP configuration
  * @see MPU6050_RA_CONFIG
@@ -219,10 +224,12 @@ void MPU6050::setDLPFMode(uint8_t mode) {
  * The FS_SEL parameter allows setting the full-scale range of the gyro sensors,
  * as described in the table below.
  *
+ * <pre>
  * 0 = +/- 250 degrees/sec
  * 1 = +/- 500 degrees/sec
  * 2 = +/- 1000 degrees/sec
  * 3 = +/- 2000 degrees/sec
+ * </pre>
  *
  * @return Current full-scale gyroscope range setting
  * @see MPU6050_GYRO_FS_250
@@ -297,10 +304,12 @@ void MPU6050::setAccelZSelfTest(bool enabled) {
  * The FS_SEL parameter allows setting the full-scale range of the accelerometer
  * sensors, as described in the table below.
  *
+ * <pre>
  * 0 = +/- 2g
  * 1 = +/- 4g
  * 2 = +/- 8g
  * 3 = +/- 16g
+ * </pre>
  *
  * @return Current full-scale accelerometer range setting
  * @see MPU6050_ACCEL_FS_2
@@ -327,6 +336,7 @@ void MPU6050::setFullScaleAccelRange(uint8_t range) {
  *
  * The high pass filter has three modes:
  *
+ * <pre>
  *    Reset: The filter output settles to zero within one sample. This
  *           effectively disables the high pass filter. This mode may be toggled
  *           to quickly settle the filter.
@@ -336,7 +346,9 @@ void MPU6050::setFullScaleAccelRange(uint8_t range) {
  *    Hold:  When triggered, the filter holds the present sample. The filter
  *           output will be the difference between the input sample and the held
  *           sample.
+ * </pre>
  *
+ * <pre>
  * ACCEL_HPF | Filter Mode | Cut-off Frequency
  * ----------+-------------+------------------
  * 0         | Reset       | None
@@ -345,6 +357,7 @@ void MPU6050::setFullScaleAccelRange(uint8_t range) {
  * 3         | On          | 1.25Hz
  * 4         | On          | 0.63Hz
  * 7         | Hold        | None
+ * </pre>
  *
  * @return Current high-pass filter configuration
  * @see MPU6050_DHPF_RESET
@@ -806,7 +819,9 @@ void MPU6050::setSlaveReadWriteTransitionEnabled(bool enabled) {
  * MPU-60X0 internal 8MHz clock. It sets the I2C master clock speed according to
  * the following table:
  *
+ * <pre>
  * I2C_MST_CLK | I2C Master Clock Speed | 8MHz Clock Divider
+ * ------------+------------------------+-------------------
  * 0           | 348kHz                 | 23
  * 1           | 333kHz                 | 24
  * 2           | 320kHz                 | 25
@@ -823,6 +838,7 @@ void MPU6050::setSlaveReadWriteTransitionEnabled(bool enabled) {
  * 13          | 400kHz                 | 20
  * 14          | 381kHz                 | 21
  * 15          | 364kHz                 | 22
+ * </pre>
  *
  * @return Current I2C master clock speed
  * @see MPU6050_RA_I2C_MST_CTRL
@@ -1713,12 +1729,14 @@ void MPU6050::getMotion6(int16_t* ax, int16_t* ay, int16_t* az, int16_t* gx, int
  * (Register 28). For each full scale setting, the accelerometers' sensitivity
  * per LSB in ACCEL_xOUT is shown in the table below:
  *
+ * <pre>
  * AFS_SEL | Full Scale Range | LSB Sensitivity
  * --------+------------------+----------------
  * 0       | +/- 2g           | 8192 LSB/mg
  * 1       | +/- 4g           | 4096 LSB/mg
  * 2       | +/- 8g           | 2048 LSB/mg
  * 3       | +/- 16g          | 1024 LSB/mg
+ * </pre>
  *
  * @param x 16-bit signed integer container for X-axis acceleration
  * @param y 16-bit signed integer container for Y-axis acceleration
@@ -1789,12 +1807,14 @@ int16_t MPU6050::getTemperature() {
  * (Register 27). For each full scale setting, the gyroscopes' sensitivity per
  * LSB in GYRO_xOUT is shown in the table below:
  *
+ * <pre>
  * FS_SEL | Full Scale Range   | LSB Sensitivity
  * -------+--------------------+----------------
  * 0      | +/- 250 degrees/s  | 131 LSB/deg/s
  * 1      | +/- 500 degrees/s  | 65.5 LSB/deg/s
  * 2      | +/- 1000 degrees/s | 32.8 LSB/deg/s
  * 3      | +/- 2000 degrees/s | 16.4 LSB/deg/s
+ * </pre>
  *
  * @param x 16-bit signed integer container for X-axis rotation
  * @param y 16-bit signed integer container for Y-axis rotation
@@ -2044,10 +2064,10 @@ void MPU6050::setExternalShadowDelayEnabled(bool enabled) {
  * slave device is reduced. When a slave's access rate is decreased relative to
  * the Sample Rate, the slave is accessed every:
  *
- *     1 / (1 + I2C_MST_DLY)
+ *     1 / (1 + I2C_MST_DLY) Samples
  *
- * samples. This base Sample Rate in turn is determined by SMPLRT_DIV (register
- * 25) and DLPF_CFG (register 26).
+ * This base Sample Rate in turn is determined by SMPLRT_DIV (register  * 25)
+ * and DLPF_CFG (register 26).
  *
  * For further information regarding I2C_MST_DLY, please refer to register 52.
  * For further information regarding the Sample Rate, please refer to register 25.
@@ -2141,12 +2161,14 @@ void MPU6050::setAccelerometerPowerOnDelay(uint8_t delay) {
  * configuring FF_COUNT. The decrement rate can be set according to the
  * following table:
  *
+ * <pre>
  * FF_COUNT | Counter Decrement
  * ---------+------------------
  * 0        | Reset
  * 1        | 1
  * 2        | 2
  * 3        | 4
+ * </pre>
  *
  * When FF_COUNT is configured to 0 (reset), any non-qualifying sample will
  * reset the counter to 0. For further information on Free Fall detection,
@@ -2178,12 +2200,14 @@ void MPU6050::setFreefallDetectionCounterDecrement(uint8_t decrement) {
  * configuring MOT_COUNT. The decrement rate can be set according to the
  * following table:
  *
+ * <pre>
  * MOT_COUNT | Counter Decrement
  * ----------+------------------
  * 0         | Reset
  * 1         | 1
  * 2         | 2
  * 3         | 4
+ * </pre>
  *
  * When MOT_COUNT is configured to 0 (reset), any non-qualifying sample will
  * reset the counter to 0. For further information on Motion detection,
@@ -2397,6 +2421,7 @@ uint8_t MPU6050::getClockSource() {
  * the gyroscopes (or an external clock source) as the clock reference for
  * improved stability. The clock source can be selected according to the following table:
  *
+ * <pre>
  * CLK_SEL | Clock Source
  * --------+--------------------------------------
  * 0       | Internal oscillator
@@ -2407,6 +2432,7 @@ uint8_t MPU6050::getClockSource() {
  * 5       | PLL with external 19.2MHz reference
  * 6       | Reserved
  * 7       | Stops the clock and keeps the timing generator in reset
+ * </pre>
  *
  * @param source New clock source setting
  * @see getClockSource()
@@ -2428,12 +2454,14 @@ void MPU6050::setClockSource(uint8_t source) {
  * measurement. The frequency of wake-ups can be configured with LP_WAKE_CTRL
  * as shown below:
  *
+ * <pre>
  * LP_WAKE_CTRL | Wake-up Frequency
  * -------------+------------------
  * 0            | 1.25 Hz
  * 1            | 2.5 Hz
  * 2            | 5 Hz
  * 3            | 10 Hz
+ * <pre>
  *
  * For further information regarding the MPU-60X0's power modes, please refer to
  * Register 107.
