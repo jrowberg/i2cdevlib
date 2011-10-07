@@ -1,6 +1,6 @@
 // I2Cdev library collection - MPU6050 I2C device class
 // Based on InvenSense MPU-6050 register map document rev. 2.0, 5/19/2011 (RM-MPU-6000A-00)
-// 8/24/2011 by Jeff Rowberg <jeff@rowberg.net>
+// 10/3/2011 by Jeff Rowberg <jeff@rowberg.net>
 // Updates should (hopefully) always be available at https://github.com/jrowberg/i2cdevlib
 //
 // Changelog:
@@ -43,7 +43,24 @@ THE SOFTWARE.
 #define MPU6050_ADDRESS_AD0_HIGH    0x69 // address pin high (VCC)
 #define MPU6050_DEFAULT_ADDRESS     MPU6050_ADDRESS_AD0_LOW
 
-#define MPU6050_RA_AUX_VDDIO        0x01
+#define MPU6050_RA_XG_OFFS_TC       0x00 //[7] PWR_MODE	[6:1] XG_OFFS_TC	[0] OTP_BNK_VLD
+#define MPU6050_RA_YG_OFFS_TC       0x01 //[7] PWR_MODE	[6:1] XG_OFFS_TC	[0] OTP_BNK_VLD
+#define MPU6050_RA_ZG_OFFS_TC       0x02 //[7] PWR_MODE	[6:1] XG_OFFS_TC	[0] OTP_BNK_VLD
+#define MPU6050_RA_X_FINE_GAIN      0x03 //[7:0] X_FINE_GAIN
+#define MPU6050_RA_Y_FINE_GAIN      0x04 //[7:0] Y_FINE_GAIN
+#define MPU6050_RA_Z_FINE_GAIN      0x05 //[7:0] Z_FINE_GAIN
+#define MPU6050_RA_XA_OFFS_H        0x06 //[15:0] XA_OFFS
+#define MPU6050_RA_XA_OFFS_L_TC     0x07
+#define MPU6050_RA_YA_OFFS_H        0x08 //[15:0] YA_OFFS
+#define MPU6050_RA_YA_OFFS_L_TC     0x09
+#define MPU6050_RA_ZA_OFFS_H        0x0A //[15:0] ZA_OFFS
+#define MPU6050_RA_ZA_OFFS_L_TC     0x0B
+#define MPU6050_RA_XG_OFFS_USRH     0x13 //[15:0] XG_OFFS_USR
+#define MPU6050_RA_XG_OFFS_USRL     0x14
+#define MPU6050_RA_YG_OFFS_USRH     0x15 //[15:0] YG_OFFS_USR
+#define MPU6050_RA_YG_OFFS_USRL     0x16
+#define MPU6050_RA_ZG_OFFS_USRH     0x17 //[15:0] ZG_OFFS_USR
+#define MPU6050_RA_ZG_OFFS_USRL     0x18
 #define MPU6050_RA_SMPLRT_DIV       0x19
 #define MPU6050_RA_CONFIG           0x1A
 #define MPU6050_RA_GYRO_CONFIG      0x1B
@@ -131,7 +148,10 @@ THE SOFTWARE.
 #define MPU6050_RA_FIFO_R_W         0x74
 #define MPU6050_RA_WHO_AM_I         0x75
 
-#define MPU6050_VDDIO_BIT           7
+#define MPU6050_TC_PWR_MODE_BIT     7
+#define MPU6050_TC_OFFSET_BIT       6
+#define MPU6050_TC_OFFSET_LENGTH    6
+#define MPU6050_TC_OTP_BNK_VLD_BIT  0
 
 #define MPU6050_VDDIO_LEVEL_VLOGIC  0
 #define MPU6050_VDDIO_LEVEL_VDD     1
@@ -317,8 +337,8 @@ THE SOFTWARE.
 #define MPU6050_PWR1_SLEEP_BIT          6
 #define MPU6050_PWR1_CYCLE_BIT          5
 #define MPU6050_PWR1_TEMP_DIS_BIT       3
-#define MPU6050_PWR1_CLK_SEL_BIT        2
-#define MPU6050_PWR1_CLK_SEL_LENGTH     3
+#define MPU6050_PWR1_CLKSEL_BIT         2
+#define MPU6050_PWR1_CLKSEL_LENGTH      3
 
 #define MPU6050_CLOCK_INTERNAL          0x00
 #define MPU6050_CLOCK_PLL_XGYRO         0x01
@@ -351,24 +371,24 @@ class MPU6050 {
     public:
         MPU6050();
         MPU6050(uint8_t address);
-        
+
         void initialize();
         bool testConnection();
-        
+
         // AUX_VDDIO register
         uint8_t getAuxVDDIOLevel();
         void setAuxVDDIOLevel(uint8_t level);
-        
+
         // SMPLRT_DIV register
         uint8_t getRate();
         void setRate(uint8_t rate);
-        
+
         // CONFIG register
         uint8_t getExternalFrameSync();
         void setExternalFrameSync(uint8_t sync);
-        uint8_t getDLPFBandwidth();
-        void setDLPFBandwidth(uint8_t bandwidth);
-        
+        uint8_t getDLPFMode();
+        void setDLPFMode(uint8_t bandwidth);
+
         // GYRO_CONFIG register
         uint8_t getFullScaleGyroRange();
         void setFullScaleGyroRange(uint8_t range);
@@ -382,21 +402,21 @@ class MPU6050 {
         void setAccelZSelfTest(bool enabled);
         uint8_t getFullScaleAccelRange();
         void setFullScaleAccelRange(uint8_t range);
-        uint8_t getDHPFBandwidth();
-        void setDHPFBandwidth(uint8_t bandwidth);
+        uint8_t getDHPFMode();
+        void setDHPFMode(uint8_t mode);
 
         // FF_THR register
-        uint8_t getFreefallAccelerationThreshold();
-        void setFreefallAccelerationThreshold(uint8_t threshold);
-        
+        uint8_t getFreefallDetectionThreshold();
+        void setFreefallDetectionThreshold(uint8_t threshold);
+
         // FF_DUR register
-        uint8_t getFreefallDuration();
-        void setFreefallDuration(uint8_t duration);
+        uint8_t getFreefallDetectionDuration();
+        void setFreefallDetectionDuration(uint8_t duration);
 
         // MOT_THR register
         uint8_t getMotionDetectionThreshold();
         void setMotionDetectionThreshold(uint8_t threshold);
-        
+
         // MOT_DUR register
         uint8_t getMotionDetectionDuration();
         void setMotionDetectionDuration(uint8_t duration);
@@ -404,7 +424,7 @@ class MPU6050 {
         // ZRMOT_THR register
         uint8_t getZeroMotionDetectionThreshold();
         void setZeroMotionDetectionThreshold(uint8_t threshold);
-        
+
         // ZRMOT_DUR register
         uint8_t getZeroMotionDetectionDuration();
         void setZeroMotionDetectionDuration(uint8_t duration);
@@ -413,7 +433,7 @@ class MPU6050 {
         bool getTempFIFOEnabled();
         void setTempFIFOEnabled(bool enabled);
         bool getXGyroFIFOEnabled();
-        void setXGryoFIFOEnabled(bool enabled);
+        void setXGyroFIFOEnabled(bool enabled);
         bool getYGyroFIFOEnabled();
         void setYGyroFIFOEnabled(bool enabled);
         bool getZGyroFIFOEnabled();
@@ -426,7 +446,7 @@ class MPU6050 {
         void setSlave1FIFOEnabled(bool enabled);
         bool getSlave0FIFOEnabled();
         void setSlave0FIFOEnabled(bool enabled);
-        
+
         // I2C_MST_CTRL register
         bool getMultiMasterEnabled();
         void setMultiMasterEnabled(bool enabled);
@@ -438,7 +458,7 @@ class MPU6050 {
         void setSlaveReadWriteTransitionEnabled(bool enabled);
         uint8_t getMasterClockSpeed();
         void setMasterClockSpeed(uint8_t speed);
-        
+
         // I2C_SLV* registers (Slave 0-3)
         uint8_t getSlaveAddress(uint8_t num);
         void setSlaveAddress(uint8_t num, uint8_t address);
@@ -450,8 +470,8 @@ class MPU6050 {
         void setSlaveWordByteSwap(uint8_t num, bool enabled);
         bool getSlaveWriteMode(uint8_t num);
         void setSlaveWriteMode(uint8_t num, bool mode);
-        bool getSlaveGroupIntoWords(uint8_t num);
-        void setSlaveGroupIntoWords(uint8_t num, bool enabled);
+        bool getSlaveWordGroupOffset(uint8_t num);
+        void setSlaveWordGroupOffset(uint8_t num, bool enabled);
         uint8_t getSlaveDataLength(uint8_t num);
         void setSlaveDataLength(uint8_t num, uint8_t length);
 
@@ -470,7 +490,7 @@ class MPU6050 {
         uint8_t getSlave4MasterDelay();
         void setSlave4MasterDelay(uint8_t delay);
         uint8_t getSlate4InputByte();
-        
+
         // I2C_MST_STATUS register
         bool getPassthroughStatus();
         bool getSlave4IsDone();
@@ -480,7 +500,7 @@ class MPU6050 {
         bool getSlave2Nack();
         bool getSlave1Nack();
         bool getSlave0Nack();
-        
+
         // INT_PIN_CFG register
         bool getInterruptMode();
         void setInterruptMode(bool mode);
@@ -537,12 +557,12 @@ class MPU6050 {
         int16_t getRotationX();
         int16_t getRotationY();
         int16_t getRotationZ();
-        
+
         // EXT_SENS_DATA_* registers
         uint8_t getExternalSensorByte(int position);
         uint16_t getExternalSensorWord(int position);
         uint32_t getExternalSensorDWord(int position);
-        
+
         // MOT_DETECT_STATUS register
         bool getXNegMotionDetected();
         bool getXPosMotionDetected();
@@ -554,21 +574,21 @@ class MPU6050 {
 
         // I2C_SLV*_DO register
         void setSlaveOutputByte(uint8_t num, uint8_t data);
-        
+
         // I2C_MST_DELAY_CTRL register
         bool getExternalShadowDelayEnabled();
         void setExternalShadowDelayEnabled(bool enabled);
         bool getSlaveDelayEnabled(uint8_t num);
         void setSlaveDelayEnabled(uint8_t num, bool enabled);
-        
+
         // SIGNAL_PATH_RESET register
         void resetGyroscopePath();
         void resetAccelerometerPath();
         void resetTemperaturePath();
 
         // MOT_DETECT_CTRL register
-        uint8_t getAcceleratorPowerOnDelay();
-        void setAcceleratorPowerOnDelay(uint8_t delay);
+        uint8_t getAccelerometerPowerOnDelay();
+        void setAccelerometerPowerOnDelay(uint8_t delay);
         uint8_t getFreefallDetectionCounterDecrement();
         void setFreefallDetectionCounterDecrement(uint8_t decrement);
         uint8_t getMotionDetectionCounterDecrement();
@@ -596,6 +616,8 @@ class MPU6050 {
         void setClockSource(uint8_t source);
 
         // PWR_MGMT_2 register
+        uint8_t getWakeFrequency();
+        void setWakeFrequency(uint8_t frequency);
         bool getStandbyXAccelEnabled();
         void setStandbyXAccelEnabled(bool enabled);
         bool getStandbyYAccelEnabled();
@@ -608,10 +630,10 @@ class MPU6050 {
         void setStandbyYGyroEnabled(bool enabled);
         bool getStandbyZGyroEnabled();
         void setStandbyZGyroEnabled(bool enabled);
-        
+
         // FIFO_COUNT_* registers
         uint16_t getFIFOCount();
-        
+
         // FIFO_R_W register
         uint8_t getFIFOByte();
         void setFIFOByte(uint8_t data);
