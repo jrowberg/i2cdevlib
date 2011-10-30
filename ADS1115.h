@@ -6,6 +6,7 @@
 //
 // Changelog:
 //     2011-08-02 - initial release
+//     2011-10-29 - added getDifferentialx() methods, F. Farzanegan
 
 /* ============================================
 I2Cdev device library code is placed under the MIT license
