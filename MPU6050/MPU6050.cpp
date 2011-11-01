@@ -2674,3 +2674,352 @@ uint8_t MPU6050::getDeviceID() {
 void MPU6050::setDeviceID(uint8_t id) {
     I2Cdev::writeBits(devAddr, MPU6050_RA_WHO_AM_I, MPU6050_WHO_AM_I_BIT, MPU6050_WHO_AM_I_LENGTH, id);
 }
+
+// ======== UNDOCUMENTED/DMP REGISTERS/METHODS ========
+
+// XG_OFFS_TC register
+
+int8_t MPU6050::getXGyroOffset() {
+    I2Cdev::readBits(devAddr, MPU6050_RA_XG_OFFS_TC, MPU6050_TC_OFFSET_BIT, MPU6050_TC_OFFSET_LENGTH, buffer);
+    return buffer[0];
+}
+void MPU6050::setXGyroOffset(int8_t offset) {
+    I2Cdev::writeBits(devAddr, MPU6050_RA_XG_OFFS_TC, MPU6050_TC_OFFSET_BIT, MPU6050_TC_OFFSET_LENGTH, offset);
+}
+
+// YG_OFFS_TC register
+
+int8_t MPU6050::getYGyroOffset() {
+    I2Cdev::readBits(devAddr, MPU6050_RA_YG_OFFS_TC, MPU6050_TC_OFFSET_BIT, MPU6050_TC_OFFSET_LENGTH, buffer);
+    return buffer[0];
+}
+void MPU6050::setYGyroOffset(int8_t offset) {
+    I2Cdev::writeBits(devAddr, MPU6050_RA_YG_OFFS_TC, MPU6050_TC_OFFSET_BIT, MPU6050_TC_OFFSET_LENGTH, offset);
+}
+
+// ZG_OFFS_TC register
+
+int8_t MPU6050::getZGyroOffset() {
+    I2Cdev::readBits(devAddr, MPU6050_RA_ZG_OFFS_TC, MPU6050_TC_OFFSET_BIT, MPU6050_TC_OFFSET_LENGTH, buffer);
+    return buffer[0];
+}
+void MPU6050::setZGyroOffset(int8_t offset) {
+    I2Cdev::writeBits(devAddr, MPU6050_RA_ZG_OFFS_TC, MPU6050_TC_OFFSET_BIT, MPU6050_TC_OFFSET_LENGTH, offset);
+}
+
+// X_FINE_GAIN register
+
+int8_t MPU6050::getXFineGain() {
+    I2Cdev::readByte(devAddr, MPU6050_RA_X_FINE_GAIN, buffer);
+    return buffer[0];
+}
+void MPU6050::setXFineGain(int8_t gain) {
+    I2Cdev::writeByte(devAddr, MPU6050_RA_X_FINE_GAIN, gain);
+}
+
+// Y_FINE_GAIN register
+
+int8_t MPU6050::getYFineGain() {
+    I2Cdev::readByte(devAddr, MPU6050_RA_Y_FINE_GAIN, buffer);
+    return buffer[0];
+}
+void MPU6050::setYFineGain(int8_t gain) {
+    I2Cdev::writeByte(devAddr, MPU6050_RA_Y_FINE_GAIN, gain);
+}
+
+// Z_FINE_GAIN register
+
+int8_t MPU6050::getZFineGain() {
+    I2Cdev::readByte(devAddr, MPU6050_RA_Z_FINE_GAIN, buffer);
+    return buffer[0];
+}
+void MPU6050::setZFineGain(int8_t gain) {
+    I2Cdev::writeByte(devAddr, MPU6050_RA_Z_FINE_GAIN, gain);
+}
+
+// XA_OFFS_* registers
+
+int16_t MPU6050::getXAccelOffset() {
+    I2Cdev::readBytes(devAddr, MPU6050_RA_XA_OFFS_H, 2, buffer);
+    return (((int16_t)buffer[0]) << 8) | buffer[1];
+}
+void MPU6050::setXAccelOffset(int16_t offset) {
+    I2Cdev::writeWord(devAddr, MPU6050_RA_XA_OFFS_H, offset);
+}
+
+// YA_OFFS_* register
+
+int16_t MPU6050::getYAccelOffset() {
+    I2Cdev::readBytes(devAddr, MPU6050_RA_YA_OFFS_H, 2, buffer);
+    return (((int16_t)buffer[0]) << 8) | buffer[1];
+}
+void MPU6050::setYAccelOffset(int16_t offset) {
+    I2Cdev::writeWord(devAddr, MPU6050_RA_YA_OFFS_H, offset);
+}
+
+// ZA_OFFS_* register
+
+int16_t MPU6050::getZAccelOffset() {
+    I2Cdev::readBytes(devAddr, MPU6050_RA_ZA_OFFS_H, 2, buffer);
+    return (((int16_t)buffer[0]) << 8) | buffer[1];
+}
+void MPU6050::setZAccelOffset(int16_t offset) {
+    I2Cdev::writeWord(devAddr, MPU6050_RA_ZA_OFFS_H, offset);
+}
+
+// XG_OFFS_USR* registers
+
+int16_t MPU6050::getXGyroOffsetUser() {
+    I2Cdev::readBytes(devAddr, MPU6050_RA_XG_OFFS_USRH, 2, buffer);
+    return (((int16_t)buffer[0]) << 8) | buffer[1];
+}
+void MPU6050::setXGyroOffsetUser(int16_t offset) {
+    I2Cdev::writeWord(devAddr, MPU6050_RA_XG_OFFS_USRH, offset);
+}
+
+// YG_OFFS_USR* register
+
+int16_t MPU6050::getYGyroOffsetUser() {
+    I2Cdev::readBytes(devAddr, MPU6050_RA_YG_OFFS_USRH, 2, buffer);
+    return (((int16_t)buffer[0]) << 8) | buffer[1];
+}
+void MPU6050::setYGyroOffsetUser(int16_t offset) {
+    I2Cdev::writeWord(devAddr, MPU6050_RA_YG_OFFS_USRH, offset);
+}
+
+// ZG_OFFS_USR* register
+
+int16_t MPU6050::getZGyroOffsetUser() {
+    I2Cdev::readBytes(devAddr, MPU6050_RA_ZG_OFFS_USRH, 2, buffer);
+    return (((int16_t)buffer[0]) << 8) | buffer[1];
+}
+void MPU6050::setZGyroOffsetUser(int16_t offset) {
+    I2Cdev::writeWord(devAddr, MPU6050_RA_ZG_OFFS_USRH, offset);
+}
+
+// INT_ENABLE register (DMP functions)
+
+bool MPU6050::getIntPLLReadyEnabled() {
+    I2Cdev::readBit(devAddr, MPU6050_RA_INT_ENABLE, MPU6050_INTERRUPT_PLL_RDY_INT_BIT, buffer);
+    return buffer[0];
+}
+void MPU6050::setIntPLLReadyEnabled(bool enabled) {
+    I2Cdev::writeBit(devAddr, MPU6050_RA_INT_ENABLE, MPU6050_INTERRUPT_PLL_RDY_INT_BIT, enabled);
+}
+bool MPU6050::getIntDMPEnabled() {
+    I2Cdev::readBit(devAddr, MPU6050_RA_INT_ENABLE, MPU6050_INTERRUPT_DMP_INT_BIT, buffer);
+    return buffer[0];
+}
+void MPU6050::setIntDMPEnabled(bool enabled) {
+    I2Cdev::writeBit(devAddr, MPU6050_RA_INT_ENABLE, MPU6050_INTERRUPT_DMP_INT_BIT, enabled);
+}
+
+// DMP_INT_STATUS
+
+bool MPU6050::getDMPInt5Status() {
+    I2Cdev::readBit(devAddr, MPU6050_RA_DMP_INT_STATUS, MPU6050_DMPINT_5_BIT, buffer);
+    return buffer[0];
+}
+bool MPU6050::getDMPInt4Status() {
+    I2Cdev::readBit(devAddr, MPU6050_RA_DMP_INT_STATUS, MPU6050_DMPINT_4_BIT, buffer);
+    return buffer[0];
+}
+bool MPU6050::getDMPInt3Status() {
+    I2Cdev::readBit(devAddr, MPU6050_RA_DMP_INT_STATUS, MPU6050_DMPINT_3_BIT, buffer);
+    return buffer[0];
+}
+bool MPU6050::getDMPInt2Status() {
+    I2Cdev::readBit(devAddr, MPU6050_RA_DMP_INT_STATUS, MPU6050_DMPINT_2_BIT, buffer);
+    return buffer[0];
+}
+bool MPU6050::getDMPInt1Status() {
+    I2Cdev::readBit(devAddr, MPU6050_RA_DMP_INT_STATUS, MPU6050_DMPINT_1_BIT, buffer);
+    return buffer[0];
+}
+bool MPU6050::getDMPInt0Status() {
+    I2Cdev::readBit(devAddr, MPU6050_RA_DMP_INT_STATUS, MPU6050_DMPINT_0_BIT, buffer);
+    return buffer[0];
+}
+
+// INT_STATUS register (DMP functions)
+
+bool MPU6050::getIntPLLReadyStatus() {
+    I2Cdev::readBit(devAddr, MPU6050_RA_INT_STATUS, MPU6050_INTERRUPT_PLL_RDY_INT_BIT, buffer);
+    return buffer[0];
+}
+bool MPU6050::getIntDMPStatus() {
+    I2Cdev::readBit(devAddr, MPU6050_RA_INT_STATUS, MPU6050_INTERRUPT_DMP_INT_BIT, buffer);
+    return buffer[0];
+}
+
+// USER_CTRL register (DMP functions)
+
+bool MPU6050::getDMPEnabled() {
+    I2Cdev::readBit(devAddr, MPU6050_RA_USER_CTRL, MPU6050_USERCTRL_DMP_EN_BIT, buffer);
+    return buffer[0];
+}
+void MPU6050::setDMPEnabled(bool enabled) {
+    I2Cdev::writeBit(devAddr, MPU6050_RA_USER_CTRL, MPU6050_USERCTRL_DMP_EN_BIT, enabled);
+}
+void MPU6050::resetDMP() {
+    I2Cdev::writeBit(devAddr, MPU6050_RA_USER_CTRL, MPU6050_USERCTRL_DMP_RESET_BIT, true);
+}
+
+// BANK_SEL register
+
+void MPU6050::setMemoryBank(uint8_t bank, bool prefetchEnabled, bool userBank) {
+    bank &= 0x1F;
+    if (userBank) bank |= 0x20;
+    if (prefetchEnabled) bank |= 0x40;
+    I2Cdev::writeByte(devAddr, MPU6050_RA_BANK_SEL, bank);
+}
+
+// MEM_START_ADDR register
+
+void MPU6050::setMemoryStartAddress(uint8_t address) {
+    I2Cdev::writeByte(devAddr, MPU6050_RA_MEM_START_ADDR, address);
+}
+
+// MEM_R_W register
+
+uint8_t MPU6050::readMemoryByte() {
+    I2Cdev::readByte(devAddr, MPU6050_RA_MEM_R_W, buffer);
+    return buffer[0];
+}
+void MPU6050::writeMemoryByte(uint8_t data) {
+    I2Cdev::writeByte(devAddr, MPU6050_RA_MEM_R_W, data);
+}
+void MPU6050::readMemoryBlock(uint8_t *data, uint16_t dataSize, uint8_t bank, uint8_t address) {
+    setMemoryBank(bank);
+    setMemoryStartAddress(address);
+    uint8_t chunkSize;
+    for (uint16_t i = 0; i < dataSize;) {
+        // determine correct chunk size according to bank position and data size
+        chunkSize = MPU6050_DMP_MEMORY_CHUNK_SIZE;
+
+        // make sure we don't go past the data size
+        if (i + chunkSize > dataSize) chunkSize = dataSize - i;
+
+        // make sure this chunk doesn't go past the bank boundary (256 bytes)
+        if (chunkSize > 256 - address) chunkSize = 256 - address;
+
+        // read the chunk of data as specified
+        I2Cdev::readBytes(devAddr, MPU6050_RA_MEM_R_W, chunkSize, data + i);
+        
+        // increase byte index by [chunkSize]
+        i += chunkSize;
+
+        // uint8_t automatically wraps to 0 at 256
+        address + chunkSize;
+
+        // if we aren't done, update bank (if necessary) and address
+        if (i < dataSize) {
+            if (address == 0) bank++;
+            setMemoryBank(bank);
+            setMemoryStartAddress(address);
+        }
+    }
+}
+bool MPU6050::writeMemoryBlock(uint8_t *data, uint16_t dataSize, uint8_t bank, uint8_t address, bool verify, bool useProgMem) {
+    setMemoryBank(bank);
+    setMemoryStartAddress(address);
+    uint8_t chunkSize;
+    uint8_t *verifyBuffer;
+    uint8_t *progBuffer;
+    uint16_t i;
+    uint8_t j;
+    if (verify) verifyBuffer = (uint8_t *)malloc(MPU6050_DMP_MEMORY_CHUNK_SIZE);
+    if (useProgMem) progBuffer = (uint8_t *)malloc(MPU6050_DMP_MEMORY_CHUNK_SIZE);
+    for (i = 0; i < dataSize;) {
+        // determine correct chunk size according to bank position and data size
+        chunkSize = MPU6050_DMP_MEMORY_CHUNK_SIZE;
+
+        // make sure we don't go past the data size
+        if (i + chunkSize > dataSize) chunkSize = dataSize - i;
+
+        // make sure this chunk doesn't go past the bank boundary (256 bytes)
+        if (chunkSize > 256 - address) chunkSize = 256 - address;
+        
+        if (useProgMem) {
+            // write the chunk of data as specified
+            for (j = 0; j < chunkSize; j++) progBuffer[j] = pgm_read_byte(data + i + j);
+            I2Cdev::writeBytes(devAddr, MPU6050_RA_MEM_R_W, chunkSize, progBuffer);
+        } else {
+            // write the chunk of data as specified
+            I2Cdev::writeBytes(devAddr, MPU6050_RA_MEM_R_W, chunkSize, data + i);
+        }
+
+        // verify data if needed
+        if (verify && verifyBuffer) {
+            setMemoryBank(bank);
+            setMemoryStartAddress(address);
+            I2Cdev::readBytes(devAddr, MPU6050_RA_MEM_R_W, chunkSize, verifyBuffer);
+            if (memcmp(data + i, verifyBuffer, chunkSize) != 0) {
+                Serial.print("Block write verification error, bank ");
+                Serial.print(bank, DEC);
+                Serial.print(", address ");
+                Serial.print(address, DEC);
+                Serial.print("!\nExpected:");
+                for (j = 0; j < chunkSize; j++) {
+                    Serial.print(" 0x");
+                    if (useProgMem) {
+                        if (progBuffer[j] < 16) Serial.print("0");
+                        Serial.print(progBuffer[j], HEX);
+                    } else {
+                        if (data[i + j] < 16) Serial.print("0");
+                        Serial.print(data[i + j], HEX);
+                    }
+                }
+                Serial.print("\nReceived:");
+                for (uint8_t j = 0; j < chunkSize; j++) {
+                    Serial.print(" 0x");
+                    if (verifyBuffer[i + j] < 16) Serial.print("0");
+                    Serial.print(verifyBuffer[i + j], HEX);
+                }
+                Serial.print("\n");
+                free(verifyBuffer);
+                if (useProgMem) free(progBuffer);
+                return false; // uh oh.
+            }
+        }
+
+        // increase byte index by [chunkSize]
+        i += chunkSize;
+
+        // uint8_t automatically wraps to 0 at 256
+        address + chunkSize;
+
+        // if we aren't done, update bank (if necessary) and address
+        if (i < dataSize) {
+            if (address == 0) bank++;
+            setMemoryBank(bank);
+            setMemoryStartAddress(address);
+        }
+    }
+    if (verify) free(verifyBuffer);
+    if (useProgMem) free(progBuffer);
+    return true;
+}
+bool MPU6050::writeProgMemoryBlock(uint8_t *data, uint16_t dataSize, uint8_t bank, uint8_t address, bool verify) {
+    writeMemoryBlock(data, dataSize, bank, address, verify, true);
+}
+
+// DMP_CFG_1 register
+
+uint8_t MPU6050::getDMPConfig1() {
+    I2Cdev::readByte(devAddr, MPU6050_RA_DMP_CFG_1, buffer);
+    return buffer[0];
+}
+void MPU6050::setDMPConfig1(uint8_t config) {
+    I2Cdev::writeByte(devAddr, MPU6050_RA_DMP_CFG_1, config);
+}
+
+// DMP_CFG_2 register
+
+uint8_t MPU6050::getDMPConfig2() {
+    I2Cdev::readByte(devAddr, MPU6050_RA_DMP_CFG_2, buffer);
+    return buffer[0];
+}
+void MPU6050::setDMPConfig2(uint8_t config) {
+    I2Cdev::writeByte(devAddr, MPU6050_RA_DMP_CFG_2, config);
+}
