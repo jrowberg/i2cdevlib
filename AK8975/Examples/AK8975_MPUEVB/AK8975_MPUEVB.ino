@@ -44,6 +44,10 @@ THE SOFTWARE.
 ===============================================
 */
 
+// Arduino Wire library is required if I2Cdev I2CDEV_ARDUINO_WIRE implementation
+// is used in I2Cdev.h
+#include "Wire.h"
+
 // I2Cdev, AK8975, and MPU6050 must be installed as libraries, or else the
 // .cpp/.h files for all classes must be in the include path of your project
 #include "I2Cdev.h"

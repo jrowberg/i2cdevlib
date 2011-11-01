@@ -29,6 +29,10 @@ THE SOFTWARE.
 ===============================================
 */
 
+// Arduino Wire library is required if I2Cdev I2CDEV_ARDUINO_WIRE implementation
+// is used in I2Cdev.h
+#include "Wire.h"
+
 // I2Cdev and ADXL345 must be installed as libraries, or else the .cpp/.h files
 // for both classes must be in the include path of your project
 #include "I2Cdev.h"
@@ -42,7 +46,7 @@ ADXL345 accel;
 
 int16_t ax, ay, az;
 
-#define LED_PIN 13
+#define LED_PIN 13 // (Arduino is 13, Teensy is 6)
 bool blinkState = false;
 
 void setup() {
@@ -62,7 +66,7 @@ void setup() {
     Serial.println("Testing device connections...");
     Serial.println(accel.testConnection() ? "ADXL345 connection successful" : "ADXL345 connection failed");
 
-    // configure Arduino LED for
+    // configure LED for output
     pinMode(LED_PIN, OUTPUT);
 }
 
