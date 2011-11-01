@@ -118,6 +118,10 @@ class ADS1115 {
 
         // CONVERSION register
         int16_t getDifferential();
+        int16_t getDifferential0();
+        int16_t getDifferential1();
+        int16_t getDifferential2();
+        int16_t getDifferential3();
         int16_t getDiff0();
         int16_t getDiff1();
         int16_t getDiff2();
