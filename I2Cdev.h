@@ -1,8 +1,11 @@
 // I2Cdev library collection - Main I2C device class header file
 // Abstracts bit and byte I2C R/W functions into a convenient class
-// 8/31/2011 by Jeff Rowberg <jeff@rowberg.net>
+// 11/1/2011 by Jeff Rowberg <jeff@rowberg.net>
 //
 // Changelog:
+//     2011-11-01 - fix write*Bits mask calculation (thanks sasquatch @ Arduino forums)
+//     2011-10-03 - added automatic Arduino version detection for ease of use
+//     2011-10-02 - added Gene Knight's NBWire TwoWire class implementation with small modifications
 //     2011-08-31 - added support for Arduino 1.0 Wire library (methods are different from 0.x)
 //     2011-08-03 - added optional timeout parameter to read* methods to easily change from default
 //     2011-08-02 - added support for 16-bit registers
@@ -42,30 +45,31 @@ THE SOFTWARE.
 // -----------------------------------------------------------------------------
 // I2C interface implementation setting
 // -----------------------------------------------------------------------------
-#define I2CDEV_IMPLEMENTATION       I2CDEV_ARDUINO1_WIRE
+#define I2CDEV_IMPLEMENTATION       I2CDEV_ARDUINO_WIRE
 
 // -----------------------------------------------------------------------------
 // I2C interface implementation options
 // -----------------------------------------------------------------------------
-#define I2CDEV_RAW                  1 // not implemented yet
-#define I2CDEV_ARDUINO0_WIRE        2 // Wire object from Arduino 0.x
-#define I2CDEV_ARDUINO1_WIRE        3 // Wire object from Arduino 1.x
+#define I2CDEV_ARDUINO_WIRE         1 // Wire object from Arduino
+#define I2CDEV_BUILTIN_NBWIRE       2 // Tweaked Wire object from Gene Knight's NBWire project
+                                      // ^^^ NBWire implementation is still buggy w/some interrupts!
 
 // -----------------------------------------------------------------------------
 // Arduino-style "Serial.print" debug constant (uncomment to enable)
 // -----------------------------------------------------------------------------
 //#define I2CDEV_SERIAL_DEBUG
 
-#ifdef LUFA_ARDUINO_WRAPPER
-    #include "ArduinoWrapper.h"
-#else
-    #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO0_WIRE
-        #include <Wire.h>
+#ifdef ARDUINO
+    #if ARDUINO < 100
         #include "WProgram.h"
-    #elif I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO1_WIRE
-        #include <Wire.h>
+    #else
         #include "Arduino.h"
     #endif
+    #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
+        #include <Wire.h>
+    #endif
+#else
+    #include "ArduinoWrapper.h"
 #endif
 
 // 1000ms default read timeout (modify with "I2Cdev::readTimeout = [ms];")
@@ -95,5 +99,115 @@ class I2Cdev {
 
         static uint16_t readTimeout;
 };
+
+#if I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_NBWIRE
+    // NBWire implementation based heavily on code by Gene Knight <Gene@Telobot.com>
+    // Originally posted on the Arduino forum at http://arduino.cc/forum/index.php/topic,70705.0.html
+    // Originally offered to the i2cdevlib project at http://arduino.cc/forum/index.php/topic,68210.30.html
+
+    #define NBWIRE_BUFFER_LENGTH 32
+    
+    class TwoWire {
+        private:
+            static uint8_t rxBuffer[];
+            static uint8_t rxBufferIndex;
+            static uint8_t rxBufferLength;
+        
+            static uint8_t txAddress;
+            static uint8_t txBuffer[];
+            static uint8_t txBufferIndex;
+            static uint8_t txBufferLength;
+        
+            // static uint8_t transmitting;
+            static void (*user_onRequest)(void);
+            static void (*user_onReceive)(int);
+            static void onRequestService(void);
+            static void onReceiveService(uint8_t*, int);
+    
+        public:
+            TwoWire();
+            void begin();
+            void begin(uint8_t);
+            void begin(int);
+            void beginTransmission(uint8_t);
+            //void beginTransmission(int);
+            uint8_t endTransmission(uint16_t timeout=0);
+            void nbendTransmission(void (*function)(int)) ;
+            uint8_t requestFrom(uint8_t, int, uint16_t timeout=0);
+            //uint8_t requestFrom(int, int);
+            void nbrequestFrom(uint8_t, int, void (*function)(int));
+            void send(uint8_t);
+            void send(uint8_t*, uint8_t);
+            //void send(int);
+            void send(char*);
+            uint8_t available(void);
+            uint8_t receive(void);
+            void onReceive(void (*)(int));
+            void onRequest(void (*)(void));
+    };
+    
+    #define TWI_READY   0
+    #define TWI_MRX     1
+    #define TWI_MTX     2
+    #define TWI_SRX     3
+    #define TWI_STX     4
+    
+    #define TW_WRITE    0
+    #define TW_READ     1
+    
+    #define TW_MT_SLA_NACK      0x20
+    #define TW_MT_DATA_NACK     0x30
+    
+    #define CPU_FREQ            16000000L
+    #define TWI_FREQ            100000L
+    #define TWI_BUFFER_LENGTH   32
+    
+    /* TWI Status is in TWSR, in the top 5 bits: TWS7 - TWS3 */
+    
+    #define TW_STATUS_MASK              (_BV(TWS7)|_BV(TWS6)|_BV(TWS5)|_BV(TWS4)|_BV(TWS3))
+    #define TW_STATUS                   (TWSR & TW_STATUS_MASK)
+    #define TW_START                    0x08
+    #define TW_REP_START                0x10
+    #define TW_MT_SLA_ACK               0x18
+    #define TW_MT_SLA_NACK              0x20
+    #define TW_MT_DATA_ACK              0x28
+    #define TW_MT_DATA_NACK             0x30
+    #define TW_MT_ARB_LOST              0x38
+    #define TW_MR_ARB_LOST              0x38
+    #define TW_MR_SLA_ACK               0x40
+    #define TW_MR_SLA_NACK              0x48
+    #define TW_MR_DATA_ACK              0x50
+    #define TW_MR_DATA_NACK             0x58
+    #define TW_ST_SLA_ACK               0xA8
+    #define TW_ST_ARB_LOST_SLA_ACK      0xB0
+    #define TW_ST_DATA_ACK              0xB8
+    #define TW_ST_DATA_NACK             0xC0
+    #define TW_ST_LAST_DATA             0xC8
+    #define TW_SR_SLA_ACK               0x60
+    #define TW_SR_ARB_LOST_SLA_ACK      0x68
+    #define TW_SR_GCALL_ACK             0x70
+    #define TW_SR_ARB_LOST_GCALL_ACK    0x78
+    #define TW_SR_DATA_ACK              0x80
+    #define TW_SR_DATA_NACK             0x88
+    #define TW_SR_GCALL_DATA_ACK        0x90
+    #define TW_SR_GCALL_DATA_NACK       0x98
+    #define TW_SR_STOP                  0xA0
+    #define TW_NO_INFO                  0xF8
+    #define TW_BUS_ERROR                0x00
+    
+    //#define _MMIO_BYTE(mem_addr) (*(volatile uint8_t *)(mem_addr))
+    //#define _SFR_BYTE(sfr) _MMIO_BYTE(_SFR_ADDR(sfr))
+    
+    #ifndef sbi // set bit
+        #define sbi(sfr, bit) (_SFR_BYTE(sfr) |= _BV(bit))
+    #endif // sbi
+    
+    #ifndef cbi // clear bit
+        #define cbi(sfr, bit) (_SFR_BYTE(sfr) &= ~_BV(bit))
+    #endif // cbi
+    
+    extern TwoWire Wire;
+
+#endif // I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_NBWIRE
 
 #endif /* _I2CDEV_H_ */
