@@ -6,6 +6,7 @@
 //
 // Changelog:
 //     2011-08-02 - initial release
+//     2011-10-29 - added getDifferentialx() methods, F. Farzanegan
 
 /* ============================================
 I2Cdev device library code is placed under the MIT license
@@ -92,6 +93,10 @@ bool ADS1115::testConnection() {
  * comparison circuitry when needed.
  *
  * @return 16-bit signed differential value
+ * @see getDifferential0();
+ * @see getDifferential1();
+ * @see getDifferential2();
+ * @see getDifferential3();
  * @see getDiff0();
  * @see getDiff1();
  * @see getDiff2();
@@ -111,6 +116,61 @@ int16_t ADS1115::getDifferential() {
     I2Cdev::readWord(devAddr, ADS1115_RA_CONVERSION, buffer);
     return buffer[0];
 }
+/** Get AIN0/N1 differential.
+ * This changes the MUX setting to AIN0/N1 if necessary, triggers a new
+ * measurement (also only if necessary), then gets the differential value
+ * currently in the CONVERSION register.
+ * @return 16-bit signed differential value
+ * @see getDifferential()
+ */
+int16_t ADS1115::getDifferential0() {
+    if (muxMode != ADS1115_MUX_P0_N1) setMultiplexer(ADS1115_MUX_P0_N1);
+    if (devMode == ADS1115_MODE_SINGLESHOT) setOpStatus(ADS1115_OS_ACTIVE);
+    return getDifferential();
+}
+
+/** Get AIN0/N3 differential.
+ * This changes the MUX setting to AIN0/N1 if necessary, triggers a new
+ * measurement (also only if necessary), then gets the differential value
+ * currently in the CONVERSION register.
+ * @return 16-bit signed differential value
+ * @see getDifferential()
+ */
+int16_t ADS1115::getDifferential1() {
+    if (muxMode != ADS1115_MUX_P0_N3) setMultiplexer(ADS1115_MUX_P0_N3);
+    if (devMode == ADS1115_MODE_SINGLESHOT) setOpStatus(ADS1115_OS_ACTIVE);
+    return getDifferential();
+}
+
+/** Get AIN1/N3 differential.
+ * This changes the MUX setting to AIN1/N3 if necessary, triggers a new
+ * measurement (also only if necessary), then gets the differential value
+ * currently in the CONVERSION register.
+ * @return 16-bit signed differential value
+ * @see getDifferential()
+ */
+int16_t ADS1115::getDifferential2() {
+    if (muxMode != ADS1115_MUX_P1_N3) setMultiplexer(ADS1115_MUX_P1_N3);
+    if (devMode == ADS1115_MODE_SINGLESHOT) setOpStatus(ADS1115_OS_ACTIVE);
+    return getDifferential();
+}
+
+/** Get AIN2/N3 differential.
+ * This changes the MUX setting to AIN2/N3 if necessary, triggers a new
+ * measurement (also only if necessary), then gets the differential value
+ * currently in the CONVERSION register.
+ * @return 16-bit signed differential value
+ * @see getDifferential()
+ */
+int16_t ADS1115::getDifferential3() {
+    if (muxMode != ADS1115_MUX_P2_N3) setMultiplexer(ADS1115_MUX_P2_N3);
+    if (devMode == ADS1115_MODE_SINGLESHOT) setOpStatus(ADS1115_OS_ACTIVE);
+    return getDifferential();
+}
+
+
+
+
 /** Get AIN0/GND differential.
  * This changes the MUX setting to AIN0/GND if necessary, triggers a new
  * measurement (also only if necessary), then gets the differential value
