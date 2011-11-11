@@ -6,6 +6,7 @@
 //
 // Changelog:
 //     2011-08-02 - initial release
+//     2011-10-29 - added getDifferentialx() methods, F. Farzanegan
 
 /* ============================================
 I2Cdev device library code is placed under the MIT license
@@ -61,8 +62,8 @@ THE SOFTWARE.
 #define ADS1115_CFG_COMP_QUE_BIT    1
 #define ADS1115_CFG_COMP_QUE_LENGTH 2
 
-#define ADS1115_OS_ACTIVE           0x00
-#define ADS1115_OS_INACTIVE         0x01
+#define ADS1115_OS_INACTIVE         0x00
+#define ADS1115_OS_ACTIVE           0x01
 
 #define ADS1115_MUX_P0_N1           0x00 // default
 #define ADS1115_MUX_P0_N3           0x01
@@ -81,6 +82,15 @@ THE SOFTWARE.
 #define ADS1115_PGA_0P256           0x05
 #define ADS1115_PGA_0P256B          0x06
 #define ADS1115_PGA_0P256C          0x07
+
+#define ADS1115_MV_6P144            0.187500
+#define ADS1115_MV_4P096            0.125000
+#define ADS1115_MV_2P048            0.062500 // default
+#define ADS1115_MV_1P024            0.031250
+#define ADS1115_MV_0P512            0.015625
+#define ADS1115_MV_0P256            0.007813
+#define ADS1115_MV_0P256B           0.007813 
+#define ADS1115_MV_0P256C           0.007813
 
 #define ADS1115_MODE_CONTINUOUS     0x00
 #define ADS1115_MODE_SINGLESHOT     0x01 // default
@@ -108,6 +118,7 @@ THE SOFTWARE.
 #define ADS1115_COMP_QUE_ASSERT4    0x02
 #define ADS1115_COMP_QUE_DISABLE    0x03 // default
 
+
 class ADS1115 {
     public:
         ADS1115();
@@ -126,6 +137,8 @@ class ADS1115 {
         int16_t getDiff1();
         int16_t getDiff2();
         int16_t getDiff3();
+        float getMilliVolts(); 
+        float getMvPerCount();
 
         // CONFIG register
         uint8_t getOpStatus();
@@ -158,6 +171,7 @@ class ADS1115 {
         uint16_t buffer[2];
         uint8_t devMode;
         uint8_t muxMode;
+        uint8_t pgaMode;
 };
 
 #endif /* _ADS1115_H_ */
