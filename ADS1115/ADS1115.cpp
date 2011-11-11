@@ -7,6 +7,7 @@
 // Changelog:
 //     2011-08-02 - initial release
 //     2011-10-29 - added getDifferentialx() methods, F. Farzanegan
+//     2011-11-06 - added getVoltage, F. Farzanegan
 
 /* ============================================
 I2Cdev device library code is placed under the MIT license
@@ -220,6 +221,73 @@ int16_t ADS1115::getDiff3() {
     return getDifferential();
 }
 
+/** Get the current voltage reading
+ * Read the current differential and return it multiplied
+ * by the constant for the current gain.  mV is returned to
+ * increase the precision of the voltage
+ *
+ */
+float ADS1115::getMilliVolts() {
+  switch (pgaMode) {
+    case ADS1115_PGA_6P144:
+      return (getDifferential() * ADS1115_MV_6P144);
+      break;    
+    case ADS1115_PGA_4P096:
+      return (getDifferential() * ADS1115_MV_4P096);
+      break;             
+    case ADS1115_PGA_2P048:    
+      return (getDifferential() * ADS1115_MV_2P048);
+      break;       
+    case ADS1115_PGA_1P024:     
+      return (getDifferential() * ADS1115_MV_1P024);
+      break;       
+    case ADS1115_PGA_0P512:      
+      return (getDifferential() * ADS1115_MV_0P512);
+      break;       
+    case ADS1115_PGA_0P256:           
+    case ADS1115_PGA_0P256B:          
+    case ADS1115_PGA_0P256C:      
+      return (getDifferential() * ADS1115_MV_0P256);
+      break;       
+  }
+}
+
+/**
+ * Return the current multiplier for the PGA setting.
+ * 
+ * This may be directly retreived by using getMilliVolts(),
+ * but this causes an independent read.  This function could
+ * be used to average a number of reads from the getDifferential()
+ * or getDiffx(), or getDifferentialx() functions and cut down
+ * on the number of floating-point calculations needed.
+ *
+ */
+ 
+float ADS1115::getMvPerCount() {
+  switch (pgaMode) {
+    case ADS1115_PGA_6P144:
+      return ADS1115_MV_6P144;
+      break;    
+    case ADS1115_PGA_4P096:
+      return  ADS1115_MV_4P096;
+      break;             
+    case ADS1115_PGA_2P048:    
+      return ADS1115_MV_2P048;
+      break;       
+    case ADS1115_PGA_1P024:     
+      return ADS1115_MV_1P024;
+      break;       
+    case ADS1115_PGA_0P512:      
+      return ADS1115_MV_0P512;
+      break;       
+    case ADS1115_PGA_0P256:           
+    case ADS1115_PGA_0P256B:          
+    case ADS1115_PGA_0P256C:      
+      return ADS1115_MV_0P256;
+      break;       
+  }
+}
+
 // CONFIG register
 
 /** Get operational status.
@@ -295,7 +363,9 @@ uint8_t ADS1115::getGain() {
  * @see ADS1115_CFG_PGA_LENGTH
  */
 void ADS1115::setGain(uint8_t gain) {
-    I2Cdev::writeBitsW(devAddr, ADS1115_RA_CONFIG, ADS1115_CFG_PGA_BIT, ADS1115_CFG_PGA_LENGTH, gain);
+    if (I2Cdev::writeBitsW(devAddr, ADS1115_RA_CONFIG, ADS1115_CFG_PGA_BIT, ADS1115_CFG_PGA_LENGTH, gain)) {
+              pgaMode = gain;
+    }
 }
 /** Get device mode.
  * @return Current device mode
