@@ -53,6 +53,7 @@ THE SOFTWARE.
 #define I2CDEV_ARDUINO_WIRE         1 // Wire object from Arduino
 #define I2CDEV_BUILTIN_NBWIRE       2 // Tweaked Wire object from Gene Knight's NBWire project
                                       // ^^^ NBWire implementation is still buggy w/some interrupts!
+#define I2CDEV_BUILTIN_FASTWIRE     3 // FastWire object from Francesco Ferrara's project
 
 // -----------------------------------------------------------------------------
 // Arduino-style "Serial.print" debug constant (uncomment to enable)
@@ -99,6 +100,45 @@ class I2Cdev {
 
         static uint16_t readTimeout;
 };
+
+#if I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_FASTWIRE
+    // I2C library
+    //////////////////////
+    // Copyright(C) 2011
+    // Francesco Ferrara
+    //////////////////////
+    
+    /* Master */
+    #define TW_START                0x08
+    #define TW_REP_START            0x10
+
+    /* Master Transmitter */
+    #define TW_MT_SLA_ACK           0x18
+    #define TW_MT_SLA_NACK          0x20
+    #define TW_MT_DATA_ACK          0x28
+    #define TW_MT_DATA_NACK         0x30
+    #define TW_MT_ARB_LOST          0x38
+
+    /* Master Receiver */
+    #define TW_MR_ARB_LOST          0x38
+    #define TW_MR_SLA_ACK           0x40
+    #define TW_MR_SLA_NACK          0x48
+    #define TW_MR_DATA_ACK          0x50
+    #define TW_MR_DATA_NACK         0x58
+
+    #define TW_OK                   0
+    #define TW_ERROR                1
+
+    class Fastwire {
+        private:
+          static boolean waitInt();
+
+        public:
+          static void setup(int khz, boolean pullup);
+          static byte write(byte device, byte address, byte value);
+          static byte readBuf(byte device, byte address, byte *data, byte num);
+    };
+#endif
 
 #if I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_NBWIRE
     // NBWire implementation based heavily on code by Gene Knight <Gene@Telobot.com>
