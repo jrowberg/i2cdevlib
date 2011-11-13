@@ -1,11 +1,11 @@
 // I2Cdev library collection - DS1307 I2C device class
 // Based on Maxim DS1307 datasheet, 2008
-// 11/12/2011 by Jeff Rowberg <jeff@rowberg.net>
+// 11/13/2011 by Jeff Rowberg <jeff@rowberg.net>
 // Updates should (hopefully) always be available at https://github.com/jrowberg/i2cdevlib
 // I2C Device Library hosted at http://www.i2cdevlib.com
 //
 // Changelog:
-//     2011-11-12 - initial release
+//     2011-11-13 - initial release
 
 /* ============================================
 I2Cdev device library code is placed under the MIT license
@@ -55,6 +55,7 @@ DS1307::DS1307(uint8_t address) {
  */
 void DS1307::initialize() {
     getMode(); // automatically sets internal "mode12" member variable
+    getClockRunning(); // automatically sets internal "clockHalt" member variable
 }
 
 /** Verify the I2C connection.
@@ -69,30 +70,36 @@ bool DS1307::testConnection() {
 }
 
 // SECONDS register
-bool DS1307::getClockEnabled() {
+bool DS1307::getClockRunning() {
     I2Cdev::readBit(devAddr, DS1307_RA_SECONDS, DS1307_SECONDS_CH_BIT, buffer);
+    clockHalt = buffer[0];
     return !buffer[0];
 }
-void DS1307::setClockEnabled(bool enabled) {
-    I2Cdev::writeBit(devAddr, DS1307_RA_SECONDS, DS1307_SECONDS_CH_BIT, !enabled);
+void DS1307::setClockRunning(bool running) {
+    I2Cdev::writeBit(devAddr, DS1307_RA_SECONDS, DS1307_SECONDS_CH_BIT, !running);
 }
 uint8_t DS1307::getSeconds() {
     // Byte: [7 = CH] [6:4 = 10SEC] [3:0 = 1SEC]
     I2Cdev::readByte(devAddr, DS1307_RA_SECONDS, buffer);
-    return (buffer[0] & 0x0F) + (buffer[0] & 0x70) * 10;
+    clockHalt = buffer[0] & 0x80;
+    return (buffer[0] & 0x0F) + ((buffer[0] & 0x70) >> 4) * 10;
 }
 void DS1307::setSeconds(uint8_t seconds) {
-    I2Cdev::writeByte(devAddr, DS1307_RA_SECONDS, seconds);
+    if (seconds > 59) return;
+    uint8_t value = (clockHalt ? 0x80 : 0x00) + ((seconds / 10) << 4) + (seconds % 10);
+    I2Cdev::writeByte(devAddr, DS1307_RA_SECONDS, value);
 }
 
 // MINUTES register
 uint8_t DS1307::getMinutes() {
     // Byte: [7 = 0] [6:4 = 10MIN] [3:0 = 1MIN]
     I2Cdev::readByte(devAddr, DS1307_RA_MINUTES, buffer);
-    return (buffer[0] & 0x0F) + (buffer[0] & 0x70) * 10;
+    return (buffer[0] & 0x0F) + ((buffer[0] & 0x70) >> 4) * 10;
 }
 void DS1307::setMinutes(uint8_t minutes) {
-    I2Cdev::writeByte(devAddr, DS1307_RA_MINUTES, minutes);
+    if (minutes > 59) return;
+    uint8_t value = ((minutes / 10) << 4) + (minutes % 10);
+    I2Cdev::writeByte(devAddr, DS1307_RA_MINUTES, value);
 }
 
 // HOURS register
@@ -117,11 +124,11 @@ uint8_t DS1307::getHours12() {
     if (mode12) {
         // bit 6 is high, 12-hour mode
         // Byte: [5 = AM/PM] [4 = 10HR] [3:0 = 1HR]
-        return (buffer[0] & 0x0F) + (buffer[0] & 0x10) * 10;
+        return (buffer[0] & 0x0F) + ((buffer[0] & 0x10) >> 4) * 10;
     } else {
         // bit 6 is low, 24-hour mode (default)
         // Byte: [5:4 = 10HR] [3:0 = 1HR]
-        uint8_t hours = (buffer[0] & 0x0F) + (buffer[0] & 0x30) * 10;
+        uint8_t hours = (buffer[0] & 0x0F) + ((buffer[0] & 0x30) >> 4) * 10;
 
         // convert 24-hour to 12-hour format, since that's what's requested
         if (hours > 12) hours -= 12;
@@ -129,8 +136,23 @@ uint8_t DS1307::getHours12() {
         return hours;
     }
 }
-void DS1307::setHours12(uint8_t hours) {
-    I2Cdev::writeByte(devAddr, DS1307_RA_HOURS, hours);
+void DS1307::setHours12(uint8_t hours, uint8_t ampm) {
+    if (hours > 12 || hours < 1) return;
+    if (mode12) {
+        // bit 6 is high, 12-hour mode
+        // Byte: [5 = AM/PM] [4 = 10HR] [3:0 = 1HR]
+        if (ampm > 0) ampm = 0x20;
+        uint8_t value = 0x40 + ampm + ((hours / 10) << 4) + (hours % 10);
+        I2Cdev::writeByte(devAddr, DS1307_RA_HOURS, value);
+    } else {
+        // bit 6 is low, 24-hour mode (default)
+        // Byte: [5:4 = 10HR] [3:0 = 1HR]
+        if (ampm > 0) hours += 12;
+        if (hours == 0) hours = 12; // 12 AM
+        else if (hours == 24) hours = 12; // 12 PM, after +12 adjustment
+        uint8_t value = ((hours / 10) << 4) + (hours % 10);
+        I2Cdev::writeByte(devAddr, DS1307_RA_HOURS, value);
+    }
 }
 uint8_t DS1307::getHours24() {
     I2Cdev::readByte(devAddr, DS1307_RA_HOURS, buffer);
@@ -138,7 +160,7 @@ uint8_t DS1307::getHours24() {
     if (mode12) {
         // bit 6 is high, 12-hour mode
         // Byte: [5 = AM/PM] [4 = 10HR] [3:0 = 1HR]
-        uint8_t hours = (buffer[0] & 0x0F) + (buffer[0] & 0x10) * 10;
+        uint8_t hours = (buffer[0] & 0x0F) + ((buffer[0] & 0x10) >> 4) * 10;
 
         // convert 12-hour to 24-hour format, since that's what's requested
         if (buffer[0] & 0x80) {
@@ -152,12 +174,26 @@ uint8_t DS1307::getHours24() {
     } else {
         // bit 6 is low, 24-hour mode (default)
         // Byte: [5:4 = 10HR] [3:0 = 1HR]
-        return (buffer[0] & 0x0F) + (buffer[0] & 0x30) * 10;
-        uint8_t hours = (buffer[0] & 0x0F) + (buffer[0] & 0x30) * 10;
+        return (buffer[0] & 0x0F) + ((buffer[0] & 0x30) >> 4) * 10;
     }
 }
 void DS1307::setHours24(uint8_t hours) {
-    I2Cdev::writeByte(devAddr, DS1307_RA_HOURS, hours);
+    if (hours > 23) return;
+    if (mode12) {
+        // bit 6 is high, 12-hour mode
+        // Byte: [5 = AM/PM] [4 = 10HR] [3:0 = 1HR]
+        uint8_t ampm = 0;
+        if (hours > 11) ampm = 0x20;
+        if (hours > 12) hours -= 12;
+        else if (hours == 0) hours = 12;
+        uint8_t value = 0x40 + ampm + ((hours / 10) << 4) + (hours % 10);
+        I2Cdev::writeByte(devAddr, DS1307_RA_HOURS, value);
+    } else {
+        // bit 6 is low, 24-hour mode (default)
+        // Byte: [5:4 = 10HR] [3:0 = 1HR]
+        uint8_t value = ((hours / 10) << 4) + (hours % 10);
+        I2Cdev::writeByte(devAddr, DS1307_RA_HOURS, value);
+    }
 }
 
 // DAY register
@@ -166,6 +202,7 @@ uint8_t DS1307::getDayOfWeek() {
     return buffer[0];
 }
 void DS1307::setDayOfWeek(uint8_t dow) {
+    if (dow < 1 || dow > 7) return;
     I2Cdev::writeBits(devAddr, DS1307_RA_DAY, DS1307_DAY_BIT, DS1307_DAY_LENGTH, dow);
 }
 
@@ -173,29 +210,35 @@ void DS1307::setDayOfWeek(uint8_t dow) {
 uint8_t DS1307::getDay() {
     // Byte: [7:6 = 0] [5:4 = 10DAY] [3:0 = 1DAY]
     I2Cdev::readByte(devAddr, DS1307_RA_DATE, buffer);
-    return (buffer[0] & 0x0F) + (buffer[0] & 0x30) * 10;
+    return (buffer[0] & 0x0F) + ((buffer[0] & 0x30) >> 4) * 10;
 }
 void DS1307::setDay(uint8_t day) {
-    I2Cdev::writeByte(devAddr, DS1307_RA_DATE, day);
+    uint8_t value = ((day / 10) << 4) + (day % 10);
+    I2Cdev::writeByte(devAddr, DS1307_RA_DATE, value);
 }
 
 // MONTH register
 uint8_t DS1307::getMonth() {
     // Byte: [7:5 = 0] [4 = 10MONTH] [3:0 = 1MONTH]
     I2Cdev::readByte(devAddr, DS1307_RA_MONTH, buffer);
-    return (buffer[0] & 0x0F) + (buffer[0] & 0x10) * 10;
+    return (buffer[0] & 0x0F) + ((buffer[0] & 0x10) >> 4) * 10;
 }
 void DS1307::setMonth(uint8_t month) {
-    I2Cdev::writeByte(devAddr, DS1307_RA_MONTH, month);
+    if (month < 1 || month > 12) return;
+    uint8_t value = ((month / 10) << 4) + (month % 10);
+    I2Cdev::writeByte(devAddr, DS1307_RA_MONTH, value);
 }
 
 // YEAR register
 uint16_t DS1307::getYear() {
     I2Cdev::readByte(devAddr, DS1307_RA_YEAR, buffer);
-    return 2000 + (buffer[0] & 0x0F) + (buffer[0] & 0xF0) * 10;
+    return 2000 + (buffer[0] & 0x0F) + ((buffer[0] & 0xF0) >> 4) * 10;
 }
 void DS1307::setYear(uint16_t year) {
-    I2Cdev::writeByte(devAddr, DS1307_RA_YEAR, year);
+    if (year < 2000) return;
+    year -= 2000;
+    uint8_t value = ((year / 10) << 4) + (year % 10);
+    I2Cdev::writeByte(devAddr, DS1307_RA_YEAR, value);
 }
 
 // CONTROL register
@@ -256,12 +299,7 @@ void DS1307::setTime12(uint8_t hours, uint8_t minutes, uint8_t seconds, uint8_t 
     // us 1 second to write remaining time info
     setSeconds(seconds);
     setMinutes(minutes);
-    if (mode12) {
-        setHours12(hours);
-        setAMPM(ampm);
-    } else {
-        setHours24(hours);
-    }
+    setHours12(hours, ampm);
 }
 
 void DS1307::getTime24(uint8_t *hours, uint8_t *minutes, uint8_t *seconds) {
@@ -274,15 +312,7 @@ void DS1307::setTime24(uint8_t hours, uint8_t minutes, uint8_t seconds) {
     // us 1 second to write remaining time info
     setSeconds(seconds);
     setMinutes(minutes);
-    if (mode12) {
-        uint8_t ampm = (hours > 11) ? 1 : 0;
-        if (hours == 0) hours = 12;
-        else if (hours > 12) hours -= 12;
-        setHours12(hours);
-        setAMPM(ampm);
-    } else {
-        setHours24(hours);
-    }
+    setHours24(hours);
 }
 
 void DS1307::getDateTime12(uint16_t *year, uint8_t *month, uint8_t *day, uint8_t *hours, uint8_t *minutes, uint8_t *seconds, uint8_t *ampm) {

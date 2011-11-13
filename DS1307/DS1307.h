@@ -1,11 +1,11 @@
 // I2Cdev library collection - DS1307 I2C device class header file
 // Based on Maxim DS1307 datasheet, 2008
-// 11/12/2011 by Jeff Rowberg <jeff@rowberg.net>
+// 11/13/2011 by Jeff Rowberg <jeff@rowberg.net>
 // Updates should (hopefully) always be available at https://github.com/jrowberg/i2cdevlib
 // I2C Device Library hosted at http://www.i2cdevlib.com
 //
 // Changelog:
-//     2011-11-12 - initial release
+//     2011-11-13 - initial release
 
 /* ============================================
 I2Cdev device library code is placed under the MIT license
@@ -135,8 +135,8 @@ class DS1307 {
         bool testConnection();
 
         // SECONDS register
-        bool getClockEnabled();
-        void setClockEnabled(bool enabled);
+        bool getClockRunning();
+        void setClockRunning(bool running);
         uint8_t getSeconds(); // 0-59
         void setSeconds(uint8_t seconds);
 
@@ -150,7 +150,7 @@ class DS1307 {
         uint8_t getAMPM(); // 0-1
         void setAMPM(uint8_t ampm);
         uint8_t getHours12(); // 1-12
-        void setHours12(uint8_t hours);
+        void setHours12(uint8_t hours, uint8_t ampm);
         uint8_t getHours24(); // 0-23
         void setHours24(uint8_t hours);
 
@@ -207,7 +207,8 @@ class DS1307 {
     private:
         uint8_t devAddr;
         uint8_t buffer[1];
-        uint8_t mode12;
+        bool mode12;
+        bool clockHalt;
 };
 
 #endif /* _DS1307_H_ */
