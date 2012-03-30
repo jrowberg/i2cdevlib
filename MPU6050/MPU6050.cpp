@@ -121,7 +121,7 @@ void MPU6050::setAuxVDDIOLevel(uint8_t level) {
  * @see MPU6050_RA_SMPLRT_DIV
  */
 uint8_t MPU6050::getRate() {
-    return I2Cdev::readByte(devAddr, MPU6050_RA_SMPLRT_DIV, buffer);
+    I2Cdev::readByte(devAddr, MPU6050_RA_SMPLRT_DIV, buffer);
     return buffer[0];
 }
 /** Set gyroscope sample rate divider.
