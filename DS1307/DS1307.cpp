@@ -6,6 +6,9 @@
 //
 // Changelog:
 //     2011-11-13 - initial release
+//     2012-03-29 - alain.spineux@gmail.com: bug in getHours24() 
+//                  am/pm is bit 0x20 instead of 0x80
+//
 
 /* ============================================
 I2Cdev device library code is placed under the MIT license
@@ -163,7 +166,7 @@ uint8_t DS1307::getHours24() {
         uint8_t hours = (buffer[0] & 0x0F) + ((buffer[0] & 0x10) >> 4) * 10;
 
         // convert 12-hour to 24-hour format, since that's what's requested
-        if (buffer[0] & 0x80) {
+        if (buffer[0] & 0x20) {
             // currently PM
             if (hours < 12) hours += 12;
         } else {
