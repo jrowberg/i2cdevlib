@@ -121,7 +121,7 @@ void MPU6050::setAuxVDDIOLevel(uint8_t level) {
  * @see MPU6050_RA_SMPLRT_DIV
  */
 uint8_t MPU6050::getRate() {
-    return I2Cdev::readByte(devAddr, MPU6050_RA_SMPLRT_DIV, buffer);
+    I2Cdev::readByte(devAddr, MPU6050_RA_SMPLRT_DIV, buffer);
     return buffer[0];
 }
 /** Set gyroscope sample rate divider.
@@ -1596,6 +1596,17 @@ void MPU6050::setIntDataReadyEnabled(bool enabled) {
 
 // INT_STATUS register
 
+/** Get full set of interrupt status bits.
+ * These bits clear to 0 after the register has been read. Very useful
+ * for getting multiple INT statuses, since each single bit read clears
+ * all of them because it has to read the whole byte.
+ * @return Current interrupt status
+ * @see MPU6050_RA_INT_STATUS
+ */
+uint8_t MPU6050::getIntStatus() {
+    I2Cdev::readByte(devAddr, MPU6050_RA_INT_STATUS, buffer);
+    return buffer[0];
+}
 /** Get Free Fall interrupt status.
  * This bit automatically sets to 1 when a Free Fall interrupt has been
  * generated. The bit clears to 0 after the register has been read.
@@ -2641,6 +2652,9 @@ uint8_t MPU6050::getFIFOByte() {
     I2Cdev::readByte(devAddr, MPU6050_RA_FIFO_R_W, buffer);
     return buffer[0];
 }
+void MPU6050::getFIFOBytes(uint8_t *data, uint8_t length) {
+    I2Cdev::readBytes(devAddr, MPU6050_RA_FIFO_R_W, length, data);
+}
 /** Write byte to FIFO buffer.
  * @see getFIFOByte()
  * @see MPU6050_RA_FIFO_R_W
@@ -2679,6 +2693,13 @@ void MPU6050::setDeviceID(uint8_t id) {
 
 // XG_OFFS_TC register
 
+uint8_t MPU6050::getOTPBankValid() {
+    I2Cdev::readBit(devAddr, MPU6050_RA_XG_OFFS_TC, MPU6050_TC_OTP_BNK_VLD_BIT, buffer);
+    return buffer[0];
+}
+void MPU6050::setOTPBankValid(bool enabled) {
+    I2Cdev::writeBit(devAddr, MPU6050_RA_XG_OFFS_TC, MPU6050_TC_OTP_BNK_VLD_BIT, enabled);
+}
 int8_t MPU6050::getXGyroOffset() {
     I2Cdev::readBits(devAddr, MPU6050_RA_XG_OFFS_TC, MPU6050_TC_OFFSET_BIT, MPU6050_TC_OFFSET_LENGTH, buffer);
     return buffer[0];
@@ -2943,32 +2964,28 @@ bool MPU6050::writeMemoryBlock(uint8_t *data, uint16_t dataSize, uint8_t bank, u
         if (useProgMem) {
             // write the chunk of data as specified
             for (j = 0; j < chunkSize; j++) progBuffer[j] = pgm_read_byte(data + i + j);
-            I2Cdev::writeBytes(devAddr, MPU6050_RA_MEM_R_W, chunkSize, progBuffer);
         } else {
             // write the chunk of data as specified
-            I2Cdev::writeBytes(devAddr, MPU6050_RA_MEM_R_W, chunkSize, data + i);
+            progBuffer = data + i;
         }
+
+        I2Cdev::writeBytes(devAddr, MPU6050_RA_MEM_R_W, chunkSize, progBuffer);
 
         // verify data if needed
         if (verify && verifyBuffer) {
             setMemoryBank(bank);
             setMemoryStartAddress(address);
             I2Cdev::readBytes(devAddr, MPU6050_RA_MEM_R_W, chunkSize, verifyBuffer);
-            if (memcmp(data + i, verifyBuffer, chunkSize) != 0) {
-                Serial.print("Block write verification error, bank ");
+            if (memcmp(progBuffer, verifyBuffer, chunkSize) != 0) {
+                /*Serial.print("Block write verification error, bank ");
                 Serial.print(bank, DEC);
                 Serial.print(", address ");
                 Serial.print(address, DEC);
                 Serial.print("!\nExpected:");
                 for (j = 0; j < chunkSize; j++) {
                     Serial.print(" 0x");
-                    if (useProgMem) {
-                        if (progBuffer[j] < 16) Serial.print("0");
-                        Serial.print(progBuffer[j], HEX);
-                    } else {
-                        if (data[i + j] < 16) Serial.print("0");
-                        Serial.print(data[i + j], HEX);
-                    }
+                    if (progBuffer[j] < 16) Serial.print("0");
+                    Serial.print(progBuffer[j], HEX);
                 }
                 Serial.print("\nReceived:");
                 for (uint8_t j = 0; j < chunkSize; j++) {
@@ -2976,7 +2993,7 @@ bool MPU6050::writeMemoryBlock(uint8_t *data, uint16_t dataSize, uint8_t bank, u
                     if (verifyBuffer[i + j] < 16) Serial.print("0");
                     Serial.print(verifyBuffer[i + j], HEX);
                 }
-                Serial.print("\n");
+                Serial.print("\n");*/
                 free(verifyBuffer);
                 if (useProgMem) free(progBuffer);
                 return false; // uh oh.
@@ -2987,7 +3004,7 @@ bool MPU6050::writeMemoryBlock(uint8_t *data, uint16_t dataSize, uint8_t bank, u
         i += chunkSize;
 
         // uint8_t automatically wraps to 0 at 256
-        address + chunkSize;
+        address += chunkSize;
 
         // if we aren't done, update bank (if necessary) and address
         if (i < dataSize) {
@@ -3002,6 +3019,83 @@ bool MPU6050::writeMemoryBlock(uint8_t *data, uint16_t dataSize, uint8_t bank, u
 }
 bool MPU6050::writeProgMemoryBlock(uint8_t *data, uint16_t dataSize, uint8_t bank, uint8_t address, bool verify) {
     writeMemoryBlock(data, dataSize, bank, address, verify, true);
+}
+#define MPU6050_DMP_CONFIG_BLOCK_SIZE 6
+bool MPU6050::writeDMPConfigurationSet(uint8_t *data, uint16_t dataSize, bool useProgMem) {
+    uint8_t *progBuffer, success, special;
+    uint16_t i, j;
+    if (useProgMem) {
+        progBuffer = (uint8_t *)malloc(8); // assume 8-byte blocks, realloc later if necessary
+    }
+
+    // config set data is a long string of blocks with the following structure:
+    // [bank] [offset] [length] [byte[0], byte[1], ..., byte[length]]
+    uint8_t bank, offset, length;
+    for (i = 0; i < dataSize;) {
+        if (useProgMem) {
+            bank = pgm_read_byte(data + i++);
+            offset = pgm_read_byte(data + i++);
+            length = pgm_read_byte(data + i++);
+        } else {
+            bank = data[i++];
+            offset = data[i++];
+            length = data[i++];
+        }
+
+        // write data or perform special action
+        if (length > 0) {
+            // regular block of data to write
+            /*Serial.print("Writing config block to bank ");
+            Serial.print(bank);
+            Serial.print(", offset ");
+            Serial.print(offset);
+            Serial.print(", length=");
+            Serial.println(length);*/
+            if (useProgMem) {
+                if (sizeof(progBuffer) < length) progBuffer = (uint8_t *)realloc(progBuffer, length);
+                for (j = 0; j < length; j++) progBuffer[j] = pgm_read_byte(data + i + j);
+            } else {
+                progBuffer = data + i;
+            }
+            success = writeMemoryBlock(progBuffer, length, bank, offset, true);
+            i += length;
+        } else {
+            // special instruction
+            // NOTE: this kind of behavior (what and when to do certain things)
+            // is totally undocumented. This code is in here based on observed
+            // behavior only, and exactly why (or even whether) it has to be here
+            // is anybody's guess for now.
+            if (useProgMem) {
+                special = pgm_read_byte(data + i++);
+            } else {
+                special = data[i++];
+            }
+            /*Serial.print("Special command code ");
+            Serial.print(special, HEX);
+            Serial.println(" found...");*/
+            if (special == 0x01) {
+                // enable DMP-related interrupts
+                setIntZeroMotionEnabled(true);
+                setIntFIFOBufferOverflowEnabled(true);
+                setIntDMPEnabled(true);
+                //I2Cdev::writeByte(devAddr, MPU6050_RA_INT_ENABLE, 0x32);
+                success = true;
+            } else {
+                // unknown special command
+                success = false;
+            }
+        }
+        
+        if (!success) {
+            if (useProgMem) free(progBuffer);
+            return false; // uh oh
+        }
+    }
+    if (useProgMem) free(progBuffer);
+    return true;
+}
+bool MPU6050::writeProgDMPConfigurationSet(uint8_t *data, uint16_t dataSize) {
+    return writeDMPConfigurationSet(data, dataSize, true);
 }
 
 // DMP_CFG_1 register
