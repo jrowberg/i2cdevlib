@@ -49,7 +49,7 @@ uint8_t fifoCount;
 uint8_t fifoBuffer[128];
 uint8_t mpuIntStatus;
 
-//#define DEBUG
+#define DEBUG
 #ifdef DEBUG
     #define DEBUG_PRINT(x) Serial.print(x)
     #define DEBUG_PRINTF(x, y) Serial.print(x, y)
@@ -298,7 +298,7 @@ void loop() {
 
     // check for the correct FIFO size to indicate full data ready
     if (fifoCount >= 42) {
-        /*
+
         // display quaternion values in easy matrix form: [w, x, y, z]
         q[0] = (float)((fifoBuffer[0] << 8) + fifoBuffer[1]) / 16384;
         q[1] = (float)((fifoBuffer[4] << 8) + fifoBuffer[5]) / 16384;
@@ -312,9 +312,11 @@ void loop() {
         Serial.print(q[2]);
         Serial.print(", ");
         Serial.print(q[3]);
-        Serial.print("]\n"); //*/
+        Serial.print("]\n");
+        //*/
 
-        // display quaternion values in Teapot demo form:
+        /*
+        // display quaternion values in Teapot demo format: (Teapot demo is not fully working yet)
         teapotPacket[2] = fifoBuffer[0];
         teapotPacket[3] = fifoBuffer[1];
         teapotPacket[4] = fifoBuffer[4];
@@ -323,8 +325,9 @@ void loop() {
         teapotPacket[7] = fifoBuffer[9];
         teapotPacket[8] = fifoBuffer[12];
         teapotPacket[9] = fifoBuffer[13];
-        Serial.write(teapotPacket, 14); //*/
+        Serial.write(teapotPacket, 14);
         teapotPacket[11]++; // packetCount, loops at 0xFF on purpose
+        //*/
 
         // blink LED to indicate activity
         blinkState = !blinkState;
