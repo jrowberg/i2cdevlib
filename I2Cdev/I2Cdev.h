@@ -102,8 +102,9 @@ class I2Cdev {
 };
 
 #if I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_FASTWIRE
-    // I2C library
     //////////////////////
+    // FastWire 0.2
+    // This is a library to help faster programs to read I2C devices.
     // Copyright(C) 2011
     // Francesco Ferrara
     //////////////////////
@@ -131,12 +132,12 @@ class I2Cdev {
 
     class Fastwire {
         private:
-          static boolean waitInt();
+            static boolean waitInt();
 
         public:
-          static void setup(int khz, boolean pullup);
-          static byte write(byte device, byte address, byte value);
-          static byte readBuf(byte device, byte address, byte *data, byte num);
+            static void setup(int khz, boolean pullup);
+            static byte write(byte device, byte address, byte value);
+            static byte readBuf(byte device, byte address, byte *data, byte num);
     };
 #endif
 
