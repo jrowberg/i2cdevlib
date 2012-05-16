@@ -3018,7 +3018,7 @@ bool MPU6050::writeMemoryBlock(uint8_t *data, uint16_t dataSize, uint8_t bank, u
     return true;
 }
 bool MPU6050::writeProgMemoryBlock(uint8_t *data, uint16_t dataSize, uint8_t bank, uint8_t address, bool verify) {
-    writeMemoryBlock(data, dataSize, bank, address, verify, true);
+    return writeMemoryBlock(data, dataSize, bank, address, verify, true);
 }
 #define MPU6050_DMP_CONFIG_BLOCK_SIZE 6
 bool MPU6050::writeDMPConfigurationSet(uint8_t *data, uint16_t dataSize, bool useProgMem) {
