@@ -865,7 +865,7 @@ void MPU6050::setMasterClockSpeed(uint8_t speed) {
  * In read mode, the result of the read is placed in the lowest available 
  * EXT_SENS_DATA register. For further information regarding the allocation of
  * read results, please refer to the EXT_SENS_DATA register description
- * (Registers 73 – 96).
+ * (Registers 73 - 96).
  *
  * The MPU-6050 supports a total of five slaves, but Slave 4 has unique
  * characteristics, and so it has its own functions (getSlave4* and setSlave4*).
@@ -2931,7 +2931,7 @@ void MPU6050::readMemoryBlock(uint8_t *data, uint16_t dataSize, uint8_t bank, ui
         i += chunkSize;
 
         // uint8_t automatically wraps to 0 at 256
-        address + chunkSize;
+        address += chunkSize;
 
         // if we aren't done, update bank (if necessary) and address
         if (i < dataSize) {
