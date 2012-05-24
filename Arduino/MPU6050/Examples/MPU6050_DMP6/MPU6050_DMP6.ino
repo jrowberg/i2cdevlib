@@ -41,7 +41,7 @@ THE SOFTWARE.
 
 // class default I2C address is 0x68
 // specific I2C addresses may be passed as a parameter here
-// AD0 low = 0x68 (default for InvenSense evaluation board)
+// AD0 low = 0x68 (default for SparkFun breakout and InvenSense evaluation board)
 // AD0 high = 0x69
 MPU6050 accelgyro;
 
@@ -52,14 +52,20 @@ MPU6050 accelgyro;
 // =============================================================
 // In addition to connection 3.3v, GND, SDA, and SCL, this sketch
 // depends on the MPU-6050's INT pin being connected to the
-// Arduino's external interrupt #0 pin. On the Arduino Mega 2560,
-// this is digital I/O pin 2.
+// Arduino's external interrupt #0 pin. On the Arduino Uno and
+// Mega 2560, this is digital I/O pin 2.
 
 uint8_t fifoCount;
 uint8_t fifoBuffer[128];
 uint8_t mpuIntStatus;
 
-#define DEBUG
+// NOTE! Enabling DEBUG causes memory usage issues on the regular
+// Arduino Uno (ATMEGA328P). You WILL get malformed serial output
+// on a device powered by this MCU if you enable DEBUG and leave
+// the rest of the code as-is. Teensy boards and Arduino Mega
+// boards do not have this limitation.
+
+//#define DEBUG
 #ifdef DEBUG
     #define DEBUG_PRINT(x) Serial.print(x)
     #define DEBUG_PRINTF(x, y) Serial.print(x, y)
@@ -93,7 +99,7 @@ void setup() {
     DEBUG_PRINTLN(accelgyro.testConnection() ? "MPU6050 connection successful" : "MPU6050 connection failed");
     
     // wait for ready
-    DEBUG_PRINT("\nSend any character to begin DMP programming and demo: ");
+    Serial.println("\nSend any character to begin DMP programming and demo: ");
     while (Serial.available() && Serial.read()); // empty buffer
     while (!Serial.available());                 // wait for data
     while (Serial.available() && Serial.read()); // empty buffer again
@@ -308,7 +314,7 @@ void loop() {
 
     // check for the correct FIFO size to indicate full data ready
     if (fifoCount >= 42) {
-
+        /*
         // display quaternion values in easy matrix form: [w, x, y, z]
         q[0] = (float)((fifoBuffer[0] << 8) + fifoBuffer[1]) / 16384;
         q[1] = (float)((fifoBuffer[4] << 8) + fifoBuffer[5]) / 16384;
@@ -325,8 +331,8 @@ void loop() {
         Serial.print("]\n");
         //*/
 
-        /*
-        // display quaternion values in Teapot demo format: (Teapot demo is not fully working yet)
+        //*
+        // display quaternion values in Teapot demo format:
         teapotPacket[2] = fifoBuffer[0];
         teapotPacket[3] = fifoBuffer[1];
         teapotPacket[4] = fifoBuffer[4];
