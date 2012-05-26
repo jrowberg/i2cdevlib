@@ -59,6 +59,15 @@ uint8_t fifoCount;
 uint8_t fifoBuffer[128];
 uint8_t mpuIntStatus;
 
+// uncomment "OUTPUT_TEAPOT" if you want output that matches the
+// format used for the InvenSense teapot demo
+//#define OUTPUT_TEAPOT
+
+// uncomment "OUTPUT_READABLE" if you want to see the actual quaternion
+// components in a [w, x, y, z] format (not best for parsing on a remote
+// host such as Processing or something though)
+#define OUTPUT_READABLE
+
 // NOTE! Enabling DEBUG causes memory usage issues on the regular
 // Arduino Uno (ATMEGA328P). You WILL get malformed serial output
 // on a device powered by this MCU if you enable DEBUG and leave
@@ -314,36 +323,36 @@ void loop() {
 
     // check for the correct FIFO size to indicate full data ready
     if (fifoCount >= 42) {
-        /*
-        // display quaternion values in easy matrix form: [w, x, y, z]
-        q[0] = (float)((fifoBuffer[0] << 8) + fifoBuffer[1]) / 16384;
-        q[1] = (float)((fifoBuffer[4] << 8) + fifoBuffer[5]) / 16384;
-        q[2] = (float)((fifoBuffer[8] << 8) + fifoBuffer[9]) / 16384;
-        q[3] = (float)((fifoBuffer[12] << 8) + fifoBuffer[13]) / 16384;
-        Serial.print("[");
-        Serial.print(q[0]);
-        Serial.print(", ");
-        Serial.print(q[1]);
-        Serial.print(", ");
-        Serial.print(q[2]);
-        Serial.print(", ");
-        Serial.print(q[3]);
-        Serial.print("]\n");
-        //*/
+        #ifdef OUTPUT_READABLE
+            // display quaternion values in easy matrix form: [w, x, y, z]
+            q[0] = (float)((fifoBuffer[0] << 8) + fifoBuffer[1]) / 16384;
+            q[1] = (float)((fifoBuffer[4] << 8) + fifoBuffer[5]) / 16384;
+            q[2] = (float)((fifoBuffer[8] << 8) + fifoBuffer[9]) / 16384;
+            q[3] = (float)((fifoBuffer[12] << 8) + fifoBuffer[13]) / 16384;
+            Serial.print("[");
+            Serial.print(q[0]);
+            Serial.print(", ");
+            Serial.print(q[1]);
+            Serial.print(", ");
+            Serial.print(q[2]);
+            Serial.print(", ");
+            Serial.print(q[3]);
+            Serial.print("]\n");
+        #endif
 
-        //*
-        // display quaternion values in Teapot demo format:
-        teapotPacket[2] = fifoBuffer[0];
-        teapotPacket[3] = fifoBuffer[1];
-        teapotPacket[4] = fifoBuffer[4];
-        teapotPacket[5] = fifoBuffer[5];
-        teapotPacket[6] = fifoBuffer[8];
-        teapotPacket[7] = fifoBuffer[9];
-        teapotPacket[8] = fifoBuffer[12];
-        teapotPacket[9] = fifoBuffer[13];
-        Serial.write(teapotPacket, 14);
-        teapotPacket[11]++; // packetCount, loops at 0xFF on purpose
-        //*/
+        #ifdef OUTPUT_TEAPOT
+            // display quaternion values in Teapot demo format:
+            teapotPacket[2] = fifoBuffer[0];
+            teapotPacket[3] = fifoBuffer[1];
+            teapotPacket[4] = fifoBuffer[4];
+            teapotPacket[5] = fifoBuffer[5];
+            teapotPacket[6] = fifoBuffer[8];
+            teapotPacket[7] = fifoBuffer[9];
+            teapotPacket[8] = fifoBuffer[12];
+            teapotPacket[9] = fifoBuffer[13];
+            Serial.write(teapotPacket, 14);
+            teapotPacket[11]++; // packetCount, loops at 0xFF on purpose
+        #endif
 
         // blink LED to indicate activity
         blinkState = !blinkState;
