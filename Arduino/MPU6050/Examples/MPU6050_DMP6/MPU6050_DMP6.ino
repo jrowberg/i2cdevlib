@@ -194,7 +194,7 @@ void setup() {
             DEBUG_PRINTLN(F("Setting DLPF bandwidth to 42Hz..."));
             accelgyro.setDLPFMode(MPU6050_DLPF_BW_42);
             DEBUG_PRINTLN(F("Setting gyro sensitivity to +/- 2000 deg/sec..."));
-            accelgyro.setDLPFMode(MPU6050_GYRO_FS_2000);
+            accelgyro.setFullScaleGyroRange(MPU6050_GYRO_FS_2000);
             DEBUG_PRINTLN(F("Setting DMP configuration bytes (function unknown)..."));
             accelgyro.setDMPConfig1(0x03);
             accelgyro.setDMPConfig2(0x00);
@@ -288,7 +288,7 @@ void setup() {
             DEBUG_PRINTLN(F("DMP is good to go! Finally."));
             
             DEBUG_PRINTLN(F("Enabling interrupt detection (Arduino external interrupt 0)..."));
-            attachInterrupt(0, dmpDataReady, CHANGE);
+            attachInterrupt(4, dmpDataReady, CHANGE);
         } else {
             DEBUG_PRINTLN(F("ERROR! DMP configuration verification failed."));
         }
