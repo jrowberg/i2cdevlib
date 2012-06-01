@@ -288,7 +288,7 @@ void setup() {
             DEBUG_PRINTLN(F("DMP is good to go! Finally."));
             
             DEBUG_PRINTLN(F("Enabling interrupt detection (Arduino external interrupt 0)..."));
-            attachInterrupt(0, dmpDataReady, CHANGE);
+            attachInterrupt(4, dmpDataReady, CHANGE);
         } else {
             DEBUG_PRINTLN(F("ERROR! DMP configuration verification failed."));
         }
