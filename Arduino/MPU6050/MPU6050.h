@@ -758,11 +758,11 @@ class MPU6050 {
         uint8_t readMemoryByte();
         void writeMemoryByte(uint8_t data);
         void readMemoryBlock(uint8_t *data, uint16_t dataSize, uint8_t bank=0, uint8_t address=0);
-        bool writeMemoryBlock(uint8_t *data, uint16_t dataSize, uint8_t bank=0, uint8_t address=0, bool verify=true, bool useProgMem=false);
-        bool writeProgMemoryBlock(uint8_t *data, uint16_t dataSize, uint8_t bank=0, uint8_t address=0, bool verify=true);
+        bool writeMemoryBlock(const uint8_t *data, uint16_t dataSize, uint8_t bank=0, uint8_t address=0, bool verify=true, bool useProgMem=false);
+        bool writeProgMemoryBlock(const uint8_t *data, uint16_t dataSize, uint8_t bank=0, uint8_t address=0, bool verify=true);
 
-        bool writeDMPConfigurationSet(uint8_t *data, uint16_t dataSize, bool useProgMem=false);
-        bool writeProgDMPConfigurationSet(uint8_t *data, uint16_t dataSize);
+        bool writeDMPConfigurationSet(const uint8_t *data, uint16_t dataSize, bool useProgMem=false);
+        bool writeProgDMPConfigurationSet(const uint8_t *data, uint16_t dataSize);
 
         // DMP_CFG_1 register
         uint8_t getDMPConfig1();
@@ -796,7 +796,7 @@ class MPU6050 {
     // this block of memory gets written to the MPU on start-up, and it seems
     // to be volatile memory, so it has to be done each time (it only takes ~1
     // second though)
-    prog_uchar dmpMemory[MPU6050_DMP_CODE_SIZE] PROGMEM = {
+    const prog_uchar dmpMemory[MPU6050_DMP_CODE_SIZE] PROGMEM = {
         // bank 0, 256 bytes
         0xFB, 0x00, 0x00, 0x3E, 0x00, 0x0B, 0x00, 0x36, 0x00, 0x01, 0x00, 0x02, 0x00, 0x03, 0x00, 0x00,
         0x00, 0x65, 0x00, 0x54, 0xFF, 0xEF, 0x00, 0x00, 0xFA, 0x80, 0x00, 0x0B, 0x12, 0x82, 0x00, 0x01,
@@ -938,7 +938,7 @@ class MPU6050 {
     #define MPU6050_DMP_CONFIG_SIZE 192
 
     // thanks to Noah Zerkin for piecing this stuff together!
-    prog_uchar dmpConfig[MPU6050_DMP_CONFIG_SIZE] PROGMEM = {
+    const prog_uchar dmpConfig[MPU6050_DMP_CONFIG_SIZE] PROGMEM = {
     //  BANK    OFFSET  LENGTH  [DATA]
         0x03,   0x7B,   0x03,   0x4C, 0xCD, 0x6C,         // FCFG_1 inv_set_gyro_calibration
         0x03,   0xAB,   0x03,   0x36, 0x56, 0x76,         // FCFG_3 inv_set_gyro_calibration

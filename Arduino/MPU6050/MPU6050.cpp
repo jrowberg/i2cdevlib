@@ -2941,7 +2941,7 @@ void MPU6050::readMemoryBlock(uint8_t *data, uint16_t dataSize, uint8_t bank, ui
         }
     }
 }
-bool MPU6050::writeMemoryBlock(uint8_t *data, uint16_t dataSize, uint8_t bank, uint8_t address, bool verify, bool useProgMem) {
+bool MPU6050::writeMemoryBlock(const uint8_t *data, uint16_t dataSize, uint8_t bank, uint8_t address, bool verify, bool useProgMem) {
     setMemoryBank(bank);
     setMemoryStartAddress(address);
     uint8_t chunkSize;
@@ -2966,7 +2966,7 @@ bool MPU6050::writeMemoryBlock(uint8_t *data, uint16_t dataSize, uint8_t bank, u
             for (j = 0; j < chunkSize; j++) progBuffer[j] = pgm_read_byte(data + i + j);
         } else {
             // write the chunk of data as specified
-            progBuffer = data + i;
+            progBuffer = (uint8_t *)data + i;
         }
 
         I2Cdev::writeBytes(devAddr, MPU6050_RA_MEM_R_W, chunkSize, progBuffer);
@@ -3017,11 +3017,11 @@ bool MPU6050::writeMemoryBlock(uint8_t *data, uint16_t dataSize, uint8_t bank, u
     if (useProgMem) free(progBuffer);
     return true;
 }
-bool MPU6050::writeProgMemoryBlock(uint8_t *data, uint16_t dataSize, uint8_t bank, uint8_t address, bool verify) {
+bool MPU6050::writeProgMemoryBlock(const uint8_t *data, uint16_t dataSize, uint8_t bank, uint8_t address, bool verify) {
     return writeMemoryBlock(data, dataSize, bank, address, verify, true);
 }
 #define MPU6050_DMP_CONFIG_BLOCK_SIZE 6
-bool MPU6050::writeDMPConfigurationSet(uint8_t *data, uint16_t dataSize, bool useProgMem) {
+bool MPU6050::writeDMPConfigurationSet(const uint8_t *data, uint16_t dataSize, bool useProgMem) {
     uint8_t *progBuffer, success, special;
     uint16_t i, j;
     if (useProgMem) {
@@ -3055,7 +3055,7 @@ bool MPU6050::writeDMPConfigurationSet(uint8_t *data, uint16_t dataSize, bool us
                 if (sizeof(progBuffer) < length) progBuffer = (uint8_t *)realloc(progBuffer, length);
                 for (j = 0; j < length; j++) progBuffer[j] = pgm_read_byte(data + i + j);
             } else {
-                progBuffer = data + i;
+                progBuffer = (uint8_t *)data + i;
             }
             success = writeMemoryBlock(progBuffer, length, bank, offset, true);
             i += length;
@@ -3094,7 +3094,7 @@ bool MPU6050::writeDMPConfigurationSet(uint8_t *data, uint16_t dataSize, bool us
     if (useProgMem) free(progBuffer);
     return true;
 }
-bool MPU6050::writeProgDMPConfigurationSet(uint8_t *data, uint16_t dataSize) {
+bool MPU6050::writeProgDMPConfigurationSet(const uint8_t *data, uint16_t dataSize) {
     return writeDMPConfigurationSet(data, dataSize, true);
 }
 
