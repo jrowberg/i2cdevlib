@@ -3,11 +3,12 @@
 // Updates should (hopefully) always be available at https://github.com/jrowberg/i2cdevlib
 //
 // Changelog:
-//     ... - ongoing debug release
+//     2012-06-01 - fixed gyro sensitivity to be 2000 deg/sec instead of 250
+//     2012-05-30 - basic DMP initialization working
 
 /* ============================================
 I2Cdev device library code is placed under the MIT license
-Copyright (c) 2011 Jeff Rowberg
+Copyright (c) 2012 Jeff Rowberg
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -68,13 +69,12 @@ uint8_t mpuIntStatus;
 // host such as Processing or something though)
 #define OUTPUT_READABLE
 
-// NOTE! Enabling DEBUG causes memory usage issues on the regular
-// Arduino Uno (ATMEGA328P). You WILL get malformed serial output
-// on a device powered by this MCU if you enable DEBUG and leave
-// the rest of the code as-is. Teensy boards and Arduino Mega
-// boards do not have this limitation.
+// NOTE! Enabling DEBUG adds about 3.3kB to the flash program size.
+// Debug output is now working even on ATMega328P MCUs (e.g. Arduino Uno)
+// after moving string constants to flash memory storage using the F()
+// compiler macro (Arduino IDE 1.0+ required).
 
-//#define DEBUG
+#define DEBUG
 #ifdef DEBUG
     #define DEBUG_PRINT(x) Serial.print(x)
     #define DEBUG_PRINTF(x, y) Serial.print(x, y)
@@ -100,15 +100,15 @@ void setup() {
     Serial.begin(38400);
 
     // initialize device
-    DEBUG_PRINTLN("Initializing I2C devices...");
+    DEBUG_PRINTLN(F("Initializing I2C devices..."));
     accelgyro.initialize();
 
     // verify connection
-    DEBUG_PRINTLN("Testing device connections...");
-    DEBUG_PRINTLN(accelgyro.testConnection() ? "MPU6050 connection successful" : "MPU6050 connection failed");
+    Serial.println(F("Testing device connections..."));
+    Serial.println(accelgyro.testConnection() ? F("MPU6050 connection successful") : F("MPU6050 connection failed"));
     
     // wait for ready
-    Serial.println("\nSend any character to begin DMP programming and demo: ");
+    Serial.println(F("\nSend any character to begin DMP programming and demo: "));
     while (Serial.available() && Serial.read()); // empty buffer
     while (!Serial.available());                 // wait for data
     while (Serial.available() && Serial.read()); // empty buffer again
@@ -116,93 +116,95 @@ void setup() {
     // ====================== BEGIN DMP INITIALIZATION CODE ===========================
 
     // reset device
-    DEBUG_PRINTLN("\n\nResetting MPU6050...");
+    DEBUG_PRINTLN(F("\n\nResetting MPU6050..."));
     accelgyro.reset();
     delay(50); // wait after reset
 
     // enable sleep mode and wake cycle
-    //Serial.println("Enabling sleep mode...");
+    //Serial.println(F("Enabling sleep mode..."));
     //accelgyro.setSleepEnabled(true);
-    //Serial.println("Enabling wake cycle...");
+    //Serial.println(F("Enabling wake cycle..."));
     //accelgyro.setWakeCycleEnabled(true);
     //delay(10);
 
     // disable sleep mode
-    DEBUG_PRINTLN("Disabling sleep mode...");
+    DEBUG_PRINTLN(F("Disabling sleep mode..."));
     accelgyro.setSleepEnabled(false);
 
     // get MPU hardware revision
-    DEBUG_PRINTLN("Selecting user bank 16...");
+    DEBUG_PRINTLN(F("Selecting user bank 16..."));
     accelgyro.setMemoryBank(0x10, true, true);
-    DEBUG_PRINTLN("Selecting memory byte 6...");
+    DEBUG_PRINTLN(F("Selecting memory byte 6..."));
     accelgyro.setMemoryStartAddress(0x06);
-    DEBUG_PRINTLN("Checking hardware revision...");
+    DEBUG_PRINTLN(F("Checking hardware revision..."));
     uint8_t hwRevision = accelgyro.readMemoryByte();
-    DEBUG_PRINT("Revision @ user[16][6] = ");
+    DEBUG_PRINT(F("Revision @ user[16][6] = "));
     DEBUG_PRINTLNF(hwRevision, HEX);
-    DEBUG_PRINTLN("Resetting memory bank selection to 0...");
+    DEBUG_PRINTLN(F("Resetting memory bank selection to 0..."));
     accelgyro.setMemoryBank(0, false, false);
 
     // check OTP bank valid
-    DEBUG_PRINTLN("Reading OTP bank valid flag...");
+    DEBUG_PRINTLN(F("Reading OTP bank valid flag..."));
     uint8_t otpValid = accelgyro.getOTPBankValid();
-    DEBUG_PRINT("OTP bank is ");
-    DEBUG_PRINTLN(otpValid ? "valid!" : "invalid!");
+    DEBUG_PRINT(F("OTP bank is "));
+    DEBUG_PRINTLN(otpValid ? F("valid!") : F("invalid!"));
 
     // get X/Y/Z gyro offsets
-    DEBUG_PRINTLN("Reading gyro offset values...");
+    DEBUG_PRINTLN(F("Reading gyro offset values..."));
     int8_t xgOffset = accelgyro.getXGyroOffset();
     int8_t ygOffset = accelgyro.getYGyroOffset();
     int8_t zgOffset = accelgyro.getZGyroOffset();
-    DEBUG_PRINT("X gyro offset = ");
+    DEBUG_PRINT(F("X gyro offset = "));
     DEBUG_PRINTLN(xgOffset);
-    DEBUG_PRINT("Y gyro offset = ");
+    DEBUG_PRINT(F("Y gyro offset = "));
     DEBUG_PRINTLN(ygOffset);
-    DEBUG_PRINT("Z gyro offset = ");
+    DEBUG_PRINT(F("Z gyro offset = "));
     DEBUG_PRINTLN(zgOffset);
 
     // setup weird slave stuff (?)
-    DEBUG_PRINTLN("Setting slave 0 address to 0x7F...");
+    DEBUG_PRINTLN(F("Setting slave 0 address to 0x7F..."));
     accelgyro.setSlaveAddress(0, 0x7F);
-    DEBUG_PRINTLN("Disabling I2C Master mode...");
+    DEBUG_PRINTLN(F("Disabling I2C Master mode..."));
     accelgyro.setI2CMasterModeEnabled(false);
-    DEBUG_PRINTLN("Setting slave 0 address to 0x68 (self)...");
+    DEBUG_PRINTLN(F("Setting slave 0 address to 0x68 (self)..."));
     accelgyro.setSlaveAddress(0, 0x68);
-    DEBUG_PRINTLN("Resetting I2C Master control...");
+    DEBUG_PRINTLN(F("Resetting I2C Master control..."));
     accelgyro.resetI2CMaster();
     delay(20);
 
     // load DMP code into memory banks
-    DEBUG_PRINT("Writing DMP code to MPU memory banks (");
+    DEBUG_PRINT(F("Writing DMP code to MPU memory banks ("));
     DEBUG_PRINT(MPU6050_DMP_CODE_SIZE);
-    DEBUG_PRINTLN(" bytes)");
+    DEBUG_PRINTLN(F(" bytes)"));
     if (accelgyro.writeProgMemoryBlock(dmpMemory, MPU6050_DMP_CODE_SIZE)) {
-        DEBUG_PRINTLN("Success! DMP code written and verified.");
+        DEBUG_PRINTLN(F("Success! DMP code written and verified."));
 
         // write DMP configuration
-        DEBUG_PRINT("Writing DMP configuration to MPU memory banks (");
+        DEBUG_PRINT(F("Writing DMP configuration to MPU memory banks ("));
         DEBUG_PRINT(MPU6050_DMP_CONFIG_SIZE);
-        DEBUG_PRINTLN(" bytes in config def)");
+        DEBUG_PRINTLN(F(" bytes in config def)"));
         if (accelgyro.writeProgDMPConfigurationSet(dmpConfig, MPU6050_DMP_CONFIG_SIZE)) {
-            DEBUG_PRINTLN("Success! DMP configuration written and verified.");
-            DEBUG_PRINTLN("Setting clock source to Z Gyro...");
+            DEBUG_PRINTLN(F("Success! DMP configuration written and verified."));
+            DEBUG_PRINTLN(F("Setting clock source to Z Gyro..."));
             accelgyro.setClockSource(MPU6050_CLOCK_PLL_ZGYRO);
-            DEBUG_PRINTLN("Setting sample rate to 200Hz...");
+            DEBUG_PRINTLN(F("Setting sample rate to 200Hz..."));
             accelgyro.setRate(4); // 1khz / (1 + 4) = 200 Hz
-            DEBUG_PRINTLN("Setting external frame sync to TEMP_OUT_L[0]...");
+            DEBUG_PRINTLN(F("Setting external frame sync to TEMP_OUT_L[0]..."));
             accelgyro.setExternalFrameSync(MPU6050_EXT_SYNC_TEMP_OUT_L);
-            DEBUG_PRINTLN("Setting DLPF bandwidth to 42Hz...");
+            DEBUG_PRINTLN(F("Setting DLPF bandwidth to 42Hz..."));
             accelgyro.setDLPFMode(MPU6050_DLPF_BW_42);
-            DEBUG_PRINTLN("Setting DMP configuration bytes (function unknown)...");
+            DEBUG_PRINTLN(F("Setting gyro sensitivity to +/- 2000 deg/sec..."));
+            accelgyro.setDLPFMode(MPU6050_GYRO_FS_2000);
+            DEBUG_PRINTLN(F("Setting DMP configuration bytes (function unknown)..."));
             accelgyro.setDMPConfig1(0x03);
             accelgyro.setDMPConfig2(0x00);
-            DEBUG_PRINTLN("Clearing OTP Bank flag...");
+            DEBUG_PRINTLN(F("Clearing OTP Bank flag..."));
             accelgyro.setOTPBankValid(false);
-            DEBUG_PRINTLN("Setting X/Y/Z gyro offsets to zero...");
+            DEBUG_PRINTLN(F("Setting X/Y/Z gyro offsets to zero..."));
             accelgyro.setXGyroOffset(0);
             accelgyro.setYGyroOffset(0);
             accelgyro.setZGyroOffset(0);
-            DEBUG_PRINTLN("Setting X/Y/Z accel offsets to zero...");
+            DEBUG_PRINTLN(F("Setting X/Y/Z accel offsets to zero..."));
             accelgyro.setXAccelOffset(0);
             accelgyro.setYAccelOffset(0);
             accelgyro.setZAccelOffset(0);
@@ -217,81 +219,81 @@ void setup() {
                 { 0x00, 0x60, 0x04, 0x00, 0x40, 0x00, 0x00 }
             };
 
-            DEBUG_PRINTLN("Writing final memory update 1/7 (function unknown)...");
+            DEBUG_PRINTLN(F("Writing final memory update 1/7 (function unknown)..."));
             accelgyro.writeMemoryBlock(dmpMemUpdates[0] + 3, dmpMemUpdates[0][2], dmpMemUpdates[0][0], dmpMemUpdates[0][1]);
-            DEBUG_PRINTLN("Writing final memory update 2/7 (function unknown)...");
+            DEBUG_PRINTLN(F("Writing final memory update 2/7 (function unknown)..."));
             accelgyro.writeMemoryBlock(dmpMemUpdates[1] + 3, dmpMemUpdates[1][2], dmpMemUpdates[1][0], dmpMemUpdates[1][1]);
 
-            DEBUG_PRINTLN("Resetting FIFO...");
+            DEBUG_PRINTLN(F("Resetting FIFO..."));
             accelgyro.resetFIFO();
-            DEBUG_PRINTLN("Reading FIFO count...");
+            DEBUG_PRINTLN(F("Reading FIFO count..."));
             fifoCount = accelgyro.getFIFOCount();
-            DEBUG_PRINT("Current FIFO count=");
+            DEBUG_PRINT(F("Current FIFO count="));
             DEBUG_PRINTLN(fifoCount);
             accelgyro.getFIFOBytes(fifoBuffer, fifoCount);
 
-            DEBUG_PRINTLN("Setting motion detection threshold to 2...");
+            DEBUG_PRINTLN(F("Setting motion detection threshold to 2..."));
             accelgyro.setMotionDetectionThreshold(2);
-            DEBUG_PRINTLN("Setting zero-motion detection threshold to 156...");
+            DEBUG_PRINTLN(F("Setting zero-motion detection threshold to 156..."));
             accelgyro.setZeroMotionDetectionThreshold(2);
-            DEBUG_PRINTLN("Setting motion detection duration to 80...");
+            DEBUG_PRINTLN(F("Setting motion detection duration to 80..."));
             accelgyro.setMotionDetectionDuration(80);
-            DEBUG_PRINTLN("Setting zero-motion detection duration to 0...");
+            DEBUG_PRINTLN(F("Setting zero-motion detection duration to 0..."));
             accelgyro.setZeroMotionDetectionDuration(0);
-            DEBUG_PRINTLN("Resetting FIFO...");
+            DEBUG_PRINTLN(F("Resetting FIFO..."));
             accelgyro.resetFIFO();
             
-            DEBUG_PRINTLN("Enabling FIFO...");
+            DEBUG_PRINTLN(F("Enabling FIFO..."));
             accelgyro.setFIFOEnabled(true);
-            DEBUG_PRINTLN("Enabling DMP...");
+            DEBUG_PRINTLN(F("Enabling DMP..."));
             accelgyro.setDMPEnabled(true);
-            DEBUG_PRINTLN("Resetting DMP...");
+            DEBUG_PRINTLN(F("Resetting DMP..."));
             accelgyro.resetDMP();
 
-            DEBUG_PRINTLN("Writing final memory update 3/7 (function unknown)...");
+            DEBUG_PRINTLN(F("Writing final memory update 3/7 (function unknown)..."));
             accelgyro.writeMemoryBlock(dmpMemUpdates[2] + 3, dmpMemUpdates[2][2], dmpMemUpdates[2][0], dmpMemUpdates[2][1]);
-            DEBUG_PRINTLN("Writing final memory update 4/7 (function unknown)...");
+            DEBUG_PRINTLN(F("Writing final memory update 4/7 (function unknown)..."));
             accelgyro.writeMemoryBlock(dmpMemUpdates[3] + 3, dmpMemUpdates[3][2], dmpMemUpdates[3][0], dmpMemUpdates[3][1]);
-            DEBUG_PRINTLN("Writing final memory update 5/7 (function unknown)...");
+            DEBUG_PRINTLN(F("Writing final memory update 5/7 (function unknown)..."));
             accelgyro.writeMemoryBlock(dmpMemUpdates[4] + 3, dmpMemUpdates[4][2], dmpMemUpdates[4][0], dmpMemUpdates[4][1]);
 
-            DEBUG_PRINTLN("Waiting for FIFO count > 2...");
+            DEBUG_PRINTLN(F("Waiting for FIFO count > 2..."));
             while ((fifoCount = accelgyro.getFIFOCount()) < 3);
-            DEBUG_PRINT("Current FIFO count=");
+            DEBUG_PRINT(F("Current FIFO count="));
             DEBUG_PRINTLN(fifoCount);
-            DEBUG_PRINTLN("Reading FIFO data...");
+            DEBUG_PRINTLN(F("Reading FIFO data..."));
             accelgyro.getFIFOBytes(fifoBuffer, fifoCount);
-            DEBUG_PRINTLN("Reading interrupt status...");
+            DEBUG_PRINTLN(F("Reading interrupt status..."));
             mpuIntStatus = accelgyro.getIntStatus();
-            DEBUG_PRINT("Current interrupt status=");
+            DEBUG_PRINT(F("Current interrupt status="));
             DEBUG_PRINTLNF(mpuIntStatus, HEX);
 
-            DEBUG_PRINTLN("Reading final memory update 6/7 (function unknown)...");
+            DEBUG_PRINTLN(F("Reading final memory update 6/7 (function unknown)..."));
             accelgyro.readMemoryBlock(dmpMemUpdates[5] + 3, dmpMemUpdates[5][2], dmpMemUpdates[5][0], dmpMemUpdates[5][1]);
 
-            DEBUG_PRINTLN("Waiting for FIFO count > 2...");
+            DEBUG_PRINTLN(F("Waiting for FIFO count > 2..."));
             while ((fifoCount = accelgyro.getFIFOCount()) < 3);
-            DEBUG_PRINT("Current FIFO count=");
+            DEBUG_PRINT(F("Current FIFO count="));
             DEBUG_PRINTLN(fifoCount);
-            DEBUG_PRINTLN("Reading FIFO data...");
+            DEBUG_PRINTLN(F("Reading FIFO data..."));
             accelgyro.getFIFOBytes(fifoBuffer, fifoCount);
-            DEBUG_PRINTLN("Reading interrupt status...");
+            DEBUG_PRINTLN(F("Reading interrupt status..."));
             mpuIntStatus = accelgyro.getIntStatus();
-            DEBUG_PRINT("Current interrupt status=");
+            DEBUG_PRINT(F("Current interrupt status="));
             DEBUG_PRINTLNF(mpuIntStatus, HEX);
 
-            DEBUG_PRINTLN("Writing final memory update 7/7 (function unknown)...");
+            DEBUG_PRINTLN(F("Writing final memory update 7/7 (function unknown)..."));
             accelgyro.writeMemoryBlock(dmpMemUpdates[6] + 3, dmpMemUpdates[6][2], dmpMemUpdates[6][0], dmpMemUpdates[6][1]);
 
-            DEBUG_PRINTLN("DMP is good to go! Finally.");
+            DEBUG_PRINTLN(F("DMP is good to go! Finally."));
             
-            DEBUG_PRINTLN("Enabling interrupt detection (Arduino external interrupt 0)...");
+            DEBUG_PRINTLN(F("Enabling interrupt detection (Arduino external interrupt 0)..."));
             attachInterrupt(0, dmpDataReady, CHANGE);
         } else {
-            DEBUG_PRINTLN("ERROR! DMP configuration verification failed.");
+            DEBUG_PRINTLN(F("ERROR! DMP configuration verification failed."));
         }
     } else {
-        DEBUG_PRINTLN("ERROR! DMP code verification failed.");
+        DEBUG_PRINTLN(F("ERROR! DMP code verification failed."));
     }
 
     // ====================== END DMP INITIALIZATION CODE ===========================
@@ -322,6 +324,9 @@ void loop() {
     accelgyro.getFIFOBytes(fifoBuffer, fifoCount);
 
     // check for the correct FIFO size to indicate full data ready
+    // NOTE: I am SURE this is not the most efficient way to do this,
+    // but I don't understand how the FIFO works w/interrupts well
+    // enough yet (expect DMP quaternion output at ~20Hz with this)
     if (fifoCount >= 42) {
         #ifdef OUTPUT_READABLE
             // display quaternion values in easy matrix form: [w, x, y, z]
@@ -341,7 +346,7 @@ void loop() {
         #endif
 
         #ifdef OUTPUT_TEAPOT
-            // display quaternion values in Teapot demo format:
+            // display quaternion values in InvenSense Teapot demo format:
             teapotPacket[2] = fifoBuffer[0];
             teapotPacket[3] = fifoBuffer[1];
             teapotPacket[4] = fifoBuffer[4];
