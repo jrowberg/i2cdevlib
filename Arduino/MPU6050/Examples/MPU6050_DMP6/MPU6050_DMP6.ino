@@ -3,6 +3,7 @@
 // Updates should (hopefully) always be available at https://github.com/jrowberg/i2cdevlib
 //
 // Changelog:
+//     2012-06-05 - remove accel offset clearing for better results (thanks Sungon Lee)
 //     2012-06-01 - fixed gyro sensitivity to be 2000 deg/sec instead of 250
 //     2012-05-30 - basic DMP initialization working
 
@@ -185,29 +186,39 @@ void setup() {
         DEBUG_PRINTLN(F(" bytes in config def)"));
         if (accelgyro.writeProgDMPConfigurationSet(dmpConfig, MPU6050_DMP_CONFIG_SIZE)) {
             DEBUG_PRINTLN(F("Success! DMP configuration written and verified."));
+
             DEBUG_PRINTLN(F("Setting clock source to Z Gyro..."));
             accelgyro.setClockSource(MPU6050_CLOCK_PLL_ZGYRO);
+
             DEBUG_PRINTLN(F("Setting sample rate to 200Hz..."));
             accelgyro.setRate(4); // 1khz / (1 + 4) = 200 Hz
+
             DEBUG_PRINTLN(F("Setting external frame sync to TEMP_OUT_L[0]..."));
             accelgyro.setExternalFrameSync(MPU6050_EXT_SYNC_TEMP_OUT_L);
+
             DEBUG_PRINTLN(F("Setting DLPF bandwidth to 42Hz..."));
             accelgyro.setDLPFMode(MPU6050_DLPF_BW_42);
+
             DEBUG_PRINTLN(F("Setting gyro sensitivity to +/- 2000 deg/sec..."));
             accelgyro.setFullScaleGyroRange(MPU6050_GYRO_FS_2000);
+
             DEBUG_PRINTLN(F("Setting DMP configuration bytes (function unknown)..."));
             accelgyro.setDMPConfig1(0x03);
             accelgyro.setDMPConfig2(0x00);
+
             DEBUG_PRINTLN(F("Clearing OTP Bank flag..."));
             accelgyro.setOTPBankValid(false);
+
             DEBUG_PRINTLN(F("Setting X/Y/Z gyro offsets to zero..."));
             accelgyro.setXGyroOffset(0);
             accelgyro.setYGyroOffset(0);
             accelgyro.setZGyroOffset(0);
-            DEBUG_PRINTLN(F("Setting X/Y/Z accel offsets to zero..."));
-            accelgyro.setXAccelOffset(0);
-            accelgyro.setYAccelOffset(0);
-            accelgyro.setZAccelOffset(0);
+
+            // Sungon Lee reports better results by disabling accel offset zeroing here
+            //DEBUG_PRINTLN(F("Setting X/Y/Z accel offsets to zero..."));
+            //accelgyro.setXAccelOffset(0);
+            //accelgyro.setYAccelOffset(0);
+            //accelgyro.setZAccelOffset(0);
 
             uint8_t dmpMemUpdates[7][11] = {
                 { 0x01, 0xB2, 0x02, 0xFF, 0xFF },
@@ -221,50 +232,64 @@ void setup() {
 
             DEBUG_PRINTLN(F("Writing final memory update 1/7 (function unknown)..."));
             accelgyro.writeMemoryBlock(dmpMemUpdates[0] + 3, dmpMemUpdates[0][2], dmpMemUpdates[0][0], dmpMemUpdates[0][1]);
+
             DEBUG_PRINTLN(F("Writing final memory update 2/7 (function unknown)..."));
             accelgyro.writeMemoryBlock(dmpMemUpdates[1] + 3, dmpMemUpdates[1][2], dmpMemUpdates[1][0], dmpMemUpdates[1][1]);
 
             DEBUG_PRINTLN(F("Resetting FIFO..."));
             accelgyro.resetFIFO();
+
             DEBUG_PRINTLN(F("Reading FIFO count..."));
             fifoCount = accelgyro.getFIFOCount();
+
             DEBUG_PRINT(F("Current FIFO count="));
             DEBUG_PRINTLN(fifoCount);
             accelgyro.getFIFOBytes(fifoBuffer, fifoCount);
 
             DEBUG_PRINTLN(F("Setting motion detection threshold to 2..."));
             accelgyro.setMotionDetectionThreshold(2);
+
             DEBUG_PRINTLN(F("Setting zero-motion detection threshold to 156..."));
             accelgyro.setZeroMotionDetectionThreshold(2);
+
             DEBUG_PRINTLN(F("Setting motion detection duration to 80..."));
             accelgyro.setMotionDetectionDuration(80);
+
             DEBUG_PRINTLN(F("Setting zero-motion detection duration to 0..."));
             accelgyro.setZeroMotionDetectionDuration(0);
+
             DEBUG_PRINTLN(F("Resetting FIFO..."));
             accelgyro.resetFIFO();
-            
+
             DEBUG_PRINTLN(F("Enabling FIFO..."));
             accelgyro.setFIFOEnabled(true);
+
             DEBUG_PRINTLN(F("Enabling DMP..."));
             accelgyro.setDMPEnabled(true);
+
             DEBUG_PRINTLN(F("Resetting DMP..."));
             accelgyro.resetDMP();
 
             DEBUG_PRINTLN(F("Writing final memory update 3/7 (function unknown)..."));
             accelgyro.writeMemoryBlock(dmpMemUpdates[2] + 3, dmpMemUpdates[2][2], dmpMemUpdates[2][0], dmpMemUpdates[2][1]);
+
             DEBUG_PRINTLN(F("Writing final memory update 4/7 (function unknown)..."));
             accelgyro.writeMemoryBlock(dmpMemUpdates[3] + 3, dmpMemUpdates[3][2], dmpMemUpdates[3][0], dmpMemUpdates[3][1]);
+
             DEBUG_PRINTLN(F("Writing final memory update 5/7 (function unknown)..."));
             accelgyro.writeMemoryBlock(dmpMemUpdates[4] + 3, dmpMemUpdates[4][2], dmpMemUpdates[4][0], dmpMemUpdates[4][1]);
 
             DEBUG_PRINTLN(F("Waiting for FIFO count > 2..."));
             while ((fifoCount = accelgyro.getFIFOCount()) < 3);
+
             DEBUG_PRINT(F("Current FIFO count="));
             DEBUG_PRINTLN(fifoCount);
             DEBUG_PRINTLN(F("Reading FIFO data..."));
             accelgyro.getFIFOBytes(fifoBuffer, fifoCount);
+
             DEBUG_PRINTLN(F("Reading interrupt status..."));
             mpuIntStatus = accelgyro.getIntStatus();
+
             DEBUG_PRINT(F("Current interrupt status="));
             DEBUG_PRINTLNF(mpuIntStatus, HEX);
 
@@ -273,12 +298,16 @@ void setup() {
 
             DEBUG_PRINTLN(F("Waiting for FIFO count > 2..."));
             while ((fifoCount = accelgyro.getFIFOCount()) < 3);
+
             DEBUG_PRINT(F("Current FIFO count="));
             DEBUG_PRINTLN(fifoCount);
+
             DEBUG_PRINTLN(F("Reading FIFO data..."));
             accelgyro.getFIFOBytes(fifoBuffer, fifoCount);
+
             DEBUG_PRINTLN(F("Reading interrupt status..."));
             mpuIntStatus = accelgyro.getIntStatus();
+
             DEBUG_PRINT(F("Current interrupt status="));
             DEBUG_PRINTLNF(mpuIntStatus, HEX);
 
