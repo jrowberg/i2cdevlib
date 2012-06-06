@@ -1477,6 +1477,28 @@ void MPU6050::setClockOutputEnabled(bool enabled) {
 
 // INT_ENABLE register
 
+/** Get full interrupt enabled status.
+ * Full register byte for all interrupts, for quick reading. Each bit will be
+ * set 0 for disabled, 1 for enabled.
+ * @return Current interrupt enabled status
+ * @see MPU6050_RA_INT_ENABLE
+ * @see MPU6050_INTERRUPT_FF_BIT
+ **/
+uint8_t MPU6050::getIntEnabled() {
+    I2Cdev::readByte(devAddr, MPU6050_RA_INT_ENABLE, buffer);
+    return buffer[0];
+}
+/** Set full interrupt enabled status.
+ * Full register byte for all interrupts, for quick reading. Each bit should be
+ * set 0 for disabled, 1 for enabled.
+ * @param enabled New interrupt enabled status
+ * @see getIntFreefallEnabled()
+ * @see MPU6050_RA_INT_ENABLE
+ * @see MPU6050_INTERRUPT_FF_BIT
+ **/
+void MPU6050::setIntEnabled(uint8_t enabled) {
+    I2Cdev::writeByte(devAddr, MPU6050_RA_INT_ENABLE, enabled);
+}
 /** Get Free Fall interrupt enabled status.
  * Will be set 0 for disabled, 1 for enabled.
  * @return Current interrupt enabled status

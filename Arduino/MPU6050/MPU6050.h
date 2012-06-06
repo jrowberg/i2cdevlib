@@ -549,6 +549,8 @@ class MPU6050 {
         void setClockOutputEnabled(bool enabled);
 
         // INT_ENABLE register
+        uint8_t getIntEnabled();
+        void setIntEnabled(uint8_t enabled);
         bool getIntFreefallEnabled();
         void setIntFreefallEnabled(bool enabled);
         bool getIntMotionEnabled();
