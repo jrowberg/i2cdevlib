@@ -3,7 +3,9 @@
 // Updates should (hopefully) always be available at https://github.com/jrowberg/i2cdevlib
 //
 // Changelog:
-//     2012-06-05 - add Euler output and Yaw/Pitch/Roll output formats
+//     2012-06-05 - add gravity-compensated initial reference frame acceleration output
+//                - add 3D math helper file to DMP6 example sketch
+//                - add Euler output and Yaw/Pitch/Roll output formats
 //     2012-06-04 - remove accel offset clearing for better results (thanks Sungon Lee)
 //     2012-06-01 - fixed gyro sensitivity to be 2000 deg/sec instead of 250
 //     2012-05-30 - basic DMP initialization working
@@ -39,8 +41,10 @@ THE SOFTWARE.
 // I2Cdev and MPU6050 must be installed as libraries, or else the .cpp/.h files
 // for both classes must be in the include path of your project
 #include "I2Cdev.h"
+
 #define MPU6050_INCLUDE_DMP_MOTIONAPPS20
 #include "MPU6050.h"
+#include "helper_3dmath.h"
 
 // class default I2C address is 0x68
 // specific I2C addresses may be passed as a parameter here
@@ -75,10 +79,9 @@ uint8_t mpuIntStatus;
 
 // uncomment "OUTPUT_READABLE_YAWPITCHROLL" if you want to see the yaw/
 // pitch/roll angles (in degrees) calculated from the quaternions coming
-// from the FIFO. Note this also requires a gravity vector calculation,
-// which may be useful for reference. Note that yaw/pitch/roll angles
-// suffer from gimbal lock (for more info, see:
-// http://en.wikipedia.org/wiki/Gimbal_lock)
+// from the FIFO. Note this also requires a gravity vector calculations.
+// Also note that yaw/pitch/roll angles suffer from gimbal lock (for
+// more info, see: http://en.wikipedia.org/wiki/Gimbal_lock)
 #define OUTPUT_READABLE_YAWPITCHROLL
 
 // uncomment "OUTPUT_READABLE_FRAMEACCEL" if you want to see acceleration
@@ -361,23 +364,25 @@ void setup() {
 uint8_t teapotPacket[14] = { '$', 0x02, 0,0, 0,0, 0,0, 0,0, 0x00, 0x00, '\r', '\n' };
 
 // raw accel sensor measurements (not used in some output formats)
-int16_t ax, ay, az;
+VectorInt16 aa;         // [x, y, z]
 
 // gravity-free accel sensor measurements (not used in some output formats)
-int16_t axReal, ayReal, azReal;
+VectorInt16 aaReal;     // [x, y, z]
 
 // initial-frame accel sensor measurements (not used in some output formats)
-int16_t axFrame, ayFrame, azFrame;
+VectorInt16 aaFrame;    // [x, y, z]
 
 // raw quaternion container
-float q[4];         // [w, x, y, z]
+Quaternion q;           // [w, x, y, z]
+
+// gravity vector
+VectorFloat gravity;    // [x, y, z]
 
 // Euler angle container
-float euler[3];     // [psi, theta, phi]
+float euler[3];         // [psi, theta, phi]
 
 // yaw/pitch/roll container and gravity vector
-float gravity[3];   // [x, y, z]
-float ypr[3];       // [yaw, pitch, roll]
+float ypr[3];           // [yaw, pitch, roll]
 
 // boolean to indicate whether the MPU interrupt pin has changed
 volatile bool dmpIntChange = false;
@@ -401,32 +406,32 @@ void loop() {
         // possible. Ideally the DMP could also spit this information out to us,
         // but I don't know if that is possible yet.
         #ifdef OUTPUT_READABLE_FRAMEACCEL
-            accelgyro.getAcceleration(&ax, &ay, &az);
+            accelgyro.getAcceleration(&aa.x, &aa.y, &aa.z);
         #endif
     
         // convert FIFO output (16-bit unsigned integer, 0-32767 used)
         // to [-1, 1] ranged float variable
         // (not necessary for TEAPOT output, but used by others)
-        q[0] = (float)((fifoBuffer[0] << 8) + fifoBuffer[1]) / 16384;   // w
-        q[1] = (float)((fifoBuffer[4] << 8) + fifoBuffer[5]) / 16384;   // x
-        q[2] = (float)((fifoBuffer[8] << 8) + fifoBuffer[9]) / 16384;   // y
-        q[3] = (float)((fifoBuffer[12] << 8) + fifoBuffer[13]) / 16384; // z
+        q.w = (float)((fifoBuffer[0] << 8) + fifoBuffer[1]) / 16384;   // w
+        q.x = (float)((fifoBuffer[4] << 8) + fifoBuffer[5]) / 16384;   // x
+        q.y = (float)((fifoBuffer[8] << 8) + fifoBuffer[9]) / 16384;   // y
+        q.z = (float)((fifoBuffer[12] << 8) + fifoBuffer[13]) / 16384; // z
     
         // calculate gravity vector (not necessary for TEAPOT output)
-        gravity[0] = 2 * (q[1]*q[3] - q[0]*q[2]);                       // x
-        gravity[1] = 2 * (q[0]*q[1] + q[2]*q[3]);                       // y
-        gravity[2] = q[0]*q[0] - q[1]*q[1] - q[2]*q[2] + q[3]*q[3];     // z
+        gravity.x = 2 * (q.x*q.z - q.w*q.y);                       // x
+        gravity.y = 2 * (q.w*q.x + q.y*q.z);                       // y
+        gravity.z = q.w*q.w - q.x*q.x - q.y*q.y + q.z*q.z;     // z
     
         #ifdef OUTPUT_READABLE_QUATERNION
             // display quaternion values in easy matrix form: [w, x, y, z]
             Serial.print("quat\t[");
-            Serial.print(q[0]);
+            Serial.print(q.w);
             Serial.print(", ");
-            Serial.print(q[1]);
+            Serial.print(q.x);
             Serial.print(", ");
-            Serial.print(q[2]);
+            Serial.print(q.y);
             Serial.print(", ");
-            Serial.print(q[3]);
+            Serial.print(q.z);
             Serial.print("]\n");
         #endif
     
@@ -434,11 +439,11 @@ void loop() {
             // display Euler angles in degrees
     
             // psi
-            euler[0] = atan2(2*q[1]*q[2] - 2*q[0]*q[3], 2*q[0]*q[0] + 2*q[1]*q[1] - 1) * 180/M_PI;
+            euler[0] = atan2(2*q.x*q.y - 2*q.w*q.z, 2*q.w*q.w + 2*q.x*q.x - 1) * 180/M_PI;
             // theta
-            euler[1] = -asin(2*q[1]*q[3] + 2*q[0]*q[2]) * 180/M_PI;
+            euler[1] = -asin(2*q.x*q.z + 2*q.w*q.y) * 180/M_PI;
             // phi
-            euler[2] = atan2(2*q[2]*q[3] - 2*q[0]*q[1], 2*q[0]*q[0] + 2*q[3]*q[3] - 1) * 180/M_PI;
+            euler[2] = atan2(2*q.y*q.z - 2*q.w*q.x, 2*q.w*q.w + 2*q.z*q.z - 1) * 180/M_PI;
     
             Serial.print("euler\t");
             Serial.print(euler[0]);
@@ -452,11 +457,11 @@ void loop() {
             // display Euler angles in degrees: phi
     
             // yaw: (about Z axis)
-            ypr[0] = atan2(2*q[1]*q[2] - 2*q[0]*q[3], 2*q[0]*q[0] + 2*q[1]*q[1] - 1) * 180/M_PI;
+            ypr[0] = atan2(2*q.x*q.y - 2*q.w*q.z, 2*q.w*q.w + 2*q.x*q.x - 1) * 180/M_PI;
             // pitch: (nose up/down, about Y axis)
-            ypr[1] = atan(gravity[0] / sqrt(gravity[1]*gravity[1] + gravity[2]*gravity[2])) * 180/M_PI;
+            ypr[1] = atan(gravity.x / sqrt(gravity.y*gravity.y + gravity.z*gravity.z)) * 180/M_PI;
             // roll: (tilt left/right, about X axis)
-            ypr[2] = atan(gravity[1] / sqrt(gravity[0]*gravity[0] + gravity[2]*gravity[2])) * 180/M_PI;
+            ypr[2] = atan(gravity.y / sqrt(gravity.x*gravity.x + gravity.z*gravity.z)) * 180/M_PI;
     
             Serial.print("ypr\t");
             Serial.print(ypr[0]);
@@ -470,17 +475,21 @@ void loop() {
             // display initial-frame acceleration, adjusted to remove gravity
             // and rotated based on known orientation from quaternion
     
-            // get rid of the gravity component (+1g = +1024 in standard DMP)
-            axReal = (ax - gravity[0]*16384);
-            ayReal = (ay - gravity[1]*16384);
-            azReal = (az - gravity[2]*16384);
-    
+            // get rid of the gravity component (+1g = +16384 in standard DMP)
+            aaReal.x = (aa.x - gravity.x*16384);
+            aaReal.y = (aa.y - gravity.y*16384);
+            aaReal.z = (aa.z - gravity.z*16384);
+            
+            // rotate measured 3D acceleration vector into original state
+            // frame of reference based on orientation quaternion
+            aaFrame = aaReal.getRotated(q);
+
             Serial.print("aframe\t");
-            Serial.print(axReal);
+            Serial.print(aaFrame.x);
             Serial.print("\t");
-            Serial.print(ayReal);
+            Serial.print(aaFrame.y);
             Serial.print("\t");
-            Serial.println(azReal);
+            Serial.println(aaFrame.z);
         #endif
     
         #ifdef OUTPUT_TEAPOT
