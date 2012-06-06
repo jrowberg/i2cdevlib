@@ -3,7 +3,8 @@
 // Updates should (hopefully) always be available at https://github.com/jrowberg/i2cdevlib
 //
 // Changelog:
-//     2012-06-05 - remove accel offset clearing for better results (thanks Sungon Lee)
+//     2012-06-05 - add Euler output and Yaw/Pitch/Roll output formats
+//     2012-06-04 - remove accel offset clearing for better results (thanks Sungon Lee)
 //     2012-06-01 - fixed gyro sensitivity to be 2000 deg/sec instead of 250
 //     2012-05-30 - basic DMP initialization working
 
@@ -61,14 +62,35 @@ uint8_t fifoCount;
 uint8_t fifoBuffer[128];
 uint8_t mpuIntStatus;
 
+// uncomment "OUTPUT_READABLE_QUATERNION" if you want to see the actual
+// quaternion components in a [w, x, y, z] format (not best for parsing
+// on a remote host such as Processing or something though)
+//#define OUTPUT_READABLE_QUATERNION
+
+// uncomment "OUTPUT_READABLE_EULER" if you want to see Euler angles
+// (in degrees) calculated from the quaternions coming from the FIFO.
+// Note that Euler angles suffer from gimbal lock (for more info, see
+// http://en.wikipedia.org/wiki/Gimbal_lock)
+//#define OUTPUT_READABLE_EULER
+
+// uncomment "OUTPUT_READABLE_YAWPITCHROLL" if you want to see the yaw/
+// pitch/roll angles (in degrees) calculated from the quaternions coming
+// from the FIFO. Note this also requires a gravity vector calculation,
+// which may be useful for reference. Note that yaw/pitch/roll angles
+// suffer from gimbal lock (for more info, see:
+// http://en.wikipedia.org/wiki/Gimbal_lock)
+#define OUTPUT_READABLE_YAWPITCHROLL
+
+// uncomment "OUTPUT_READABLE_FRAMEACCEL" if you want to see acceleration
+// components with gravity removed and adjusted for the initial "zero
+// rotation" frame of reference. Could be quite handy in some cases.
+//#define OUTPUT_READABLE_FRAMEACCEL
+
 // uncomment "OUTPUT_TEAPOT" if you want output that matches the
 // format used for the InvenSense teapot demo
 //#define OUTPUT_TEAPOT
 
-// uncomment "OUTPUT_READABLE" if you want to see the actual quaternion
-// components in a [w, x, y, z] format (not best for parsing on a remote
-// host such as Processing or something though)
-#define OUTPUT_READABLE
+
 
 // NOTE! Enabling DEBUG adds about 3.3kB to the flash program size.
 // Debug output is now working even on ATMega328P MCUs (e.g. Arduino Uno)
@@ -122,11 +144,10 @@ void setup() {
     delay(50); // wait after reset
 
     // enable sleep mode and wake cycle
-    //Serial.println(F("Enabling sleep mode..."));
-    //accelgyro.setSleepEnabled(true);
-    //Serial.println(F("Enabling wake cycle..."));
-    //accelgyro.setWakeCycleEnabled(true);
-    //delay(10);
+    /*Serial.println(F("Enabling sleep mode..."));
+    accelgyro.setSleepEnabled(true);
+    Serial.println(F("Enabling wake cycle..."));
+    accelgyro.setWakeCycleEnabled(true);*/
 
     // disable sleep mode
     DEBUG_PRINTLN(F("Disabling sleep mode..."));
@@ -189,6 +210,9 @@ void setup() {
 
             DEBUG_PRINTLN(F("Setting clock source to Z Gyro..."));
             accelgyro.setClockSource(MPU6050_CLOCK_PLL_ZGYRO);
+
+            DEBUG_PRINTLN(F("Setting DMP interrupt (only) enabled..."));
+            accelgyro.setIntEnabled(0x02);
 
             DEBUG_PRINTLN(F("Setting sample rate to 200Hz..."));
             accelgyro.setRate(4); // 1khz / (1 + 4) = 200 Hz
@@ -315,9 +339,11 @@ void setup() {
             accelgyro.writeMemoryBlock(dmpMemUpdates[6] + 3, dmpMemUpdates[6][2], dmpMemUpdates[6][0], dmpMemUpdates[6][1]);
 
             DEBUG_PRINTLN(F("DMP is good to go! Finally."));
-            
+
             DEBUG_PRINTLN(F("Enabling interrupt detection (Arduino external interrupt 0)..."));
             attachInterrupt(0, dmpDataReady, CHANGE);
+
+            DEBUG_PRINTLN(F("Waiting for 1st interrupt..."));
         } else {
             DEBUG_PRINTLN(F("ERROR! DMP configuration verification failed."));
         }
@@ -334,8 +360,24 @@ void setup() {
 // packet structure for InvenSense teapot demo
 uint8_t teapotPacket[14] = { '$', 0x02, 0,0, 0,0, 0,0, 0,0, 0x00, 0x00, '\r', '\n' };
 
+// raw accel sensor measurements (not used in some output formats)
+int16_t ax, ay, az;
+
+// gravity-free accel sensor measurements (not used in some output formats)
+int16_t axReal, ayReal, azReal;
+
+// initial-frame accel sensor measurements (not used in some output formats)
+int16_t axFrame, ayFrame, azFrame;
+
 // raw quaternion container
-float q[4];
+float q[4];         // [w, x, y, z]
+
+// Euler angle container
+float euler[3];     // [psi, theta, phi]
+
+// yaw/pitch/roll container and gravity vector
+float gravity[3];   // [x, y, z]
+float ypr[3];       // [yaw, pitch, roll]
 
 // boolean to indicate whether the MPU interrupt pin has changed
 volatile bool dmpIntChange = false;
@@ -352,18 +394,32 @@ void loop() {
     fifoCount = accelgyro.getFIFOCount();
     accelgyro.getFIFOBytes(fifoBuffer, fifoCount);
 
-    // check for the correct FIFO size to indicate full data ready
-    // NOTE: I am SURE this is not the most efficient way to do this,
-    // but I don't understand how the FIFO works w/interrupts well
-    // enough yet (expect DMP quaternion output at ~20Hz with this)
     if (fifoCount >= 42) {
-        #ifdef OUTPUT_READABLE
+        // read raw sensor data ASAP if we're later going to display initial-frame
+        // acceleration values; we want to do this as soon as possible to make sure
+        // the acceleration values read are as close to the ones used by the DMP as
+        // possible. Ideally the DMP could also spit this information out to us,
+        // but I don't know if that is possible yet.
+        #ifdef OUTPUT_READABLE_FRAMEACCEL
+            accelgyro.getAcceleration(&ax, &ay, &az);
+        #endif
+    
+        // convert FIFO output (16-bit unsigned integer, 0-32767 used)
+        // to [-1, 1] ranged float variable
+        // (not necessary for TEAPOT output, but used by others)
+        q[0] = (float)((fifoBuffer[0] << 8) + fifoBuffer[1]) / 16384;   // w
+        q[1] = (float)((fifoBuffer[4] << 8) + fifoBuffer[5]) / 16384;   // x
+        q[2] = (float)((fifoBuffer[8] << 8) + fifoBuffer[9]) / 16384;   // y
+        q[3] = (float)((fifoBuffer[12] << 8) + fifoBuffer[13]) / 16384; // z
+    
+        // calculate gravity vector (not necessary for TEAPOT output)
+        gravity[0] = 2 * (q[1]*q[3] - q[0]*q[2]);                       // x
+        gravity[1] = 2 * (q[0]*q[1] + q[2]*q[3]);                       // y
+        gravity[2] = q[0]*q[0] - q[1]*q[1] - q[2]*q[2] + q[3]*q[3];     // z
+    
+        #ifdef OUTPUT_READABLE_QUATERNION
             // display quaternion values in easy matrix form: [w, x, y, z]
-            q[0] = (float)((fifoBuffer[0] << 8) + fifoBuffer[1]) / 16384;
-            q[1] = (float)((fifoBuffer[4] << 8) + fifoBuffer[5]) / 16384;
-            q[2] = (float)((fifoBuffer[8] << 8) + fifoBuffer[9]) / 16384;
-            q[3] = (float)((fifoBuffer[12] << 8) + fifoBuffer[13]) / 16384;
-            Serial.print("[");
+            Serial.print("quat\t[");
             Serial.print(q[0]);
             Serial.print(", ");
             Serial.print(q[1]);
@@ -373,7 +429,60 @@ void loop() {
             Serial.print(q[3]);
             Serial.print("]\n");
         #endif
-
+    
+        #ifdef OUTPUT_READABLE_EULER
+            // display Euler angles in degrees
+    
+            // psi
+            euler[0] = atan2(2*q[1]*q[2] - 2*q[0]*q[3], 2*q[0]*q[0] + 2*q[1]*q[1] - 1) * 180/M_PI;
+            // theta
+            euler[1] = -asin(2*q[1]*q[3] + 2*q[0]*q[2]) * 180/M_PI;
+            // phi
+            euler[2] = atan2(2*q[2]*q[3] - 2*q[0]*q[1], 2*q[0]*q[0] + 2*q[3]*q[3] - 1) * 180/M_PI;
+    
+            Serial.print("euler\t");
+            Serial.print(euler[0]);
+            Serial.print("\t");
+            Serial.print(euler[1]);
+            Serial.print("\t");
+            Serial.println(euler[2]);
+        #endif
+    
+        #ifdef OUTPUT_READABLE_YAWPITCHROLL
+            // display Euler angles in degrees: phi
+    
+            // yaw: (about Z axis)
+            ypr[0] = atan2(2*q[1]*q[2] - 2*q[0]*q[3], 2*q[0]*q[0] + 2*q[1]*q[1] - 1) * 180/M_PI;
+            // pitch: (nose up/down, about Y axis)
+            ypr[1] = atan(gravity[0] / sqrt(gravity[1]*gravity[1] + gravity[2]*gravity[2])) * 180/M_PI;
+            // roll: (tilt left/right, about X axis)
+            ypr[2] = atan(gravity[1] / sqrt(gravity[0]*gravity[0] + gravity[2]*gravity[2])) * 180/M_PI;
+    
+            Serial.print("ypr\t");
+            Serial.print(ypr[0]);
+            Serial.print("\t");
+            Serial.print(ypr[1]);
+            Serial.print("\t");
+            Serial.println(ypr[2]);
+        #endif
+    
+        #ifdef OUTPUT_READABLE_FRAMEACCEL
+            // display initial-frame acceleration, adjusted to remove gravity
+            // and rotated based on known orientation from quaternion
+    
+            // get rid of the gravity component (+1g = +1024 in standard DMP)
+            axReal = (ax - gravity[0]*16384);
+            ayReal = (ay - gravity[1]*16384);
+            azReal = (az - gravity[2]*16384);
+    
+            Serial.print("aframe\t");
+            Serial.print(axReal);
+            Serial.print("\t");
+            Serial.print(ayReal);
+            Serial.print("\t");
+            Serial.println(azReal);
+        #endif
+    
         #ifdef OUTPUT_TEAPOT
             // display quaternion values in InvenSense Teapot demo format:
             teapotPacket[2] = fifoBuffer[0];
