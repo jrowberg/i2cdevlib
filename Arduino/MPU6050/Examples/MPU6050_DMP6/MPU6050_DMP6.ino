@@ -277,7 +277,7 @@ void setup() {
             accelgyro.setMotionDetectionThreshold(2);
 
             DEBUG_PRINTLN(F("Setting zero-motion detection threshold to 156..."));
-            accelgyro.setZeroMotionDetectionThreshold(2);
+            accelgyro.setZeroMotionDetectionThreshold(156);
 
             DEBUG_PRINTLN(F("Setting motion detection duration to 80..."));
             accelgyro.setMotionDetectionDuration(80);
