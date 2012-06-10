@@ -1,8 +1,9 @@
-// I2C device class (I2Cdev) demonstration Arduino sketch for MPU6050 class
-// 10/9/2011 by Jeff Rowberg <jeff@rowberg.net>
+// I2C device class (I2Cdev) demonstration Arduino sketch for MPU6050 class using DMP (MotionApps v2.0)
+// 6/9/2012 by Jeff Rowberg <jeff@rowberg.net>
 // Updates should (hopefully) always be available at https://github.com/jrowberg/i2cdevlib
 //
 // Changelog:
+//     2012-06-09 - fix broken FIFO read sequence and change interrupt detection to RISING
 //     2012-06-05 - add gravity-compensated initial reference frame acceleration output
 //                - add 3D math helper file to DMP6 example sketch
 //                - add Euler output and Yaw/Pitch/Roll output formats
@@ -112,6 +113,12 @@ uint8_t mpuIntStatus;
     #define DEBUG_PRINTLN(x)
     #define DEBUG_PRINTLNF(x, y)
 #endif
+
+// NOTE! Enabling FIFO debug will give you a boatload of extra information
+// that you probably don't care about unless you are trying to mess with
+// the internal DMP behavior or something. Just saying...
+//#define FIFO_DEBUG_SIZE
+//#define FIFO_DEBUG_DATA
 
 #define LED_PIN 13 // (Arduino is 13, Teensy is 11, Teensy++ is 6)
 bool blinkState = false;
@@ -344,7 +351,7 @@ void setup() {
             DEBUG_PRINTLN(F("DMP is good to go! Finally."));
 
             DEBUG_PRINTLN(F("Enabling interrupt detection (Arduino external interrupt 0)..."));
-            attachInterrupt(0, dmpDataReady, CHANGE);
+            attachInterrupt(0, dmpDataReady, RISING);
 
             DEBUG_PRINTLN(F("Waiting for 1st interrupt..."));
         } else {
@@ -394,12 +401,38 @@ void dmpDataReady() {
 void loop() {
     // wait for DMP interrupt
     while (!dmpIntChange);
-    dmpIntChange = false;
+    
+    // read DMP interrupt status (clears INT flag since LATCH is enabled)
     mpuIntStatus = accelgyro.getIntStatus();
-    fifoCount = accelgyro.getFIFOCount();
-    accelgyro.getFIFOBytes(fifoBuffer, fifoCount);
+    dmpIntChange = false;
 
-    if (fifoCount >= 42) {
+    // wait for correct FIFO packet size (42 bytes for MotionApps 2.0 DMP output)
+    while ((fifoCount = accelgyro.getFIFOCount()) < 42);
+
+    // read FIFO content
+    accelgyro.getFIFOBytes(fifoBuffer, fifoCount);
+    
+    #ifdef FIFO_DEBUG_SIZE
+        // display FIFO count for debugging
+        Serial.print(F("FIFO size:\t"));
+        Serial.println(fifoCount);
+    #endif
+
+    #ifdef FIFO_DEBUG_DATA
+        // display FIFO content for debugging
+        Serial.print(F("FIFO data:\t"));
+        for (uint8_t k = 0; k < 42; k++) {
+            if (fifoBuffer[k] < 0x10) Serial.print("0");
+            Serial.print(fifoBuffer[k], HEX);
+            Serial.print(" ");
+        }
+        Serial.println("");
+    #endif
+
+    if (fifoCount == 1024) {
+        // overflow (this should never happen)
+        accelgyro.resetFIFO();
+    } else {
         // read raw sensor data ASAP if we're later going to display initial-frame
         // acceleration values; we want to do this as soon as possible to make sure
         // the acceleration values read are as close to the ones used by the DMP as
