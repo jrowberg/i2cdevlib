@@ -1,9 +1,10 @@
 // I2Cdev library collection - HMC5883L I2C device class header file
 // Based on Honeywell HMC5883L datasheet, 10/2010 (Form #900405 Rev B)
-// 8/22/2011 by Jeff Rowberg <jeff@rowberg.net>
+// 6/12/2012 by Jeff Rowberg <jeff@rowberg.net>
 // Updates should (hopefully) always be available at https://github.com/jrowberg/i2cdevlib
 //
 // Changelog:
+//     2012-06-12 - fixed swapped Y/Z axes
 //     2011-08-22 - small Doxygen comment fixes
 //     2011-07-31 - initial release
 
@@ -44,10 +45,10 @@ THE SOFTWARE.
 #define HMC5883L_RA_MODE            0x02
 #define HMC5883L_RA_DATAX_H         0x03
 #define HMC5883L_RA_DATAX_L         0x04
-#define HMC5883L_RA_DATAY_H         0x05
-#define HMC5883L_RA_DATAY_L         0x06
-#define HMC5883L_RA_DATAZ_H         0x07
-#define HMC5883L_RA_DATAZ_L         0x08
+#define HMC5883L_RA_DATAZ_H         0x05
+#define HMC5883L_RA_DATAZ_L         0x06
+#define HMC5883L_RA_DATAY_H         0x07
+#define HMC5883L_RA_DATAY_L         0x08
 #define HMC5883L_RA_STATUS          0x09
 #define HMC5883L_RA_ID_A            0x0A
 #define HMC5883L_RA_ID_B            0x0B

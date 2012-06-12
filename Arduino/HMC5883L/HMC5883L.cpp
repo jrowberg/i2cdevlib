@@ -1,15 +1,16 @@
 // I2Cdev library collection - HMC5883L I2C device class
 // Based on Honeywell HMC5883L datasheet, 10/2010 (Form #900405 Rev B)
-// 8/22/2011 by Jeff Rowberg <jeff@rowberg.net>
+// 6/12/2012 by Jeff Rowberg <jeff@rowberg.net>
 // Updates should (hopefully) always be available at https://github.com/jrowberg/i2cdevlib
 //
 // Changelog:
+//     2012-06-12 - fixed swapped Y/Z axes
 //     2011-08-22 - small Doxygen comment fixes
 //     2011-07-31 - initial release
 
 /* ============================================
 I2Cdev device library code is placed under the MIT license
-Copyright (c) 2011 Jeff Rowberg
+Copyright (c) 2012 Jeff Rowberg
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -270,8 +271,8 @@ void HMC5883L::getHeading(int16_t *x, int16_t *y, int16_t *z) {
     I2Cdev::readBytes(devAddr, HMC5883L_RA_DATAX_H, 6, buffer);
     if (mode == HMC5883L_MODE_SINGLE) I2Cdev::writeByte(devAddr, HMC5883L_RA_MODE, HMC5883L_MODE_SINGLE << (HMC5883L_MODEREG_BIT - HMC5883L_MODEREG_LENGTH + 1));
     *x = (((int16_t)buffer[0]) << 8) | buffer[1];
-    *y = (((int16_t)buffer[2]) << 8) | buffer[3];
-    *z = (((int16_t)buffer[4]) << 8) | buffer[5];
+    *y = (((int16_t)buffer[4]) << 8) | buffer[5];
+    *z = (((int16_t)buffer[2]) << 8) | buffer[3];
 }
 /** Get X-axis heading measurement.
  * @return 16-bit signed integer with X-axis heading
@@ -293,7 +294,7 @@ int16_t HMC5883L::getHeadingY() {
     // one is used; this was not done ineffiently in the code by accident
     I2Cdev::readBytes(devAddr, HMC5883L_RA_DATAX_H, 6, buffer);
     if (mode == HMC5883L_MODE_SINGLE) I2Cdev::writeByte(devAddr, HMC5883L_RA_MODE, HMC5883L_MODE_SINGLE << (HMC5883L_MODEREG_BIT - HMC5883L_MODEREG_LENGTH + 1));
-    return (((int16_t)buffer[2]) << 8) | buffer[3];
+    return (((int16_t)buffer[4]) << 8) | buffer[5];
 }
 /** Get Z-axis heading measurement.
  * @return 16-bit signed integer with Z-axis heading
@@ -304,7 +305,7 @@ int16_t HMC5883L::getHeadingZ() {
     // one is used; this was not done ineffiently in the code by accident
     I2Cdev::readBytes(devAddr, HMC5883L_RA_DATAX_H, 6, buffer);
     if (mode == HMC5883L_MODE_SINGLE) I2Cdev::writeByte(devAddr, HMC5883L_RA_MODE, HMC5883L_MODE_SINGLE << (HMC5883L_MODEREG_BIT - HMC5883L_MODEREG_LENGTH + 1));
-    return (((int16_t)buffer[4]) << 8) | buffer[5];
+    return (((int16_t)buffer[2]) << 8) | buffer[3];
 }
 
 // STATUS register
