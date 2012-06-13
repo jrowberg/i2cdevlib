@@ -1,8 +1,10 @@
 // I2Cdev library collection - Main I2C device class header file
 // Abstracts bit and byte I2C R/W functions into a convenient class
-// 11/1/2011 by Jeff Rowberg <jeff@rowberg.net>
+// 6/9/2012 by Jeff Rowberg <jeff@rowberg.net>
 //
 // Changelog:
+//     2012-06-09 - fix major issue with reading > 32 bytes at a time with Arduino Wire
+//                - add compiler warnings when using outdated or IDE or limited I2Cdev implementation
 //     2011-11-01 - fix write*Bits mask calculation (thanks sasquatch @ Arduino forums)
 //     2011-10-03 - added automatic Arduino version detection for ease of use
 //     2011-10-02 - added Gene Knight's NBWire TwoWire class implementation with small modifications
@@ -17,7 +19,7 @@
 
 /* ============================================
 I2Cdev device library code is placed under the MIT license
-Copyright (c) 2011 Jeff Rowberg
+Copyright (c) 2012 Jeff Rowberg
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -47,6 +49,10 @@ THE SOFTWARE.
 // -----------------------------------------------------------------------------
 #define I2CDEV_IMPLEMENTATION       I2CDEV_ARDUINO_WIRE
 
+// comment this out if you are using a non-optimal IDE/implementation setting
+// but want the compiler to shut up about it
+#define I2CDEV_IMPLEMENTATION_WARNINGS
+
 // -----------------------------------------------------------------------------
 // I2C interface implementation options
 // -----------------------------------------------------------------------------
@@ -54,6 +60,7 @@ THE SOFTWARE.
 #define I2CDEV_BUILTIN_NBWIRE       2 // Tweaked Wire object from Gene Knight's NBWire project
                                       // ^^^ NBWire implementation is still buggy w/some interrupts!
 #define I2CDEV_BUILTIN_FASTWIRE     3 // FastWire object from Francesco Ferrara's project
+                                      // ^^^ FastWire implementation in I2Cdev is INCOMPLETE!
 
 // -----------------------------------------------------------------------------
 // Arduino-style "Serial.print" debug constant (uncomment to enable)
