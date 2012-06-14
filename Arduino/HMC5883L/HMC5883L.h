@@ -40,6 +40,8 @@ THE SOFTWARE.
 #define HMC5883L_ADDRESS            0x1E // this device only has one address
 #define HMC5883L_DEFAULT_ADDRESS    0x1E
 
+#define HMC5883L_MEASUREMENT_PERIOD 6 // From receiving command to data ready (ms)
+
 #define HMC5883L_RA_CONFIG_A        0x00
 #define HMC5883L_RA_CONFIG_B        0x01
 #define HMC5883L_RA_MODE            0x02
@@ -100,11 +102,26 @@ THE SOFTWARE.
 #define HMC5883L_STATUS_LOCK_BIT    1
 #define HMC5883L_STATUS_READY_BIT   0
 
+static const uint16_t HMC5883L_READY_FOR_I2C_COMMAND = 200; // Ready for I2C commands (µs)
+
+static const float  HMC5883L_SELF_TEST_X_AXIS_ABSOLUTE_GAUSS = 1.16f;
+static const float  HMC5883L_SELF_TEST_Y_AXIS_ABSOLUTE_GAUSS = 1.16f;
+static const float  HMC5883L_SELF_TEST_Z_AXIS_ABSOLUTE_GAUSS = 1.08f;
+
+static const uint16_t HMC5883L_LSB_PER_GAUS[]= {
+  1370, 1090, 820, 660, 440, 390, 330, 230
+};
+static const float HMC5883L_OUTPUT_RATES_IN_CONTINUOUS_MODE[]= {
+  0.5, 1, 2, 5, 10, 20, 50
+};
+
 class HMC5883L {
-    public:
-        HMC5883L();
+
+	public:
+
+		HMC5883L();
         HMC5883L(uint8_t address);
-        
+
         void initialize();
         bool testConnection();
 
@@ -130,6 +147,11 @@ class HMC5883L {
         int16_t getHeadingY();
         int16_t getHeadingZ();
 
+        void getRawHeading(int16_t *x, int16_t *y, int16_t *z);
+        int16_t getRawHeadingX();
+        int16_t getRawHeadingY();
+        int16_t getRawHeadingZ();
+
         // STATUS register
         bool getLockStatus();
         bool getReadyStatus();
@@ -139,10 +161,15 @@ class HMC5883L {
         uint8_t getIDB();
         uint8_t getIDC();
 
+        bool calibrate(int8_t testGain = -1);
+
     private:
         uint8_t devAddr;
         uint8_t buffer[6];
         uint8_t mode;
+        uint8_t gain;
+        float scaleFactors[8][3];
+
 };
 
 #endif /* _HMC5883L_H_ */

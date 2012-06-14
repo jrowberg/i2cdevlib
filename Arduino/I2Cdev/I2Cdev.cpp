@@ -3,6 +3,7 @@
 // 6/9/2012 by Jeff Rowberg <jeff@rowberg.net>
 //
 // Changelog:
+//     2012-06-13 - added optional wait parameter to read* methods.
 //     2012-06-09 - fix major issue with reading > 32 bytes at a time with Arduino Wire
 //                - add compiler warnings when using outdated or IDE or limited I2Cdev implementation
 //     2011-11-01 - fix write*Bits mask calculation (thanks sasquatch @ Arduino forums)
@@ -98,11 +99,12 @@ I2Cdev::I2Cdev() {
  * @param bitNum Bit position to read (0-7)
  * @param data Container for single bit value
  * @param timeout Optional read timeout in milliseconds (0 to disable, leave off to use default class value in I2Cdev::readTimeout)
+ * @param wait Optional read delay in milliseconds (0 to disable, leave off to use default class value in I2Cdev::delayTimeout)
  * @return Status of read operation (true = success)
  */
-int8_t I2Cdev::readBit(uint8_t devAddr, uint8_t regAddr, uint8_t bitNum, uint8_t *data, uint16_t timeout) {
+int8_t I2Cdev::readBit(uint8_t devAddr, uint8_t regAddr, uint8_t bitNum, uint8_t *data, uint16_t timeout, uint16_t wait) {
     uint8_t b;
-    uint8_t count = readByte(devAddr, regAddr, &b, timeout);
+    uint8_t count = readByte(devAddr, regAddr, &b, timeout, wait);
     *data = b & (1 << bitNum);
     return count;
 }
@@ -115,9 +117,9 @@ int8_t I2Cdev::readBit(uint8_t devAddr, uint8_t regAddr, uint8_t bitNum, uint8_t
  * @param timeout Optional read timeout in milliseconds (0 to disable, leave off to use default class value in I2Cdev::readTimeout)
  * @return Status of read operation (true = success)
  */
-int8_t I2Cdev::readBitW(uint8_t devAddr, uint8_t regAddr, uint8_t bitNum, uint16_t *data, uint16_t timeout) {
+int8_t I2Cdev::readBitW(uint8_t devAddr, uint8_t regAddr, uint8_t bitNum, uint16_t *data, uint16_t timeout, uint16_t wait) {
     uint16_t b;
-    uint8_t count = readWord(devAddr, regAddr, &b, timeout);
+    uint8_t count = readWord(devAddr, regAddr, &b, timeout, wait);
     *data = b & (1 << bitNum);
     return count;
 }
@@ -131,14 +133,14 @@ int8_t I2Cdev::readBitW(uint8_t devAddr, uint8_t regAddr, uint8_t bitNum, uint16
  * @param timeout Optional read timeout in milliseconds (0 to disable, leave off to use default class value in I2Cdev::readTimeout)
  * @return Status of read operation (true = success)
  */
-int8_t I2Cdev::readBits(uint8_t devAddr, uint8_t regAddr, uint8_t bitStart, uint8_t length, uint8_t *data, uint16_t timeout) {
+int8_t I2Cdev::readBits(uint8_t devAddr, uint8_t regAddr, uint8_t bitStart, uint8_t length, uint8_t *data, uint16_t timeout, uint16_t wait) {
     // 01101001 read byte
     // 76543210 bit numbers
     //    xxx   args: bitStart=4, length=3
     //    010   masked
     //   -> 010 shifted
     uint8_t count, b;
-    if ((count = readByte(devAddr, regAddr, &b, timeout)) != 0) {
+    if ((count = readByte(devAddr, regAddr, &b, timeout, wait)) != 0) {
         uint8_t mask = ((1 << length) - 1) << (bitStart - length + 1);
         b &= mask;
         b >>= (bitStart - length + 1);
@@ -156,7 +158,7 @@ int8_t I2Cdev::readBits(uint8_t devAddr, uint8_t regAddr, uint8_t bitStart, uint
  * @param timeout Optional read timeout in milliseconds (0 to disable, leave off to use default class value in I2Cdev::readTimeout)
  * @return Status of read operation (1 = success, 0 = failure, -1 = timeout)
  */
-int8_t I2Cdev::readBitsW(uint8_t devAddr, uint8_t regAddr, uint8_t bitStart, uint8_t length, uint16_t *data, uint16_t timeout) {
+int8_t I2Cdev::readBitsW(uint8_t devAddr, uint8_t regAddr, uint8_t bitStart, uint8_t length, uint16_t *data, uint16_t timeout, uint16_t wait) {
     // 1101011001101001 read byte
     // fedcba9876543210 bit numbers
     //    xxx           args: bitStart=12, length=3
@@ -164,7 +166,7 @@ int8_t I2Cdev::readBitsW(uint8_t devAddr, uint8_t regAddr, uint8_t bitStart, uin
     //           -> 010 shifted
     uint8_t count;
     uint16_t w;
-    if ((count = readWord(devAddr, regAddr, &w, timeout)) != 0) {
+    if ((count = readWord(devAddr, regAddr, &w, timeout, wait)) != 0) {
         uint16_t mask = ((1 << length) - 1) << (bitStart - length + 1);
         w &= mask;
         w >>= (bitStart - length + 1);
@@ -180,8 +182,8 @@ int8_t I2Cdev::readBitsW(uint8_t devAddr, uint8_t regAddr, uint8_t bitStart, uin
  * @param timeout Optional read timeout in milliseconds (0 to disable, leave off to use default class value in I2Cdev::readTimeout)
  * @return Status of read operation (true = success)
  */
-int8_t I2Cdev::readByte(uint8_t devAddr, uint8_t regAddr, uint8_t *data, uint16_t timeout) {
-    return readBytes(devAddr, regAddr, 1, data, timeout);
+int8_t I2Cdev::readByte(uint8_t devAddr, uint8_t regAddr, uint8_t *data, uint16_t timeout, uint16_t wait) {
+    return readBytes(devAddr, regAddr, 1, data, timeout, wait);
 }
 
 /** Read single word from a 16-bit device register.
@@ -191,8 +193,8 @@ int8_t I2Cdev::readByte(uint8_t devAddr, uint8_t regAddr, uint8_t *data, uint16_
  * @param timeout Optional read timeout in milliseconds (0 to disable, leave off to use default class value in I2Cdev::readTimeout)
  * @return Status of read operation (true = success)
  */
-int8_t I2Cdev::readWord(uint8_t devAddr, uint8_t regAddr, uint16_t *data, uint16_t timeout) {
-    return readWords(devAddr, regAddr, 1, data, timeout);
+int8_t I2Cdev::readWord(uint8_t devAddr, uint8_t regAddr, uint16_t *data, uint16_t timeout, uint16_t wait) {
+    return readWords(devAddr, regAddr, 1, data, timeout, wait);
 }
 
 /** Read multiple bytes from an 8-bit device register.
@@ -203,7 +205,7 @@ int8_t I2Cdev::readWord(uint8_t devAddr, uint8_t regAddr, uint16_t *data, uint16
  * @param timeout Optional read timeout in milliseconds (0 to disable, leave off to use default class value in I2Cdev::readTimeout)
  * @return Number of bytes read (-1 indicates failure)
  */
-int8_t I2Cdev::readBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8_t *data, uint16_t timeout) {
+int8_t I2Cdev::readBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8_t *data, uint16_t timeout, uint16_t wait) {
     #ifdef I2CDEV_SERIAL_DEBUG
         Serial.print("I2C (0x");
         Serial.print(devAddr, HEX);
@@ -229,6 +231,7 @@ int8_t I2Cdev::readBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8
                 Wire.beginTransmission(devAddr);
                 Wire.send(regAddr);
                 Wire.endTransmission();
+                if (wait > 0) delay(wait);
                 Wire.beginTransmission(devAddr);
                 Wire.requestFrom(devAddr, (uint8_t)min(length - k, BUFFER_LENGTH));
 
@@ -253,6 +256,7 @@ int8_t I2Cdev::readBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8
                 Wire.beginTransmission(devAddr);
                 Wire.write(regAddr);
                 Wire.endTransmission();
+                if (wait > 0) delay(wait);
                 Wire.beginTransmission(devAddr);
                 Wire.requestFrom(devAddr, (uint8_t)min(length - k, BUFFER_LENGTH));
         
@@ -277,6 +281,7 @@ int8_t I2Cdev::readBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8
                 Wire.beginTransmission(devAddr);
                 Wire.write(regAddr);
                 Wire.endTransmission();
+                if (wait > 0) delay(wait);
                 Wire.beginTransmission(devAddr);
                 Wire.requestFrom(devAddr, (uint8_t)min(length - k, BUFFER_LENGTH));
         
@@ -325,7 +330,7 @@ int8_t I2Cdev::readBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8
  * @param timeout Optional read timeout in milliseconds (0 to disable, leave off to use default class value in I2Cdev::readTimeout)
  * @return Number of words read (0 indicates failure)
  */
-int8_t I2Cdev::readWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint16_t *data, uint16_t timeout) {
+int8_t I2Cdev::readWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint16_t *data, uint16_t timeout, uint16_t wait) {
     #ifdef I2CDEV_SERIAL_DEBUG
         Serial.print("I2C (0x");
         Serial.print(devAddr, HEX);
@@ -351,6 +356,7 @@ int8_t I2Cdev::readWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint1
                 Wire.beginTransmission(devAddr);
                 Wire.send(regAddr);
                 Wire.endTransmission();
+                if (wait > 0) delay(wait);
                 Wire.beginTransmission(devAddr);
                 Wire.requestFrom(devAddr, (uint8_t)(length * 2)); // length=words, this wants bytes
     
@@ -384,6 +390,7 @@ int8_t I2Cdev::readWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint1
                 Wire.beginTransmission(devAddr);
                 Wire.write(regAddr);
                 Wire.endTransmission();
+                if (wait > 0) delay(wait);
                 Wire.beginTransmission(devAddr);
                 Wire.requestFrom(devAddr, (uint8_t)(length * 2)); // length=words, this wants bytes
     
@@ -417,6 +424,7 @@ int8_t I2Cdev::readWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint1
                 Wire.beginTransmission(devAddr);
                 Wire.write(regAddr);
                 Wire.endTransmission();
+                if (wait > 0) delay(wait);
                 Wire.beginTransmission(devAddr);
                 Wire.requestFrom(devAddr, (uint8_t)(length * 2)); // length=words, this wants bytes
         
@@ -681,6 +689,11 @@ bool I2Cdev::writeWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint16
  * Set this to 0 to disable timeout detection.
  */
 uint16_t I2Cdev::readTimeout = I2CDEV_DEFAULT_READ_TIMEOUT;
+
+/** Default delay value for read operations.
+ * Set this to 0 to disable.
+ */
+uint16_t I2Cdev::readDelay = I2CDEV_DEFAULT_READ_DELAY;
 
 #if I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_FASTWIRE
     /*
