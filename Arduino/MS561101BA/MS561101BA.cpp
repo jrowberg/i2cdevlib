@@ -66,10 +66,13 @@ MS561101BA::MS561101BA(uint8_t address, uint8_t osr) {
 	devAddr = address;
 	defaultOsr = osr;
 }
+
 /** Power on and prepare for general usage.
  */
 void MS561101BA::initialize() {
+	// Reset the device to populate its internal PROM registers
 	if (reset()) {
+		delay(100);
 		readPROM();
 	}
 }
@@ -138,16 +141,19 @@ bool MS561101BA::setOverSampleRate(uint8_t osr) {
  */
 bool MS561101BA::read(int32_t * pressure, int32_t * temperature, int8_t osr) {
 
+	// Read the sensors
 	int32_t d1 = readD1(osr);
 	int32_t d2 = readD2(osr);
+
+	// Check for errors
 	if (d1 < 0 || d2 < 0) return false;
 
 	int32_t dT = d2 - (((uint32_t) getTREF()) << 8);
 	double t = 2000.0 + ((int64_t) dT) * getTEMPSENS() / POW_2_23;
 
-	double off  = (((int64_t) getOFFT1())  << 16) +
+	int64_t off  = (((int64_t) getOFFT1())  << 16) +
 			((int64_t) dT) * getTCO() / POW_2_7;
-	double sens = (((int64_t) getSENST1()) << 15) +
+	int64_t sens = (((int64_t) getSENST1()) << 15) +
 			((int64_t) dT) * getTCS() / POW_2_8;
 
 	// Second order temperature compensation
@@ -162,14 +168,16 @@ bool MS561101BA::read(int32_t * pressure, int32_t * temperature, int8_t osr) {
 			off2  += square * 7;
 			sens2 += square * 11 / 2;
 		}
+
 		t    -= t2;
 		off  -= off2;
 		sens -= sens2;
+
 	}
 
 	double p = ((sens * d1 / POW_2_21) - off) / POW_2_15;
-	*pressure    = (int32_t) p;
-	*temperature = (int32_t) t;
+	*pressure    = p;
+	*temperature = t;
 
 	return true;
 

@@ -430,7 +430,6 @@ bool HMC5883L::calibrate(int8_t testGain) {
 
 	// Keep the current status ...
 	uint8_t previousGain = getGain();
-	uint8_t previousBias = getMeasurementBias();
 
 	// Set the gain
 	if (testGain < 0) {
