@@ -80,7 +80,10 @@ class MS561101BA {
 		bool readPROM();
 		bool setOverSampleRate(uint8_t osr);
 
-		bool read(int32_t * pressure, int32_t * temperature, int8_t osr=-1);
+		bool readValues(
+				float * temperature,
+				float * pressure,
+				int8_t osr = -1);
 
 		int32_t readD1(int8_t osr = -1);
 		int32_t readD2(int8_t osr = -1);

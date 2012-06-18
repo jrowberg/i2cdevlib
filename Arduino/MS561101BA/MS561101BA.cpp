@@ -70,11 +70,12 @@ MS561101BA::MS561101BA(uint8_t address, uint8_t osr) {
 /** Power on and prepare for general usage.
  */
 void MS561101BA::initialize() {
-	// Reset the device to populate its internal PROM registers
-	if (reset()) {
-		delay(100);
-		readPROM();
-	}
+	// Reset the device
+	reset();
+	// Wait for it populates its internal PROM registers
+	delay(100);
+	// Read PROM registers
+	readPROM();
 }
 
 /** Verify the I2C connection.
@@ -134,12 +135,15 @@ bool MS561101BA::setOverSampleRate(uint8_t osr) {
  * Read the pressure and temperature.
  * This method use the second order temperature
  * compensation algorithm described in the datasheet.
- * @param pressure Pressure pointer.
- * @param temperature Temperature pointer.
+ * @param pressure Pressure pointer. hPa
+ * @param temperature Temperature pointer. ºC
  * @param osr Oversample rate. Optional.
  * @return Status of operation (true = success)
  */
-bool MS561101BA::read(int32_t * pressure, int32_t * temperature, int8_t osr) {
+bool MS561101BA::readValues(
+		float * temperature,
+		float * pressure,
+		int8_t osr) {
 
 	// Read the sensors
 	int32_t d1 = readD1(osr);
@@ -176,8 +180,9 @@ bool MS561101BA::read(int32_t * pressure, int32_t * temperature, int8_t osr) {
 	}
 
 	double p = ((sens * d1 / POW_2_21) - off) / POW_2_15;
-	*pressure    = p;
-	*temperature = t;
+
+	*temperature = float(t/100);
+	*pressure    = float(p/100);
 
 	return true;
 

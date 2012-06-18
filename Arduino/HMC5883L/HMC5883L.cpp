@@ -274,17 +274,36 @@ void HMC5883L::setMode(uint8_t newMode) {
  * register will contain the value -4096. This register value will clear when
  * after the next valid measurement is made. Note that this method automatically
  * clears the appropriate bit in the MODE register if Single mode is active.
+ * @param x float container for X-axis heading
+ * @param y float container for Y-axis heading
+ * @param z float for Z-axis heading
+ * @see HMC5883L_RA_DATAX_H
+ */
+void HMC5883L::getHeading(float *x, float *y, float *z) {
+	int16_t rawx, rawy, rawz;
+	getRawHeading(&rawx, &rawy, &rawz);
+	*x = rawx * scaleFactors[gain][0];
+	*y = rawx * scaleFactors[gain][1];
+	*z = rawx * scaleFactors[gain][2];
+}
+
+/** Get 3-axis heading measurements.
+ * In the event the ADC reading overflows or underflows for the given channel,
+ * or if there is a math overflow during the bias measurement, this data
+ * register will contain the value -4096. This register value will clear when
+ * after the next valid measurement is made. Note that this method automatically
+ * clears the appropriate bit in the MODE register if Single mode is active.
  * @param x 16-bit signed integer container for X-axis heading
  * @param y 16-bit signed integer container for Y-axis heading
  * @param z 16-bit signed integer container for Z-axis heading
  * @see HMC5883L_RA_DATAX_H
  */
 void HMC5883L::getHeading(int16_t *x, int16_t *y, int16_t *z) {
-	int16_t rawx, rawy, rawz;
-	getRawHeading(&rawx, &rawy, &rawz);
-	*x = rawx * scaleFactors[gain][0];
-	*y = rawy * scaleFactors[gain][1];
-	*z = rawz * scaleFactors[gain][2];
+	float fx, fy, fz;
+	getHeading(&fx, &fy, &fz);
+	*x = (int16_t) fx + 0.5;
+	*y = (int16_t) fy + 0.5;
+	*z = (int16_t) fz + 0.5;
 }
 
 /** Get X-axis heading measurement.
@@ -292,7 +311,9 @@ void HMC5883L::getHeading(int16_t *x, int16_t *y, int16_t *z) {
  * @see HMC5883L_RA_DATAX_H
  */
 int16_t HMC5883L::getHeadingX() {
-	return getRawHeadingX() * scaleFactors[gain][0];
+	int16_t x,y,z;
+	getHeading(&x,&y,&z);
+	return x;
 }
 
 /** Get Y-axis heading measurement.
@@ -300,7 +321,9 @@ int16_t HMC5883L::getHeadingX() {
  * @see HMC5883L_RA_DATAY_H
  */
 int16_t HMC5883L::getHeadingY() {
-	return getRawHeadingY() * scaleFactors[gain][1];
+	int16_t x,y,z;
+	getHeading(&x,&y,&z);
+	return y;
 }
 
 /** Get Z-axis heading measurement.
@@ -308,7 +331,9 @@ int16_t HMC5883L::getHeadingY() {
  * @see HMC5883L_RA_DATAZ_H
  */
 int16_t HMC5883L::getHeadingZ() {
-	return getRawHeadingZ() * scaleFactors[gain][2];
+	int16_t x,y,z;
+	getHeading(&x,&y,&z);
+	return z;
 }
 
 /** Get raw 3-axis heading measurements.
@@ -325,7 +350,7 @@ int16_t HMC5883L::getHeadingZ() {
 void HMC5883L::getRawHeading(int16_t *x, int16_t *y, int16_t *z) {
     uint16_t wait = (mode==HMC5883L_MODE_SINGLE)?HMC5883L_MEASUREMENT_PERIOD:0;
     I2Cdev::readBytes(devAddr, HMC5883L_RA_DATAX_H, 6, buffer, I2Cdev::readTimeout, wait);
-    if (mode == HMC5883L_MODE_SINGLE) I2Cdev::writeByte(devAddr, HMC5883L_RA_MODE, HMC5883L_MODE_SINGLE << (HMC5883L_MODEREG_BIT - HMC5883L_MODEREG_LENGTH + 1));
+    // if (mode == HMC5883L_MODE_SINGLE) I2Cdev::writeByte(devAddr, HMC5883L_RA_MODE, HMC5883L_MODE_SINGLE << (HMC5883L_MODEREG_BIT - HMC5883L_MODEREG_LENGTH + 1));
     *x = (((int16_t)buffer[0]) << 8) | buffer[1];
     *y = (((int16_t)buffer[4]) << 8) | buffer[5];
     *z = (((int16_t)buffer[2]) << 8) | buffer[3];
@@ -340,7 +365,7 @@ int16_t HMC5883L::getRawHeadingX() {
     // one is used; this was not done ineffiently in the code by accident
     uint16_t wait = (mode==HMC5883L_MODE_SINGLE)?HMC5883L_MEASUREMENT_PERIOD:0;
     I2Cdev::readBytes(devAddr, HMC5883L_RA_DATAX_H, 6, buffer, I2Cdev::readTimeout, wait);
-    if (mode == HMC5883L_MODE_SINGLE) I2Cdev::writeByte(devAddr, HMC5883L_RA_MODE, HMC5883L_MODE_SINGLE << (HMC5883L_MODEREG_BIT - HMC5883L_MODEREG_LENGTH + 1));
+    // if (mode == HMC5883L_MODE_SINGLE) I2Cdev::writeByte(devAddr, HMC5883L_RA_MODE, HMC5883L_MODE_SINGLE << (HMC5883L_MODEREG_BIT - HMC5883L_MODEREG_LENGTH + 1));
     return (((int16_t)buffer[0]) << 8) | buffer[1];
 }
 
@@ -353,7 +378,7 @@ int16_t HMC5883L::getRawHeadingY() {
     // one is used; this was not done ineffiently in the code by accident
     uint16_t wait = (mode==HMC5883L_MODE_SINGLE)?HMC5883L_MEASUREMENT_PERIOD:0;
     I2Cdev::readBytes(devAddr, HMC5883L_RA_DATAX_H, 6, buffer, I2Cdev::readTimeout, wait);
-    if (mode == HMC5883L_MODE_SINGLE) I2Cdev::writeByte(devAddr, HMC5883L_RA_MODE, HMC5883L_MODE_SINGLE << (HMC5883L_MODEREG_BIT - HMC5883L_MODEREG_LENGTH + 1));
+    // if (mode == HMC5883L_MODE_SINGLE) I2Cdev::writeByte(devAddr, HMC5883L_RA_MODE, HMC5883L_MODE_SINGLE << (HMC5883L_MODEREG_BIT - HMC5883L_MODEREG_LENGTH + 1));
     return (((int16_t)buffer[4]) << 8) | buffer[5];
 }
 
@@ -366,7 +391,7 @@ int16_t HMC5883L::getRawHeadingZ() {
     // one is used; this was not done ineffiently in the code by accident
     uint16_t wait = (mode==HMC5883L_MODE_SINGLE)?HMC5883L_MEASUREMENT_PERIOD:0;
     I2Cdev::readBytes(devAddr, HMC5883L_RA_DATAX_H, 6, buffer, I2Cdev::readTimeout, wait);
-    if (mode == HMC5883L_MODE_SINGLE) I2Cdev::writeByte(devAddr, HMC5883L_RA_MODE, HMC5883L_MODE_SINGLE << (HMC5883L_MODEREG_BIT - HMC5883L_MODEREG_LENGTH + 1));
+    // if (mode == HMC5883L_MODE_SINGLE) I2Cdev::writeByte(devAddr, HMC5883L_RA_MODE, HMC5883L_MODE_SINGLE << (HMC5883L_MODEREG_BIT - HMC5883L_MODEREG_LENGTH + 1));
     return (((int16_t)buffer[2]) << 8) | buffer[3];
 }
 

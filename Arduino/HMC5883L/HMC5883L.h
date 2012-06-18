@@ -142,6 +142,7 @@ class HMC5883L {
         void setMode(uint8_t mode);
 
         // DATA* registers
+        void getHeading(float *x, float *y, float *z);
         void getHeading(int16_t *x, int16_t *y, int16_t *z);
         int16_t getHeadingX();
         int16_t getHeadingY();
