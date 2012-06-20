@@ -12,7 +12,7 @@
 
 /* ============================================
 I2Cdev device library code is placed under the MIT license
-Copyright (c) 2011 Jeff Rowberg
+Copyright (c) 2012 Jeff Rowberg
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -3042,7 +3042,6 @@ bool MPU6050::writeMemoryBlock(const uint8_t *data, uint16_t dataSize, uint8_t b
 bool MPU6050::writeProgMemoryBlock(const uint8_t *data, uint16_t dataSize, uint8_t bank, uint8_t address, bool verify) {
     return writeMemoryBlock(data, dataSize, bank, address, verify, true);
 }
-#define MPU6050_DMP_CONFIG_BLOCK_SIZE 6
 bool MPU6050::writeDMPConfigurationSet(const uint8_t *data, uint16_t dataSize, bool useProgMem) {
     uint8_t *progBuffer, success, special;
     uint16_t i, j;
@@ -3097,10 +3096,12 @@ bool MPU6050::writeDMPConfigurationSet(const uint8_t *data, uint16_t dataSize, b
             Serial.println(" found...");*/
             if (special == 0x01) {
                 // enable DMP-related interrupts
-                setIntZeroMotionEnabled(true);
-                setIntFIFOBufferOverflowEnabled(true);
-                setIntDMPEnabled(true);
-                //I2Cdev::writeByte(devAddr, MPU6050_RA_INT_ENABLE, 0x32);
+                
+                //setIntZeroMotionEnabled(true);
+                //setIntFIFOBufferOverflowEnabled(true);
+                //setIntDMPEnabled(true);
+                I2Cdev::writeByte(devAddr, MPU6050_RA_INT_ENABLE, 0x32);  // single operation
+
                 success = true;
             } else {
                 // unknown special command
