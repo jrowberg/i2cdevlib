@@ -91,6 +91,9 @@ THE SOFTWARE.
 #define HMC5883L_GAIN_390           0x05
 #define HMC5883L_GAIN_330           0x06
 #define HMC5883L_GAIN_220           0x07
+static const uint16_t HMC5883L_LSB_PER_GAUS[]= {
+  1370, 1090, 820, 660, 440, 390, 330, 230
+};
 
 #define HMC5883L_MODEREG_BIT        1
 #define HMC5883L_MODEREG_LENGTH     2
@@ -107,13 +110,6 @@ static const uint16_t HMC5883L_READY_FOR_I2C_COMMAND = 200; // Ready for I2C com
 static const float  HMC5883L_SELF_TEST_X_AXIS_ABSOLUTE_GAUSS = 1.16f;
 static const float  HMC5883L_SELF_TEST_Y_AXIS_ABSOLUTE_GAUSS = 1.16f;
 static const float  HMC5883L_SELF_TEST_Z_AXIS_ABSOLUTE_GAUSS = 1.08f;
-
-static const uint16_t HMC5883L_LSB_PER_GAUS[]= {
-  1370, 1090, 820, 660, 440, 390, 330, 230
-};
-static const float HMC5883L_OUTPUT_RATES_IN_CONTINUOUS_MODE[]= {
-  0.5, 1, 2, 5, 10, 20, 50
-};
 
 class HMC5883L {
 
@@ -142,7 +138,6 @@ class HMC5883L {
         void setMode(uint8_t mode);
 
         // DATA* registers
-        void getHeading(float *x, float *y, float *z);
         void getHeading(int16_t *x, int16_t *y, int16_t *z);
         int16_t getHeadingX();
         int16_t getHeadingY();
@@ -165,6 +160,7 @@ class HMC5883L {
         bool calibrate(int8_t testGain = -1);
 
     private:
+
         uint8_t devAddr;
         uint8_t buffer[6];
         uint8_t mode;
