@@ -68,7 +68,7 @@ void setup() {
     println(Serial.list());
 
     // get the first available port (use EITHER this OR the specific port code below)
-    Sring portName Serial.list()[0];
+    String portName = Serial.list()[0];
     
     // get a specific serial port (use EITHER this OR the first-available code above)
     //String portName = "COM4";
