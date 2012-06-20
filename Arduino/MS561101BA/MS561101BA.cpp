@@ -73,7 +73,7 @@ void MS561101BA::initialize() {
 	// Reset the device
 	reset();
 	// Wait for it populates its internal PROM registers
-	delay(100);
+	delay(250);
 	// Read PROM registers
 	readPROM();
 }
@@ -141,8 +141,8 @@ bool MS561101BA::setOverSampleRate(uint8_t osr) {
  * @return Status of operation (true = success)
  */
 bool MS561101BA::readValues(
-		float * temperature,
 		float * pressure,
+		float * temperature,
 		int8_t osr) {
 
 	// Read the sensors
