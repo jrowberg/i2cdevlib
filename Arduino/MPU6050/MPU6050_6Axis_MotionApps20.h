@@ -279,7 +279,7 @@ uint8_t MPU6050::dmpInitialize() {
     // reset device
     DEBUG_PRINTLN(F("\n\nResetting MPU6050..."));
     reset();
-    delay(50); // wait after reset
+    delay(30); // wait after reset
 
     // enable sleep mode and wake cycle
     /*Serial.println(F("Enabling sleep mode..."));
@@ -349,8 +349,8 @@ uint8_t MPU6050::dmpInitialize() {
             DEBUG_PRINTLN(F("Setting clock source to Z Gyro..."));
             setClockSource(MPU6050_CLOCK_PLL_ZGYRO);
 
-            DEBUG_PRINTLN(F("Setting DMP interrupt (only) enabled..."));
-            setIntEnabled(0x02);
+            DEBUG_PRINTLN(F("Setting DMP and FIFO_OFLOW interrupts enabled..."));
+            setIntEnabled(0x12);
 
             DEBUG_PRINTLN(F("Setting sample rate to 200Hz..."));
             setRate(4); // 1khz / (1 + 4) = 200 Hz
@@ -587,20 +587,36 @@ uint8_t MPU6050::dmpGetQuaternion(Quaternion *q, const uint8_t* packet) {
 uint8_t MPU6050::dmpGetGyro(int32_t *data, const uint8_t* packet) {
     // TODO: accommodate different arrangements of sent data (ONLY default supported now)
     if (packet == 0) packet = dmpPacketBuffer;
-    memcpy(data, packet + 16, 12);
+    data[0] = ((packet[16] << 24) + (packet[17] << 16) + (packet[18] << 8) + packet[19]);
+    data[1] = ((packet[20] << 24) + (packet[21] << 16) + (packet[22] << 8) + packet[23]);
+    data[2] = ((packet[24] << 24) + (packet[25] << 16) + (packet[26] << 8) + packet[27]);
     return 0;
 }
 uint8_t MPU6050::dmpGetGyro(int16_t *data, const uint8_t* packet) {
     // TODO: accommodate different arrangements of sent data (ONLY default supported now)
     if (packet == 0) packet = dmpPacketBuffer;
-    memcpy(data, packet + 16, 2);
-    memcpy(data + 2, packet + 20, 2);
-    memcpy(data + 4, packet + 24, 2);
+    data[0] = (packet[16] << 8) + packet[17];
+    data[1] = (packet[20] << 8) + packet[21];
+    data[2] = (packet[24] << 8) + packet[25];
     return 0;
 }
 // uint8_t MPU6050::dmpSetLinearAccelFilterCoefficient(float coef);
 // uint8_t MPU6050::dmpGetLinearAccel(long *data, const uint8_t* packet);
+uint8_t MPU6050::dmpGetLinearAccel(VectorInt16 *v, VectorInt16 *vRaw, VectorFloat *gravity) {
+    // get rid of the gravity component (+1g = +4096 in standard DMP FIFO packet)
+    v -> x = vRaw -> x - gravity -> x*4096;
+    v -> y = vRaw -> y - gravity -> y*4096;
+    v -> z = vRaw -> z - gravity -> z*4096;
+    return 0;
+}
 // uint8_t MPU6050::dmpGetLinearAccelInWorld(long *data, const uint8_t* packet);
+uint8_t MPU6050::dmpGetLinearAccelInWorld(VectorInt16 *v, VectorInt16 *vReal, Quaternion *q) {
+    // rotate measured 3D acceleration vector into original state
+    // frame of reference based on orientation quaternion
+    memcpy(v, vReal, sizeof(Quaternion));
+    v -> rotate(q);
+    return 0;
+}
 // uint8_t MPU6050::dmpGetGyroAndAccelSensor(long *data, const uint8_t* packet);
 // uint8_t MPU6050::dmpGetGyroSensor(long *data, const uint8_t* packet);
 // uint8_t MPU6050::dmpGetControlData(long *data, const uint8_t* packet);
@@ -610,13 +626,14 @@ uint8_t MPU6050::dmpGetGravity(VectorFloat *v, Quaternion *q) {
     v -> x = 2 * (q -> x*q -> z - q -> w*q -> y);
     v -> y = 2 * (q -> w*q -> x + q -> y*q -> z);
     v -> z = q -> w*q -> w - q -> x*q -> x - q -> y*q -> y + q -> z*q -> z;
+    return 0;
 }
 // uint8_t MPU6050::dmpGetUnquantizedAccel(long *data, const uint8_t* packet);
 // uint8_t MPU6050::dmpGetQuantizedAccel(long *data, const uint8_t* packet);
 // uint8_t MPU6050::dmpGetExternalSensorData(long *data, int size, const uint8_t* packet);
 // uint8_t MPU6050::dmpGetEIS(long *data, const uint8_t* packet);
 
-uint8_t MPU6050::dmpGetEulerAngles(float *data, Quaternion *q) {
+uint8_t MPU6050::dmpGetEuler(float *data, Quaternion *q) {
     data[0] = atan2(2*q -> x*q -> y - 2*q -> w*q -> z, 2*q -> w*q -> w + 2*q -> x*q -> x - 1);   // psi
     data[1] = -asin(2*q -> x*q -> z + 2*q -> w*q -> y);                              // theta
     data[2] = atan2(2*q -> y*q -> z - 2*q -> w*q -> x, 2*q -> w*q -> w + 2*q -> z*q -> z - 1);   // phi

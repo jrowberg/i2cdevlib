@@ -829,9 +829,11 @@ class MPU6050 {
             uint8_t dmpGetLinearAccel(int32_t *data, const uint8_t* packet=0);
             uint8_t dmpGetLinearAccel(int16_t *data, const uint8_t* packet=0);
             uint8_t dmpGetLinearAccel(VectorInt16 *v, const uint8_t* packet=0);
+            uint8_t dmpGetLinearAccel(VectorInt16 *v, VectorInt16 *vRaw, VectorFloat *gravity);
             uint8_t dmpGetLinearAccelInWorld(int32_t *data, const uint8_t* packet=0);
             uint8_t dmpGetLinearAccelInWorld(int16_t *data, const uint8_t* packet=0);
             uint8_t dmpGetLinearAccelInWorld(VectorInt16 *v, const uint8_t* packet=0);
+            uint8_t dmpGetLinearAccelInWorld(VectorInt16 *v, VectorInt16 *vReal, Quaternion *q);
             uint8_t dmpGetGyroAndAccelSensor(int32_t *data, const uint8_t* packet=0);
             uint8_t dmpGetGyroAndAccelSensor(int16_t *data, const uint8_t* packet=0);
             uint8_t dmpGetGyroAndAccelSensor(VectorInt16 *g, VectorInt16 *a, const uint8_t* packet=0);
@@ -853,7 +855,7 @@ class MPU6050 {
             uint8_t dmpGetExternalSensorData(int32_t *data, uint16_t size, const uint8_t* packet=0);
             uint8_t dmpGetEIS(int32_t *data, const uint8_t* packet=0);
             
-            uint8_t dmpGetEulerAngles(float *data, Quaternion *q);
+            uint8_t dmpGetEuler(float *data, Quaternion *q);
             uint8_t dmpGetYawPitchRoll(float *data, Quaternion *q, VectorFloat *gravity);
 
             // Get Floating Point data from FIFO
