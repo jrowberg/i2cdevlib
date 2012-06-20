@@ -44,6 +44,9 @@ THE SOFTWARE.
 #define MPU6050_ADDRESS_AD0_HIGH    0x69 // address pin high (VCC)
 #define MPU6050_DEFAULT_ADDRESS     MPU6050_ADDRESS_AD0_LOW
 
+#define MPU6050_START_UP_TIME_TYP   20  // Typical start-Up Time (ms) for Register Read/Write
+#define MPU6050_START_UP_TIME_MAX   100 // Max start-Up Time (ms) for Register Read/Write
+
 #define MPU6050_RA_XG_OFFS_TC       0x00 //[7] PWR_MODE, [6:1] XG_OFFS_TC, [0] OTP_BNK_VLD
 #define MPU6050_RA_YG_OFFS_TC       0x01 //[7] PWR_MODE, [6:1] YG_OFFS_TC, [0] OTP_BNK_VLD
 #define MPU6050_RA_ZG_OFFS_TC       0x02 //[7] PWR_MODE, [6:1] ZG_OFFS_TC, [0] OTP_BNK_VLD
@@ -185,6 +188,9 @@ THE SOFTWARE.
 #define MPU6050_DLPF_BW_10          0x05
 #define MPU6050_DLPF_BW_5           0x06
 
+#define MPU6050_GCONFIG_XG_ST_BIT       7
+#define MPU6050_GCONFIG_YG_ST_BIT       6
+#define MPU6050_GCONFIG_ZG_ST_BIT       5
 #define MPU6050_GCONFIG_FS_SEL_BIT      4
 #define MPU6050_GCONFIG_FS_SEL_LENGTH   2
 
@@ -192,6 +198,18 @@ THE SOFTWARE.
 #define MPU6050_GYRO_FS_500         0x01
 #define MPU6050_GYRO_FS_1000        0x02
 #define MPU6050_GYRO_FS_2000        0x03
+
+#define MPU6050_GYRO_LSB_SEN_FS_250		131.0f
+#define MPU6050_GYRO_LSB_SEN_FS_500		 65.5f
+#define MPU6050_GYRO_LSB_SEN_FS_1000	 32.8f
+#define MPU6050_GYRO_LSB_SEN_FS_2000	 16.4f
+
+#define MPU6050_GYRO_SELF_TEST_X_AXIS_MIN	10
+#define MPU6050_GYRO_SELF_TEST_X_AXIS_MAX	105
+#define MPU6050_GYRO_SELF_TEST_Y_AXIS_MIN	-105
+#define MPU6050_GYRO_SELF_TEST_Y_AXIS_MAX	-10
+#define MPU6050_GYRO_SELF_TEST_Z_AXIS_MIN	10
+#define MPU6050_GYRO_SELF_TEST_Z_AXIS_MAX	105
 
 #define MPU6050_ACONFIG_XA_ST_BIT           7
 #define MPU6050_ACONFIG_YA_ST_BIT           6
@@ -201,10 +219,22 @@ THE SOFTWARE.
 #define MPU6050_ACONFIG_ACCEL_HPF_BIT       2
 #define MPU6050_ACONFIG_ACCEL_HPF_LENGTH    3
 
-#define MPU6050_ACCEL_FS_2          0x00
-#define MPU6050_ACCEL_FS_4          0x01
-#define MPU6050_ACCEL_FS_8          0x02
-#define MPU6050_ACCEL_FS_16         0x03
+#define MPU6050_ACCEL_FS_2     0x00
+#define MPU6050_ACCEL_FS_4     0x01
+#define MPU6050_ACCEL_FS_8     0x02
+#define MPU6050_ACCEL_FS_16		0x03
+
+#define MPU6050_ACCEL_LSB_SEN_FS_2  16384
+#define MPU6050_ACCEL_LSB_SEN_FS_4   8192
+#define MPU6050_ACCEL_LSB_SEN_FS_8   4096
+#define MPU6050_ACCEL_LSB_SEN_FS_16  2048
+
+#define MPU6050_ACCEL_SELF_TEST_X_AXIS_MIN	300
+#define MPU6050_ACCEL_SELF_TEST_X_AXIS_MAX	950
+#define MPU6050_ACCEL_SELF_TEST_Y_AXIS_MIN	300
+#define MPU6050_ACCEL_SELF_TEST_Y_AXIS_MAX	950
+#define MPU6050_ACCEL_SELF_TEST_Z_AXIS_MIN	300
+#define MPU6050_ACCEL_SELF_TEST_Z_AXIS_MAX	950
 
 #define MPU6050_DHPF_RESET          0x00
 #define MPU6050_DHPF_5              0x01
@@ -421,6 +451,12 @@ class MPU6050 {
         // GYRO_CONFIG register
         uint8_t getFullScaleGyroRange();
         void setFullScaleGyroRange(uint8_t range);
+        bool getGyroXSelfTest();
+        void setGyroXSelfTest(bool enabled);
+        bool getGyroYSelfTest();
+        void setGyroYSelfTest(bool enabled);
+        bool getGyroZSelfTest();
+        void setGyroZSelfTest(bool enabled);
 
         // ACCEL_CONFIG register
         bool getAccelXSelfTest();
@@ -774,9 +810,16 @@ class MPU6050 {
         uint8_t getDMPConfig2();
         void setDMPConfig2(uint8_t config);
 
+        // Self tests
+        bool selfTest();
+        bool AccelerometersSelfTest();
+        bool GyroscopesSelfTest();
+
     private:
+
         uint8_t devAddr;
         uint8_t buffer[14];
+
 };
 
 #ifdef MPU6050_INCLUDE_DMP_MOTIONAPPS20
