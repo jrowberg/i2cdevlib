@@ -72,6 +72,8 @@ void setup() {
     
     // get a specific serial port (use EITHER this OR the first-available code above)
     //String portName = "COM4";
+    
+    // open the serial port
     port = new Serial(this, portName, 115200);
     
     // send single character to trigger DMP init/start
@@ -116,30 +118,24 @@ void draw() {
     pushMatrix();
     translate(0, 0, -120);
     rotateX(PI/2);
-    drawCylinder(0, 20, 20, 4);
+    drawCylinder(0, 20, 20, 8);
     popMatrix();
     
     // draw wings and tail fin in green
     fill(0, 255, 0, 200);
     beginShape(TRIANGLES);
-    vertex(-100, 2, 30);   // wing layer 1
-    vertex(0, 2, -80);
-    vertex(100, 2, 30);
-    vertex(-100, 0, 30);   // wing layer 2
-    vertex(0, 0, -80);
-    vertex(100, 0, 30);
-    vertex(-100, -2, 30);  // wing layer 3
-    vertex(0, -2, -80);
-    vertex(100, -2, 30);
-    vertex(-2, 0, 98);     // tail layer 1
-    vertex(-2, -30, 98);
-    vertex(-2, 0, 70);
-    vertex(0, 0, 98);      // tail layer 2
-    vertex(0, -30, 98);
-    vertex(0, 0, 70);
-    vertex(2, 0, 98);      // tail layer 3
-    vertex(2, -30, 98);
-    vertex(2, 0, 70);
+    vertex(-100,  2, 30); vertex(0,  2, -80); vertex(100,  2, 30);  // wing top layer
+    vertex(-100, -2, 30); vertex(0, -2, -80); vertex(100, -2, 30);  // wing bottom layer
+    vertex(-2, 0, 98); vertex(-2, -30, 98); vertex(-2, 0, 70);  // tail left layer
+    vertex( 2, 0, 98); vertex( 2, -30, 98); vertex( 2, 0, 70);  // tail right layer
+    endShape();
+    beginShape(QUADS);
+    vertex(-100, 2, 30); vertex(-100, -2, 30); vertex(  0, -2, -80); vertex(  0, 2, -80);
+    vertex( 100, 2, 30); vertex( 100, -2, 30); vertex(  0, -2, -80); vertex(  0, 2, -80);
+    vertex(-100, 2, 30); vertex(-100, -2, 30); vertex(100, -2,  30); vertex(100, 2,  30);
+    vertex(-2,   0, 98); vertex(2,   0, 98); vertex(2, -30, 98); vertex(-2, -30, 98);
+    vertex(-2,   0, 98); vertex(2,   0, 98); vertex(2,   0, 70); vertex(-2,   0, 70);
+    vertex(-2, -30, 98); vertex(2, -30, 98); vertex(2,   0, 70); vertex(-2,   0, 70);
     endShape();
     
     popMatrix();
