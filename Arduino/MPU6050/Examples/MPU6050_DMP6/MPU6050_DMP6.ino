@@ -1,8 +1,10 @@
 // I2C device class (I2Cdev) demonstration Arduino sketch for MPU6050 class using DMP (MotionApps v2.0)
-// 6/20/2012 by Jeff Rowberg <jeff@rowberg.net>
+// 6/21/2012 by Jeff Rowberg <jeff@rowberg.net>
 // Updates should (hopefully) always be available at https://github.com/jrowberg/i2cdevlib
 //
 // Changelog:
+//     2012-06-21 - added note about Arduino 1.0.1 + Leonardo compatibility error
+//     2012-06-20 - improved FIFO overflow handling and simplified read process
 //     2012-06-19 - completely rearranged DMP initialization code and simplification
 //     2012-06-13 - pull gyro and accel data from FIFO packet instead of reading directly
 //     2012-06-09 - fix broken FIFO read sequence and change interrupt detection to RISING
@@ -54,22 +56,30 @@ THE SOFTWARE.
 // AD0 high = 0x69
 MPU6050 mpu;
 
-// =============================================================
-// =============================================================
-//                            NOTE!
-// =============================================================
-// =============================================================
-// In addition to connection 3.3v, GND, SDA, and SCL, this sketch
-// depends on the MPU-6050's INT pin being connected to the
-// Arduino's external interrupt #0 pin. On the Arduino Uno and
-// Mega 2560, this is digital I/O pin 2.
+/* =========================================================================
+   NOTE: In addition to connection 3.3v, GND, SDA, and SCL, this sketch
+   depends on the MPU-6050's INT pin being connected to the Arduino's
+   external interrupt #0 pin. On the Arduino Uno and Mega 2560, this is
+   digital I/O pin 2.
+ * ========================================================================= */
+
+/* =========================================================================
+   NOTE: Arduino v1.0.1 with the Leonardo board generates a compile error
+   when using Serial.write(buf, len). The Teapot output uses this method.
+   The solution requires a modification to the Arduino USBAPI.h file, which
+   is fortunately simple, but annoying. This will be fixed in the next IDE
+   release. For more info, see these links:
+
+   http://arduino.cc/forum/index.php/topic,109987.0.html
+   http://code.google.com/p/arduino/issues/detail?id=958
+ * ========================================================================= */
 
 
 
 // uncomment "OUTPUT_READABLE_QUATERNION" if you want to see the actual
 // quaternion components in a [w, x, y, z] format (not best for parsing
 // on a remote host such as Processing or something though)
-#define OUTPUT_READABLE_QUATERNION
+//#define OUTPUT_READABLE_QUATERNION
 
 // uncomment "OUTPUT_READABLE_EULER" if you want to see Euler angles
 // (in degrees) calculated from the quaternions coming from the FIFO.
@@ -99,7 +109,7 @@ MPU6050 mpu;
 
 // uncomment "OUTPUT_TEAPOT" if you want output that matches the
 // format used for the InvenSense teapot demo
-//#define OUTPUT_TEAPOT
+#define OUTPUT_TEAPOT
 
 
 
@@ -116,7 +126,6 @@ uint8_t fifoBuffer[64]; // FIFO storage buffer
 
 // orientation/motion vars
 Quaternion q;           // [w, x, y, z]         quaternion container
-VectorInt16 gv;         // [x, y, z]            gyro sensor measurements
 VectorInt16 aa;         // [x, y, z]            accel sensor measurements
 VectorInt16 aaReal;     // [x, y, z]            gravity-free accel sensor measurements
 VectorInt16 aaWorld;    // [x, y, z]            world-frame accel sensor measurements
@@ -152,6 +161,7 @@ void setup() {
     // (115200 chosen because it is required for Teapot Demo output, but it's
     // really up to you depending on your project)
     Serial.begin(115200);
+    while (!Serial); // wait for Leonardo enumeration, others continue immediately
 
     // NOTE: 8MHz or slower host processors, like the Teensy @ 3.3v or Ardunio
     // Pro Mini running at 3.3v, cannot handle this baud rate reliably due to
