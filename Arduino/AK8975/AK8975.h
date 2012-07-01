@@ -117,8 +117,8 @@ class AK8975 {
         void disableI2C(); // um, why...?
         
         // ASA* registers
-        void getAdjustment(uint8_t *x, uint8_t *y, uint8_t *z);
-        void setAdjustment(uint8_t x, uint8_t y, uint8_t z);
+        void getAdjustment(int8_t *x, int8_t *y, int8_t *z);
+        void setAdjustment(int8_t x, int8_t y, int8_t z);
         uint8_t getAdjustmentX();
         void setAdjustmentX(uint8_t x);
         uint8_t getAdjustmentY();

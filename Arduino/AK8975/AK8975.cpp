@@ -147,13 +147,13 @@ void AK8975::disableI2C() {
 }
 
 // ASA* registers
-void AK8975::getAdjustment(uint8_t *x, uint8_t *y, uint8_t *z) {
+void AK8975::getAdjustment(int8_t *x, int8_t *y, int8_t *z) {
     I2Cdev::readBytes(devAddr, AK8975_RA_ASAX, 3, buffer);
     *x = buffer[0];
     *y = buffer[1];
     *z = buffer[2];
 }
-void AK8975::setAdjustment(uint8_t x, uint8_t y, uint8_t z) {
+void AK8975::setAdjustment(int8_t x, int8_t y, int8_t z) {
     buffer[0] = x;
     buffer[1] = y;
     buffer[2] = z;
