@@ -319,19 +319,19 @@ void loop() {
             Serial.println(aaReal.z);
         #endif
 
-        #ifdef OUTPUT_READABLE_FRAMEACCEL
-            // display initial-frame acceleration, adjusted to remove gravity
+        #ifdef OUTPUT_READABLE_WORLDACCEL
+            // display initial world-frame acceleration, adjusted to remove gravity
             // and rotated based on known orientation from quaternion
             mpu.dmpGetQuaternion(&q, fifoBuffer);
             mpu.dmpGetAccel(&aa, fifoBuffer);
             mpu.dmpGetGravity(&gravity, &q);
-            mpu.dmpGetLinearAccelInWorld(&aaFrame, &aaReal, &q);
-            Serial.print("aframe\t");
-            Serial.print(aaFrame.x);
+            mpu.dmpGetLinearAccelInWorld(&aaWorld, &aaReal, &q);
+            Serial.print("aworld\t");
+            Serial.print(aaWorld.x);
             Serial.print("\t");
-            Serial.print(aaFrame.y);
+            Serial.print(aaWorld.y);
             Serial.print("\t");
-            Serial.println(aaFrame.z);
+            Serial.println(aaWorld.z);
         #endif
     
         #ifdef OUTPUT_TEAPOT
