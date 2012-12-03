@@ -129,8 +129,8 @@ class ADS1115 {
         
         // SINGLE SHOT utilities
         void startConversion(uint8_t channel, uint8_t pga_gain);
-        void waitBusy(uint16_t timeout_ms);
-        int16_t getDiffSingle(uint8_t channel, uint8_t pga_gain, uint16_t timeout_ms);
+        void waitBusy(uint16_t max_retries);
+        int16_t getDiffSingle(uint8_t channel, uint8_t pga_gain, uint16_t max_retries);
 
         // CONVERSION register
         int16_t getDifferential();

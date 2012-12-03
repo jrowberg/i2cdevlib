@@ -92,12 +92,12 @@ void ADS1115::startConversion(uint8_t channel, uint8_t pga_gain) {
 }
 
 /** Wait until the single-shot conversion is finished
- * Wait a maximum of 'timeout_ms' (approximate) or until the
+ * Retry at most 'max_retries' times
  * conversion is finished, then return;
  */
-void ADS1115::waitBusy(uint16_t timeout_ms) {
+void ADS1115::waitBusy(uint16_t max_retries) {
   buffer[0] = 0;
-  for(uint16_t i = 0; i < timeout_ms && (0x8000 & buffer[0]) == 0; i++) {
+  for(uint16_t i = 0; i < max_retries && (0x8000 & buffer[0]) == 0; i++) {
     I2Cdev::readWord(devAddr, ADS1115_RA_CONFIG, buffer);
   }
 }
@@ -116,9 +116,9 @@ void ADS1115::waitBusy(uint16_t timeout_ms) {
  * @see ADS1115_MUX_P2_NG
  * @see ADS1115_MUX_P3_NG
  */
-int16_t ADS1115::getDiffSingle(uint8_t channel, uint8_t pga_gain, uint16_t timeout_ms) {
+int16_t ADS1115::getDiffSingle(uint8_t channel, uint8_t pga_gain, uint16_t max_retries) {
   ADS1115::startConversion(channel, pga_gain);
-  ADS1115::waitBusy(timeout_ms);
+  ADS1115::waitBusy(max_retries);
   return ADS1115::getDifferential();
 }
 
