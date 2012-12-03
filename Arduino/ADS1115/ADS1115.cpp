@@ -102,6 +102,20 @@ void ADS1115::waitBusy(uint16_t timeout_ms) {
   }
 }
 
+/** Start a single-shot conversion and get the result
+ * Start a conversion on 'channel'
+ * Set the PGA voltage gain to 'pga_gain'
+ * Wait a maximum time of 'timeout_ms', note that this is an approximate
+ * value, it's based on the speed of a single read to ADS1115_RA_CONFIG.
+ * @see ADS1115_MUX_P0_N1
+ * @see ADS1115_MUX_P0_N3
+ * @see ADS1115_MUX_P1_N3
+ * @see ADS1115_MUX_P2_N3
+ * @see ADS1115_MUX_P0_NG
+ * @see ADS1115_MUX_P1_NG
+ * @see ADS1115_MUX_P2_NG
+ * @see ADS1115_MUX_P3_NG
+ */
 int16_t ADS1115::getDiffSingle(uint8_t channel, uint8_t pga_gain, uint16_t timeout_ms) {
   ADS1115::startConversion(channel, pga_gain);
   ADS1115::waitBusy(timeout_ms);
