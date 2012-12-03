@@ -126,6 +126,11 @@ class ADS1115 {
         
         void initialize();
         bool testConnection();
+        
+        // SINGLE SHOT utilities
+        void startConversion(uint8_t channel, uint8_t pga_gain);
+        void waitBusy(uint16_t timeout_ms);
+        int16_t getDiffSingle(uint8_t channel, uint8_t pga_gain, uint16_t timeout_ms);
 
         // CONVERSION register
         int16_t getDifferential();
