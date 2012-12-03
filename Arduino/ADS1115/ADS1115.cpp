@@ -76,6 +76,52 @@ bool ADS1115::testConnection() {
     return I2Cdev::readWord(devAddr, ADS1115_RA_CONVERSION, buffer) == 1;
 }
 
+/** Start an ADC conversion
+ * Set the PGA gain to 'pga_gain' and start a conversion on 'channel'.
+ */
+void ADS1115::startConversion(uint8_t channel, uint8_t pga_gain) {
+    uint8_t bytes[2];
+    I2Cdev::readWord(devAddr, ADS1115_RA_CONFIG, buffer);
+    buffer[0] &= 0x80FF; // mask out the channel bits and the PGA bits (set them to zero)
+    buffer[0] |= ((channel & 0x07)<<12); // set the channel select bits
+    buffer[0] |= ((pga_gain & 0x07)<<9); // set the PGA gain
+    buffer[0] |= 0x8100; // set the SOC bit, set mode to single-shot
+    bytes[0] = (0xFF00&buffer[0])>>8;
+    bytes[1] = (0x00FF&buffer[0]);
+    I2Cdev::writeBytes(devAddr, ADS1115_RA_CONFIG, 2, bytes);
+}
+
+/** Wait until the single-shot conversion is finished
+ * Retry at most 'max_retries' times
+ * conversion is finished, then return;
+ */
+void ADS1115::waitBusy(uint16_t max_retries) {
+  buffer[0] = 0;
+  for(uint16_t i = 0; i < max_retries && (0x8000 & buffer[0]) == 0; i++) {
+    I2Cdev::readWord(devAddr, ADS1115_RA_CONFIG, buffer);
+  }
+}
+
+/** Start a single-shot conversion and get the result
+ * Start a conversion on 'channel'
+ * Set the PGA voltage gain to 'pga_gain'
+ * Wait a maximum time of 'timeout_ms', note that this is an approximate
+ * value, it's based on the speed of a single read to ADS1115_RA_CONFIG.
+ * @see ADS1115_MUX_P0_N1
+ * @see ADS1115_MUX_P0_N3
+ * @see ADS1115_MUX_P1_N3
+ * @see ADS1115_MUX_P2_N3
+ * @see ADS1115_MUX_P0_NG
+ * @see ADS1115_MUX_P1_NG
+ * @see ADS1115_MUX_P2_NG
+ * @see ADS1115_MUX_P3_NG
+ */
+int16_t ADS1115::getDiffSingle(uint8_t channel, uint8_t pga_gain, uint16_t max_retries) {
+  ADS1115::startConversion(channel, pga_gain);
+  ADS1115::waitBusy(max_retries);
+  return ADS1115::getDifferential();
+}
+
 // CONVERSION register
 
 /** Read differential value based on current MUX configuration.
