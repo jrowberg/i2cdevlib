@@ -35,7 +35,7 @@ THE SOFTWARE.
 */
 
 #include "MPU6050.h"
-#include <msp430.h> //todo remove again
+
 /** Default constructor, uses default I2C address.
  * @see MPU6050_DEFAULT_ADDRESS
  */
@@ -61,15 +61,10 @@ MPU6050::MPU6050(uint8_t address) {
  * the default internal clock source.
  */
 void MPU6050::initialize() {
-	P1OUT |= BIT1; //todo remove again
     setClockSource(MPU6050_CLOCK_PLL_XGYRO);
-    P1OUT &= ~BIT1;
     setFullScaleGyroRange(MPU6050_GYRO_FS_250);
-    P1OUT |= BIT1;
     setFullScaleAccelRange(MPU6050_ACCEL_FS_2);
-    P1OUT &= ~BIT1;
     setSleepEnabled(false); // thanks to Jack Elston for pointing this one out!
-    P1OUT |= BIT1;
 }
 
 /** Verify the I2C connection.
