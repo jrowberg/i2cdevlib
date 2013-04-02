@@ -12,12 +12,12 @@
 
 //Standard Libraries
 #include <stdint.h>
+#include <msp430.h>
 
-#include "usci_i2c.h"
+#include "i2c.h"
 
-//functions needed:
-//millis()
+//TODO functions that need wrapper: millis(), Serial.print
+
 #define millis() 0
-
 
 #endif /* ARDUINOWRAPPER_H_ */

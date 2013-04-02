@@ -35,7 +35,7 @@ THE SOFTWARE.
 */
 
 #include "MPU6050.h"
-
+#include <msp430.h> //todo remove again
 /** Default constructor, uses default I2C address.
  * @see MPU6050_DEFAULT_ADDRESS
  */
@@ -61,10 +61,15 @@ MPU6050::MPU6050(uint8_t address) {
  * the default internal clock source.
  */
 void MPU6050::initialize() {
+	P1OUT |= BIT1; //todo remove again
     setClockSource(MPU6050_CLOCK_PLL_XGYRO);
+    P1OUT &= ~BIT1;
     setFullScaleGyroRange(MPU6050_GYRO_FS_250);
+    P1OUT |= BIT1;
     setFullScaleAccelRange(MPU6050_ACCEL_FS_2);
+    P1OUT &= ~BIT1;
     setSleepEnabled(false); // thanks to Jack Elston for pointing this one out!
+    P1OUT |= BIT1;
 }
 
 /** Verify the I2C connection.
@@ -263,7 +268,7 @@ bool MPU6050::getAccelXSelfTest() {
     I2Cdev::readBit(devAddr, MPU6050_RA_ACCEL_CONFIG, MPU6050_ACONFIG_XA_ST_BIT, buffer);
     return buffer[0];
 }
-/** Get self-test enabled setting for accelerometer X axis.
+/** Set self-test enabled setting for accelerometer X axis.
  * @param enabled Self-test enabled value
  * @see MPU6050_RA_ACCEL_CONFIG
  */
@@ -278,7 +283,7 @@ bool MPU6050::getAccelYSelfTest() {
     I2Cdev::readBit(devAddr, MPU6050_RA_ACCEL_CONFIG, MPU6050_ACONFIG_YA_ST_BIT, buffer);
     return buffer[0];
 }
-/** Get self-test enabled value for accelerometer Y axis.
+/** Set self-test enabled value for accelerometer Y axis.
  * @param enabled Self-test enabled value
  * @see MPU6050_RA_ACCEL_CONFIG
  */
@@ -2357,6 +2362,7 @@ void MPU6050::resetSensors() {
  * @see MPU6050_PWR1_DEVICE_RESET_BIT
  */
 void MPU6050::reset() {
+	//todo consider writing byte 0x80 without reading the register before since it is reset anyways
     I2Cdev::writeBit(devAddr, MPU6050_RA_PWR_MGMT_1, MPU6050_PWR1_DEVICE_RESET_BIT, true);
 }
 /** Get sleep mode status.

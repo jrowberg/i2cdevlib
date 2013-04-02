@@ -47,17 +47,17 @@ THE SOFTWARE.
 
     #ifdef I2CDEV_IMPLEMENTATION_WARNINGS
         #if ARDUINO < 100
-            #warning Using outdated Arduino IDE with Wire library is functionally limiting.
-            #warning Arduino IDE v1.0.1+ with I2Cdev Fastwire implementation is recommended.
-            #warning This I2Cdev implementation does not support:
-            #warning - Repeated starts conditions
-            #warning - Timeout detection (some Wire requests block forever)
+            #warn Using outdated Arduino IDE with Wire library is functionally limiting.
+            #warn Arduino IDE v1.0.1+ with I2Cdev Fastwire implementation is recommended.
+            #warn This I2Cdev implementation does not support:
+            #warn - Repeated starts conditions
+            #warn - Timeout detection (some Wire requests block forever)
         #elif ARDUINO == 100
-            #warning Using outdated Arduino IDE with Wire library is functionally limiting.
-            #warning Arduino IDE v1.0.1+ with I2Cdev Fastwire implementation is recommended.
-            #warning This I2Cdev implementation does not support:
-            #warning - Repeated starts conditions
-            #warning - Timeout detection (some Wire requests block forever)
+            #warn Using outdated Arduino IDE with Wire library is functionally limiting.
+            #warn Arduino IDE v1.0.1+ with I2Cdev Fastwire implementation is recommended.
+            #warn This I2Cdev implementation does not support:
+            #warn - Repeated starts conditions
+            #warn - Timeout detection (some Wire requests block forever)
         #elif ARDUINO > 100
             /*
             #warning Using current Arduino IDE with Wire library is functionally limiting.
@@ -75,9 +75,9 @@ THE SOFTWARE.
 #elif I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_NBWIRE
 
     #ifdef I2CDEV_IMPLEMENTATION_WARNINGS
-        #warning Using I2CDEV_BUILTIN_NBWIRE implementation may adversely affect interrupt detection.
-        #warning This I2Cdev implementation does not support:
-        #warning - Repeated starts conditions
+        #warn Using I2CDEV_BUILTIN_NBWIRE implementation may adversely affect interrupt detection.
+        #warn This I2Cdev implementation does not support:
+        #warn - Repeated starts conditions
     #endif
 
     // NBWire implementation based heavily on code by Gene Knight <Gene@Telobot.com>
@@ -90,6 +90,10 @@ THE SOFTWARE.
 /** Default constructor.
  */
 I2Cdev::I2Cdev() {
+#if (I2CDEV_IMPLEMENTATION == I2CDEV_MSP430)
+	I2C_masterInit();
+#endif
+
 }
 
 /** Read a single bit from an 8-bit device register.
@@ -303,16 +307,9 @@ int8_t I2Cdev::readBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8
             count = -1; // error
         }
 	#elif (I2CDEV_IMPLEMENTATION == I2CDEV_MSP430)
-        unsigned char d[2];		//dummy field to hold regAddr
-        d[0]=regAddr;
 
-    	USCI_I2C_transmitinit(devAddr, I2C_PRESCALE);
-    	while ( USCI_I2C_notready() );         // wait for bus to be free
-    	USCI_I2C_transmit(1,d);       // start transmitting
+        I2C_readBytesFromAddress(devAddr, regAddr, length, data);
 
-        USCI_I2C_receiveinit(devAddr, I2C_PRESCALE);   // init receiving with USCI
-		while ( USCI_I2C_notready() );         // wait for bus to be free
-		USCI_I2C_receive(length,data);
 		count = length; //TODO implement something meaningful, for now just making sure no error is thrown
 	
     #endif
@@ -639,14 +636,16 @@ bool I2Cdev::writeBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8_
     #endif
 
 	#if (I2CDEV_IMPLEMENTATION == I2CDEV_MSP430)
-        unsigned char d[2];		//dummy field to hold regAddr
-        d[0]=regAddr;
+//        unsigned char d[2];		//dummy field to hold regAddr
+//        d[0]=regAddr;
+//
+//        USCI_I2C_transmitinit(devAddr, I2C_PRESCALE);
+//        while ( USCI_I2C_notready() );         // wait for bus to be free
+//        USCI_I2C_transmit(1,d);                // send address
+//        while ( USCI_I2C_notready() );         // wait for bus to be free
+//        USCI_I2C_transmit(length,data);       // start transmitting
 
-        USCI_I2C_transmitinit(devAddr, I2C_PRESCALE);
-        while ( USCI_I2C_notready() );         // wait for bus to be free
-        USCI_I2C_transmit(1,d);                // send address
-        while ( USCI_I2C_notready() );         // wait for bus to be free
-        USCI_I2C_transmit(length,data);       // start transmitting
+        I2C_writeBytesToAddress(devAddr, regAddr, length, data);
 
 	#endif
     return status == 0;
@@ -676,6 +675,33 @@ bool I2Cdev::writeWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint16
     #elif (I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE && ARDUINO >= 100)
         Wire.beginTransmission(devAddr);
         Wire.write(regAddr); // send address
+	#elif (I2CDEV_IMPLEMENTATION == I2CDEV_MSP430)
+
+//        //Specify slave address
+//		I2C_setSlaveAddress(devAddr);
+//
+//		//Set in transmit mode
+//		I2C_setMode(I2C_TRANSMIT_MODE);
+//
+//		//Enable I2C Module to start operations
+//		I2C_enable();
+//
+//		//Enable TX interrupt
+//		I2C_enableInterrupt(I2C_TRANSMIT_INTERRUPT);
+//
+//		//Set transmit length
+//		TXLENGTH = 1;
+//		//Load TX byte counter
+//		transmitCounter = 1;
+//		transmitData[0] = regAddr;
+//
+//		//Initiate start and send first character
+//		I2C_masterMultiByteSendStart(transmitData[0]);
+//
+//		//Delay until transmission completes
+//		while (I2C_isBusBusy()) ;
+//todo implement
+
     #endif
     for (uint8_t i = 0; i < length * 2; i++) {
         #if ((I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE && ARDUINO < 100) || I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_NBWIRE)
@@ -687,6 +713,22 @@ bool I2Cdev::writeWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint16
         #elif (I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_FASTWIRE)
             status = Fastwire::write(devAddr, regAddr, (uint8_t)(data[i++] >> 8));
             status = Fastwire::write(devAddr, regAddr + 1, (uint8_t)data[i]);
+		#elif (I2CDEV_IMPLEMENTATION == I2CDEV_MSP430)
+
+
+//    		//Set transmit length
+//    		TXLENGTH = 2;
+//    		//Load TX byte counter
+//    		transmitCounter = 1;
+//    		transmitData[0] = (uint8_t)(data[i++] >> 8);
+//    		transmitData[1] = (uint8_t)(data[i++]);
+//
+//    		//Initiate start and send first character
+//    		I2C_masterMultiByteSendStart(transmitData[0]);
+//
+//    		//Delay until transmission completes
+//    		while (I2C_isBusBusy()) ;
+
         #endif
         #ifdef I2CDEV_SERIAL_DEBUG
             Serial.print(data[i], HEX);
@@ -697,6 +739,14 @@ bool I2Cdev::writeWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint16
         Wire.endTransmission();
     #elif (I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE && ARDUINO >= 100)
         status = Wire.endTransmission();
+	#elif (I2CDEV_IMPLEMENTATION == I2CDEV_MSP430)
+//    	//Delay until transmission completes
+//    	while (I2C_isBusBusy()) ;
+//
+//    	//Disable TX interrupt
+//    	I2C_disableInterrupt(I2C_TRANSMIT_INTERRUPT);
+//    	//Disable I2C Module to stop operations
+//    	I2C_disable();
     #endif
     #ifdef I2CDEV_SERIAL_DEBUG
         Serial.println(". Done.");

@@ -40,7 +40,7 @@ THE SOFTWARE.
 #define MPU6050_INCLUDE_DMP_MOTIONAPPS41
 
 #include "MPU6050.h"
-#include <avr/pgmspace.h>
+//#include <avr/pgmspace.h>
 
 // NOTE! Enabling DEBUG adds about 3.3kB to the flash program size.
 // Debug output is now working even on ATMega328P MCUs (e.g. Arduino Uno)

@@ -258,4 +258,10 @@ class I2Cdev {
 
 #endif // I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_NBWIRE
 
+#if I2CDEV_IMPLEMENTATION == I2CDEV_MSP430
+//TODO put all methods etc. in a MSP430I2C class and move it here
+
+#endif // I2CDEV_IMPLEMENTATION == I2CDEV_MSP430
+
+
 #endif /* _I2CDEV_H_ */
