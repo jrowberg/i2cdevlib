@@ -90,9 +90,6 @@ THE SOFTWARE.
 /** Default constructor.
  */
 I2Cdev::I2Cdev() {
-#if (I2CDEV_IMPLEMENTATION == I2CDEV_MSP430)
-	I2C_masterInit();
-#endif
 
 }
 
