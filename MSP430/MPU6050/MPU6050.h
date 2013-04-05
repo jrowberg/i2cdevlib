@@ -46,6 +46,8 @@ THE SOFTWARE.
 #define MPU6050_ADDRESS_AD0_HIGH    0x69 // address pin high (VCC)
 #define MPU6050_DEFAULT_ADDRESS     MPU6050_ADDRESS_AD0_LOW
 
+#define MPU6050_ADDRESS_COMPASS		0x0c
+
 #define MPU6050_RA_XG_OFFS_TC       0x00 //[7] PWR_MODE, [6:1] XG_OFFS_TC, [0] OTP_BNK_VLD
 #define MPU6050_RA_YG_OFFS_TC       0x01 //[7] PWR_MODE, [6:1] YG_OFFS_TC, [0] OTP_BNK_VLD
 #define MPU6050_RA_ZG_OFFS_TC       0x02 //[7] PWR_MODE, [6:1] ZG_OFFS_TC, [0] OTP_BNK_VLD
@@ -778,6 +780,9 @@ class MPU6050 {
         uint8_t getDMPConfig2();
         void setDMPConfig2(uint8_t config);
 
+        //Magnetometer initialization
+        void setup_compass();
+
         // special methods for MotionApps 2.0 implementation
         #ifdef MPU6050_INCLUDE_DMP_MOTIONAPPS20
             uint8_t *dmpPacketBuffer;
@@ -983,7 +988,7 @@ class MPU6050 {
 
     private:
         uint8_t devAddr;
-        uint8_t buffer[14];
+        uint8_t buffer[22];
 };
 
 #endif /* _MPU6050_H_ */
