@@ -3233,6 +3233,7 @@ void MPU6050::setDMPConfig2(uint8_t config) {
 void MPU6050::setup_compass() {
 //todo make more general and use MPU6050 methods and defines
 	MPU6050::setI2CBypassEnabled(false);
+	MPU6050::setI2CMasterModeEnabled(true);
 	//    mpu.setWaitForExternalSensorEnabled(true);
 	//    mpu.setSlaveAddress(0,MPU6050_ADDRESS_COMPASS);
 	//    mpu.setSlaveAddress(1,MPU6050_ADDRESS_COMPASS);
@@ -3259,4 +3260,6 @@ void MPU6050::setup_compass() {
     /* For the MPU9150, the auxiliary I2C bus needs to be set to VDD. */
     I2Cdev::writeByte(MPU6050_DEFAULT_ADDRESS, MPU6050_RA_YG_OFFS_TC, BIT_I2C_MST_VDDIO);
 #endif
+    //enable I2C Master Mode
+    MPU6050::setI2CMasterModeEnabled(true);
 }
