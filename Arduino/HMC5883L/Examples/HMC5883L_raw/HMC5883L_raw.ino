@@ -3,6 +3,7 @@
 // Updates should (hopefully) always be available at https://github.com/jrowberg/i2cdevlib
 //
 // Changelog:
+//     2013-05-04 - Added Heading Calculation in degrees
 //     2011-10-07 - initial release
 
 /* ============================================
@@ -77,7 +78,14 @@ void loop() {
     Serial.print("mag:\t");
     Serial.print(mx); Serial.print("\t");
     Serial.print(my); Serial.print("\t");
-    Serial.println(mz);
+    Serial.print(mz); Serial.print("\t");
+    
+// To calculate heading in degrees. 0 degree indicates North
+    float heading = atan2(my, mx);
+    if(heading < 0)
+      heading += 2 * M_PI;
+    Serial.print("heading:\t");
+    Serial.println(heading * 180/M_PI);
 
     // blink LED to indicate activity
     blinkState = !blinkState;
