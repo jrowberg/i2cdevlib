@@ -5,10 +5,10 @@
 // Updates should (hopefully) always be available at https://github.com/jrowberg/i2cdevlib
 //
 // Changelog:
-//     2011-08-02 - initial release
-//     2011-10-29 - added getDifferentialx() methods, F. Farzanegan
+//     2013-05-05 - Add debug information.  Rename methods to match datasheet.
 //     2011-11-06 - added getVoltage, F. Farzanegan
-
+//     2011-10-29 - added getDifferentialx() methods, F. Farzanegan
+//     2011-08-02 - initial release
 /* ============================================
 I2Cdev device library code is placed under the MIT license
 Copyright (c) 2011 Jeff Rowberg
@@ -40,8 +40,6 @@ THE SOFTWARE.
  */
 ADS1115::ADS1115() {
     devAddr = ADS1115_DEFAULT_ADDRESS;
-    devMode = ADS1115_MODE_SINGLESHOT;
-    muxMode = ADS1115_MUX_P0_N1;
 }
 
 /** Specific address constructor.
@@ -54,18 +52,23 @@ ADS1115::ADS1115() {
  */
 ADS1115::ADS1115(uint8_t address) {
     devAddr = address;
-    devMode = ADS1115_MODE_SINGLESHOT;
-    muxMode = ADS1115_MUX_P0_N1;
 }
 
 /** Power on and prepare for general usage.
  * This device is ready to use automatically upon power-up. It defaults to
  * single-shot read mode, P0/N1 mux, 2.048v gain, 128 samples/sec, default
  * comparator with hysterysis, active-low polarity, non-latching comparator,
- * and comparater-disabled operation. This stub function is present for device
- * library consistency.
+ * and comparater-disabled operation. 
  */
 void ADS1115::initialize() {
+  setMultiplexer(ADS1115_MUX_P0_N1);
+  setGain(ADS1115_PGA_2P048);
+  setMode(ADS1115_MODE_SINGLESHOT);
+  setRate(ADS1115_RATE_128);
+  setComparatorMode(ADS1115_COMP_MODE_HYSTERESIS);
+  setComparatorPolarity(ADS1115_COMP_POL_ACTIVE_LOW);
+  setComparatorLatchEnabled(ADS1115_COMP_LAT_NON_LATCHING);
+  setComparatorQueueMode(ADS1115_COMP_QUE_DISABLE);
 }
 
 /** Verify the I2C connection.
@@ -76,60 +79,24 @@ bool ADS1115::testConnection() {
     return I2Cdev::readWord(devAddr, ADS1115_RA_CONVERSION, buffer) == 1;
 }
 
-/** Start an ADC conversion
- * Set the PGA gain to 'pga_gain' and start a conversion on 'channel'.
- */
-void ADS1115::startConversion(uint8_t channel, uint8_t pga_gain) {
-    uint8_t bytes[2];
-    I2Cdev::readWord(devAddr, ADS1115_RA_CONFIG, buffer);
-    buffer[0] &= 0x80FF; // mask out the channel bits and the PGA bits (set them to zero)
-    buffer[0] |= ((channel & 0x07)<<12); // set the channel select bits
-    buffer[0] |= ((pga_gain & 0x07)<<9); // set the PGA gain
-    buffer[0] |= 0x8100; // set the SOC bit, set mode to single-shot
-    bytes[0] = (0xFF00&buffer[0])>>8;
-    bytes[1] = (0x00FF&buffer[0]);
-    I2Cdev::writeBytes(devAddr, ADS1115_RA_CONFIG, 2, bytes);
-}
-
 /** Wait until the single-shot conversion is finished
  * Retry at most 'max_retries' times
  * conversion is finished, then return;
+ * @see ADS1115_OS_INACTIVE
  */
-void ADS1115::waitBusy(uint16_t max_retries) {
-  buffer[0] = 0;
-  for(uint16_t i = 0; i < max_retries && (0x8000 & buffer[0]) == 0; i++) {
-    I2Cdev::readWord(devAddr, ADS1115_RA_CONFIG, buffer);
+void ADS1115::waitBusy(uint16_t max_retries) {  
+  for(uint16_t i = 0; i < max_retries; i++) {
+    if (getOpStatus()==ADS1115_OS_INACTIVE) break;    
   }
 }
 
-/** Start a single-shot conversion and get the result
- * Start a conversion on 'channel'
- * Set the PGA voltage gain to 'pga_gain'
- * Wait a maximum time of 'timeout_ms', note that this is an approximate
- * value, it's based on the speed of a single read to ADS1115_RA_CONFIG.
- * @see ADS1115_MUX_P0_N1
- * @see ADS1115_MUX_P0_N3
- * @see ADS1115_MUX_P1_N3
- * @see ADS1115_MUX_P2_N3
- * @see ADS1115_MUX_P0_NG
- * @see ADS1115_MUX_P1_NG
- * @see ADS1115_MUX_P2_NG
- * @see ADS1115_MUX_P3_NG
- */
-int16_t ADS1115::getDiffSingle(uint8_t channel, uint8_t pga_gain, uint16_t max_retries) {
-  ADS1115::startConversion(channel, pga_gain);
-  ADS1115::waitBusy(max_retries);
-  return ADS1115::getDifferential();
-}
-
-// CONVERSION register
 
 /** Read differential value based on current MUX configuration.
  * The default MUX setting sets the device to get the differential between the
  * AIN0 and AIN1 pins. There are 8 possible MUX settings, but if you are using
  * all four input pins as single-end voltage sensors, then the default option is
  * not what you want; instead you will need to set the MUX to compare the
- * desired AIN* pin with GND. There are four shortcut methods (getDiff*) to do
+ * desired AIN* pin with GND. There are shortcut methods (getConversion*) to do
  * this conveniently, but you can also do it manually with setMultiplexer()
  * followed by this method.
  *
@@ -140,14 +107,14 @@ int16_t ADS1115::getDiffSingle(uint8_t channel, uint8_t pga_gain, uint16_t max_r
  * comparison circuitry when needed.
  *
  * @return 16-bit signed differential value
- * @see getDifferential0();
- * @see getDifferential1();
- * @see getDifferential2();
- * @see getDifferential3();
- * @see getDiff0();
- * @see getDiff1();
- * @see getDiff2();
- * @see getDiff3();
+ * @see getConversionP0N1();
+ * @see getConversionPON3();
+ * @see getConversionP1N3();
+ * @see getConversionP2N3();
+ * @see getConversionP0GND();
+ * @see getConversionP1GND();
+ * @see getConversionP2GND();
+ * @see getConversionP3GND);
  * @see setMultiplexer();
  * @see ADS1115_RA_CONVERSION
  * @see ADS1115_MUX_P0_N1
@@ -159,7 +126,13 @@ int16_t ADS1115::getDiffSingle(uint8_t channel, uint8_t pga_gain, uint16_t max_r
  * @see ADS1115_MUX_P2_NG
  * @see ADS1115_MUX_P3_NG
  */
-int16_t ADS1115::getDifferential() {
+int16_t ADS1115::getConversion() {
+    if (devMode == ADS1115_MODE_SINGLESHOT) 
+    {  
+      setOpStatus(ADS1115_OS_ACTIVE);
+      ADS1115::waitBusy(I2CDEV_DEFAULT_READ_TIMEOUT);
+      
+    }
     I2Cdev::readWord(devAddr, ADS1115_RA_CONVERSION, buffer);
     return buffer[0];
 }
@@ -168,25 +141,23 @@ int16_t ADS1115::getDifferential() {
  * measurement (also only if necessary), then gets the differential value
  * currently in the CONVERSION register.
  * @return 16-bit signed differential value
- * @see getDifferential()
+ * @see getConversion()
  */
-int16_t ADS1115::getDifferential0() {
+int16_t ADS1115::getConversionP0N1() {
     if (muxMode != ADS1115_MUX_P0_N1) setMultiplexer(ADS1115_MUX_P0_N1);
-    if (devMode == ADS1115_MODE_SINGLESHOT) setOpStatus(ADS1115_OS_ACTIVE);
-    return getDifferential();
+    return getConversion();
 }
 
 /** Get AIN0/N3 differential.
- * This changes the MUX setting to AIN0/N1 if necessary, triggers a new
+ * This changes the MUX setting to AIN0/N3 if necessary, triggers a new
  * measurement (also only if necessary), then gets the differential value
  * currently in the CONVERSION register.
  * @return 16-bit signed differential value
- * @see getDifferential()
+ * @see getConversion()
  */
-int16_t ADS1115::getDifferential1() {
+int16_t ADS1115::getConversionP0N3() {
     if (muxMode != ADS1115_MUX_P0_N3) setMultiplexer(ADS1115_MUX_P0_N3);
-    if (devMode == ADS1115_MODE_SINGLESHOT) setOpStatus(ADS1115_OS_ACTIVE);
-    return getDifferential();
+    return getConversion();
 }
 
 /** Get AIN1/N3 differential.
@@ -194,12 +165,11 @@ int16_t ADS1115::getDifferential1() {
  * measurement (also only if necessary), then gets the differential value
  * currently in the CONVERSION register.
  * @return 16-bit signed differential value
- * @see getDifferential()
+ * @see getConversion()
  */
-int16_t ADS1115::getDifferential2() {
+int16_t ADS1115::getConversionP1N3() {
     if (muxMode != ADS1115_MUX_P1_N3) setMultiplexer(ADS1115_MUX_P1_N3);
-    if (devMode == ADS1115_MODE_SINGLESHOT) setOpStatus(ADS1115_OS_ACTIVE);
-    return getDifferential();
+    return getConversion();
 }
 
 /** Get AIN2/N3 differential.
@@ -207,12 +177,11 @@ int16_t ADS1115::getDifferential2() {
  * measurement (also only if necessary), then gets the differential value
  * currently in the CONVERSION register.
  * @return 16-bit signed differential value
- * @see getDifferential()
+ * @see getConversion()
  */
-int16_t ADS1115::getDifferential3() {
+int16_t ADS1115::getConversionP2N3() {
     if (muxMode != ADS1115_MUX_P2_N3) setMultiplexer(ADS1115_MUX_P2_N3);
-    if (devMode == ADS1115_MODE_SINGLESHOT) setOpStatus(ADS1115_OS_ACTIVE);
-    return getDifferential();
+    return getConversion();
 }
 
 
@@ -223,48 +192,44 @@ int16_t ADS1115::getDifferential3() {
  * measurement (also only if necessary), then gets the differential value
  * currently in the CONVERSION register.
  * @return 16-bit signed differential value
- * @see getDifferential()
+ * @see getConversion()
  */
-int16_t ADS1115::getDiff0() {
+int16_t ADS1115::getConversionP0GND() {
     if (muxMode != ADS1115_MUX_P0_NG) setMultiplexer(ADS1115_MUX_P0_NG);
-    if (devMode == ADS1115_MODE_SINGLESHOT) setOpStatus(ADS1115_OS_ACTIVE);
-    return getDifferential();
+    return getConversion();
 }
 /** Get AIN1/GND differential.
  * This changes the MUX setting to AIN1/GND if necessary, triggers a new
  * measurement (also only if necessary), then gets the differential value
  * currently in the CONVERSION register.
  * @return 16-bit signed differential value
- * @see getDifferential()
+ * @see getConversion()
  */
-int16_t ADS1115::getDiff1() {
+int16_t ADS1115::getConversionP1GND() {
     if (muxMode != ADS1115_MUX_P1_NG) setMultiplexer(ADS1115_MUX_P1_NG);
-    if (devMode == ADS1115_MODE_SINGLESHOT) setOpStatus(ADS1115_OS_ACTIVE);
-    return getDifferential();
+    return getConversion();
 }
 /** Get AIN2/GND differential.
  * This changes the MUX setting to AIN2/GND if necessary, triggers a new
  * measurement (also only if necessary), then gets the differential value
  * currently in the CONVERSION register.
  * @return 16-bit signed differential value
- * @see getDifferential()
+ * @see getConversion()
  */
-int16_t ADS1115::getDiff2() {
+int16_t ADS1115::getConversionP2GND() {
     if (muxMode != ADS1115_MUX_P2_NG) setMultiplexer(ADS1115_MUX_P2_NG);
-    if (devMode == ADS1115_MODE_SINGLESHOT) setOpStatus(ADS1115_OS_ACTIVE);
-    return getDifferential();
+    return getConversion();
 }
 /** Get AIN3/GND differential.
  * This changes the MUX setting to AIN3/GND if necessary, triggers a new
  * measurement (also only if necessary), then gets the differential value
  * currently in the CONVERSION register.
  * @return 16-bit signed differential value
- * @see getDifferential()
+ * @see getConversion()
  */
-int16_t ADS1115::getDiff3() {
+int16_t ADS1115::getConversionP3GND() {
     if (muxMode != ADS1115_MUX_P3_NG) setMultiplexer(ADS1115_MUX_P3_NG);
-    if (devMode == ADS1115_MODE_SINGLESHOT) setOpStatus(ADS1115_OS_ACTIVE);
-    return getDifferential();
+    return getConversion();
 }
 
 /** Get the current voltage reading
@@ -276,24 +241,24 @@ int16_t ADS1115::getDiff3() {
 float ADS1115::getMilliVolts() {
   switch (pgaMode) {
     case ADS1115_PGA_6P144:
-      return (getDifferential() * ADS1115_MV_6P144);
+      return (getConversion() * ADS1115_MV_6P144);
       break;    
     case ADS1115_PGA_4P096:
-      return (getDifferential() * ADS1115_MV_4P096);
+      return (getConversion() * ADS1115_MV_4P096);
       break;             
     case ADS1115_PGA_2P048:    
-      return (getDifferential() * ADS1115_MV_2P048);
+      return (getConversion() * ADS1115_MV_2P048);
       break;       
     case ADS1115_PGA_1P024:     
-      return (getDifferential() * ADS1115_MV_1P024);
+      return (getConversion() * ADS1115_MV_1P024);
       break;       
     case ADS1115_PGA_0P512:      
-      return (getDifferential() * ADS1115_MV_0P512);
+      return (getConversion() * ADS1115_MV_0P512);
       break;       
     case ADS1115_PGA_0P256:           
     case ADS1115_PGA_0P256B:          
     case ADS1115_PGA_0P256C:      
-      return (getDifferential() * ADS1115_MV_0P256);
+      return (getConversion() * ADS1115_MV_0P256);
       break;       
   }
 }
@@ -303,8 +268,8 @@ float ADS1115::getMilliVolts() {
  * 
  * This may be directly retreived by using getMilliVolts(),
  * but this causes an independent read.  This function could
- * be used to average a number of reads from the getDifferential()
- * or getDiffx(), or getDifferentialx() functions and cut down
+ * be used to average a number of reads from the getConversion()
+ * or getDiffx(), or getConversionx() functions and cut down
  * on the number of floating-point calculations needed.
  *
  */
@@ -345,7 +310,8 @@ float ADS1115::getMvPerCount() {
  */
 uint8_t ADS1115::getOpStatus() {
     I2Cdev::readBitW(devAddr, ADS1115_RA_CONFIG, ADS1115_CFG_OS_BIT, buffer);
-    return buffer[0];
+    devMode=(uint8_t)buffer[0];
+    return devMode;
 }
 /** Set operational status.
  * This bit can only be written while in power-down mode (no conversions active).
@@ -354,7 +320,9 @@ uint8_t ADS1115::getOpStatus() {
  * @see ADS1115_CFG_OS_BIT
  */
 void ADS1115::setOpStatus(uint8_t status) {
+  
     I2Cdev::writeBitW(devAddr, ADS1115_RA_CONFIG, ADS1115_CFG_OS_BIT, status);
+    devMode=status;
 }
 /** Get multiplexer connection.
  * @return Current multiplexer connection setting
@@ -394,7 +362,8 @@ void ADS1115::setMultiplexer(uint8_t mux) {
  */
 uint8_t ADS1115::getGain() {
     I2Cdev::readBitsW(devAddr, ADS1115_RA_CONFIG, ADS1115_CFG_PGA_BIT, ADS1115_CFG_PGA_LENGTH, buffer);
-    return buffer[0];
+    pgaMode=(uint8_t)buffer[0];
+    return pgaMode;
 }
 /** Set programmable gain amplifier level.
  * @param gain New programmable gain amplifier level
@@ -587,3 +556,77 @@ int16_t ADS1115::getHighThreshold() {
 void ADS1115::setHighThreshold(int16_t threshold) {
     I2Cdev::writeWord(devAddr, ADS1115_RA_HI_THRESH, threshold);
 }
+
+// Create a mask between two bits
+// http://stackoverflow.com/questions/8011700/how-do-i-extract-specific-n-bits-of-a-32-bit-unsigned-integer-in-c
+unsigned createMask(unsigned a, unsigned b)
+{
+   unsigned mask = 0;
+   for (unsigned i=a; i<=b; i++)
+       mask |= 1 << i;
+   return mask;
+}
+
+uint16_t shiftDown(uint16_t extractFrom, int places)
+{
+  return (extractFrom >> places);
+}
+
+
+uint16_t getValueFromBits(uint16_t extractFrom, int high, int length) 
+{
+   int low= high-length +1;
+   uint16_t mask = createMask(low ,high);
+   return shiftDown(extractFrom & mask, low); 
+}
+
+/** Show all the config register settings
+ */
+void ADS1115::showConfigRegister()
+{
+    I2Cdev::readWord(devAddr, ADS1115_RA_CONFIG, buffer);
+    uint16_t configRegister =buffer[0];    
+    
+    
+    #ifdef ADS1115_SERIAL_DEBUG
+      Serial.print("Register is:");
+      Serial.println(configRegister,BIN);
+  
+      Serial.print("OS:\t");
+      Serial.println(getValueFromBits(configRegister, 
+        ADS1115_CFG_OS_BIT,1), BIN);
+      Serial.print("MUX:\t");
+      Serial.println(getValueFromBits(configRegister,  
+        ADS1115_CFG_MUX_BIT,ADS1115_CFG_MUX_LENGTH), BIN);
+        
+      Serial.print("PGA:\t");
+      Serial.println(getValueFromBits(configRegister, 
+        ADS1115_CFG_PGA_BIT,ADS1115_CFG_PGA_LENGTH), BIN);
+        
+      Serial.print("MODE:\t");
+      Serial.println(getValueFromBits(configRegister,
+        ADS1115_CFG_MODE_BIT,1), BIN);
+        
+      Serial.print("DR:\t");
+      Serial.println(getValueFromBits(configRegister, 
+        ADS1115_CFG_DR_BIT,ADS1115_CFG_DR_LENGTH), BIN);
+        
+      Serial.print("CMP_MODE:\t");
+      Serial.println(getValueFromBits(configRegister, 
+        ADS1115_CFG_COMP_MODE_BIT,1), BIN);
+        
+      Serial.print("CMP_POL:\t");
+      Serial.println(getValueFromBits(configRegister, 
+        ADS1115_CFG_COMP_POL_BIT,1), BIN);
+        
+      Serial.print("CMP_LAT:\t");
+      Serial.println(getValueFromBits(configRegister, 
+        ADS1115_CFG_COMP_LAT_BIT,1), BIN);
+        
+      Serial.print("CMP_QUE:\t");
+      Serial.println(getValueFromBits(configRegister, 
+        ADS1115_CFG_COMP_QUE_BIT,ADS1115_CFG_COMP_QUE_LENGTH), BIN);
+    #endif
+    
+};
+

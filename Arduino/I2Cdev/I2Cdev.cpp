@@ -3,6 +3,7 @@
 // 6/9/2012 by Jeff Rowberg <jeff@rowberg.net>
 //
 // Changelog:
+//     2013-05-05 - fix issue with writing bit values to words (Sasquatch/Farzanegan)
 //     2012-06-09 - fix major issue with reading > 32 bytes at a time with Arduino Wire
 //                - add compiler warnings when using outdated or IDE or limited I2Cdev implementation
 //     2011-11-01 - fix write*Bits mask calculation (thanks sasquatch @ Arduino forums)
@@ -16,6 +17,7 @@
 //     2011-07-30 - changed read/write function structures to return success or byte counts
 //                - made all methods static for multi-device memory savings
 //     2011-07-28 - initial release
+
 
 /* ============================================
 I2Cdev device library code is placed under the MIT license
@@ -538,13 +540,13 @@ bool I2Cdev::writeBitsW(uint8_t devAddr, uint8_t regAddr, uint8_t bitStart, uint
     //              010 value to write
     // fedcba9876543210 bit numbers
     //    xxx           args: bitStart=12, length=3
-    // 0001110000000000 mask byte
+    // 0001110000000000 mask word
     // 1010111110010110 original value (sample)
     // 1010001110010110 original & ~mask
     // 1010101110010110 masked | value
     uint16_t w;
     if (readWord(devAddr, regAddr, &w) != 0) {
-        uint8_t mask = ((1 << length) - 1) << (bitStart - length + 1);
+        uint16_t mask = ((1 << length) - 1) << (bitStart - length + 1);
         data <<= (bitStart - length + 1); // shift data into correct position
         data &= mask; // zero all non-important bits in data
         w &= ~(mask); // zero all important bits in existing word
