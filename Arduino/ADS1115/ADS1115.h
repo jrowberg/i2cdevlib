@@ -140,9 +140,7 @@ class ADS1115 {
         bool testConnection();
         
         // SINGLE SHOT utilities
-        void startConversion(uint8_t channel, uint8_t pga_gain);
         void waitBusy(uint16_t max_retries);
-        int16_t getDiffSingle(uint8_t channel, uint8_t pga_gain, uint16_t max_retries);
 
         // Read the current CONVERSION register
         int16_t getConversion();
@@ -165,7 +163,7 @@ class ADS1115 {
 
         // CONFIG register
         uint8_t getOpStatus();
-        void setOpStatus(uint8_t mux);
+        void setOpStatus(uint8_t op);
         uint8_t getMultiplexer();
         void setMultiplexer(uint8_t mux);
         uint8_t getGain();
