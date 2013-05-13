@@ -184,9 +184,6 @@ int16_t ADS1115::getConversionP2N3() {
     return getConversion();
 }
 
-
-
-
 /** Get AIN0/GND differential.
  * This changes the MUX setting to AIN0/GND if necessary, triggers a new
  * measurement (also only if necessary), then gets the differential value
@@ -239,7 +236,7 @@ int16_t ADS1115::getConversionP3GND() {
  *
  */
 float ADS1115::getMilliVolts() {
-  switch (pgaMode) {
+  switch (pgaMode) { 
     case ADS1115_PGA_6P144:
       return (getConversion() * ADS1115_MV_6P144);
       break;    
@@ -269,8 +266,8 @@ float ADS1115::getMilliVolts() {
  * This may be directly retreived by using getMilliVolts(),
  * but this causes an independent read.  This function could
  * be used to average a number of reads from the getConversion()
- * or getDiffx(), or getConversionx() functions and cut down
- * on the number of floating-point calculations needed.
+ * getConversionx() functions and cut downon the number of 
+ * floating-point calculations needed.
  *
  */
  
@@ -310,8 +307,7 @@ float ADS1115::getMvPerCount() {
  */
 uint8_t ADS1115::getOpStatus() {
     I2Cdev::readBitW(devAddr, ADS1115_RA_CONFIG, ADS1115_CFG_OS_BIT, buffer);
-    devMode=(uint8_t)buffer[0];
-    return devMode;
+    return (uint8_t)buffer[0];
 }
 /** Set operational status.
  * This bit can only be written while in power-down mode (no conversions active).
@@ -319,10 +315,8 @@ uint8_t ADS1115::getOpStatus() {
  * @see ADS1115_RA_CONFIG
  * @see ADS1115_CFG_OS_BIT
  */
-void ADS1115::setOpStatus(uint8_t status) {
-  
+void ADS1115::setOpStatus(uint8_t status) { 
     I2Cdev::writeBitW(devAddr, ADS1115_RA_CONFIG, ADS1115_CFG_OS_BIT, status);
-    devMode=status;
 }
 /** Get multiplexer connection.
  * @return Current multiplexer connection setting
@@ -335,7 +329,9 @@ uint8_t ADS1115::getMultiplexer() {
     muxMode = (uint8_t)buffer[0];
     return muxMode;
 }
-/** Set multiplexer connection.
+/** Set multiplexer connection.  Continous mode may fill the conversion register
+ * with data before the MUX setting has taken effect.  A stop/start of the conversion
+ * is done to reset the values.
  * @param mux New multiplexer connection setting
  * @see ADS1115_MUX_P0_N1
  * @see ADS1115_MUX_P0_N3
@@ -352,7 +348,14 @@ uint8_t ADS1115::getMultiplexer() {
 void ADS1115::setMultiplexer(uint8_t mux) {
     if (I2Cdev::writeBitsW(devAddr, ADS1115_RA_CONFIG, ADS1115_CFG_MUX_BIT, ADS1115_CFG_MUX_LENGTH, mux)) {
         muxMode = mux;
+        if (devMode == ADS1115_MODE_CONTINUOUS) {
+          // Force a stop/start
+          setMode(ADS1115_MODE_SINGLESHOT);
+          getConversion();
+          setMode(ADS1115_MODE_CONTINUOUS);
+        }
     }
+    
 }
 /** Get programmable gain amplifier level.
  * @return Current programmable gain amplifier level
@@ -365,7 +368,10 @@ uint8_t ADS1115::getGain() {
     pgaMode=(uint8_t)buffer[0];
     return pgaMode;
 }
-/** Set programmable gain amplifier level.
+/** Set programmable gain amplifier level.  
+ * Continous mode may fill the conversion register
+ * with data before the gain setting has taken effect.  A stop/start of the conversion
+ * is done to reset the values.
  * @param gain New programmable gain amplifier level
  * @see ADS1115_PGA_6P144
  * @see ADS1115_PGA_4P096
@@ -379,7 +385,13 @@ uint8_t ADS1115::getGain() {
  */
 void ADS1115::setGain(uint8_t gain) {
     if (I2Cdev::writeBitsW(devAddr, ADS1115_RA_CONFIG, ADS1115_CFG_PGA_BIT, ADS1115_CFG_PGA_LENGTH, gain)) {
-              pgaMode = gain;
+      pgaMode = gain;
+         if (devMode == ADS1115_MODE_CONTINUOUS) {
+            // Force a stop/start
+            setMode(ADS1115_MODE_SINGLESHOT);
+            getConversion();
+            setMode(ADS1115_MODE_CONTINUOUS);
+         }
     }
 }
 /** Get device mode.
@@ -414,7 +426,7 @@ void ADS1115::setMode(uint8_t mode) {
  */
 uint8_t ADS1115::getRate() {
     I2Cdev::readBitsW(devAddr, ADS1115_RA_CONFIG, ADS1115_CFG_DR_BIT, ADS1115_CFG_DR_LENGTH, buffer);
-    return buffer[0];
+    return (uint8_t)buffer[0];
 }
 /** Set data rate.
  * @param rate New data rate
@@ -442,7 +454,7 @@ void ADS1115::setRate(uint8_t rate) {
  */
 uint8_t ADS1115::getComparatorMode() {
     I2Cdev::readBitW(devAddr, ADS1115_RA_CONFIG, ADS1115_CFG_COMP_MODE_BIT, buffer);
-    return buffer[0];
+    return (uint8_t)buffer[0];
 }
 /** Set comparator mode.
  * @param mode New comparator mode
@@ -463,7 +475,7 @@ void ADS1115::setComparatorMode(uint8_t mode) {
  */
 uint8_t ADS1115::getComparatorPolarity() {
     I2Cdev::readBitW(devAddr, ADS1115_RA_CONFIG, ADS1115_CFG_COMP_POL_BIT, buffer);
-    return buffer[0];
+    return (uint8_t)buffer[0];
 }
 /** Set comparator polarity setting.
  * @param polarity New comparator polarity setting
@@ -508,7 +520,7 @@ void ADS1115::setComparatorLatchEnabled(bool enabled) {
  */
 uint8_t ADS1115::getComparatorQueueMode() {
     I2Cdev::readBitsW(devAddr, ADS1115_RA_CONFIG, ADS1115_CFG_COMP_QUE_BIT, ADS1115_CFG_COMP_QUE_LENGTH, buffer);
-    return buffer[0];
+    return (uint8_t)buffer[0];
 }
 /** Set comparator queue mode.
  * @param mode New comparator queue mode
@@ -558,7 +570,6 @@ void ADS1115::setHighThreshold(int16_t threshold) {
 }
 
 // Create a mask between two bits
-// http://stackoverflow.com/questions/8011700/how-do-i-extract-specific-n-bits-of-a-32-bit-unsigned-integer-in-c
 unsigned createMask(unsigned a, unsigned b)
 {
    unsigned mask = 0;
