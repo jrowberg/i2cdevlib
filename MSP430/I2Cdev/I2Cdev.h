@@ -3,6 +3,7 @@
 // 6/9/2012 by Jeff Rowberg <jeff@rowberg.net>
 //
 // Changelog:
+//     2013-05-09 - added MSP430 implementation (zoellner)
 //     2012-06-09 - fix major issue with reading > 32 bytes at a time with Arduino Wire
 //                - add compiler warnings when using outdated or IDE or limited I2Cdev implementation
 //     2011-11-01 - fix write*Bits mask calculation (thanks sasquatch @ Arduino forums)
@@ -61,7 +62,7 @@ THE SOFTWARE.
                                       // ^^^ NBWire implementation is still buggy w/some interrupts!
 #define I2CDEV_BUILTIN_FASTWIRE     3 // FastWire object from Francesco Ferrara's project
                                       // ^^^ FastWire implementation in I2Cdev is INCOMPLETE!
-#define I2CDEV_MSP430				4 // Experimental MSP430 implementation from Andreas Zoellner
+#define I2CDEV_MSP430				4 // Experimental MSP430 (MSP430F2618) implementation from Andreas Zoellner
 // -----------------------------------------------------------------------------
 // Arduino-style "Serial.print" debug constant (uncomment to enable)
 // -----------------------------------------------------------------------------
@@ -259,7 +260,10 @@ class I2Cdev {
 #endif // I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_NBWIRE
 
 #if I2CDEV_IMPLEMENTATION == I2CDEV_MSP430
-//TODO put all methods etc. in a MSP430I2C class and move it here
+//TODO put all methods etc. in a MSP430I2C class
+
+
+
 
 #endif // I2CDEV_IMPLEMENTATION == I2CDEV_MSP430
 

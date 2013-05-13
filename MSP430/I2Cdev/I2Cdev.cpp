@@ -1449,4 +1449,5 @@ uint16_t I2Cdev::readTimeout = I2CDEV_DEFAULT_READ_TIMEOUT;
 #if  I2CDEV_IMPLEMENTATION == I2CDEV_MSP430
 //MSP 430 I2C implementation based on TI examples
 
+
 #endif

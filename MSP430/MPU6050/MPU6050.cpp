@@ -3222,6 +3222,7 @@ void MPU6050::setDMPConfig2(uint8_t config) {
 
 #define BIT_I2C_READ 0x80
 #define AKM_REG_ST1         (0x02)
+#define AKM_REG_HXL			(0x03)
 #define BIT_SLAVE_EN        (0x80)
 #define AKM_REG_CNTL        (0x0A)
 #define SUPPORTS_AK89xx_HIGH_SENS   (0x00)
@@ -3233,7 +3234,6 @@ void MPU6050::setDMPConfig2(uint8_t config) {
 void MPU6050::setup_compass() {
 //todo make more general and use MPU6050 methods and defines
 	MPU6050::setI2CBypassEnabled(false);
-	MPU6050::setI2CMasterModeEnabled(true);
 	//    mpu.setWaitForExternalSensorEnabled(true);
 	//    mpu.setSlaveAddress(0,MPU6050_ADDRESS_COMPASS);
 	//    mpu.setSlaveAddress(1,MPU6050_ADDRESS_COMPASS);
@@ -3242,10 +3242,10 @@ void MPU6050::setup_compass() {
     I2Cdev::writeByte(MPU6050_DEFAULT_ADDRESS, MPU6050_RA_I2C_MST_CTRL, 0x40);
     /* Slave 0 reads from AKM data registers. */
     I2Cdev::writeByte(MPU6050_DEFAULT_ADDRESS, MPU6050_RA_I2C_SLV0_ADDR, BIT_I2C_READ | MPU6050_ADDRESS_COMPASS);
-    /* Compass reads start at this register. */
-    I2Cdev::writeByte(MPU6050_DEFAULT_ADDRESS, MPU6050_RA_I2C_SLV0_REG, AKM_REG_ST1);
-    /* Enable slave 0, 8-byte reads. */
-    I2Cdev::writeByte(MPU6050_DEFAULT_ADDRESS, MPU6050_RA_I2C_SLV0_CTRL, BIT_SLAVE_EN | 8);
+    /* Compass reads start at this register, the first data register. */
+    I2Cdev::writeByte(MPU6050_DEFAULT_ADDRESS, MPU6050_RA_I2C_SLV0_REG, AKM_REG_HXL);
+    /* Enable slave 0, 6-byte reads. */
+    I2Cdev::writeByte(MPU6050_DEFAULT_ADDRESS, MPU6050_RA_I2C_SLV0_CTRL, BIT_SLAVE_EN | 6);
     /* Slave 1 changes AKM measurement mode. */
     I2Cdev::writeByte(MPU6050_DEFAULT_ADDRESS, MPU6050_RA_I2C_SLV1_ADDR, MPU6050_ADDRESS_COMPASS);
     /* AKM measurement mode register. */

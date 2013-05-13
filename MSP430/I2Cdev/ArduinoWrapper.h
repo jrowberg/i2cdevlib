@@ -13,8 +13,7 @@
 //Standard Libraries
 #include <stdint.h>
 #include <msp430.h>
-#include "config.h"
-#include "i2c.h"
+#include "msp430_i2c.h"
 
 //TODO functions that need wrapper: millis(), Serial.print
 
