@@ -682,16 +682,16 @@ class MPU6050 {
         // XG_OFFS_TC register
         uint8_t getOTPBankValid();
         void setOTPBankValid(bool enabled);
-        int8_t getXGyroOffset();
-        void setXGyroOffset(int8_t offset);
+        int8_t getXGyroOffsetTC();
+        void setXGyroOffsetTC(int8_t offset);
 
         // YG_OFFS_TC register
-        int8_t getYGyroOffset();
-        void setYGyroOffset(int8_t offset);
+        int8_t getYGyroOffsetTC();
+        void setYGyroOffsetTC(int8_t offset);
 
         // ZG_OFFS_TC register
-        int8_t getZGyroOffset();
-        void setZGyroOffset(int8_t offset);
+        int8_t getZGyroOffsetTC();
+        void setZGyroOffsetTC(int8_t offset);
 
         // X_FINE_GAIN register
         int8_t getXFineGain();
@@ -718,16 +718,16 @@ class MPU6050 {
         void setZAccelOffset(int16_t offset);
 
         // XG_OFFS_USR* registers
-        int16_t getXGyroOffsetUser();
-        void setXGyroOffsetUser(int16_t offset);
+        int16_t getXGyroOffset();
+        void setXGyroOffset(int16_t offset);
 
         // YG_OFFS_USR* register
-        int16_t getYGyroOffsetUser();
-        void setYGyroOffsetUser(int16_t offset);
+        int16_t getYGyroOffset();
+        void setYGyroOffset(int16_t offset);
 
         // ZG_OFFS_USR* register
-        int16_t getZGyroOffsetUser();
-        void setZGyroOffsetUser(int16_t offset);
+        int16_t getZGyroOffset();
+        void setZGyroOffset(int16_t offset);
         
         // INT_ENABLE register (DMP functions)
         bool getIntPLLReadyEnabled();

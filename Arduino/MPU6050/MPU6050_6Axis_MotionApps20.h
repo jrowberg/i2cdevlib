@@ -1,6 +1,6 @@
 // I2Cdev library collection - MPU6050 I2C device class, 6-axis MotionApps 2.0 implementation
 // Based on InvenSense MPU-6050 register map document rev. 2.0, 5/19/2011 (RM-MPU-6000A-00)
-// 6/18/2012 by Jeff Rowberg <jeff@rowberg.net>
+// 5/20/2013 by Jeff Rowberg <jeff@rowberg.net>
 // Updates should (hopefully) always be available at https://github.com/jrowberg/i2cdevlib
 //
 // Changelog:
@@ -313,10 +313,10 @@ uint8_t MPU6050::dmpInitialize() {
     DEBUG_PRINTLN(otpValid ? F("valid!") : F("invalid!"));
 
     // get X/Y/Z gyro offsets
-    DEBUG_PRINTLN(F("Reading gyro offset values..."));
-    int8_t xgOffset = getXGyroOffset();
-    int8_t ygOffset = getYGyroOffset();
-    int8_t zgOffset = getZGyroOffset();
+    DEBUG_PRINTLN(F("Reading gyro offset TC values..."));
+    int8_t xgOffsetTC = getXGyroOffsetTC();
+    int8_t ygOffsetTC = getYGyroOffsetTC();
+    int8_t zgOffsetTC = getZGyroOffsetTC();
     DEBUG_PRINT(F("X gyro offset = "));
     DEBUG_PRINTLN(xgOffset);
     DEBUG_PRINT(F("Y gyro offset = "));
@@ -374,15 +374,15 @@ uint8_t MPU6050::dmpInitialize() {
             DEBUG_PRINTLN(F("Clearing OTP Bank flag..."));
             setOTPBankValid(false);
 
-            DEBUG_PRINTLN(F("Setting X/Y/Z gyro offsets to previous values..."));
-            setXGyroOffset(xgOffset);
-            setYGyroOffset(ygOffset);
-            setZGyroOffset(zgOffset);
+            DEBUG_PRINTLN(F("Setting X/Y/Z gyro offset TCs to previous values..."));
+            setXGyroOffsetTC(xgOffsetTC);
+            setYGyroOffsetTC(ygOffsetTC);
+            setZGyroOffsetTC(zgOffsetTC);
 
-            DEBUG_PRINTLN(F("Setting X/Y/Z gyro user offsets to zero..."));
-            setXGyroOffsetUser(0);
-            setYGyroOffsetUser(0);
-            setZGyroOffsetUser(0);
+            //DEBUG_PRINTLN(F("Setting X/Y/Z gyro user offsets to zero..."));
+            //setXGyroOffset(0);
+            //setYGyroOffset(0);
+            //setZGyroOffset(0);
 
             DEBUG_PRINTLN(F("Writing final memory update 1/7 (function unknown)..."));
             uint8_t dmpUpdate[16], j;
@@ -398,7 +398,7 @@ uint8_t MPU6050::dmpInitialize() {
             resetFIFO();
 
             DEBUG_PRINTLN(F("Reading FIFO count..."));
-            uint8_t fifoCount = getFIFOCount();
+            uint16_t fifoCount = getFIFOCount();
             uint8_t fifoBuffer[128];
 
             DEBUG_PRINT(F("Current FIFO count="));
