@@ -1,15 +1,16 @@
-// I2Cdev library collection - MYDEVSTUB I2C device class header file
-// Based on [Manufacturer Name] MYDEVSTUB datasheet, [datasheet date]
-// [current release date] by [Author Name] <[Author Email]>
+// I2Cdev library collection - L3G4200D I2C device class header file
+// Based on STMicroelectronics L3G4200D datasheet rev. 3, 12/2010
+// TODO Add release date here
+// [current release date] by Jonathan "j3rn" Arnett <j3rn@j3rn.com>
 // Updates should (hopefully) always be available at https://github.com/jrowberg/i2cdevlib
 //
+// TODO Add initial release date here as well
 // Changelog:
-//     [YYYY-mm-dd] - updated some broken thing
 //     [YYYY-mm-dd] - initial release
 
 /* ============================================
 I2Cdev device library code is placed under the MIT license
-Copyright (c) 2011 [Author Name], Jeff Rowberg
+Copyright (c) 2011 Jonathan Arnett, Jeff Rowberg
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -31,8 +32,8 @@ THE SOFTWARE.
 ===============================================
 */
 
-#ifndef _MYDEVSTUB_H_
-#define _MYDEVSTUB_H_
+#ifndef _L3G4200D_H_
+#define _L3G4200D_H_
 
 #include "I2Cdev.h"
 
@@ -49,7 +50,7 @@ THE SOFTWARE.
 //      - PanelPilot
 //
 // 2. All #defines should use a device-specific prefix that is the same as the
-//    all-caps version of the class name ("MYDEVSTUB_" in this example).
+//    all-caps version of the class name ("L3G4200D_" in this example).
 //
 // 3. All #defines should be ALL CAPS, no matter what. This makes them clearly
 //    distinctive from variables, classes, and functions.
@@ -83,15 +84,15 @@ THE SOFTWARE.
 // STUB TODO:
 // List all possible device I2C addresses here, if they are predefined. Some
 // devices only have one possible address, in which case that one should be
-// defined as both [MYDEVSTUB]_ADDRESS and [MYDEVSTUB]_DEFAULT_ADDRESS for
+// defined as both [L3G4200D]_ADDRESS and [L3G4200D]_DEFAULT_ADDRESS for
 // consistency. The *_DEFAULT address will be used if a device object is
 // created without an address provided in the constructor. Note that I2C
 // devices conventionally use 7-bit addresses, so these will generally be
 // between 0x00 and 0x7F.
 // ----------------------------------------------------------------------------
-#define MYDEVSTUB_ADDRESS_AD0_LOW   0x20
-#define MYDEVSTUB_ADDRESS_AD0_HIGH  0x21
-#define MYDEVSTUB_DEFAULT_ADDRESS   0x20
+#define L3G4200D_ADDRESS_AD0_LOW   0x20
+#define L3G4200D_ADDRESS_AD0_HIGH  0x21
+#define L3G4200D_DEFAULT_ADDRESS   0x20
 
 // ----------------------------------------------------------------------------
 // STUB TODO:
@@ -100,14 +101,14 @@ THE SOFTWARE.
 // everything in the datasheet. Register address constants should use the extra
 // prefix "RA_", followed by the datasheet's given name for each register.
 // ----------------------------------------------------------------------------
-#define MYDEVSTUB_RA_MEASURE1       0x00
-#define MYDEVSTUB_RA_MEASURE2       0x01
-#define MYDEVSTUB_RA_MEASURE3       0x02
-#define MYDEVSTUB_RA_CONFIG1        0x03
-#define MYDEVSTUB_RA_CONFIG2        0x04
-#define MYDEVSTUB_RA_DATA_H         0x05
-#define MYDEVSTUB_RA_DATA_L         0x06
-#define MYDEVSTUB_RA_WHO_AM_I       0x07
+#define L3G4200D_RA_MEASURE1       0x00
+#define L3G4200D_RA_MEASURE2       0x01
+#define L3G4200D_RA_MEASURE3       0x02
+#define L3G4200D_RA_CONFIG1        0x03
+#define L3G4200D_RA_CONFIG2        0x04
+#define L3G4200D_RA_DATA_H         0x05
+#define L3G4200D_RA_DATA_L         0x06
+#define L3G4200D_RA_WHO_AM_I       0x07
 
 // ----------------------------------------------------------------------------
 // STUB TODO:
@@ -119,11 +120,11 @@ THE SOFTWARE.
 // constant that it complements. Fields that are a single bit in length don't
 // need a separate field length constant.
 // ----------------------------------------------------------------------------
-#define MYDEVSTUB_MEASURE1_RATE_BIT     4
-#define MYDEVSTUB_MEASURE1_RATE_LENGTH  3
+#define L3G4200D_MEASURE1_RATE_BIT     4
+#define L3G4200D_MEASURE1_RATE_LENGTH  3
 
-#define MYDEVSTUB_CONFIG1_FIFO_BIT      1
-#define MYDEVSTUB_CONFIG1_RESET_BIT     0
+#define L3G4200D_CONFIG1_FIFO_BIT      1
+#define L3G4200D_CONFIG1_RESET_BIT     0
 
 // ----------------------------------------------------------------------------
 // STUB TODO:
@@ -134,16 +135,16 @@ THE SOFTWARE.
 // 0x1, 0x2, and 0x3). Defining them here makes it easy to know which options
 // are available.
 // ----------------------------------------------------------------------------
-#define MYDEVSTUB_RATE_10           0x00
-#define MYDEVSTUB_RATE_20           0x01
-#define MYDEVSTUB_RATE_40           0x02
-#define MYDEVSTUB_RATE_80           0x03
-#define MYDEVSTUB_RATE_160          0x04
+#define L3G4200D_RATE_10           0x00
+#define L3G4200D_RATE_20           0x01
+#define L3G4200D_RATE_40           0x02
+#define L3G4200D_RATE_80           0x03
+#define L3G4200D_RATE_160          0x04
 
-class MYDEVSTUB {
+class L3G4200D {
     public:
-        MYDEVSTUB();
-        MYDEVSTUB(uint8_t address);
+        L3G4200D();
+        L3G4200D(uint8_t address);
 
         void initialize();
         bool testConnection();
@@ -206,4 +207,4 @@ class MYDEVSTUB {
         uint8_t buffer[6];
 };
 
-#endif /* _MYDEVSTUB_H_ */
+#endif /* _L3G4200D_H_ */
