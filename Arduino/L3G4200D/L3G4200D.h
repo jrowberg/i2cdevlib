@@ -37,94 +37,85 @@ THE SOFTWARE.
 
 #include "I2Cdev.h"
 
-// ============================================================================
-// DEVICE LIBRARY CONVENTIONS:
-//
-// 1. The class name should be the same as the device model if at all possible.
-//    No spaces or hyphens, and ideally no underlines unless they're absolutely
-//    necessary for clarity. ALL CAPS for model numbers, or FirstInitial caps
-//    for full names. For example:
-//      - ADXL345
-//      - MPU6050
-//      - TCA6424A
-//      - PanelPilot
-//
-// 2. All #defines should use a device-specific prefix that is the same as the
-//    all-caps version of the class name ("L3G4200D_" in this example).
-//
-// 3. All #defines should be ALL CAPS, no matter what. This makes them clearly
-//    distinctive from variables, classes, and functions.
-//
-// 4. Class methods and member variables should be named using camelCaps.
-//
-// 5. Every device class should contain an "initialize()" method which takes
-//    no parameters and resets any important settings back to a known state,
-//    ideally the defaults outlined in the datasheet. Some devices have a
-//    RESET command available, which may be suitable. Some devices may not
-//    require any specific initialization, but an empty method should be
-//    created for consistency anyway.
-//
-// 6. Every device class should contain a "testConnection()" method which
-//    returns TRUE if the device appears to be connected, or FALSE otherwise.
-//    If a known ID register or device code is available, check for that. Since
-//    such an ID register is not always available, at least check to make sure
-//    that an I2C read may be performed on a specific register and that data
-//    does actually come back (the I2Cdev class returns a "bytes read" value
-//    for all read operations).
-//
-// 7. All class methods should be documented with useful information in Doxygen
-//    format. You can take the info right out of the datasheet if you want to,
-//    since that's likely to be helpful. Writing your own info is fine as well.
-//    The goal is to have enough clear documentation right in the code that
-//    someone can determine how the device works by studying the code alone.
-//
-// ============================================================================
+#define L3G4200D_ADDRESS           0x69
+#define L3G4200D_DEFAULT_ADDRESS   0x69
 
-// ----------------------------------------------------------------------------
-// STUB TODO:
-// List all possible device I2C addresses here, if they are predefined. Some
-// devices only have one possible address, in which case that one should be
-// defined as both [L3G4200D]_ADDRESS and [L3G4200D]_DEFAULT_ADDRESS for
-// consistency. The *_DEFAULT address will be used if a device object is
-// created without an address provided in the constructor. Note that I2C
-// devices conventionally use 7-bit addresses, so these will generally be
-// between 0x00 and 0x7F.
-// ----------------------------------------------------------------------------
-#define L3G4200D_ADDRESS_AD0_LOW   0x20
-#define L3G4200D_ADDRESS_AD0_HIGH  0x21
-#define L3G4200D_DEFAULT_ADDRESS   0x20
+#define L3G4200D_RA_WHO_AM_I       0x0F
+#define L3G4200D_RA_CTRL_REG1      0x20
+#define L3G4200D_RA_CTRL_REG2      0x21
+#define L3G4200D_RA_CTRL_REG3      0x22
+#define L3G4200D_RA_CTRL_REG4      0x23
+#define L3G4200D_RA_CTRL_REG5      0x24
+#define L3G4200D_RA_REFERENCE      0x25
+#define L3G4200D_RA_OUT_TEMP       0x26
+#define L3G4200D_RA_STATUS_REG     0x27
+#define L3G4200D_RA_OUT_X_L        0x28
+#define L3G4200D_RA_OUT_X_H        0x29
+#define L3G4200D_RA_OUT_Y_L        0x2A
+#define L3G4200D_RA_OUT_Y_H        0x2B
+#define L3G4200D_RA_OUT_Z_L        0x2C
+#define L3G4200D_RA_OUT_Z_H        0x2D
+#define L3G4200D_RA_FIFO_CTRL_REG  0x2E
+#define L3G4200D_RA_FIFO_SRC_REG   0x2F
+#define L3G4200D_RA_INT1_CFG       0x30
+#define L3G4200D_RA_INT1_SRC       0x31
+#define L3G4200D_RA_INT1_THS_XH    0x32
+#define L3G4200D_RA_INT1_THS_XL    0X33
+#define L3G4200D_RA_INT1_THS_YH    0X34
+#define L3G4200D_RA_INT1_THS_YL    0x35
+#define L3G4200D_RA_INT1_THS_ZH    0X36
+#define L3G4200D_RA_INT1_THS_ZL    0x37
+#define L3G4200D_RA_INT1_DURATION  0X38
 
-// ----------------------------------------------------------------------------
-// STUB TODO:
-// List all registers that this device has. The goal for all device libraries
-// is to have complete coverage of all possible functions, so be sure to add
-// everything in the datasheet. Register address constants should use the extra
-// prefix "RA_", followed by the datasheet's given name for each register.
-// ----------------------------------------------------------------------------
-#define L3G4200D_RA_MEASURE1       0x00
-#define L3G4200D_RA_MEASURE2       0x01
-#define L3G4200D_RA_MEASURE3       0x02
-#define L3G4200D_RA_CONFIG1        0x03
-#define L3G4200D_RA_CONFIG2        0x04
-#define L3G4200D_RA_DATA_H         0x05
-#define L3G4200D_RA_DATA_L         0x06
-#define L3G4200D_RA_WHO_AM_I       0x07
-
-// ----------------------------------------------------------------------------
-// STUB TODO:
-// List register structures wherever necessary. Bit position constants should
-// end in "_BIT", and are defined from 7 to 0, with 7 being the left/MSB and
-// 0 being the right/LSB. If the device uses 16-bit registers instead of the
-// more common 8-bit registers, the range is 15 to 0. Field length constants
-// should end in "_LENGTH", but otherwise match the name of bit position
-// constant that it complements. Fields that are a single bit in length don't
-// need a separate field length constant.
-// ----------------------------------------------------------------------------
-#define L3G4200D_MEASURE1_RATE_BIT     4
-#define L3G4200D_MEASURE1_RATE_LENGTH  3
-
-#define L3G4200D_CONFIG1_FIFO_BIT      1
-#define L3G4200D_CONFIG1_RESET_BIT     0
+#define L3G4200D_ODR_BIT           0
+#define L3G4200D_ODR_LENGTH        2
+#define L3G4200D_BW_BIT            2
+#define L3G4200D_BW_LENGTH         2
+#define L3G4200D_PD_BIT            4
+#define L3G4200D_ZEN_BIT           5
+#define L3G4200D_YEN_BIT           6
+#define L3G4200D_XEN_BIT           7
+#define L3G4200D_HPM_HPCF_BIT      0
+#define L3G4200D_HPM_HPCF_LENGTH   8
+#define L3G4200D_I1_INT1_BIT       0
+#define L3G4200D_I1_BOOT_BIT       1
+#define L3G4200D_H_LACTIVE_BIT     2
+#define L3G4200D_PP_OD_BIT         3
+#define L3G4200D_I2_DRDY_BIT       4
+#define L3G4200D_I2_WTM_BIT        5
+#define L3G4200D_I2_ORUN_BIT       6
+#define L3G4200D_I2_EMPTY_BIT      7
+#define L3G4200D_BDU_BIT           0
+#define L3G4200D_BLE_BIT           1
+#define L3G4200D_FS_BIT            2
+#define L3G4200D_FS_LENGTH         2
+#define L3G4200D_ST_BIT            5
+#define L3G4200D_ST_LENGTH         2
+#define L3G4200D_SIM_BIT           7
+#define L3G4200D_BOOT_BIT          0
+#define L3G4200D_FIFO_EN_BIT       1
+#define L3G4200D_HPEN_BIT          3
+#define L3G4200D_INT1_SEL_BIT      4
+#define L3G4200D_INT1_SEL_LENGTH   2
+#define L3G4200D_OUT_SEL_BIT       6
+#define L3G4200D_OUT_SEL_LENGTH    2
+#define L3G4200D_REF_BIT           0
+#define L3G4200D_REF_LENGTH        8
+#define L3G4200D_FIFO_MODE_BIT     0
+#define L3G4200D_FIFO_MODE_LENGTH  3
+#define L3G4200D_FIFO_WM_BIT       3
+#define L3G4200D_FIFO_WM_LENGTH    5
+#define L3G4200D_INT1_AND_OR_BIT   0
+#define L3G4200D_INT1_LIR_BIT      1
+#define L3G4200D_ZHIE_BIT          2
+#define L3G4200D_ZLIE_BIT          3
+#define L3G4200D_YHIE_BIT          4
+#define L3G4200D_YLIE_BIT          5
+#define L3G4200D_XHIE_BIT          6
+#define L3G4200D_XLIE_BIT          7
+#define L3G4200D_INT1_WAIT_BIT     0
+#define L3G4200D_INT1_DUR_BIT      1
+#define L3G4200D_INT1_DUR_LENGTH   7
 
 // ----------------------------------------------------------------------------
 // STUB TODO:
