@@ -41,22 +41,27 @@ THE SOFTWARE.
 #define L3G4200D_DEFAULT_ADDRESS   0x69
 
 #define L3G4200D_RA_WHO_AM_I       0x0F
+
 #define L3G4200D_RA_CTRL_REG1      0x20
 #define L3G4200D_RA_CTRL_REG2      0x21
 #define L3G4200D_RA_CTRL_REG3      0x22
 #define L3G4200D_RA_CTRL_REG4      0x23
 #define L3G4200D_RA_CTRL_REG5      0x24
+
 #define L3G4200D_RA_REFERENCE      0x25
 #define L3G4200D_RA_OUT_TEMP       0x26
 #define L3G4200D_RA_STATUS_REG     0x27
+
 #define L3G4200D_RA_OUT_X_L        0x28
 #define L3G4200D_RA_OUT_X_H        0x29
 #define L3G4200D_RA_OUT_Y_L        0x2A
 #define L3G4200D_RA_OUT_Y_H        0x2B
 #define L3G4200D_RA_OUT_Z_L        0x2C
 #define L3G4200D_RA_OUT_Z_H        0x2D
+
 #define L3G4200D_RA_FIFO_CTRL_REG  0x2E
 #define L3G4200D_RA_FIFO_SRC_REG   0x2F
+
 #define L3G4200D_RA_INT1_CFG       0x30
 #define L3G4200D_RA_INT1_SRC       0x31
 #define L3G4200D_RA_INT1_THS_XH    0x32
@@ -75,8 +80,10 @@ THE SOFTWARE.
 #define L3G4200D_ZEN_BIT           5
 #define L3G4200D_YEN_BIT           6
 #define L3G4200D_XEN_BIT           7
-#define L3G4200D_HPM_HPCF_BIT      0
-#define L3G4200D_HPM_HPCF_LENGTH   8
+#define L3G4200D_HPM_BIT           2
+#define L3G4200D_HPM_LENGTH        2
+#define L3G4200D_HPCF_BIT          4
+#define L3G4200D_HPCF_LENGTH       4
 #define L3G4200D_I1_INT1_BIT       0
 #define L3G4200D_I1_BOOT_BIT       1
 #define L3G4200D_H_LACTIVE_BIT     2
@@ -122,10 +129,21 @@ THE SOFTWARE.
 #define L3G4200D_RATE_400          0b10
 #define L3G4200D_RATE_800          0b11
 
-#define L3G4200D_BW_LOW            0b00
-#define L3G4200D_BW_MED_LOW        0b01
-#define L3G4200D_BW_MED_HIGH       0b10
-#define L3G4200D_BW_HIGH           0b11
+#define L3G4200D_HPM_HRF           0b00
+#define L3G4200D_HPM_REFERENCE     0b01
+#define L3G4200D_HPM_NORMAL        0b10
+#define L3G4200D_HPM_AUTORESET     0b11
+
+#define L3G4200D_HPCF1             0b0000
+#define L3G4200D_HPCF2             0b0001
+#define L3G4200D_HPCF3             0b0010
+#define L3G4200D_HPCF4             0b0011
+#define L3G4200D_HPCF5             0b0100
+#define L3G4200D_HPCF6             0b0101
+#define L3G4200D_HPCF7             0b0110
+#define L3G4200D_HPCF8             0b0111
+#define L3G4200D_HPCF9             0b1000
+#define L3G4200D_HPCF10            0b1001
 
 #define L3G4200D_FS_250            0b00
 #define L3G4200D_FS_500            0b01
@@ -149,59 +167,62 @@ class L3G4200D {
         void initialize();
         bool testConnection();
 
-// ----------------------------------------------------------------------------
-// STUB TODO:
-// Declare methods to fully cover all available functionality provided by the
-// device, according to the datasheet and/or register map. Unless there is very
-// clear reason not to, try to follow the get/set naming convention for all
-// values, for instance:
-//   - uint8_t getThreshold()
-//   - void setThreshold(uint8_t threshold)
-//   - uint8_t getRate()
-//   - void setRate(uint8_t rate)
-//
-// Some methods may be named differently if it makes sense. As long as all
-// functionality is covered, that's the important part. The methods here are
-// only examples and should not be kept for your real device.
-// ----------------------------------------------------------------------------
-
-        // MEASURE1 register, read-only
-        uint8_t getMeasurement1();
-
-        // MEASURE2 register, read-only
-        uint8_t getMeasurement2();
-
-        // MEASURE3 register, read-only
-        uint8_t getMeasurement3();
-
-        // CONFIG1 register, r/w
-        void reset();               // <-- special method that resets entire device
-        bool getFIFOEnabled();
-        void setFIFOEnabled(bool enabled);
-
-        // CONFIG2 register, r/w
-        uint8_t getInterruptMode();
-        void setInterruptMode(uint8_t mode);
-        uint8_t getRate();
-        void setRate(uint8_t rate);
-
-        // DATA_* registers, r/w
-        uint16_t getData();
-        void setData(uint16_t value);
-
-        // WHO_AM_I register, read-only
+		// WHO_AM_I register, read-only
         uint8_t getDeviceID();
+		
+		// CTRL_REG1 registers, r/w
+		void setOutputDataRate(uint16_t rate);
+		uint16_t getOutputDataRate();
+		void setBandwidthCutOff(uint8_t cutOff);
+		uint8_t getBandwidthCutOff();
+		void setPowerDown(bool enabled);
+		bool getPowerDown();
+		void setZEnabled(bool enabled);
+		bool getZEnabled();
+		void setYEnabled(bool enabled);
+		bool getYEnabled();
+		void setXEnabled(bool enabled);
+		bool getXEnabled();
 
-// ----------------------------------------------------------------------------
-// STUB TODO:
-// Declare private object helper variables or local storage for particular
-// device settings, if required. All devices need a "devAddr" variable to store
-// the I2C slave address for easy access. Most devices also need a buffer for
-// reads (the I2Cdev class' read methods use a pointer for the storage location
-// of any read data). The buffer should be of type "uint8_t" if the device uses
-// 8-bit registers, or type "uint16_t" if the device uses 16-bit registers.
-// Many devices will not require more member variables than this.
-// ----------------------------------------------------------------------------
+		// CTRL_REG2 registers, r/w
+		void setHighPassResetMode();
+		void setHighPassReferenceMode();
+		void setHighPassNormalMode();
+		void setHighPassAutoresetMode();
+		void setHighPassMode(uint8_t mode);
+		uint8_t getHighPassMode();
+		void setHighPassFilterCutOffFrequencyLevel(uint8_t level);
+		uint8_t getHighPassFilterCutOffFrequencyLevel();
+
+		// CTRL_REG3 registers, r/w
+		void setInt1InterruptEnabled(bool enabled);
+		bool getInt1InterruptEnabled();
+		void setInt1BootStatusEnabled(bool enabled);
+		bool getInt1BootStatusEnabled();
+		void interruptActiveInt1Config();
+		void setPushPull(bool pushPull);	// Alternative being open drain
+		bool getIsPushPull();
+		void setInt2DateReadyEnabled(bool enabled);
+		bool getInt2DateReadyEnabled();
+		void setInt2FIFOWatermarkEnabled(bool enabled);
+		bool getInt2FIFOWatermarkEnabled();
+		void setInt2FIFOInterruptEnabled(bool enabled);
+		bool getInt2FIFOInterruptEnabled();
+		void setInt2EmptyInterruptEnabled(bool enabled);
+		bool getInt2EmptyInterruptEnabled();
+		
+		// TODO Finish CTRL_REG* registers
+		// TODO Random registers
+
+        // OUT_* registers, read-only
+        void getRate(int16_t* x, int16_t* y, int16_t* z);
+        int16_t getRateX();
+		int16_t getRateY();
+		int16_t getRateZ();
+
+		// TODO FIFO_* registers
+		// TODO INT1_* registers
+
     private:
         uint8_t devAddr;
         uint8_t buffer[6];
