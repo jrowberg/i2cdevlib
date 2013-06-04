@@ -265,7 +265,62 @@ class L3G4200D {
 		bool getFIFOEmpty();
 		uint8_t getFIFOStoredDataLevel();
 		
-		// TODO INT1_* registers
+		// INT1_CFG register, r/w
+		void setAndInterruptCombination(bool enabled); // Alternative: OR
+		bool getAndInterruptCombination();
+		void setInterruptRequestLatched(bool latched);
+		bool getInterruptRequestLatched();
+		void setZHighInterruptEnabled(bool enabled);
+		bool getZHighInterruptEnabled();
+		void setYHighInterruptEnabled(bool enabled);
+		bool getYHighInterruptEnabled();
+		void setXHighInterruptEnabled(bool enabled);
+		bool getXHighInterruptEnabled();
+		void setZLowInterruptEnabled(bool enabled);
+		bool getZLowInterruptEnabled();
+		void setYLowInterruptEnabled(bool enabled);
+		bool getYLowInterruptEnabled();
+		void setXLowInterruptEnabled(bool enabled);
+		bool getXLowInterruptEnabled();
+
+		// INT1_SRC register, read-only
+		bool getInterruptActive();
+		bool getZHigh();
+		bool getZLow();
+		bool getYHigh();
+		bool getYLow();
+		bool getXHigh();
+		bool getXHigh();
+		
+		// INT1_THS_XH register, r/w
+		void setXHighThreshold(uint8_t);
+		uint8_t getXHighThreshold();
+
+		// INT1_THS_XL register, r/w
+		void setXLowThreshold(uint8_t);
+		uint8_t getXLowThreshold();
+
+		// INT1_THS_YH register, r/w
+		void setYHighThreshold(uint8_t);
+		uint8_t getYHighThreshold();
+
+		// INT1_THS_YL register, r/w
+		void setYLowThreshold(uint8_t);
+		uint8_t getYLowThreshold();
+
+		// INT1_THS_ZH register, r/w
+		void setZHighThreshold(uint8_t);
+		uint8_t getZHighThreshold();
+
+		// INT1_THS_ZL register, r/w
+		void setZLowThreshold(uint8_t);
+		uint8_t getZLowThreshold();
+
+		// INT1_DURATION register
+		void setWaitEnabled(bool enabled);
+		bool getWaitEnabled();
+		void setDurationValue(uint8_t);
+		uint8_t getDurationValue();
 
     private:
         uint8_t devAddr;
