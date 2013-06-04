@@ -117,20 +117,29 @@ THE SOFTWARE.
 #define L3G4200D_INT1_DUR_BIT      1
 #define L3G4200D_INT1_DUR_LENGTH   7
 
-// ----------------------------------------------------------------------------
-// STUB TODO:
-// List any special predefined values for each register according to the
-// datasheet. For example, MEMS devices often provide different options for
-// measurement rates, say 25Hz, 50Hz, 100Hz, and 200Hz. These are typically
-// represented by arbitrary bit values, say 0b00, 0b01, 0b10, and 0b11 (or 0x0,
-// 0x1, 0x2, and 0x3). Defining them here makes it easy to know which options
-// are available.
-// ----------------------------------------------------------------------------
-#define L3G4200D_RATE_10           0x00
-#define L3G4200D_RATE_20           0x01
-#define L3G4200D_RATE_40           0x02
-#define L3G4200D_RATE_80           0x03
-#define L3G4200D_RATE_160          0x04
+#define L3G4200D_RATE_100          0b00
+#define L3G4200D_RATE_200          0b01
+#define L3G4200D_RATE_400          0b10
+#define L3G4200D_RATE_800          0b11
+
+#define L3G4200D_BW_LOW            0b00
+#define L3G4200D_BW_MED_LOW        0b01
+#define L3G4200D_BW_MED_HIGH       0b10
+#define L3G4200D_BW_HIGH           0b11
+
+#define L3G4200D_FS_250            0b00
+#define L3G4200D_FS_500            0b01
+#define L3G4200D_FS_2000           0b10
+
+#define L3G4200D_SELF_TEST_NORMAL  0b00
+#define L3G4200D_SELF_TEST_0       0b01
+#define L3G4200D_SELF_TEST_1       0b11
+
+#define L3G4200D_FM_BYPASS         0b000
+#define L3G4200D_FM_FIFO           0b001
+#define L3G4200D_FM_STREAM         0b010
+#define L3G4200D_FM_STREAM_FIFO    0b011
+#define L3G4200D_FM_BYPASS_STREAM  0b100
 
 class L3G4200D {
     public:
