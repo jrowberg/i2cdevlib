@@ -129,6 +129,11 @@ THE SOFTWARE.
 #define L3G4200D_RATE_400          0b10
 #define L3G4200D_RATE_800          0b11
 
+#define L3G4200D_BW_LOW            0b00
+#define L3G4200D_BW_MED_LOW        0b01
+#define L3G4200D_BW_MED_HIGH       0b10
+#define L3G4200D_BW_HIGH           0b11
+
 #define L3G4200D_HPM_HRF           0b00
 #define L3G4200D_HPM_REFERENCE     0b01
 #define L3G4200D_HPM_NORMAL        0b10
@@ -173,10 +178,11 @@ class L3G4200D {
 		// CTRL_REG1 register, r/w
 		void setDataOutputRate(uint16_t rate);
 		uint16_t getDataOutputRate();
-		void setBandwidthCutOff(uint8_t cutOff);
-		uint8_t getBandwidthCutOff();
-		void setPower(bool enabled);
-		bool getPower();
+		void setBandwidthCutOffMode(uint8_t mode);
+		uint8_t getBandwidthCutOffMode();
+		float getBandwidthCutOff();
+		void setPowerOn(bool on);
+		bool getPowerOn();
 		void setZEnabled(bool enabled);
 		bool getZEnabled();
 		void setYEnabled(bool enabled);
