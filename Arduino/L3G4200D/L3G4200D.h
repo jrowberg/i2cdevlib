@@ -157,7 +157,7 @@ THE SOFTWARE.
 #define L3G4200D_FM_FIFO           0b001
 #define L3G4200D_FM_STREAM         0b010
 #define L3G4200D_FM_STREAM_FIFO    0b011
-#define L3G4200D_FM_BYPASS_STREAM  0b100
+#define L3G4200D_FM_BYPASS_STREAM  0b100        
 
 class L3G4200D {
     public:
@@ -171,12 +171,12 @@ class L3G4200D {
         uint8_t getDeviceID();
 		
 		// CTRL_REG1 register, r/w
-		void setOutputDataRate(uint16_t rate);
-		uint16_t getOutputDataRate();
+		void setDataOutputRate(uint16_t rate);
+		uint16_t getDataOutputRate();
 		void setBandwidthCutOff(uint8_t cutOff);
 		uint8_t getBandwidthCutOff();
-		void setPowerDown(bool enabled);
-		bool getPowerDown();
+		void setPower(bool enabled);
+		bool getPower();
 		void setZEnabled(bool enabled);
 		bool getZEnabled();
 		void setYEnabled(bool enabled);
