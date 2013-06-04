@@ -170,7 +170,7 @@ class L3G4200D {
 		// WHO_AM_I register, read-only
         uint8_t getDeviceID();
 		
-		// CTRL_REG1 registers, r/w
+		// CTRL_REG1 register, r/w
 		void setOutputDataRate(uint16_t rate);
 		uint16_t getOutputDataRate();
 		void setBandwidthCutOff(uint8_t cutOff);
@@ -184,26 +184,22 @@ class L3G4200D {
 		void setXEnabled(bool enabled);
 		bool getXEnabled();
 
-		// CTRL_REG2 registers, r/w
-		void setHighPassResetMode();
-		void setHighPassReferenceMode();
-		void setHighPassNormalMode();
-		void setHighPassAutoresetMode();
+		// CTRL_REG2 register, r/w
 		void setHighPassMode(uint8_t mode);
 		uint8_t getHighPassMode();
 		void setHighPassFilterCutOffFrequencyLevel(uint8_t level);
 		uint8_t getHighPassFilterCutOffFrequencyLevel();
 
-		// CTRL_REG3 registers, r/w
+		// CTRL_REG3 register, r/w
 		void setInt1InterruptEnabled(bool enabled);
 		bool getInt1InterruptEnabled();
 		void setInt1BootStatusEnabled(bool enabled);
 		bool getInt1BootStatusEnabled();
 		void interruptActiveInt1Config();
-		void setPushPull(bool pushPull);	// Alternative being open drain
+		void setPushPull(bool pushPull);	// Alternative: Open Drain
 		bool getIsPushPull();
 		void setInt2DateReadyEnabled(bool enabled);
-		bool getInt2DateReadyEnabled();
+		bool getInt2DateReadyEnabled();	// This may be a typo on the datasheet
 		void setInt2FIFOWatermarkEnabled(bool enabled);
 		bool getInt2FIFOWatermarkEnabled();
 		void setInt2FIFOInterruptEnabled(bool enabled);
@@ -211,16 +207,64 @@ class L3G4200D {
 		void setInt2EmptyInterruptEnabled(bool enabled);
 		bool getInt2EmptyInterruptEnabled();
 		
-		// TODO Finish CTRL_REG* registers
-		// TODO Random registers
+		// CTRL_REG4 register, r/w
+		void setBlockDataUpdateEnabled(bool enabled);
+		bool getBlockDataUpdateEnabled();
+		void setBigEndianEnabled(bool enabled);	// Alternative: Little Endian
+		bool getBigEndianEnabled();
+		void setFullScale(uint16_t scale);
+		uint16_t getFullScale();
+		void setSelfTestMode(uint8_t mode);
+		uint8_t getSelfTestMode();
+		void setSPIMode4WireEnabled(bool enabled);	// Alternative: 3 wire
+		bool getSPIMode4WireEnabled();
+
+		// CTRL_REG5 register, r/w
+		void rebootMemoryContent();
+		void setFIFOEnabled(bool enabled);
+		bool getFIFOEnabled();
+		void setHighPassFilterEnabled(bool enabled);
+		bool getHighPassFilterEnabled();
+		void setDataFilter(uint8_t filter);
+		uint8_t getDataFilter();
+		void setDataInterrupt(uint8_t filter);
+		uint8_t getDataInterruptFilter();
+		
+		// REFERENCE/DATACAPTURE register, r/w
+		void setInterruptRefernce(uint8_t reference);
+		uint8_t getInterruptReference();
+		
+		// OUT_TEMP register, read-only
+		uint8_t getTemperature();
+
+		// STATUS register, read-only
+		bool getXYZOverrun();
+		bool getZOverrun();
+		bool getYOverrun();
+		bool getXOverrun();
+		bool getXYZDataAvailable();
+		bool getZDataAvailable();
+		bool getYDataAvailable();
+		bool getXDataAvailable();
 
         // OUT_* registers, read-only
         void getRate(int16_t* x, int16_t* y, int16_t* z);
         int16_t getRateX();
 		int16_t getRateY();
 		int16_t getRateZ();
-
-		// TODO FIFO_* registers
+		
+		// FIFO_CTRL register, r/w
+		void setFIFOMode(uint8_t mode);
+		uint8_t getFIFOMode();
+		void setFIFOThreshold(uint8_t thresh);
+		uint8_t getFIFOThreshold();
+		
+		// FIFO_SRC register, read-only
+		bool getFIFOWatermarkLow();	// Alternative: >= Watermark level
+		bool getFIFOOverrun();
+		bool getFIFOEmpty();
+		uint8_t getFIFOStoredDataLevel();
+		
 		// TODO INT1_* registers
 
     private:
