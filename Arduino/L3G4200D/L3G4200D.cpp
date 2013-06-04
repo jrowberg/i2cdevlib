@@ -1,15 +1,16 @@
-// I2Cdev library collection - MYDEVSTUB I2C device class
-// Based on [Manufacturer Name] MYDEVSTUB datasheet, [datasheet date]
-// [current release date] by [Author Name] <[Author Email]>
+// I2Cdev library collection - L3G4200D I2C device class header file
+// Based on STMicroelectronics L3G4200D datasheet rev. 3, 12/2010
+// TODO Add release date here
+// [current release date] by Jonathan "j3rn" Arnett <j3rn@j3rn.com>
 // Updates should (hopefully) always be available at https://github.com/jrowberg/i2cdevlib
 //
+// TODO Add initial release date here as well
 // Changelog:
-//     [YYYY-mm-dd] - updated some broken thing
 //     [YYYY-mm-dd] - initial release
 
 /* ============================================
 I2Cdev device library code is placed under the MIT license
-Copyright (c) 2011 [Author Name], Jeff Rowberg
+Copyright (c) 2011 Jonathan Arnett, Jeff Rowberg
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -31,50 +32,7 @@ THE SOFTWARE.
 ===============================================
 */
 
-#include "MYDEVSTUB.h"
-
-// ============================================================================
-// DEVICE LIBRARY CONVENTIONS:
-//
-// 1. The class name should be the same as the device model if at all possible.
-//    No spaces or hyphens, and ideally no underlines unless they're absolutely
-//    necessary for clarity. ALL CAPS for model numbers, or FirstInitial caps
-//    for full names. For example:
-//      - ADXL345
-//      - MPU6050
-//      - TCA6424A
-//      - PanelPilot
-//
-// 2. All #defines should use a device-specific prefix that is the same as the
-//    all-caps version of the class name ("MYDEVSTUB_" in this example).
-//
-// 3. All #defines should be ALL CAPS, no matter what. This makes them clearly
-//    distinctive from variables, classes, and functions.
-//
-// 4. Class methods and member variables should be named using camelCaps.
-//
-// 5. Every device class should contain an "initialize()" method which takes
-//    no parameters and resets any important settings back to a known state,
-//    ideally the defaults outlined in the datasheet. Some devices have a
-//    RESET command available, which may be suitable. Some devices may not
-//    require any specific initialization, but an empty method should be
-//    created for consistency anyway.
-//
-// 6. Every device class should contain a "testConnection()" method which
-//    returns TRUE if the device appears to be connected, or FALSE otherwise.
-//    If a known ID register or device code is available, check for that. Since
-//    such an ID register is not always available, at least check to make sure
-//    that an I2C read may be performed on a specific register and that data
-//    does actually come back (the I2Cdev class returns a "bytes read" value
-//    for all read operations).
-//
-// 7. All class methods should be documented with useful information in Doxygen
-//    format. You can take the info right out of the datasheet if you want to,
-//    since that's likely to be helpful. Writing your own info is fine as well.
-//    The goal is to have enough clear documentation right in the code that
-//    someone can determine how the device works by studying the code alone.
-//
-// ============================================================================
+#include "L3G4200D.h"
 
 /* ============================================================================
    I2Cdev Class Quick Primer:
@@ -153,24 +111,24 @@ THE SOFTWARE.
    ============================================================================ */
 
 /** Default constructor, uses default I2C address.
- * @see MYDEVSTUB_DEFAULT_ADDRESS
+ * @see L3G4200D_DEFAULT_ADDRESS
  */
-MYDEVSTUB::MYDEVSTUB() {
-    devAddr = MYDEVSTUB_DEFAULT_ADDRESS;
+L3G4200D::L3G4200D() {
+    devAddr = L3G4200D_DEFAULT_ADDRESS;
 }
 
 /** Specific address constructor.
  * @param address I2C address
- * @see MYDEVSTUB_DEFAULT_ADDRESS
- * @see MYDEVSTUB_ADDRESS
+ * @see L3G4200D_DEFAULT_ADDRESS
+ * @see L3G4200D_ADDRESS
  */
-MYDEVSTUB::MYDEVSTUB(uint8_t address) {
+L3G4200D::L3G4200D(uint8_t address) {
     devAddr = address;
 }
 
 /** Power on and prepare for general usage.
  */
-void MYDEVSTUB::initialize() {
+void L3G4200D::initialize() {
     // ----------------------------------------------------------------------------
     // STUB TODO:
     // Perform any important initialization here. Maybe nothing is required, but
@@ -182,8 +140,8 @@ void MYDEVSTUB::initialize() {
  * Make sure the device is connected and responds as expected.
  * @return True if connection is valid, false otherwise
  */
-bool MYDEVSTUB::testConnection() {
-    if (I2Cdev::readByte(devAddr, MYDEVSTUB_RA_WHO_AM_I, buffer) == 1) {
+bool L3G4200D::testConnection() {
+    if (I2Cdev::readByte(devAddr, L3G4200D_RA_WHO_AM_I, buffer) == 1) {
         return true;
     }
     return false;
@@ -207,82 +165,82 @@ bool MYDEVSTUB::testConnection() {
 
 // MEASURE1 register, read-only
 
-uint8_t MYDEVSTUB::getMeasurement1() {
+uint8_t L3G4200D::getMeasurement1() {
     // read a single byte and return it
-    I2Cdev::readByte(devAddr, MYDEVSTUB_RA_MEASURE1, buffer);
+    I2Cdev::readByte(devAddr, L3G4200D_RA_MEASURE1, buffer);
     return buffer[0];
 }
 
 // MEASURE2 register, read-only
 
-uint8_t MYDEVSTUB::getMeasurement2() {
+uint8_t L3G4200D::getMeasurement2() {
     // read a single byte and return it
-    I2Cdev::readByte(devAddr, MYDEVSTUB_RA_MEASURE2, buffer);
+    I2Cdev::readByte(devAddr, L3G4200D_RA_MEASURE2, buffer);
     return buffer[0];
 }
 
 // MEASURE3 register, read-only
 
-uint8_t MYDEVSTUB::getMeasurement3() {
+uint8_t L3G4200D::getMeasurement3() {
     // read a single byte and return it
-    I2Cdev::readByte(devAddr, MYDEVSTUB_RA_MEASURE3, buffer);
+    I2Cdev::readByte(devAddr, L3G4200D_RA_MEASURE3, buffer);
     return buffer[0];
 }
 
 // CONFIG1 register, r/w
 
-void MYDEVSTUB::reset() {
+void L3G4200D::reset() {
     // write a single bit to the RESET position in the CONFIG1 register
-    I2Cdev::writeBit(devAddr, MYDEVSTUB_RA_CONFIG1, MYDEVSTUB_CONFIG1_RESET_BIT, 1);
+    I2Cdev::writeBit(devAddr, L3G4200D_RA_CONFIG1, L3G4200D_CONFIG1_RESET_BIT, 1);
 }
-bool MYDEVSTUB::getFIFOEnabled() {
+bool L3G4200D::getFIFOEnabled() {
     // read a single bit from the FIFO_EN position in the CONFIG1 regsiter
-    I2Cdev::readBit(devAddr, MYDEVSTUB_RA_CONFIG1, MYDEVSTUB_CONFIG1_FIFO_EN_BIT, buffer);
+    I2Cdev::readBit(devAddr, L3G4200D_RA_CONFIG1, L3G4200D_CONFIG1_FIFO_EN_BIT, buffer);
     return buffer[0];
 }
-void MYDEVSTUB::setFIFOEnabled(bool enabled) {
+void L3G4200D::setFIFOEnabled(bool enabled) {
     // write a single bit to the FIFO_EN position in the CONFIG1 regsiter
-    I2Cdev::writeBit(devAddr, MYDEVSTUB_RA_CONFIG1, MYDEVSTUB_CONFIG1_FIFO_EN_BIT, enabled);
+    I2Cdev::writeBit(devAddr, L3G4200D_RA_CONFIG1, L3G4200D_CONFIG1_FIFO_EN_BIT, enabled);
 }
 
 // CONFIG2 register, r/w
 
-uint8_t MYDEVSTUB::getInterruptMode() {
+uint8_t L3G4200D::getInterruptMode() {
     // reading a single bit from a register
-    I2Cdev::readBit(devAddr, MYDEVSTUB_RA_CONFIG2, MYDEVSTUB_CONFIG2_INTMODE_BIT, buffer);
+    I2Cdev::readBit(devAddr, L3G4200D_RA_CONFIG2, L3G4200D_CONFIG2_INTMODE_BIT, buffer);
     return buffer[0];
 }
-void MYDEVSTUB::setInterruptMode(uint8_t mode) {
+void L3G4200D::setInterruptMode(uint8_t mode) {
     // writing a single bit into a register
 }
-uint8_t MYDEVSTUB::getRate() {
+uint8_t L3G4200D::getRate() {
     // reading multiple single bit from a register
-    I2Cdev::readBits(devAddr, MYDEVSTUB_RA_CONFIG2, MYDEVSTUB_CONFIG2_RATE_BIT, MYDEVSTUB_CONFIG2_RATE_LENGTH, buffer);
+    I2Cdev::readBits(devAddr, L3G4200D_RA_CONFIG2, L3G4200D_CONFIG2_RATE_BIT, L3G4200D_CONFIG2_RATE_LENGTH, buffer);
     return buffer[0];
 }
-void MYDEVSTUB::setRate(uint8_t rate) {
+void L3G4200D::setRate(uint8_t rate) {
     // writing multiple bits into a register
-    I2Cdev::writeBits(devAddr, MYDEVSTUB_RA_CONFIG2, MYDEVSTUB_CONFIG2_RATE_BIT, MYDEVSTUB_CONFIG2_RATE_LENGTH, rate);
+    I2Cdev::writeBits(devAddr, L3G4200D_RA_CONFIG2, L3G4200D_CONFIG2_RATE_BIT, L3G4200D_CONFIG2_RATE_LENGTH, rate);
 }
 
 // DATA_* registers, r/w
 
-uint16_t MYDEVSTUB::getData() {
+uint16_t L3G4200D::getData() {
     // reading two H/L bytes and bit-shifting them into a 16-bit value
-    I2Cdev::readBytes(devAddr, MYDEVSTUB_RA_DATA_H, 2, buffer);
+    I2Cdev::readBytes(devAddr, L3G4200D_RA_DATA_H, 2, buffer);
     return (buffer[0] << 8) + buffer[1];
 }
-void MYDEVSTUB::setData(uint16_t value) {
+void L3G4200D::setData(uint16_t value) {
     // splitting a 16-bit value into two H/L bytes and writing them
     buffer[0] = value >> 8;
     buffer[1] = value & 0xFF;
-    I2Cdev::writeBytes(devAddr, MYDEVSTUB_RA_DATA_H, 2, buffer);
+    I2Cdev::writeBytes(devAddr, L3G4200D_RA_DATA_H, 2, buffer);
 }
 
 // WHO_AM_I register, read-only
 
-uint8_t MYDEVSTUB::getDeviceID() {
+uint8_t L3G4200D::getDeviceID() {
     // read a single byte and return it
-    I2Cdev::readByte(devAddr, MYDEVSTUB_RA_WHO_AM_I, buffer);
+    I2Cdev::readByte(devAddr, L3G4200D_RA_WHO_AM_I, buffer);
     return buffer[0];
 }
