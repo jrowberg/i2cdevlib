@@ -249,6 +249,60 @@ bool getPowerOn() {
 	return I2Cdev::readBit(devAddr, L3G4200D_RA_CTRL_REG1, L3G4200D_PD_BIT, buffer);
 }
 
+/** Enables or disables the ability to get Z data
+ * @param enabled The new enabled state of the Z axis
+ * @see L3G4200D_RA_CTRL_REG1
+ * @see L3G4200D_ZEN_BIT
+ */
+void setZEnabled(bool enabled) {
+	I2Cdev::writeBit(devAddr, L3G4200D_RA_CTRL_REG1, L3G4200D_ZEN_BIT, enabled);
+}
+
+/** Get whether Z axis data is enabled
+ * @see L3G4200D_RA_CTRL_REG1
+ * @see L3G4200D_ZEN_BIT
+ */
+bool getZEnabled() {
+	return I2Cdev::readBit(devAddr, L3G4200D_RA_CTRL_REG1, L3G4200D_ZEN_BIT, 
+		buffer);
+}
+
+/** Enables or disables the ability to get Y data
+ * @param enabled The new enabled state of the Y axis
+ * @see L3G4200D_RA_CTRL_REG1
+ * @see L3G4200D_YEN_BIT
+ */
+void setYEnabled(bool enabled) {
+	I2Cdev::writeBit(devAddr, L3G4200D_RA_CTRL_REG1, L3G4200D_YEN_BIT, enabled);
+}
+
+/** Get whether Y axis data is enabled
+ * @see L3G4200D_RA_CTRL_REG1
+ * @see L3G4200D_YEN_BIT
+ */
+bool getYEnabled() {
+	return I2Cdev::readBit(devAddr, L3G4200D_RA_CTRL_REG1, L3G4200D_YEN_BIT, 
+		buffer);
+}
+
+/** Enables or disables the ability to get X data
+ * @param enabled The new enabled state of the X axis
+ * @see L3G4200D_RA_CTRL_REG1
+ * @see L3G4200D_XEN_BIT
+ */
+void setXEnabled(bool enabled) {
+	I2Cdev::writeBit(devAddr, L3G4200D_RA_CTRL_REG1, L3G4200D_XEN_BIT, enabled);
+}
+
+/** Get whether X axis data is enabled
+ * @see L3G4200D_RA_CTRL_REG1
+ * @see L3G4200D_XEN_BIT
+ */
+bool getXEnabled() {
+	return I2Cdev::readBit(devAddr, L3G4200D_RA_CTRL_REG1, L3G4200D_XEN_BIT, 
+		buffer);
+}
+
 
 
 
