@@ -303,6 +303,121 @@ bool getXEnabled() {
 		buffer);
 }
 
+// CTRL_REG2 register, r/w
+
+/** Set the high pass mode
+ * @see L3G4200D_RA_CTRL_REG2
+ * @see L3G4200D_HPM_BIT
+ * @see L3G4200D_HPM_LENGTH
+ * @see L3G4200D_HPM_HRF
+ * @see L3G4200D_HPM_REFERENCE
+ * @see L3G4200D_HPM_NORMAL
+ * @see L3G4200D_HPM_AUTORESET
+ */
+void setHighPassMode(uint8_t mode) {
+	I2Cdev::writeBits(devAddr, L3G4200D_CTRL_REG2, L3G4200D_HPM_BIT, 
+		L3G4200D_HPM_LENGTH, mode);
+}
+
+/** Get the high pass mode
+ * @see L3G4200D_RA_CTRL_REG2
+ * @see L3G4200D_HPM_BIT
+ * @see L3G4200D_HPM_LENGTH
+ * @see L3G4200D_HPM_HRF
+ * @see L3G4200D_HPM_REFERENCE
+ * @see L3G4200D_HPM_NORMAL
+ * @see L3G4200D_HPM_AUTORESET
+ */
+uint8_t setHighPassMode() {
+	return I2Cdev::readBits(devAddr, L3G4200D_RA_CTRL_REG2, L3G4200D_HPM_BIT, 
+		L3G4200D_HPM_LENGTH, buffer);
+}
+
+/** Set the high pass filter cut off frequency level (1 - 10)
+ * @param level The new level for the hpcf, using one of the defined levels
+ * @see L3G4200D_RA_CTRL_REG2
+ * @see L3G4200D_HPCF_BIT
+ * @see L3G4200D_HPCF_LENGTH
+ * @see L3G4200D_HPCF1
+ * @see L3G4200D_HPCF2
+ * @see L3G4200D_HPCF3
+ * @see L3G4200D_HPCF4
+ * @see L3G4200D_HPCF5
+ * @see L3G4200D_HPCF6
+ * @see L3G4200D_HPCF7
+ * @see L3G4200D_HPCF8
+ * @see L3G4200D_HPCF9
+ * @see L3G4200D_HPCF10
+ */
+void setHighPassFilterCutOffFrequencyLevel(uint8_t level) {
+	I2Cdev::writeBits(devAddr, L3G4200D_RA_CTRL_REG2, L3G4200D_HPCF_BIT, 
+		L3G4200D_HPCF_LENGTH, level);
+}
+
+/** Get the high pass filter cut off frequency level (1 - 10)
+ * @see L3G4200D_RA_CTRL_REG2
+ * @see L3G4200D_HPCF_BIT
+ * @see L3G4200D_HPCF_LENGTH
+ * @see L3G4200D_HPCF1
+ * @see L3G4200D_HPCF2
+ * @see L3G4200D_HPCF3
+ * @see L3G4200D_HPCF4
+ * @see L3G4200D_HPCF5
+ * @see L3G4200D_HPCF6
+ * @see L3G4200D_HPCF7
+ * @see L3G4200D_HPCF8
+ * @see L3G4200D_HPCF9
+ * @see L3G4200D_HPCF10
+ */
+uint8_t getHighPassFilterCutOffFrequencyLevel() {
+	return I2Cdev::readBits(devAddr, L3G4200D_RA_CTRL_REG2, L3G4200D_HPCF_BIT, 
+		L3G4200D_HPCF_LENGTH, buffer);
+}
+
+// CTRL_REG3 register, r/w
+
+/** Set the INT1 interrupt enabled state
+ * @param enabled The new enabled stat for the INT1 interrupt
+ * @see L3G4200D_RA_CTRL_REG3
+ * @see L3G4200D_I1_INT1_BIT
+ */
+void setINT1InterruptEnabled(bool enabled) {
+	I2Cdev::writeBit(devAddr, L3G4200D_RA_CTRL_REG3, L3G4200D_I1_INT1_BIT, 
+		enabled);
+}
+
+/** Get the INT1 interrupt enabled state
+ * @see L3G4200D_RA_CTRL_REG3
+ * @see L3G4200D_I1_INT1_BIT
+ */
+bool getINT1InterruptEnabled(bool enabled) {
+	return I2Cdev::readBit(devAddr, L3G4200D_RA_CTRL_REG3, L3G4200D_I1_INT1_BIT, 
+		buffer);
+}
+
+/** Set the INT1 boot status enabled state
+ * @param enabled The new enabled state for the INT1 boot status
+ * @see L3G4200D_RA_CTRL_REG3
+ * @see L3G4200D_I1_BOOT_BIT
+ */
+void setINT1BootStatusEnabled(bool enabled) {
+	I2Cdev::writeBit(devAddr, L3G4200D_RA_CTRL_REG3, L3G4200D_I1_BOOT_BIT, 
+		enabled);
+}
+
+/** Get the INT1 boot status enabled state
+ * @see L3G4200D_RA_CTRL_REG3
+ * @see L3G4200D_I1_BOOT_BIT
+ */
+bool getINT1BootStatusEnabled(bool enabled) {
+	return I2Cdev::readBit(devAddr, L3G4200D_RA_CTRL_REG3, L3G4200D_I1_BOOT_BIT, 
+		buffer);
+}
+
+/** Interrupts the active INT1 configuration
+ * @see L3G4200D_RA_CTRL_REG3
+ * @see L3G4200D_
+
 
 
 
