@@ -45,11 +45,6 @@ THE SOFTWARE.
 #ifndef _I2CDEV_H_
 #define _I2CDEV_H_
 
-// -----------------------------------------------------------------------------
-// I2C interface implementation setting
-// -----------------------------------------------------------------------------
-#define I2CDEV_IMPLEMENTATION       I2CDEV_ARDUINO_WIRE
-
 // comment this out if you are using a non-optimal IDE/implementation setting
 // but want the compiler to shut up about it
 #define I2CDEV_IMPLEMENTATION_WARNINGS
@@ -62,6 +57,13 @@ THE SOFTWARE.
                                       // ^^^ NBWire implementation is still buggy w/some interrupts!
 #define I2CDEV_BUILTIN_FASTWIRE     3 // FastWire object from Francesco Ferrara's project
                                       // ^^^ FastWire implementation in I2Cdev is INCOMPLETE!
+#define I2CDEV_I2CMASTER_LIBRARY    4 // I2C object from DSSCircuits I2C-Master Library at
+                                      //  https://github.com/DSSCircuits/I2C-Master-Library
+
+// -----------------------------------------------------------------------------
+// I2C interface implementation setting
+// -----------------------------------------------------------------------------
+#define I2CDEV_IMPLEMENTATION       I2CDEV_ARDUINO_WIRE
 
 // -----------------------------------------------------------------------------
 // Arduino-style "Serial.print" debug constant (uncomment to enable)
@@ -76,6 +78,10 @@ THE SOFTWARE.
     #endif
     #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
         #include <Wire.h>
+    #else
+    #if I2CDEV_IMPLEMENTATION == I2CDEV_I2CMASTER_LIBRARY
+        #include <I2C.h>
+    #endif
     #endif
 #else
     #include "ArduinoWrapper.h"
