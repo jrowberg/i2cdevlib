@@ -87,6 +87,10 @@ THE SOFTWARE.
     // Originally offered to the i2cdevlib project at http://arduino.cc/forum/index.php/topic,68210.30.html
     TwoWire Wire;
 
+#elif I2CDEV_IMPLEMENTATION == I2CDEV_I2CMASTER_LIBRARY
+
+    #warning Dunno, just don't want it to feel left out ^_^'
+
 #endif
 
 /** Default constructor.
@@ -305,6 +309,15 @@ int8_t I2Cdev::readBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8
             count = -1; // error
         }
 
+    #elif (I2CDEV_IMPLEMENTATION == I2CDEV_I2CMASTER_LIBRARY)
+
+        uint8_t status = I2c.read(devAddr, regAddr, length, data);
+        if(status == 0) {
+          count = length;
+        } else {
+          count = -1 * status;
+        }
+
     #endif
 
     // check for timeout
@@ -458,6 +471,18 @@ int8_t I2Cdev::readWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint1
             count = -1; // error
         }
 
+    #elif (I2CDEV_IMPLEMENTATION == I2CDEV_I2CMASTER_LIBRARY)
+
+        uint16_t intermediate[(uint8_t)length];
+        uint8_t status = I2c.read(devAddr, regAddr, length*2, (uint8_t *)intermediate);
+        if(status == 0) {
+           count = length;
+           for(uint8_t i = 0; i < length; i++) {
+              data[i] = (intermediate[2*i] << 8) | intermediate[2*i + i];
+           }
+        } else {
+           count = -1 * status;
+        }
     #endif
 
     if (timeout > 0 && millis() - t1 >= timeout && count < length) count = -1; // timeout
@@ -610,6 +635,8 @@ bool I2Cdev::writeBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8_
         #elif (I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_FASTWIRE)
             status = Fastwire::write(devAddr, regAddr, data[i]);
             Serial.println(status);
+	#elif (I2CDEV_IMPLEMENTATION == I2CDEV_I2CMASTER_LIBRARY)
+            status = I2c.write(devAddr, regAddr, data[i]);
         #endif
         #ifdef I2CDEV_SERIAL_DEBUG
             Serial.print(data[i], HEX);
@@ -662,6 +689,9 @@ bool I2Cdev::writeWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint16
         #elif (I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_FASTWIRE)
             status = Fastwire::write(devAddr, regAddr, (uint8_t)(data[i++] >> 8));
             status = Fastwire::write(devAddr, regAddr + 1, (uint8_t)data[i]);
+	#elif (I2CDEV_IMPLEMENTATION == I2CDEV_I2CMASTER_LIBRARY)
+            status = I2c.write((uint8_t)devAddr, (uint8_t)regAddr, (uint8_t)(data[i++] >> 8));
+            status = I2c.write((uint8_t)devAddr, (uint8_t)regAddr + 1, (uint8_t)data[i]);
         #endif
         #ifdef I2CDEV_SERIAL_DEBUG
             Serial.print(data[i], HEX);
