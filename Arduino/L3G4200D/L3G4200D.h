@@ -176,8 +176,8 @@ class L3G4200D {
         uint8_t getDeviceID();
 		
 		// CTRL_REG1 register, r/w
-		void setDataOutputRate(uint16_t rate);
-		uint16_t getDataOutputRate();
+		void setDataOutputRate(uINT16_t rate);
+		uINT16_t getDataOutputRate();
 		void setBandwidthCutOffMode(uint8_t mode);
 		uint8_t getBandwidthCutOffMode();
 		float getBandwidthCutOff();
@@ -197,29 +197,29 @@ class L3G4200D {
 		uint8_t getHighPassFilterCutOffFrequencyLevel();
 
 		// CTRL_REG3 register, r/w
-		void setInt1InterruptEnabled(bool enabled);
-		bool getInt1InterruptEnabled();
-		void setInt1BootStatusEnabled(bool enabled);
-		bool getInt1BootStatusEnabled();
-		void interruptActiveInt1Config();
+		void setINT1InterruptEnabled(bool enabled);
+		bool getINT1InterruptEnabled();
+		void setINT1BootStatusEnabled(bool enabled);
+		bool getINT1BootStatusEnabled();
+		void interruptActiveINT1Config();
 		void setPushPull(bool pushPull);	// Alternative: Open Drain
 		bool getIsPushPull();
-		void setInt2DateReadyEnabled(bool enabled);
-		bool getInt2DateReadyEnabled();	// This may be a typo on the datasheet
-		void setInt2FIFOWatermarkEnabled(bool enabled);
-		bool getInt2FIFOWatermarkEnabled();
-		void setInt2FIFOInterruptEnabled(bool enabled);
-		bool getInt2FIFOInterruptEnabled();
-		void setInt2EmptyInterruptEnabled(bool enabled);
-		bool getInt2EmptyInterruptEnabled();
+		void setINT2DataReadyEnabled(bool enabled);
+		bool getINT2DataReadyEnabled();	// This may be a typo on the datasheet
+		void setINT2FIFOWatermarkEnabled(bool enabled);
+		bool getINT2FIFOWatermarkEnabled();
+		void setINT2FIFOInterruptEnabled(bool enabled);
+		bool getINT2FIFOInterruptEnabled();
+		void setINT2EmptyInterruptEnabled(bool enabled);
+		bool getINT2EmptyInterruptEnabled();
 		
 		// CTRL_REG4 register, r/w
 		void setBlockDataUpdateEnabled(bool enabled);
 		bool getBlockDataUpdateEnabled();
 		void setBigEndianEnabled(bool enabled);	// Alternative: Little Endian
 		bool getBigEndianEnabled();
-		void setFullScale(uint16_t scale);
-		uint16_t getFullScale();
+		void setFullScale(uINT16_t scale);
+		uINT16_t getFullScale();
 		void setSelfTestMode(uint8_t mode);
 		uint8_t getSelfTestMode();
 		void setSPIMode4WireEnabled(bool enabled);	// Alternative: 3 wire
@@ -254,10 +254,10 @@ class L3G4200D {
 		bool getXDataAvailable();
 
         // OUT_* registers, read-only
-        void getRate(int16_t* x, int16_t* y, int16_t* z);
-        int16_t getRateX();
-		int16_t getRateY();
-		int16_t getRateZ();
+        void getRate(INT16_t* x, INT16_t* y, INT16_t* z);
+        INT16_t getRateX();
+		INT16_t getRateY();
+		INT16_t getRateZ();
 		
 		// FIFO_CTRL register, r/w
 		void setFIFOMode(uint8_t mode);
