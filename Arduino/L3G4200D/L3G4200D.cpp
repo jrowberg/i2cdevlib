@@ -635,6 +635,88 @@ uint16_t L3G4200D::getFullScale() {
 	}
 }
 
+/** Set the self test mode
+ * @param mode The new self test mode (Normal, 0, 1)
+ * @see L3G4200D_RA_CTRL_REG4
+ * @see L3G4200D_ST_BIT
+ * @see L3G4200D_ST_LENGTH
+ * @see L3G4200D_SELF_TEST_NORMAL
+ * @see L3G4200D_SELF_TEST_0
+ * @see L3G4200D_SELF_TEST_1
+ */
+void L3G4200D::setSelfTestMode(uint8_t mode) {
+	I2Cdev::writeBits(devAddr, L3G4200D_RA_CTRL_REG4, L3G4200D_ST_BIT, 
+		L3G4200D_ST_LENGTH, mode);
+}
+
+/** Get the current self test mode
+ * @return the current self test mode
+ * @see L3G4200D_RA_CTRL_REG4
+ * @see L3G4200D_ST_BIT
+ * @see L3G4200D_ST_LENGTH
+ * @see L3G4200D_SELF_TEST_NORMAL
+ * @see L3G4200D_SELF_TEST_0
+ * @see L3G4200D_SELF_TEST_1
+ */
+uint8_t L3G4200D::getSelfTestMode() {
+	return I2Cdev::readBits(devAddr, L3G4200D_RA_CTRL_REG4, L3G4200D_ST_BIT, 
+		L3G4200D_ST_LENGTH, buffer);
+}
+
+/** Set the SPI mode
+ * @param mode The new SPI mode (TRUE for 4 wire, FALSE for 3 wire)
+ * @see L3G4200D_RA_CTRL_REG4
+ * @see L3G4200D_SIM_BIT
+ * @see L3G4200D_SPI_4_WIRE
+ * @see L3G4200D_SPI_3_WIRE
+ */
+void L3G4200D::setSPIMode(bool mode) {
+	I2Cdev::writeBit(devAddr, L3G4200D_RA_CTRL_REG4, L3G4200D_SIM_BIT, mode);
+}
+
+/** Get the SPI mode
+ * @return the current SPI mode (TRUE for 4 wire, FALSE for 3 wire)
+ * @see L3G4200D_RA_CTRL_REG4
+ * @see L3G4200D_SIM_BIT
+ * @see L3G4200D_SPI_4_WIRE
+ * @see L3G4200D_SPI_3_WIRE
+ */
+bool L3G4200D::getSPIMode() {
+	return I2Cdev::readBit(devAddr, L3G4200D_RA_CTRL_REG4, L3G4200D_SIM_BIT, 
+		buffer);
+}
+
+// CTRL_REG5 register, r/w
+
+/** Reboots the FIFO memory content
+ * @see L3G4200D_RA_CTRL_REG5
+ * @see L3G4200D_BOOT_BIT
+ */
+void L3G4200D::rebootMemoryContent() {
+	I2Cdev::writeBit(devAddr, L3G4200D_RA_CTRL_REG5, L3G4200D_BOOT_BIT, true);
+}
+
+/** Set whether the FIFO buffer is enabled
+ * @param enabled The new enabled state of the FIFO buffer
+ * @see L3G4200D_CTRL_REG5
+ * @see L3G4200D_FIFO_EN_BIT
+ */
+void L3G4200D::setFIFOEnabled(bool enabled) {
+	I2Cdev::writeBit(devAddr, L3G4200D_CTRL_REG5, L3G4200D_FIFO_EN_BIT, 
+		enabled);
+}
+
+/** Get whether the FIFO buffer is enabled
+ * @return the current enabled state of the FIFO buffer
+ * @see L3G4200D_CTRL_REG5
+ * @see L3G4200D_FIFO_EN_BIT
+ */
+bool L3G4200D::getFIFOEnabled() {
+	I2Cdev::readBit(devAddr, L3G4200D_CTRL_REG5, L3G4200D_FIFO_EN_BIT, 
+		buffer);
+}
+
+
 
 
 

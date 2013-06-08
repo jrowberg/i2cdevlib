@@ -231,7 +231,7 @@ class L3G4200D {
 		uint16_t getFullScale();
 		void setSelfTestMode(uint8_t mode);
 		uint8_t getSelfTestMode();
-		void setSPIMode(bool enabled);	// Alternative: 3 wire
+		void setSPIMode(bool mode);
 		bool getSPIMode();
 
 		// CTRL_REG5 register, r/w
