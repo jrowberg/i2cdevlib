@@ -150,9 +150,18 @@ THE SOFTWARE.
 #define L3G4200D_HPCF9             0b1000
 #define L3G4200D_HPCF10            0b1001
 
+#define L3G4200D_PUSH_PULL         1
+#define L3G4200D_OPEN_DRAIN        0
+
+#define L3G4200D_BIG_ENDIAN        1
+#define L3G4200D_LITTLE_ENDIAN     0
+
 #define L3G4200D_FS_250            0b00
 #define L3G4200D_FS_500            0b01
 #define L3G4200D_FS_2000           0b10
+
+#define L3G4200D_SPI_4_WIRE        1
+#define L3G4200D_SPI_3_WIRE        0
 
 #define L3G4200D_SELF_TEST_NORMAL  0b00
 #define L3G4200D_SELF_TEST_0       0b01
@@ -202,28 +211,28 @@ class L3G4200D {
 		void setINT1BootStatusEnabled(bool enabled);
 		bool getINT1BootStatusEnabled();
 		void interruptActiveINT1Config();
-		void setPushPull(bool pushPull);	// Alternative: Open Drain
-		bool getIsPushPull();
+		void setOutputMode(bool mode);
+		bool getOutputMode();
 		void setINT2DataReadyEnabled(bool enabled);
-		bool getINT2DataReadyEnabled();	// This may be a typo on the datasheet
+		bool getINT2DataReadyEnabled();
 		void setINT2FIFOWatermarkEnabled(bool enabled);
 		bool getINT2FIFOWatermarkEnabled();
-		void setINT2FIFOInterruptEnabled(bool enabled);
-		bool getINT2FIFOInterruptEnabled();
-		void setINT2EmptyInterruptEnabled(bool enabled);
-		bool getINT2EmptyInterruptEnabled();
+		void setINT2FIFOOverrunInterruptEnabled(bool enabled);
+		bool getINT2FIFOOverrunInterruptEnabled();
+		void setINT2FIFOEmptyInterruptEnabled(bool enabled);
+		bool getINT2FIFOEmptyInterruptEnabled();
 		
 		// CTRL_REG4 register, r/w
 		void setBlockDataUpdateEnabled(bool enabled);
 		bool getBlockDataUpdateEnabled();
-		void setBigEndianEnabled(bool enabled);	// Alternative: Little Endian
-		bool getBigEndianEnabled();
-		void setFullScale(uINT16_t scale);
-		uINT16_t getFullScale();
+		void setEndianMode(bool endianness);
+		bool getEndianMode();
+		void setFullScale(uint16_t scale);
+		uint16_t getFullScale();
 		void setSelfTestMode(uint8_t mode);
 		uint8_t getSelfTestMode();
-		void setSPIMode4WireEnabled(bool enabled);	// Alternative: 3 wire
-		bool getSPIMode4WireEnabled();
+		void setSPIMode(bool enabled);	// Alternative: 3 wire
+		bool getSPIMode();
 
 		// CTRL_REG5 register, r/w
 		void rebootMemoryContent();
@@ -262,8 +271,8 @@ class L3G4200D {
 		// FIFO_CTRL register, r/w
 		void setFIFOMode(uint8_t mode);
 		uint8_t getFIFOMode();
-		void setFIFOThreshold(uint8_t thresh);
-		uint8_t getFIFOThreshold();
+		void setFIFOWatermark(uint8_t thresh);
+		uint8_t getFIFOWatermark();
 		
 		// FIFO_SRC register, read-only
 		bool getFIFOWatermarkLow();	// Alternative: >= Watermark level

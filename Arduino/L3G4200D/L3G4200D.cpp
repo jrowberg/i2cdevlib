@@ -233,8 +233,8 @@ float L3G4200D::getBandwidthCutOff() {
 	}
 }
 
-/** Set power on or off (true and false, respectively)
- * @param enabled The new power setting
+/** Set power on or off
+ * @param enabled The new power setting (TRUE for ON, FALSE for OFF)
  * @see L3G4200D_RA_CTRL_REG1
  * @see L3G4200D_PD_BIT
  */
@@ -243,7 +243,7 @@ void L3G4200D::setPowerOn(bool on) {
 }
 
 /** Get the current power state
- * @return The powered on state (true == on)
+ * @return The powered on state (TRUE for ON, FALSE for OFF)
  * @see L3G4200D_RA_CTRL_REG1
  * @see L3G4200D_PD_BIT
  */
@@ -432,28 +432,32 @@ void L3G4200D::interruptACtiveINT1Config() {
 	I2Cdev::writeBit(devAddr, L3G4200D_RA_CTRL_REG3, L3G4200D_H_LACTIVE_BIT, 1);
 }
 
-/** Set push-pull or open-drain
- * @param pushPull Set mode to push-pull if true, open-drain if otherwise
+/** Set output mode to push-pull or open-drain
+ * @param mode Set output mode (TRUE for push-pull, FALSE for open-drain)
  * @see L3G4200D_RA_CTRL_REG3
  * @see L3G4200D_PP_OD_BIT
+ * @see L3G4200D_PUSH_PULL
+ * @see L3G4200D_OPEN_DRAIN
  */
-void L3G4200D::setPushPull(bool pushPull) {
+void L3G4200D::setOutputMode(bool mode) {
 	I2Cdev::writeBit(devAddr, L3G4200D_RA_CTRL_REG3, L3G4200D_PP_OD_BIT, 
 		pushPull);
 }
 
 /** Get whether mode is push-pull or open drain
- * @return whether the mode is push-pull or open drain (true == push-pull)
+ * @return the output mode (TRUE for push-pull, FALSE for open-drain)
  * @see L3G4200D_RA_CTRL_REG3
  * @see L3G4200D_PP_OD_BIT
+ * @see L3G4200D_PUSH_PULL
+ * @see L3G4200D_OPEN_DRAIN
  */
-bool L3G4200D::getIsPushPull() {
+bool L3G4200D::getOutputMode() {
 	return I2Cdev::readBit(devAddr, L3G4200D_RA_CTRL_REG3, L3G4200D_PP_OD_BIT, 
 		buffer);
 }
 
-/** Set data enabled on INT2 pin
- * @param enabled Whether data should be available on the INT2 pin
+/** Set data ready interrupt enabled state on INT2 pin
+ * @param enabled The new INT2 data ready interrupt enabled state
  * @see L3G4200D_RA_CTRL_REG3
  * @see L3G4200D_I2_DRDY_BIT
  */
@@ -462,8 +466,8 @@ void L3G4200D::setINT2DataReadyEnabled(bool enabled) {
 		enabled);
 }
 
-/** Get whether data is enabled on the INT2 pin
- * @return true if data is enabled on INT2, false otherwise
+/** Get whether the data ready interrupt is enabled on the INT2 pin
+ * @return the INT2 data ready interrupt enabled state
  * @see L3G4200D_RA_CTRL_REG3
  * @see L3G4200D_I2_DRDY_BIT
  */
@@ -472,7 +476,180 @@ bool L3G4200D::getINT2DataReadyEnabled() {
 		buffer);
 }
 
-/** Set whether 
+/** Set whether the INT2 FIFO watermark interrupt is enabled
+ * The sensor contains a 32-slot FIFO buffer for storing data so that it may be 
+ * read later. If enabled, the sensor will generate an interrupt on the 
+ * INT2/DRDY pin when the watermark has been reached. The watermark can be 
+ * configured through the setFIFOWatermark function.
+ * @param enabled The new enabled state of the INT2 FIFO watermark
+ * @see L3G4200D_RA_CTRL_REG3
+ * @see L3G4200D_I2_WTM_BIT
+ */
+void L3G4200D::setINT2FIFOWatermarkInterruptEnabled(bool enabled) {
+	I2Cdev::writeBit(devAddr, L3G4200D_RA_CTRL_REG3, L3G4200D_I2_WTM_BIT, 
+		enabled);
+}
+
+/** Get the INT2 FIFO watermark interrupt enabled state
+ * @return whether the FIFO watermark is enabled
+ * @see L3G4200D_RA_CTRL_REG3
+ * @see L3G4200D_I2_WTM_BIT
+ */ 
+void L3G4200D::getINT2FIFOWatermarkInterruptEnabled() {
+	return I2Cdev::readBit(devAddr, L3G4200D_RA_CTRL_REG3, L3G4200D_I2_WTM_BIT, 
+		buffer);
+}
+
+/** Set whether an interrupt is triggered on INT2 when the FIFO is overrun
+ * @param enabled The new FIFO overrun interrupt enabled state
+ * @see L3G4200D_RA_CTRL_REG3
+ * @see L3G4200D_I2_ORUN_BIT
+ */
+void L3G4200D::setINT2FIFOOverrunInterruptEnabled(bool enabled) {
+	I2Cdev::writeBit(devAddr, L3G4200D_RA_CTRL_REG3, L3G4200D_I2_ORUN_BIT, 
+		enabled);
+}
+
+/** Get whether an interrupt is triggered on INT2 when the FIFO is overrun
+ * @return the enabled state of the INT2 FIFO overrun interrupt
+ * @see L3G4200D_RA_CTRL_REG3
+ * @see L3G4200D_I2_ORUN_BIT
+ */
+bool L3G4200D::getINT2FIFOOverrunInterruptEnabled() {
+	return I2Cdev::readBit(devAddr, L3G4200D_RA_CTRL_REG3, L3G4200D_I2_ORUN_BIT,
+		buffer);
+}
+
+/** Set whether an interrupt is triggered on INT2 when the FIFO buffer is empty
+ * @param enabled The new INT2 FIFO empty interrupt state
+ * @see L3G4200D_RA_CTRL_REG3
+ * @see L3G4200D_I2_EMPTY_BIT
+ */
+void L3G4200D::setINT2FIFOEmptyInterruptEnabled(bool enabled) {
+	I2Cdev::writeBit(devAddr, L3G4200D_RA_CTRL_REG3, L3G4200D_I2_EMPTY_BIT, 
+		enabled);
+}
+
+/** Get whether the INT2 FIFO empty interrupt is enabled
+ * @returns the INT2 FIFO empty interrupt enabled state
+ * @see L3G4200D_RA_CTRL_REG3
+ * @see L3G4200D_I2_EMPTY_BIT
+ */
+bool L3G4200D::getINT2FIFOEmptyInterruptEnabled() {
+	return I2Cdev::readBit(devAddr, L3G4200D_RA_CTRL_REG3, 
+		L3G4200D_I2_EMPTY_BIT, buffer);
+}
+
+// CTRL_REG4 register, r/w
+
+/** Set the Block Data Update (BDU) enabled state
+ * @param enabled The new BDU enabled state
+ * @see L3G4200D_RA_CTRL_REG4
+ * @see L3G4200D_BDU_BIT
+ */
+void L3G4200D::setBlockDataUpdateEnabled(bool enabled) {
+	I2Cdev::writeBit(devAddr, L3G4200D_RA_CTRL_REG4, L3G4200D_BDU_BIT, enabled);
+}
+
+/** Get the BDU enabled state
+ * @return the BDU enabled state
+ * @see L3G4200D_RA_CTRL_REG4
+ * @see L3G4200D_BDU_BIT
+ */
+bool L3G4200D::getBlockDataUpdateEnabled() {
+	return L3G4200D::readBit(devAddr, L3G4200D_RA_CTRL_REG4, L3G4200D_BDU_BIT, 
+		buffer);
+}
+
+/** Set the data endian mode
+ * @param endianness The new endianness mode (TRUE for Big Endian, FALSE for 
+ * Little Endian)
+ * @see L3G4200D_RA_CTRL_REG4
+ * @see L3G4200D_BLE_BIT
+ * @see L3G4200D_BIG_ENDIAN
+ * @see L3G4200D_LITTLE_ENDIAN
+ */
+void L3G4200D::setEndianMode(bool endianness) {
+	I2Cdev::writeBit(devAddr, L3G4200D_RA_CTRL_REG4, L3G4200D_BLE_BIT, 
+		endianness);
+}
+
+/** Get the data endian mode
+ * @return the current endian mode (TRUE for Big Endian, FALSE for Little 
+ * Endian) 
+ * @see L3G4200D_RA_CTRL_REG4
+ * @see L3G4200D_BLE_BIT
+ * @see L3G4200D_BIG_ENDIAN
+ * @see L3G4200D_LITTLE_ENDIAN
+ */
+void L3G4200D::getEndianMode() {
+	return I2Cdev::readBit(devAddr, L3G4200D_RA_CTRL_REG4, L3G4200D_BLE_BIT,
+		buffer);
+}
+
+/** Set the full scale of the data output (in dps)
+ * @param scale The new scale of the data output (250, 500, 2000)
+ * @see L3G4200D_RA_CTRL_REG4
+ * @see L3G4200D_FS_BIT
+ * @see L3G4200D_FS_LENGTH
+ * @see L3G4200D_FS_250
+ * @see L3G4200D_FS_500
+ * @see L3G4200D_FS_2000
+ */
+void L3G4200D::setFullScale(uint16_t scale) {
+	uint8_t writeBits;
+	
+	if (scale == 250) {
+		writeBits = L3G4200D_FS_250;
+	} else if (scale == 500) {
+		writeBits = L3G4200D_FS_500;
+	} else {
+		// If none of the above, assumed is 2000
+		writeBits = L3G4200D_FS_2000;
+	}
+
+	I2Cdev::writeBits(devAddr, L3G4200D_RA_CTRL_REG4, L3G4200D_FS_BIT, 
+		L3G4200D_FS_LENGTH, writeBits);
+}
+
+/** Get the current full scale of the output data (in dps)
+ * @return the current scale of the output data
+ * @see L3G4200D_RA_CTRL_REG4
+ * @see L3G4200D_FS_BIT
+ * @see L3G4200D_FS_LENGTH
+ * @see L3G4200D_FS_250
+ * @see L3G4200D_FS_500
+ * @see L3G4200D_FS_2000
+ */
+uint16_t L3G4200D::getFullScale() {
+	uint8_t readBits = I2Cdev::readBits(devAddr, L3G4200D_RA_CTRL_REG4, 
+		L3G4200D_FS_BIT, L3G4200D_FS_LENGTH, buffer);
+	
+	if (readBits == L3G4200D_FS_250) {
+		return 250;
+	} else if (readBits == L3G4200D_FS_500) {
+		return 500;
+	} else {
+		// Assumed if none of the above, is 2000
+		return 2000;
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
