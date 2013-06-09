@@ -50,7 +50,7 @@ THE SOFTWARE.
 
 #define L3G4200D_RA_REFERENCE      0x25
 #define L3G4200D_RA_OUT_TEMP       0x26
-#define L3G4200D_RA_STATUS_REG     0x27
+#define L3G4200D_RA_STATUS         0x27
 
 #define L3G4200D_RA_OUT_X_L        0x28
 #define L3G4200D_RA_OUT_X_H        0x29
@@ -106,8 +106,14 @@ THE SOFTWARE.
 #define L3G4200D_INT1_SEL_LENGTH   2
 #define L3G4200D_OUT_SEL_BIT       6
 #define L3G4200D_OUT_SEL_LENGTH    2
-#define L3G4200D_REF_BIT           0
-#define L3G4200D_REF_LENGTH        8
+#define L3G4200D_ZYXOR_BIT         0
+#define L3G4200D_ZOR_BIT           1
+#define L3G4200D_YOR_BIT           2
+#define L3G4200D_XOR_BIT           3
+#define L3G4200D_ZYXDA_BIT         4
+#define L3G4200D_ZDA_BIT           5
+#define L3G4200D_YDA_BIT           6
+#define L3G4200D_XDA_BIT           7
 #define L3G4200D_FIFO_MODE_BIT     0
 #define L3G4200D_FIFO_MODE_LENGTH  3
 #define L3G4200D_FIFO_WM_BIT       3
@@ -166,6 +172,11 @@ THE SOFTWARE.
 #define L3G4200D_SELF_TEST_NORMAL  0b00
 #define L3G4200D_SELF_TEST_0       0b01
 #define L3G4200D_SELF_TEST_1       0b11
+
+#define L3G4200D_NON_HIGH_PASS     0b00
+#define L3G4200D_HIGH_PASS         0b01
+#define L3G4200D_LOW_PASS          0b10
+#define L3G4200D_LOW_HIGH_PASS     0b11
 
 #define L3G4200D_FM_BYPASS         0b000
 #define L3G4200D_FM_FIFO           0b001
@@ -242,8 +253,6 @@ class L3G4200D {
 		bool getHighPassFilterEnabled();
 		void setDataFilter(uint8_t filter);
 		uint8_t getDataFilter();
-		void setDataInterrupt(uint8_t filter);
-		uint8_t getDataInterruptFilter();
 		
 		// REFERENCE/DATACAPTURE register, r/w
 		void setInterruptRefernce(uint8_t reference);
@@ -263,10 +272,10 @@ class L3G4200D {
 		bool getXDataAvailable();
 
         // OUT_* registers, read-only
-        void getRate(INT16_t* x, INT16_t* y, INT16_t* z);
-        INT16_t getRateX();
-		INT16_t getRateY();
-		INT16_t getRateZ();
+        void getAngularVelocity(int16_t* x, int16_t* y, int16_t* z);
+        int16_t getAngularVelocityX();
+		int16_t getAngularVelocityY();
+		int16_t getAngularVelocityZ();
 		
 		// FIFO_CTRL register, r/w
 		void setFIFOMode(uint8_t mode);
