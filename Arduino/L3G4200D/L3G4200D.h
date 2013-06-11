@@ -116,8 +116,13 @@ THE SOFTWARE.
 #define L3G4200D_XDA_BIT           7
 #define L3G4200D_FIFO_MODE_BIT     0
 #define L3G4200D_FIFO_MODE_LENGTH  3
-#define L3G4200D_FIFO_WM_BIT       3
-#define L3G4200D_FIFO_WM_LENGTH    5
+#define L3G4200D_FIFO_WTM_BIT      3
+#define L3G4200D_FIFO_WTM_LENGTH   5
+#define L3G4200D_FIFO_STATUS_BIT   0
+#define L3G4200D_FIFO_OVRN_BIT     1
+#define L3G4200D_FIFO_EMPTY_BIT    2
+#define L3G4200D_FIFO_FSS_BIT      3
+#define L3G4200D_FIFO_FSS_LENGTH   5
 #define L3G4200D_INT1_AND_OR_BIT   0
 #define L3G4200D_INT1_LIR_BIT      1
 #define L3G4200D_ZHIE_BIT          2
@@ -182,7 +187,10 @@ THE SOFTWARE.
 #define L3G4200D_FM_FIFO           0b001
 #define L3G4200D_FM_STREAM         0b010
 #define L3G4200D_FM_STREAM_FIFO    0b011
-#define L3G4200D_FM_BYPASS_STREAM  0b100        
+#define L3G4200D_FM_BYPASS_STREAM  0b100
+
+#define L3G4200D_INT1_OR           0
+#define L3G4200D_INT1_AND          1   
 
 class L3G4200D {
     public:
@@ -280,18 +288,18 @@ class L3G4200D {
 		// FIFO_CTRL register, r/w
 		void setFIFOMode(uint8_t mode);
 		uint8_t getFIFOMode();
-		void setFIFOWatermark(uint8_t thresh);
-		uint8_t getFIFOWatermark();
+		void setFIFOThreshold(uint8_t wtm);
+		uint8_t getFIFOThreshold();
 		
 		// FIFO_SRC register, read-only
-		bool getFIFOWatermarkLow();	// Alternative: >= Watermark level
+		bool getFIFOBelowWatermark();
 		bool getFIFOOverrun();
 		bool getFIFOEmpty();
 		uint8_t getFIFOStoredDataLevel();
 		
 		// INT1_CFG register, r/w
-		void setAndInterruptCombination(bool enabled); // Alternative: OR
-		bool getAndInterruptCombination();
+		void setInterruptCombination(bool combination);
+		bool getInterruptCombination();
 		void setInterruptRequestLatched(bool latched);
 		bool getInterruptRequestLatched();
 		void setZHighInterruptEnabled(bool enabled);

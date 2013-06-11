@@ -999,12 +999,177 @@ uint8_t L3G4200D::getFIFOMode() {
 		L3G4200D_MODE_LENGTH, buffer);
 }
 
+/** Set the FIFO watermark threshold
+ * @param wtm The new FIFO watermark threshold
+ * @see L3G4200D_RA_FIFO_CTRL
+ * @see L3G4200D_WTM_BIT
+ * @see L3G4200D_WTM_LENGTH
+ */
+void L3G4200D::setFIFOThreshold(uint8_t wtm) {
+    I2Cdev::writeBits(devAddr, L3G4200D_RA_FIFO_CTRL, L3G4200D_WTM_BIT, 
+        L3G4200D_WTM_LENGTH, wtm);
+}
 
+/** Get the FIFO watermark threshold
+ * @return the FIFO watermark threshold
+ * @see L3G4200D_RA_FIFO_CTRL
+ * @see L3G4200D_WTM_BIT
+ * @see L3G4200D_WTM_LENGTH
+ */
+uint8_t L3G4200D::getFIFOThreshold() {
+    return I2Cdev::readBits(devAddr, L3G4200D_RA_FIFO_CTRL, L3G4200D_WTM_BIT,
+        L3G4200D_WTM_LENGTH, buffer);
+}
 
+// FIFO_SRC register, read-only
 
+/** Get whether the number of data sets in the FIFO buffer is less than the 
+ * watermark
+ * @return true if the number of data sets in the FIFO buffer is less than the 
+ * watermark, false otherwise
+ * @see L3G4200D_RA_FIFO_SRC
+ * @see L3G4200D_STATUS_BIT
+ */
+bool L3G4200D::getFIFOBelowWatermark() {
+    return I2Cdev::readBit(devAddr, L3G4200D_RA_FIFO_SRC, L3G4200D_STATUS_BIT, 
+        buffer);
+}
 
+/** Get whether the FIFO buffer is full
+ * @return true if the FIFO buffer is full, false otherwise
+ * @see L3G4200D_RA_FIFO_SRC
+ * @see L3G4200D_FIFO_OVRN_BIT
+ */
+bool L3G4200D::getFIFOOverrun() {
+    return I2Cdev::readBit(devAddr, L3G4200D_RA_FIFO_SRC, 
+        L3G4200D_FIFO_OVRN_BIT, buffer);
+}
 
+/** Get whether the FIFO buffer is empty
+ * @return true if the FIFO buffer is empty, false otherwise
+ * @see L3G4200D_RA_FIFO_SRC
+ * @see L3G4200D_FIFO_EMPTY_BIT
+ */
+bool L3G4200D::getFIFOEmpty() {
+    return I2Cdev::readBit(devAddr, L3G4200D_RA_FIFO_SRC,
+        L3G4200D_FIFO_EMPTY_BIT, buffer);
+}
 
+/** Get the number of filled FIFO buffer slots
+ * @return the number of filled slots in the FIFO buffer
+ * @see L3G4200D_RA_FIFO_SRC
+ * @see L3G4200D_FIFO_FSS_BIT
+ * @see L3G4200D_FIFO_FSS_LENGTH
+ */ 
+uint8_t L3G4200D::getFIFOStoredDataLevel() {
+    return I2Cdev::readBits(devAddr, L3G4200D_RA_FIFO_SRC, 
+        L3G4200D_FIFO_FSS_BIT, L3G4200D_FIFO_FSS_LENGTH, buffer);
+}
+
+// INT1_CFG register, r/w
+
+/** Set the combination mode for interrupt events
+ * @param combination The new combination mode for interrupt events. 
+ * L3G4200D_INT1_OR for OR and L3G4200D_INT1_AND for AND
+ * @see L3G4200D_RA_INT1_CFG
+ * @see L3G4200D_AND_OR_BIT
+ * @see L3G4200D_INT1_OR
+ * @see L3G4200D_INT1_AND
+ */
+void L3G4200D::setInterruptCombination(bool combination) {
+    I2Cdev::writeBit(devAddr, L3G4200D_RA_INT1_CFG, L3G4200D_AND_OR_BIT,
+        combination);
+}
+
+/** Get the combination mode for interrupt events
+ * @return the combination mode for interrupt events. L3G4200D_INT1_OR for OR
+ * and L3G4200D_INT1_AND for AND
+ * @see L3G4200D_RA_INT1_CFG
+ * @see L3G4200D_AND_OR_BIT
+ * @see L3G4200D_INT1_OR
+ * @see L3G4200D_INT1_AND
+ */
+bool L3G4200D::getInterruptCombination() {
+    I2Cdev::readBit(devAddr, L3G4200D_RA_INT1_CFG, L3G4200D_AND_OR_BIT,
+        combination);
+}
+
+/** Set whether an interrupt request is latched
+ * This bit is cleared when the INT1_SRC register is read
+ * @param latched The new status of the latched request
+ * @see L3G4200D_RA_INT1_CFG
+ * @see L3G4200D_LIR_BIT
+ */
+void L3G4200D::setInterruptRequestLatched(bool latched) {
+    I2Cdev::writeBit(devAddr, L3G4200D_RA_INT1_CFG, L3G4200D_LIR_BIT, latched);
+}
+
+/** Get whether an interrupt request is latched
+ * @return whether and interrupt request is latched
+ * @see L3G4200D_RA_INT1_CFG
+ * @see L3G4200D_LIR_BIT
+ */
+bool L3G4200D::getInterruptRequestLatched() {
+    return I2Cdev::readBit(devAddr, L3G4200D_RA_INT1_CFG, L3G4200D_LIR_BIT, 
+        buffer); 
+}
+
+/** Set whether the interrupt for Z high is enabled
+ * @param enabled Whether the interrupt for Z high is enabled 
+ * @see L3G4200D_INT1_CFG
+ * @see L3G4200D_ZHIE_BIT
+ */
+void L3G4200D::setZHighInterruptEnabled(bool enabled) {
+    I2Cdev::writeBit(devAddr, L3G4200D_RA_INT1_CFG, L3G4200D_ZHIE_BIT, enabled);
+}
+
+/** Get whether the interrupt for Z high is enabled
+ * @return whether the interrupt for Z high is enabled 
+ * @see L3G4200D_INT1_CFG
+ * @see L3G4200D_ZHIE_BIT
+ */
+bool L3G4200D::getZHighInterruptEnabled() {
+    return I2Cdev::readBit(devAddr, L3G4200D_RA_INT1_CFG, L3G4200D_ZHIE_BIT, 
+        buffer);
+}
+
+/** Set whether the interrupt for Y high is enabled
+ * @param enabled Whether the interrupt for Y high is enabled 
+ * @see L3G4200D_INT1_CFG
+ * @see L3G4200D_YHIE_BIT
+ */
+void L3G4200D::setYHighInterruptEnabled(bool enabled) {
+    I2Cdev::writeBit(devAddr, L3G4200D_RA_INT1_CFG, L3G4200D_YHIE_BIT, enabled);
+}
+
+/** Get whether the interrupt for Y high is enabled
+ * @return whether the interrupt for Y high is enabled 
+ * @see L3G4200D_INT1_CFG
+ * @see L3G4200D_YHIE_BIT
+ */
+bool L3G4200D::getYHighInterruptEnabled() {
+    return I2Cdev::readBit(devAddr, L3G4200D_RA_INT1_CFG, L3G4200D_YHIE_BIT, 
+        buffer);
+}
+
+/** Set whether the interrupt for X high is enabled
+ * @param enabled Whether the interrupt for X high is enabled 
+ * @see L3G4200D_INT1_CFG
+ * @see L3G4200D_XHIE_BIT
+ */
+void L3G4200D::setXHighInterruptEnabled(bool enabled) {
+    I2Cdev::writeBit(devAddr, L3G4200D_RA_INT1_CFG, L3G4200D_XHIE_BIT, enabled);
+}
+
+/** Get whether the interrupt for X high is enabled
+ * @return whether the interrupt for X high is enabled 
+ * @see L3G4200D_INT1_CFG
+ * @see L3G4200D_XHIE_BIT
+ */
+bool L3G4200D::getXHighInterruptEnabled() {
+    return I2Cdev::readBit(devAddr, L3G4200D_RA_INT1_CFG, L3G4200D_XHIE_BIT, 
+        buffer);
+}
 
 
 
