@@ -131,6 +131,13 @@ THE SOFTWARE.
 #define L3G4200D_YLIE_BIT          5
 #define L3G4200D_XHIE_BIT          6
 #define L3G4200D_XLIE_BIT          7
+#define L3G4200D_INT1_IA_BIT       1
+#define L3G4200D_INT1_ZH_BIT       2
+#define L3G4200D_INT1_ZL_BIT       3
+#define L3G4200D_INT1_YH_BIT       4
+#define L3G4200D_INT1_YL_BIT       5
+#define L3G4200D_INT1_XH_BIT       6
+#define L3G4200D_INT1_XL_BIT       7
 #define L3G4200D_INT1_WAIT_BIT     0
 #define L3G4200D_INT1_DUR_BIT      1
 #define L3G4200D_INT1_DUR_LENGTH   7

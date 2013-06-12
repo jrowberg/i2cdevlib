@@ -1133,44 +1133,6 @@ bool L3G4200D::getZHighInterruptEnabled() {
         buffer);
 }
 
-/** Set whether the interrupt for Y high is enabled
- * @param enabled Whether the interrupt for Y high is enabled 
- * @see L3G4200D_INT1_CFG
- * @see L3G4200D_YHIE_BIT
- */
-void L3G4200D::setYHighInterruptEnabled(bool enabled) {
-    I2Cdev::writeBit(devAddr, L3G4200D_RA_INT1_CFG, L3G4200D_YHIE_BIT, enabled);
-}
-
-/** Get whether the interrupt for Y high is enabled
- * @return whether the interrupt for Y high is enabled 
- * @see L3G4200D_INT1_CFG
- * @see L3G4200D_YHIE_BIT
- */
-bool L3G4200D::getYHighInterruptEnabled() {
-    return I2Cdev::readBit(devAddr, L3G4200D_RA_INT1_CFG, L3G4200D_YHIE_BIT, 
-        buffer);
-}
-
-/** Set whether the interrupt for X high is enabled
- * @param enabled Whether the interrupt for X high is enabled 
- * @see L3G4200D_INT1_CFG
- * @see L3G4200D_XHIE_BIT
- */
-void L3G4200D::setXHighInterruptEnabled(bool enabled) {
-    I2Cdev::writeBit(devAddr, L3G4200D_RA_INT1_CFG, L3G4200D_XHIE_BIT, enabled);
-}
-
-/** Get whether the interrupt for X high is enabled
- * @return whether the interrupt for X high is enabled 
- * @see L3G4200D_INT1_CFG
- * @see L3G4200D_XHIE_BIT
- */
-bool L3G4200D::getXHighInterruptEnabled() {
-    return I2Cdev::readBit(devAddr, L3G4200D_RA_INT1_CFG, L3G4200D_XHIE_BIT, 
-        buffer);
-}
-
 /** Set whether the interrupt for Z low is enabled
  * @param enabled Whether the interrupt for Z low is enabled 
  * @see L3G4200D_INT1_CFG
@@ -1187,6 +1149,25 @@ void L3G4200D::setZLowInterruptEnabled(bool enabled) {
  */
 bool L3G4200D::getZLowInterruptEnabled() {
     return I2Cdev::readBit(devAddr, L3G4200D_RA_INT1_CFG, L3G4200D_ZLIE_BIT, 
+        buffer);
+}
+
+/** Set whether the interrupt for Y high is enabled
+ * @param enabled Whether the interrupt for Y high is enabled 
+ * @see L3G4200D_INT1_CFG
+ * @see L3G4200D_YHIE_BIT
+ */
+void L3G4200D::setYHighInterruptEnabled(bool enabled) {
+    I2Cdev::writeBit(devAddr, L3G4200D_RA_INT1_CFG, L3G4200D_YHIE_BIT, enabled);
+}
+
+/** Get whether the interrupt for Y high is enabled
+ * @return whether the interrupt for Y high is enabled 
+ * @see L3G4200D_INT1_CFG
+ * @see L3G4200D_YHIE_BIT
+ */
+bool L3G4200D::getYHighInterruptEnabled() {
+    return I2Cdev::readBit(devAddr, L3G4200D_RA_INT1_CFG, L3G4200D_YHIE_BIT, 
         buffer);
 }
 
@@ -1209,6 +1190,25 @@ bool L3G4200D::getYLowInterruptEnabled() {
         buffer);
 }
 
+/** Set whether the interrupt for X high is enabled
+ * @param enabled Whether the interrupt for X high is enabled 
+ * @see L3G4200D_INT1_CFG
+ * @see L3G4200D_XHIE_BIT
+ */
+void L3G4200D::setXHighInterruptEnabled(bool enabled) {
+    I2Cdev::writeBit(devAddr, L3G4200D_RA_INT1_CFG, L3G4200D_XHIE_BIT, enabled);
+}
+
+/** Get whether the interrupt for X high is enabled
+ * @return whether the interrupt for X high is enabled 
+ * @see L3G4200D_INT1_CFG
+ * @see L3G4200D_XHIE_BIT
+ */
+bool L3G4200D::getXHighInterruptEnabled() {
+    return I2Cdev::readBit(devAddr, L3G4200D_RA_INT1_CFG, L3G4200D_XHIE_BIT, 
+        buffer);
+}
+
 /** Set whether the interrupt for X low is enabled
  * @param enabled Whether the interrupt for X low is enabled 
  * @see L3G4200D_INT1_CFG
@@ -1225,6 +1225,78 @@ void L3G4200D::setXLowInterruptEnabled(bool enabled) {
  */
 bool L3G4200D::getXLowInterruptEnabled() {
     return I2Cdev::readBit(devAddr, L3G4200D_RA_INT1_CFG, L3G4200D_XLIE_BIT, 
+        buffer);
+}
+
+// INT1_SRC register, read-only
+
+/** Get whether an interrupt has been generated
+ * @return true if one or more interrupts has been generated, false otherwise
+ * @see L3G4200D_RA_INT1_SRC
+ * @see L3G4200D_INT1_IA_BIT
+ */
+bool L3G4200D::getInterruptActive() {
+    return I2Cdev::readBit(devAddr, L3G4200D_RA_INT1_SRC, L3G4200D_INT1_IA_BIT,
+        buffer);
+}
+
+/** Get whether a Z high event has occurred
+ * @return true if a Z high event has occurred, false otherwise
+ * @see L3G4200D_RA_INT1_SRC
+ * @see L3G4200D_INT1_ZH_BIT
+ */
+bool L3G4200D::getZHigh() {
+    return I2Cdev::readBit(devAddr, L3G4200D_RA_INT1_SRC, L3G4200D_INT1_ZH_BIT,
+        buffer);
+}
+
+/** Get whether a Z low event has occurred
+ * @return true if a Z low event has occurred, false otherwise
+ * @see L3G4200D_RA_INT1_SRC
+ * @see L3G4200D_INT1_ZL_BIT
+ */
+bool L3G4200D::getZLow() {
+    return I2Cdev::readBit(devAddr, L3G4200D_RA_INT1_SRC, L3G4200D_INT1_ZL_BIT,
+        buffer);
+}
+
+/** Get whether a Y high event has occurred
+ * @return true if a Y high event has occurred, false otherwise
+ * @see L3G4200D_RA_INT1_SRC
+ * @see L3G4200D_INT1_YH_BIT
+ */
+bool L3G4200D::getYHigh() {
+    return I2Cdev::readBit(devAddr, L3G4200D_RA_INT1_SRC, L3G4200D_INT1_YH_BIT,
+        buffer);
+}
+
+/** Get whether a Y low event has occurred
+ * @return true if a Y low event has occurred, false otherwise
+ * @see L3G4200D_RA_INT1_SRC
+ * @see L3G4200D_INT1_YL_BIT
+ */
+bool L3G4200D::getYLow() {
+    return I2Cdev::readBit(devAddr, L3G4200D_RA_INT1_SRC, L3G4200D_INT1_YL_BIT,
+        buffer);
+}
+
+/** Get whether a X high event has occurred
+ * @return true if a X high event has occurred, false otherwise
+ * @see L3G4200D_RA_INT1_SRC
+ * @see L3G4200D_INT1_XH_BIT
+ */
+bool L3G4200D::getXHigh() {
+    return I2Cdev::readBit(devAddr, L3G4200D_RA_INT1_SRC, L3G4200D_INT1_XH_BIT,
+        buffer);
+}
+
+/** Get whether a X low event has occurred
+ * @return true if a X low event has occurred, false otherwise
+ * @see L3G4200D_RA_INT1_SRC
+ * @see L3G4200D_INT1_XL_BIT
+ */
+bool L3G4200D::getXLow() {
+    return I2Cdev::readBit(devAddr, L3G4200D_RA_INT1_SRC, L3G4200D_INT1_XL_BIT,
         buffer);
 }
 
