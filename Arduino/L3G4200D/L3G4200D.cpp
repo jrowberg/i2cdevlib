@@ -1300,6 +1300,15 @@ bool L3G4200D::getXLow() {
         buffer);
 }
 
+// INT1_THS_* registers, r/w
+
+/** Set the threshold for a high interrupt on the X axis
+ * @param threshold The new threshold for a high interrupt on the X axis
+ * @see L3G4200D_INT1_THS_XH
+ */
+void L3G4200D::setXHighThreshold(uint8_t threshold) {
+    I2Cdev::writeByte(devAddr, L3G4200D_INT1_THS_XH, threshold);
+}
 
 
 

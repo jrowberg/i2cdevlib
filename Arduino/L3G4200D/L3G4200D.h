@@ -329,30 +329,30 @@ class L3G4200D {
 		bool getYHigh();
 		bool getYLow();
 		bool getXHigh();
-		bool getXHigh();
+		bool getXLow();
 		
 		// INT1_THS_XH register, r/w
-		void setXHighThreshold(uint8_t);
+		void setXHighThreshold(uint8_t threshold);
 		uint8_t getXHighThreshold();
 
 		// INT1_THS_XL register, r/w
-		void setXLowThreshold(uint8_t);
+		void setXLowThreshold(uint8_t threshold);
 		uint8_t getXLowThreshold();
 
 		// INT1_THS_YH register, r/w
-		void setYHighThreshold(uint8_t);
+		void setYHighThreshold(uint8_t threshold);
 		uint8_t getYHighThreshold();
 
 		// INT1_THS_YL register, r/w
-		void setYLowThreshold(uint8_t);
+		void setYLowThreshold(uint8_t threshold);
 		uint8_t getYLowThreshold();
 
 		// INT1_THS_ZH register, r/w
-		void setZHighThreshold(uint8_t);
+		void setZHighThreshold(uint8_t threshold);
 		uint8_t getZHighThreshold();
 
 		// INT1_THS_ZL register, r/w
-		void setZLowThreshold(uint8_t);
+		void setZLowThreshold(uint8_t threshold);
 		uint8_t getZLowThreshold();
 
 		// INT1_DURATION register
