@@ -1310,17 +1310,89 @@ void L3G4200D::setXHighThreshold(uint8_t threshold) {
     I2Cdev::writeByte(devAddr, L3G4200D_INT1_THS_XH, threshold);
 }
 
+/** Set the threshold for a low interrupt on the X axis
+ * @param threshold The new threshold for a low interrupt on the X axis
+ * @see L3G4200D_INT1_THS_XL
+ */
+void L3G4200D::setXLowThreshold(uint8_t threshold) {
+    I2Cdev::writeByte(devAddr, L3G4200D_INT1_THS_XL, threshold);
+}
 
+/** Set the threshold for a high interrupt on the Y axis
+ * @param threshold The new threshold for a high interrupt on the Y axis
+ * @see L3G4200D_INT1_THS_YH
+ */
+void L3G4200D::setYHighThreshold(uint8_t threshold) {
+    I2Cdev::writeByte(devAddr, L3G4200D_INT1_THS_YH, threshold);
+}
 
+/** Set the threshold for a low interrupt on the Y axis
+ * @param threshold The new threshold for a low interrupt on the Y axis
+ * @see L3G4200D_INT1_THS_YL
+ */
+void L3G4200D::setYLowThreshold(uint8_t threshold) {
+    I2Cdev::writeByte(devAddr, L3G4200D_INT1_THS_YL, threshold);
+}
 
+/** Set the threshold for a high interrupt on the Z axis
+ * @param threshold The new threshold for a high interrupt on the Z axis
+ * @see L3G4200D_INT1_THS_ZH
+ */
+void L3G4200D::setZHighThreshold(uint8_t threshold) {
+    I2Cdev::writeByte(devAddr, L3G4200D_INT1_THS_ZH, threshold);
+}
 
+/** Set the threshold for a low interrupt on the Z axis
+ * @param threshold The new threshold for a low interrupt on the Z axis
+ * @see L3G4200D_INT1_THS_ZL
+ */
+void L3G4200D::setZLowThreshold(uint8_t threshold) {
+    I2Cdev::writeByte(devAddr, L3G4200D_INT1_THS_ZL, threshold);
+}
 
+// INT1_DURATION register, r/w
 
+/* Set the minimum duration for an interrupt event to be recognized
+ * This depends on the chosen output data rate
+ * @see L3G4200D_RA_INT1_DURATION
+ * @see L3G4200D_INT1_DUR_BIT
+ * @see L3G4200D_INT1_DUR_LENGTH
+ */
+void L3G4200D::setDuration(uint8_t duration) {
+	I2Cdev::writeBits(devAddr, L3G4200D_RA_INT1_DURATION, L3G4200D_INT1_DUR_BIT,
+		L3G4200D_INT1_DUR_LENGTH, duration);
+}
 
+/** Get the minimum duration for an interrupt event to be recognized
+ * @see L3G4200D_RA_INT1_DURATION
+ * @see L3G4200D_INT1_DUR_BIT
+ * @see L3G4200D_INT1_DUR_LENGTH
+ */
+uint8_t L3G4200D::getDuration() {
+	return I2Cdev::readBits(devAddr, L3G4200D_RA_INT1_DURATION, 
+		L3G4200D_INT1_DUR_BIT, L3G4200D_INT1_DUR_LENGTH, buffer);
+}
 
+/** Set whether the interrupt wait feature is enabled
+ * If false, the interrupt falls immediately if signal crosses the selected 
+ * threshold. Otherwise, if signal crosses the selected threshold, the interrupt
+ * falls only after the duration has counted number of samples at the selected 
+ * data rate, written into the duration counter register.
+ * @param enabled The new enabled state of the interrupt wait
+ * @see L3G4200D_RA_INT1_DURATION
+ * @see L3G4200D_INT1_WAIT_BIT
+ */
+void L3G4200D::setWaitEnabled(bool enabled) {
+	I2Cdev::writeBit(devAddr, L3G4200D_RA_INT1_DURATION, L3G4200D_INT1_WAIT_BIT,
+		enabled);
+}
 
-
-
-
-
-
+/** Get whether the interrupt wait feature is enabled
+ * @return true if the wait feature is enabled, false otherwise
+ * @see L3G4200D_RA_INT1_DURATION
+ * @see L3G4200D_INT1_WAIT_BIT
+ */
+bool L3G4200D::getWaitEnabled() {
+	return I2Cdev::readBit(devAddr, L3G4200D_RA_INT1_DURATION, 
+		L3G4200D_INT1_WAIT_BIT, buffer);
+}

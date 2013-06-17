@@ -138,9 +138,9 @@ THE SOFTWARE.
 #define L3G4200D_INT1_YL_BIT       5
 #define L3G4200D_INT1_XH_BIT       6
 #define L3G4200D_INT1_XL_BIT       7
-#define L3G4200D_INT1_WAIT_BIT     0
 #define L3G4200D_INT1_DUR_BIT      1
 #define L3G4200D_INT1_DUR_LENGTH   7
+#define L3G4200D_INT1_WAIT_BIT     0
 
 #define L3G4200D_RATE_100          0b00
 #define L3G4200D_RATE_200          0b01
@@ -355,11 +355,11 @@ class L3G4200D {
 		void setZLowThreshold(uint8_t threshold);
 		uint8_t getZLowThreshold();
 
-		// INT1_DURATION register
+		// INT1_DURATION register, r/w
+		void setDurationValue(uint8_t duration);
+		uint8_t getDurationValue();
 		void setWaitEnabled(bool enabled);
 		bool getWaitEnabled();
-		void setDurationValue(uint8_t);
-		uint8_t getDurationValue();
 
     private:
         uint8_t devAddr;
