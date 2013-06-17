@@ -59,8 +59,8 @@ THE SOFTWARE.
 #define L3G4200D_RA_OUT_Z_L        0x2C
 #define L3G4200D_RA_OUT_Z_H        0x2D
 
-#define L3G4200D_RA_FIFO_CTRL_REG  0x2E
-#define L3G4200D_RA_FIFO_SRC_REG   0x2F
+#define L3G4200D_RA_FIFO_CTRL  	   0x2E
+#define L3G4200D_RA_FIFO_SRC	   0x2F
 
 #define L3G4200D_RA_INT1_CFG       0x30
 #define L3G4200D_RA_INT1_SRC       0x31
@@ -211,8 +211,8 @@ class L3G4200D {
         uint8_t getDeviceID();
 		
 		// CTRL_REG1 register, r/w
-		void setDataOutputRate(uINT16_t rate);
-		uINT16_t getDataOutputRate();
+		void setDataOutputRate(uint16_t rate);
+		uint16_t getDataOutputRate();
 		void setBandwidthCutOffMode(uint8_t mode);
 		uint8_t getBandwidthCutOffMode();
 		float getBandwidthCutOff();
@@ -241,8 +241,8 @@ class L3G4200D {
 		bool getOutputMode();
 		void setINT2DataReadyEnabled(bool enabled);
 		bool getINT2DataReadyEnabled();
-		void setINT2FIFOWatermarkEnabled(bool enabled);
-		bool getINT2FIFOWatermarkEnabled();
+		void setINT2FIFOWatermarkInterruptEnabled(bool enabled);
+		bool getINT2FIFOWatermarkInterruptEnabled();
 		void setINT2FIFOOverrunInterruptEnabled(bool enabled);
 		bool getINT2FIFOOverrunInterruptEnabled();
 		void setINT2FIFOEmptyInterruptEnabled(bool enabled);
@@ -270,7 +270,7 @@ class L3G4200D {
 		uint8_t getDataFilter();
 		
 		// REFERENCE/DATACAPTURE register, r/w
-		void setInterruptRefernce(uint8_t reference);
+		void setInterruptReference(uint8_t reference);
 		uint8_t getInterruptReference();
 		
 		// OUT_TEMP register, read-only
@@ -356,8 +356,8 @@ class L3G4200D {
 		uint8_t getZLowThreshold();
 
 		// INT1_DURATION register, r/w
-		void setDurationValue(uint8_t duration);
-		uint8_t getDurationValue();
+		void setDuration(uint8_t duration);
+		uint8_t getDuration();
 		void setWaitEnabled(bool enabled);
 		bool getWaitEnabled();
 
