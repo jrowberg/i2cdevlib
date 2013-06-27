@@ -42,10 +42,10 @@ void loop() {
   }
   
   for (int i = 0; i < 3; i++) {
-    Serial.print(names[i]);
-    Serial.print(" = ");
+    Serial.print(names[i]); 
+    Serial.print(" = "); 
     Serial.print(data[i]);
-    Serial.print(" ");
+    Serial.print("\t");
   }  
 
   Serial.println();
