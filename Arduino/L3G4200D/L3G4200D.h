@@ -211,8 +211,8 @@ class L3G4200D {
         uint8_t getDeviceID();
 		
 		// CTRL_REG1 register, r/w
-		void setDataOutputRate(uint16_t rate);
-		uint16_t getDataOutputRate();
+		void setOutputDataRate(uint16_t rate);
+		uint16_t getOutputDataRate();
 		void setBandwidthCutOffMode(uint8_t mode);
 		uint8_t getBandwidthCutOffMode();
 		float getBandwidthCutOff();
@@ -331,27 +331,17 @@ class L3G4200D {
 		bool getXHigh();
 		bool getXLow();
 		
-		// INT1_THS_XH register, r/w
+		// INT1_THS_* registers, r/w
 		void setXHighThreshold(uint8_t threshold);
 		uint8_t getXHighThreshold();
-
-		// INT1_THS_XL register, r/w
 		void setXLowThreshold(uint8_t threshold);
 		uint8_t getXLowThreshold();
-
-		// INT1_THS_YH register, r/w
 		void setYHighThreshold(uint8_t threshold);
 		uint8_t getYHighThreshold();
-
-		// INT1_THS_YL register, r/w
 		void setYLowThreshold(uint8_t threshold);
 		uint8_t getYLowThreshold();
-
-		// INT1_THS_ZH register, r/w
 		void setZHighThreshold(uint8_t threshold);
 		uint8_t getZHighThreshold();
-
-		// INT1_THS_ZL register, r/w
 		void setZLowThreshold(uint8_t threshold);
 		uint8_t getZLowThreshold();
 

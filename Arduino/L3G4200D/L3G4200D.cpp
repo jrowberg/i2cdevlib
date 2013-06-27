@@ -79,7 +79,7 @@ uint8_t L3G4200D::getDeviceID() {
 
 // CTRL_REG1 register, r/w
 
-/** Set the data output rate
+/** Set the output data rate
  * @param rate The new data output rate (can be 100, 200, 400, or 800)
  * @see L3G4200D_RA_CTRL_REG1
  * @see L3G4200D_ODR_BIT
@@ -89,7 +89,7 @@ uint8_t L3G4200D::getDeviceID() {
  * @see L3G4200D_RATE_400
  * @see L3G4200D_RATE_800
  */
-void L3G4200D::setDataOutputRate(uint16_t rate) {
+void L3G4200D::setOutputDataRate(uint16_t rate) {
 	uint8_t writeVal;
 	
 	if (rate == 100) {
@@ -107,7 +107,7 @@ void L3G4200D::setDataOutputRate(uint16_t rate) {
 		L3G4200D_ODR_LENGTH, writeVal); 
 }
 
-/** Get the current data output rate
+/** Get the current output data rate
  * @return the current data output rate
  * @see L3G4200D_RA_CTRL_REG1
  * @see L3G4200D_ODR_BIT
@@ -117,7 +117,7 @@ void L3G4200D::setDataOutputRate(uint16_t rate) {
  * @see L3G4200D_RATE_400
  * @see L3G4200D_RATE_800
  */
-uint16_t L3G4200D::getDataOutputRate() {
+uint16_t L3G4200D::getOutputDataRate() {
 	// Get rate from device
 	uint8_t rate = I2Cdev::readBits(devAddr, L3G4200D_RA_CTRL_REG1,
 		L3G4200D_ODR_BIT, L3G4200D_ODR_LENGTH, buffer);
@@ -898,18 +898,20 @@ bool L3G4200D::getXDataAvailable() {
 // OUT_* registers, read-only
 
 /** Get the angular velocity for all 3 axes
+ * Due to the fact that this device support two difference Endian modes, both 
+ * must be accounted for when reading data. In Little Endian mode, the first 
+ * byte (lowest address) is the least significant and in Big Endian mode the 
+ * first byte is the most significant.
  * @param x the 16-bit integer container for the X-axis angular velocity
  * @param y the 16-bit integer container for the Y-axis angular velocity
  * @param z the 16-bit integer container for the Z-axis angular velocity
  */
 void L3G4200D::getAngularVelocity(int16_t* x, int16_t* y, int16_t* z) {
 	I2Cdev::readBytes(devAddr, L3G4200D_RA_OUT_X_L, 6, buffer);
-	
-	// Endianness decides which byte is the most significant
 	if (getEndianMode() == L3G4200D_LITTLE_ENDIAN) {
 		*x = (((int16_t)buffer[1]) << 8) | buffer[0];
-		*y = (((int16_t)buffer[3]) << 8) | buffer[2];
-		*z = (((int16_t)buffer[5]) << 8) | buffer[4];
+    	*y = (((int16_t)buffer[3]) << 8) | buffer[2];
+    	*z = (((int16_t)buffer[5]) << 8) | buffer[4];
 	} else {
 		*x = (((int16_t)buffer[0]) << 8) | buffer[1];
 		*y = (((int16_t)buffer[2]) << 8) | buffer[3];
@@ -924,8 +926,6 @@ void L3G4200D::getAngularVelocity(int16_t* x, int16_t* y, int16_t* z) {
  */
 int16_t L3G4200D::getAngularVelocityX() {
 	I2Cdev::readBytes(devAddr, L3G4200D_RA_OUT_X_L, 2, buffer);
-	
-	// Endianness decides which byte is the most significant
 	if (getEndianMode() == L3G4200D_LITTLE_ENDIAN) {
 		return (((int16_t)buffer[1]) << 8) | buffer[0];
 	} else {
@@ -940,8 +940,6 @@ int16_t L3G4200D::getAngularVelocityX() {
  */
 int16_t L3G4200D::getAngularVelocityY() {
 	I2Cdev::readBytes(devAddr, L3G4200D_RA_OUT_Y_L, 2, buffer);
-	
-	// Endianness decides which byte is the most significant
 	if (getEndianMode() == L3G4200D_LITTLE_ENDIAN) {
 		return (((int16_t)buffer[1]) << 8) | buffer[0];
 	} else {
@@ -956,8 +954,6 @@ int16_t L3G4200D::getAngularVelocityY() {
  */
 int16_t L3G4200D::getAngularVelocityZ() {
 	I2Cdev::readBytes(devAddr, L3G4200D_RA_OUT_Z_L, 2, buffer);
-	
-	// Endianness decides which byte is the most significant
 	if (getEndianMode() == L3G4200D_LITTLE_ENDIAN) {
 		return (((int16_t)buffer[1]) << 8) | buffer[0];
 	} else {
