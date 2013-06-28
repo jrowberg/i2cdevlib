@@ -41,27 +41,22 @@ THE SOFTWARE.
 #define L3G4200D_DEFAULT_ADDRESS   0x69
 
 #define L3G4200D_RA_WHO_AM_I       0x0F
-
 #define L3G4200D_RA_CTRL_REG1      0x20
 #define L3G4200D_RA_CTRL_REG2      0x21
 #define L3G4200D_RA_CTRL_REG3      0x22
 #define L3G4200D_RA_CTRL_REG4      0x23
 #define L3G4200D_RA_CTRL_REG5      0x24
-
 #define L3G4200D_RA_REFERENCE      0x25
 #define L3G4200D_RA_OUT_TEMP       0x26
 #define L3G4200D_RA_STATUS         0x27
-
 #define L3G4200D_RA_OUT_X_L        0x28
 #define L3G4200D_RA_OUT_X_H        0x29
 #define L3G4200D_RA_OUT_Y_L        0x2A
 #define L3G4200D_RA_OUT_Y_H        0x2B
 #define L3G4200D_RA_OUT_Z_L        0x2C
 #define L3G4200D_RA_OUT_Z_H        0x2D
-
 #define L3G4200D_RA_FIFO_CTRL  	   0x2E
 #define L3G4200D_RA_FIFO_SRC	   0x2F
-
 #define L3G4200D_RA_INT1_CFG       0x30
 #define L3G4200D_RA_INT1_SRC       0x31
 #define L3G4200D_RA_INT1_THS_XH    0x32
