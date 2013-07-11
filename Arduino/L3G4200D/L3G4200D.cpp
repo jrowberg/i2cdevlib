@@ -51,9 +51,21 @@ L3G4200D::L3G4200D(uint8_t address) {
 }
 
 /** Power on and prepare for general usage.
+ * All values are defaults except for the power on bit in CTRL_REG_1
+ * A delay after initialization may be necessary for the device to function 
+ * properly
+ * @see L3G4200D_RA_CTRL_REG1
+ * @see L3G4200D_RA_CTRL_REG2
+ * @see L3G4200D_RA_CTRL_REG3
+ * @see L3G4200D_RA_CTRL_REG4
+ * @see L3G4200D_RA_CTRL_REG5
  */
 void L3G4200D::initialize() {
-    setPowerOn(true);
+	I2Cdev::writeByte(devAddr, L3G4200D_RA_CTRL_REG1, 0b00001111);
+    I2Cdev::writeByte(devAddr, L3G4200D_RA_CTRL_REG2, 0b00000000);
+    I2Cdev::writeByte(devAddr, L3G4200D_RA_CTRL_REG3, 0b00000000);
+    I2Cdev::writeByte(devAddr, L3G4200D_RA_CTRL_REG4, 0b00000000);
+    I2Cdev::writeByte(devAddr, L3G4200D_RA_CTRL_REG5, 0b00000000);
 }
 
 /** Verify the I2C connection.
@@ -907,16 +919,9 @@ bool L3G4200D::getXDataAvailable() {
  * @param z the 16-bit integer container for the Z-axis angular velocity
  */
 void L3G4200D::getAngularVelocity(int16_t* x, int16_t* y, int16_t* z) {
-	I2Cdev::readBytes(devAddr, L3G4200D_RA_OUT_X_L, 6, buffer);
-	if (getEndianMode() == L3G4200D_LITTLE_ENDIAN) {
-		*x = (((int16_t)buffer[1]) << 8) | buffer[0];
-    	*y = (((int16_t)buffer[3]) << 8) | buffer[2];
-    	*z = (((int16_t)buffer[5]) << 8) | buffer[4];
-	} else {
-		*x = (((int16_t)buffer[0]) << 8) | buffer[1];
-		*y = (((int16_t)buffer[2]) << 8) | buffer[3];
-		*z = (((int16_t)buffer[4]) << 8) | buffer[5];
-	}
+	*x = getAngularVelocityX();
+	*y = getAngularVelocityY();
+	*z = getAngularVelocityZ();
 }
 
 /** Get the angular velocity about the X-axis
