@@ -339,8 +339,9 @@ void L3G4200D::setHighPassMode(uint8_t mode) {
  * @see L3G4200D_HPM_AUTORESET
  */
 uint8_t L3G4200D::getHighPassMode() {
-	return I2Cdev::readBits(devAddr, L3G4200D_RA_CTRL_REG2, L3G4200D_HPM_BIT, 
+	I2Cdev::readBits(devAddr, L3G4200D_RA_CTRL_REG2, L3G4200D_HPM_BIT, 
 		L3G4200D_HPM_LENGTH, buffer);
+	return buffer[0];
 }
 
 /** Set the high pass filter cut off frequency level (1 - 10)
@@ -381,8 +382,9 @@ void L3G4200D::setHighPassFilterCutOffFrequencyLevel(uint8_t level) {
  * @see L3G4200D_HPCF10
  */
 uint8_t L3G4200D::getHighPassFilterCutOffFrequencyLevel() {
-	return I2Cdev::readBits(devAddr, L3G4200D_RA_CTRL_REG2, L3G4200D_HPCF_BIT, 
+	I2Cdev::readBits(devAddr, L3G4200D_RA_CTRL_REG2, L3G4200D_HPCF_BIT, 
 		L3G4200D_HPCF_LENGTH, buffer);
+	return buffer[0];
 }
 
 // CTRL_REG3 register, r/w
