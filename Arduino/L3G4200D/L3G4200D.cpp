@@ -569,8 +569,8 @@ void L3G4200D::setBlockDataUpdateEnabled(bool enabled) {
  * @see L3G4200D_BDU_BIT
  */
 bool L3G4200D::getBlockDataUpdateEnabled() {
-	return I2Cdev::readBit(devAddr, L3G4200D_RA_CTRL_REG4, L3G4200D_BDU_BIT, 
-		buffer);
+	I2Cdev::readBit(devAddr, L3G4200D_RA_CTRL_REG4, L3G4200D_BDU_BIT, buffer);
+	return buffer[0];
 }
 
 /** Set the data endian mode
@@ -595,8 +595,9 @@ void L3G4200D::setEndianMode(bool endianness) {
  * @see L3G4200D_LITTLE_ENDIAN
  */
 bool L3G4200D::getEndianMode() {
-	return I2Cdev::readBit(devAddr, L3G4200D_RA_CTRL_REG4, L3G4200D_BLE_BIT,
+	I2Cdev::readBit(devAddr, L3G4200D_RA_CTRL_REG4, L3G4200D_BLE_BIT,
 		buffer);
+	return buffer[0];
 }
 
 /** Set the full scale of the data output (in dps)
@@ -634,8 +635,9 @@ void L3G4200D::setFullScale(uint16_t scale) {
  * @see L3G4200D_FS_2000
  */
 uint16_t L3G4200D::getFullScale() {
-	uint8_t readBits = I2Cdev::readBits(devAddr, L3G4200D_RA_CTRL_REG4, 
+	I2Cdev::readBits(devAddr, L3G4200D_RA_CTRL_REG4, 
 		L3G4200D_FS_BIT, L3G4200D_FS_LENGTH, buffer);
+	uint8_t readBits = buffer[0];
 	
 	if (readBits == L3G4200D_FS_250) {
 		return 250;
@@ -671,8 +673,9 @@ void L3G4200D::setSelfTestMode(uint8_t mode) {
  * @see L3G4200D_SELF_TEST_1
  */
 uint8_t L3G4200D::getSelfTestMode() {
-	return I2Cdev::readBits(devAddr, L3G4200D_RA_CTRL_REG4, L3G4200D_ST_BIT, 
+	I2Cdev::readBits(devAddr, L3G4200D_RA_CTRL_REG4, L3G4200D_ST_BIT, 
 		L3G4200D_ST_LENGTH, buffer);
+	return buffer[0];
 }
 
 /** Set the SPI mode
@@ -694,8 +697,9 @@ void L3G4200D::setSPIMode(bool mode) {
  * @see L3G4200D_SPI_3_WIRE
  */
 bool L3G4200D::getSPIMode() {
-	return I2Cdev::readBit(devAddr, L3G4200D_RA_CTRL_REG4, L3G4200D_SIM_BIT, 
+	I2Cdev::readBit(devAddr, L3G4200D_RA_CTRL_REG4, L3G4200D_SIM_BIT, 
 		buffer);
+ 	return buffer[0];
 }
 
 // CTRL_REG5 register, r/w
