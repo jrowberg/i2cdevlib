@@ -405,8 +405,9 @@ void L3G4200D::setINT1InterruptEnabled(bool enabled) {
  * @see L3G4200D_I1_INT1_BIT
  */
 bool L3G4200D::getINT1InterruptEnabled() {
-	return I2Cdev::readBit(devAddr, L3G4200D_RA_CTRL_REG3, L3G4200D_I1_INT1_BIT, 
+	I2Cdev::readBit(devAddr, L3G4200D_RA_CTRL_REG3, L3G4200D_I1_INT1_BIT, 
 		buffer);
+	return buffer[0];
 }
 
 /** Set the INT1 boot status enabled state
@@ -425,8 +426,9 @@ void L3G4200D::setINT1BootStatusEnabled(bool enabled) {
  * @see L3G4200D_I1_BOOT_BIT
  */
 bool L3G4200D::getINT1BootStatusEnabled() {
-	return I2Cdev::readBit(devAddr, L3G4200D_RA_CTRL_REG3, L3G4200D_I1_BOOT_BIT, 
+	I2Cdev::readBit(devAddr, L3G4200D_RA_CTRL_REG3, L3G4200D_I1_BOOT_BIT, 
 		buffer);
+	return buffer[0];
 }
 
 /** Interrupts the active INT1 configuration
@@ -457,8 +459,9 @@ void L3G4200D::setOutputMode(bool mode) {
  * @see L3G4200D_OPEN_DRAIN
  */
 bool L3G4200D::getOutputMode() {
-	return I2Cdev::readBit(devAddr, L3G4200D_RA_CTRL_REG3, L3G4200D_PP_OD_BIT, 
+	I2Cdev::readBit(devAddr, L3G4200D_RA_CTRL_REG3, L3G4200D_PP_OD_BIT, 
 		buffer);
+	return buffer[0];
 }
 
 /** Set data ready interrupt enabled state on INT2 pin
@@ -477,8 +480,9 @@ void L3G4200D::setINT2DataReadyEnabled(bool enabled) {
  * @see L3G4200D_I2_DRDY_BIT
  */
 bool L3G4200D::getINT2DataReadyEnabled() {
-	return I2Cdev::readBit(devAddr, L3G4200D_RA_CTRL_REG3, L3G4200D_I2_DRDY_BIT, 
+	I2Cdev::readBit(devAddr, L3G4200D_RA_CTRL_REG3, L3G4200D_I2_DRDY_BIT, 
 		buffer);
+	return buffer[0];
 }
 
 /** Set whether the INT2 FIFO watermark interrupt is enabled
@@ -501,8 +505,9 @@ void L3G4200D::setINT2FIFOWatermarkInterruptEnabled(bool enabled) {
  * @see L3G4200D_I2_WTM_BIT
  */ 
 bool L3G4200D::getINT2FIFOWatermarkInterruptEnabled() {
-	return I2Cdev::readBit(devAddr, L3G4200D_RA_CTRL_REG3, L3G4200D_I2_WTM_BIT, 
+	I2Cdev::readBit(devAddr, L3G4200D_RA_CTRL_REG3, L3G4200D_I2_WTM_BIT, 
 		buffer);
+	return buffer[0];
 }
 
 /** Set whether an interrupt is triggered on INT2 when the FIFO is overrun
@@ -521,8 +526,9 @@ void L3G4200D::setINT2FIFOOverrunInterruptEnabled(bool enabled) {
  * @see L3G4200D_I2_ORUN_BIT
  */
 bool L3G4200D::getINT2FIFOOverrunInterruptEnabled() {
-	return I2Cdev::readBit(devAddr, L3G4200D_RA_CTRL_REG3, L3G4200D_I2_ORUN_BIT,
+	I2Cdev::readBit(devAddr, L3G4200D_RA_CTRL_REG3, L3G4200D_I2_ORUN_BIT,
 		buffer);
+	return buffer[0];
 }
 
 /** Set whether an interrupt is triggered on INT2 when the FIFO buffer is empty
@@ -541,8 +547,9 @@ void L3G4200D::setINT2FIFOEmptyInterruptEnabled(bool enabled) {
  * @see L3G4200D_I2_EMPTY_BIT
  */
 bool L3G4200D::getINT2FIFOEmptyInterruptEnabled() {
-	return I2Cdev::readBit(devAddr, L3G4200D_RA_CTRL_REG3, 
-		L3G4200D_I2_EMPTY_BIT, buffer);
+	I2Cdev::readBit(devAddr, L3G4200D_RA_CTRL_REG3, L3G4200D_I2_EMPTY_BIT, 
+		buffer);
+	return buffer[0];
 }
 
 // CTRL_REG4 register, r/w
