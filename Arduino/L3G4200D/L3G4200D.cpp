@@ -826,7 +826,8 @@ void L3G4200D::setInterruptReference(uint8_t reference) {
  * @see L3G4200D_RA_REFERENCE
  */
 uint8_t L3G4200D::getInterruptReference() {
-	return I2Cdev::readByte(devAddr, L3G4200D_RA_REFERENCE, buffer);
+	I2Cdev::readByte(devAddr, L3G4200D_RA_REFERENCE, buffer);
+	return buffer[0];
 }
 
 // OUT_TEMP register, read-only
@@ -836,7 +837,8 @@ uint8_t L3G4200D::getInterruptReference() {
  * @see L3G4200D_RA_OUT_TEMP
  */
 uint8_t L3G4200D::getTemperature() {
-	return I2Cdev::readByte(devAddr, L3G4200D_RA_OUT_TEMP, buffer);
+	I2Cdev::readByte(devAddr, L3G4200D_RA_OUT_TEMP, buffer);
+	return buffer[0];
 }
 
 // STATUS register, read-only
@@ -847,8 +849,9 @@ uint8_t L3G4200D::getTemperature() {
  * @see L3G4200D_ZYXOR_BIT
  */
 bool L3G4200D::getXYZOverrun() {
-	return I2Cdev::readBit(devAddr, L3G4200D_RA_STATUS, L3G4200D_ZYXOR_BIT, 
+	I2Cdev::readBit(devAddr, L3G4200D_RA_STATUS, L3G4200D_ZYXOR_BIT, 
 		buffer);
+	return buffer[0];
 }
 
 /** Get whether new Z data overwrote the last set of data before it was read
@@ -857,8 +860,9 @@ bool L3G4200D::getXYZOverrun() {
  * @see L3G4200D_ZOR_BIT
  */
 bool L3G4200D::getZOverrun() {
-	return I2Cdev::readBit(devAddr, L3G4200D_RA_STATUS, L3G4200D_ZOR_BIT, 
+	I2Cdev::readBit(devAddr, L3G4200D_RA_STATUS, L3G4200D_ZOR_BIT, 
 		buffer);
+	return buffer[0];
 }
 
 /** Get whether new Y data overwrote the last set of data before it was read
@@ -867,8 +871,9 @@ bool L3G4200D::getZOverrun() {
  * @see L3G4200D_YOR_BIT
  */
 bool L3G4200D::getYOverrun() {
-	return I2Cdev::readBit(devAddr, L3G4200D_RA_STATUS, L3G4200D_YOR_BIT, 
+	I2Cdev::readBit(devAddr, L3G4200D_RA_STATUS, L3G4200D_YOR_BIT, 
 		buffer);
+	return buffer[0];
 }
 
 /** Get whether new X data overwrote the last set of data before it was read
@@ -877,8 +882,9 @@ bool L3G4200D::getYOverrun() {
  * @see L3G4200D_XOR_BIT
  */
 bool L3G4200D::getXOverrun() {
-	return I2Cdev::readBit(devAddr, L3G4200D_RA_STATUS, L3G4200D_XOR_BIT, 
+	I2Cdev::readBit(devAddr, L3G4200D_RA_STATUS, L3G4200D_XOR_BIT, 
 		buffer);
+	return buffer[0];
 }
 
 /** Get whether there is new data avaialable
@@ -887,8 +893,9 @@ bool L3G4200D::getXOverrun() {
  * @see L3G4200D_ZYXDA_BIT
  */
 bool L3G4200D::getXYZDataAvailable() {
-	return I2Cdev::readBit(devAddr, L3G4200D_RA_STATUS, L3G4200D_ZYXDA_BIT, 
+	I2Cdev::readBit(devAddr, L3G4200D_RA_STATUS, L3G4200D_ZYXDA_BIT, 
 		buffer);
+	return buffer[0];
 }
 
 /** Get whether there is new Z data avaialable
@@ -897,8 +904,9 @@ bool L3G4200D::getXYZDataAvailable() {
  * @see L3G4200D_ZDA_BIT
  */
 bool L3G4200D::getZDataAvailable() {
-	return I2Cdev::readBit(devAddr, L3G4200D_RA_STATUS, L3G4200D_ZDA_BIT, 
+	I2Cdev::readBit(devAddr, L3G4200D_RA_STATUS, L3G4200D_ZDA_BIT, 
 		buffer);
+	return buffer[0];
 }
 
 /** Get whether there is new Y data avaialable
@@ -907,8 +915,9 @@ bool L3G4200D::getZDataAvailable() {
  * @see L3G4200D_YDA_BIT
  */
 bool L3G4200D::getYDataAvailable() {
-	return I2Cdev::readBit(devAddr, L3G4200D_RA_STATUS, L3G4200D_YDA_BIT, 
+	I2Cdev::readBit(devAddr, L3G4200D_RA_STATUS, L3G4200D_YDA_BIT, 
 		buffer);
+	return buffer[0];
 }
 
 /** Get whether there is new X data avaialable
@@ -917,8 +926,9 @@ bool L3G4200D::getYDataAvailable() {
  * @see L3G4200D_XDA_BIT
  */
 bool L3G4200D::getXDataAvailable() {
-	return I2Cdev::readBit(devAddr, L3G4200D_RA_STATUS, L3G4200D_XDA_BIT, 
+	I2Cdev::readBit(devAddr, L3G4200D_RA_STATUS, L3G4200D_XDA_BIT, 
 		buffer);
+	return buffer[0];
 }
 
 // OUT_* registers, read-only
