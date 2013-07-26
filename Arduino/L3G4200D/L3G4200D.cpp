@@ -730,6 +730,7 @@ void L3G4200D::setFIFOEnabled(bool enabled) {
 bool L3G4200D::getFIFOEnabled() {
 	I2Cdev::readBit(devAddr, L3G4200D_RA_CTRL_REG5, L3G4200D_FIFO_EN_BIT, 
 		buffer);
+	return buffer[0];
 }
 
 /** Set the high pass filter enabled state
@@ -748,30 +749,36 @@ void L3G4200D::setHighPassFilterEnabled(bool enabled) {
  * @see L3G4200D_HPEN_BIT
  */
 bool L3G4200D::getHighPassFilterEnabled() {
-	return I2Cdev::readBit(devAddr, L3G4200D_RA_CTRL_REG5, L3G4200D_HPEN_BIT,
+	I2Cdev::readBit(devAddr, L3G4200D_RA_CTRL_REG5, L3G4200D_HPEN_BIT,
 		buffer);
+	return buffer[0];
 }
 
 /** Sets the filter mode to one of the four provided.
  * This function also uses the setHighPassFilterEnabled function in order to set
- * the mode. That function does not haved to be called in addition to this one.
+ * the mode. That function does not haved to be called in addition to this one. 
+ * In addition to setting the filtering for the data in the FIFO buffer 
+ * (controlled by the bits written to OUT_SEL), this function also sets that the
+ * filter used for the FIFO buffer is the same used in interrupt generation (the
+ * bits written to INT1_SEL).
  * @param filter The new method to be used when filtering data
  * @see L3G4200D_RA_CTRL_REG5
  * @see L3G4200D_INT1_SEL_BIT
  * @see L3G4200D_INT1_SEL_LENGTH
  * @see L3G4200D_OUT_SEL_BIT
  * @see L3G4200D_OUT_SEL_LENGTH
+ * @see L3G4200D_NON_HIGH_PASS
+ * @see L3G4200D_HIGH_PASS
+ * @see L3G4200D_LOW_PASS
+ * @see L3G4200D_LOW_HIGH_PASS
  */
 void L3G4200D::setDataFilter(uint8_t filter) {
-	// Enable filter for HIGH and LOW_HIGH modes, disable for NON_HIGH and LOW
 	if (filter == L3G4200D_HIGH_PASS || filter == L3G4200D_LOW_HIGH_PASS) {
 		setHighPassFilterEnabled(true);
 	} else {
 		setHighPassFilterEnabled(false);
 	}
 	
-	// Set data filter and set INT1 to use same filter when generating 
-	// interrupts
 	I2Cdev::writeBits(devAddr, L3G4200D_RA_CTRL_REG5, L3G4200D_OUT_SEL_BIT, 
 		L3G4200D_OUT_SEL_LENGTH, filter);
 	I2Cdev::writeBits(devAddr, L3G4200D_RA_CTRL_REG5, L3G4200D_INT1_SEL_BIT, 
@@ -783,13 +790,16 @@ void L3G4200D::setDataFilter(uint8_t filter) {
  * @see L3G4200D_RA_CTRL_REG5
  * @see L3G4200D_OUT_SEL_BIT
  * @see L3G4200D_OUT_SEL_LENGTH
+ * @see L3G4200D_NON_HIGH_PASS
+ * @see L3G4200D_HIGH_PASS
+ * @see L3G4200D_LOW_PASS
+ * @see L3G4200D_LOW_HIGH_PASS
  */
 uint8_t L3G4200D::getDataFilter() {
-	uint8_t outBits = I2Cdev::readBits(devAddr, L3G4200D_RA_CTRL_REG5, 
-		L3G4200D_OUT_SEL_BIT, L3G4200D_OUT_SEL_LENGTH, buffer);
-	
-	// If the first bit is 0, the second is significant. Otherwise, more 
-	// information ais required to determine the filter
+	I2Cdev::readBits(devAddr, L3G4200D_RA_CTRL_REG5, L3G4200D_OUT_SEL_BIT, 
+		L3G4200D_OUT_SEL_LENGTH, buffer);
+	uint8_t outBits = buffer[0];
+
 	if (outBits == L3G4200D_NON_HIGH_PASS || outBits == L3G4200D_HIGH_PASS) {
 		return outBits;
 	}
