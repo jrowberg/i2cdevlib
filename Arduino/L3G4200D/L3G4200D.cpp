@@ -1145,7 +1145,7 @@ bool L3G4200D::getInterruptRequestLatched() {
     I2Cdev::readBit(devAddr, L3G4200D_RA_INT1_CFG, L3G4200D_INT1_LIR_BIT, 
         buffer); 
     return buffer[0];
-}
+};
 
 /** Set whether the interrupt for Z high is enabled
  * @param enabled Whether the interrupt for Z high is enabled 
