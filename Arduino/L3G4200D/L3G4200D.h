@@ -305,7 +305,7 @@ class L3G4200D {
 		uint8_t getFIFOThreshold();
 		
 		// FIFO_SRC register, read-only
-		bool getFIFOBelowWatermark();
+		bool getFIFOAtWatermark();
 		bool getFIFOOverrun();
 		bool getFIFOEmpty();
 		uint8_t getFIFOStoredDataLevel();

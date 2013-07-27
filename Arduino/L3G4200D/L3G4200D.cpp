@@ -1020,8 +1020,9 @@ void L3G4200D::setFIFOMode(uint8_t mode) {
  * @see L3G4200D_FM_BYPASS_STREAM
  */
 uint8_t L3G4200D::getFIFOMode() {
-	return I2Cdev::readBits(devAddr, L3G4200D_RA_FIFO_CTRL, 
+	I2Cdev::readBits(devAddr, L3G4200D_RA_FIFO_CTRL, 
 		L3G4200D_FIFO_MODE_BIT, L3G4200D_FIFO_MODE_LENGTH, buffer);
+	return buffer[0];
 }
 
 /** Set the FIFO watermark threshold
@@ -1042,22 +1043,24 @@ void L3G4200D::setFIFOThreshold(uint8_t wtm) {
  * @see L3G4200D_FIFO_WTM_LENGTH
  */
 uint8_t L3G4200D::getFIFOThreshold() {
-    return I2Cdev::readBits(devAddr, L3G4200D_RA_FIFO_CTRL, L3G4200D_FIFO_WTM_BIT,
+    I2Cdev::readBits(devAddr, L3G4200D_RA_FIFO_CTRL, L3G4200D_FIFO_WTM_BIT,
         L3G4200D_FIFO_WTM_LENGTH, buffer);
+    return buffer[0];
 }
 
 // FIFO_SRC register, read-only
 
 /** Get whether the number of data sets in the FIFO buffer is less than the 
  * watermark
- * @return true if the number of data sets in the FIFO buffer is less than the 
- * watermark, false otherwise
+ * @return true if the number of data sets in the FIFO buffer is more than or 
+ * equal to the watermark, false otherwise.
  * @see L3G4200D_RA_FIFO_SRC
  * @see L3G4200D_FIFO_STATUS_BIT
  */
-bool L3G4200D::getFIFOBelowWatermark() {
-    return I2Cdev::readBit(devAddr, L3G4200D_RA_FIFO_SRC, L3G4200D_FIFO_STATUS_BIT, 
+bool L3G4200D::getFIFOAtWatermark() {
+   	I2Cdev::readBit(devAddr, L3G4200D_RA_FIFO_SRC, L3G4200D_FIFO_STATUS_BIT, 
         buffer);
+   	return buffer[0];
 }
 
 /** Get whether the FIFO buffer is full
@@ -1066,8 +1069,9 @@ bool L3G4200D::getFIFOBelowWatermark() {
  * @see L3G4200D_FIFO_OVRN_BIT
  */
 bool L3G4200D::getFIFOOverrun() {
-    return I2Cdev::readBit(devAddr, L3G4200D_RA_FIFO_SRC, 
+    I2Cdev::readBit(devAddr, L3G4200D_RA_FIFO_SRC, 
         L3G4200D_FIFO_OVRN_BIT, buffer);
+    return buffer[0];
 }
 
 /** Get whether the FIFO buffer is empty
@@ -1076,8 +1080,9 @@ bool L3G4200D::getFIFOOverrun() {
  * @see L3G4200D_FIFO_EMPTY_BIT
  */
 bool L3G4200D::getFIFOEmpty() {
-    return I2Cdev::readBit(devAddr, L3G4200D_RA_FIFO_SRC,
+    I2Cdev::readBit(devAddr, L3G4200D_RA_FIFO_SRC,
         L3G4200D_FIFO_EMPTY_BIT, buffer);
+    return buffer[0];
 }
 
 /** Get the number of filled FIFO buffer slots
@@ -1087,8 +1092,9 @@ bool L3G4200D::getFIFOEmpty() {
  * @see L3G4200D_FIFO_FSS_LENGTH
  */ 
 uint8_t L3G4200D::getFIFOStoredDataLevel() {
-    return I2Cdev::readBits(devAddr, L3G4200D_RA_FIFO_SRC, 
+    I2Cdev::readBits(devAddr, L3G4200D_RA_FIFO_SRC, 
         L3G4200D_FIFO_FSS_BIT, L3G4200D_FIFO_FSS_LENGTH, buffer);
+    return buffer[0];
 }
 
 // INT1_CFG register, r/w
@@ -1117,6 +1123,7 @@ void L3G4200D::setInterruptCombination(bool combination) {
 bool L3G4200D::getInterruptCombination() {
     I2Cdev::readBit(devAddr, L3G4200D_RA_INT1_CFG, L3G4200D_INT1_AND_OR_BIT,
         buffer);
+    return buffer[0];
 }
 
 /** Set whether an interrupt request is latched
@@ -1135,8 +1142,9 @@ void L3G4200D::setInterruptRequestLatched(bool latched) {
  * @see L3G4200D_INT1_LIR_BIT
  */
 bool L3G4200D::getInterruptRequestLatched() {
-    return I2Cdev::readBit(devAddr, L3G4200D_RA_INT1_CFG, L3G4200D_INT1_LIR_BIT, 
+    I2Cdev::readBit(devAddr, L3G4200D_RA_INT1_CFG, L3G4200D_INT1_LIR_BIT, 
         buffer); 
+    return buffer[0];
 }
 
 /** Set whether the interrupt for Z high is enabled
@@ -1154,8 +1162,9 @@ void L3G4200D::setZHighInterruptEnabled(bool enabled) {
  * @see L3G4200D_ZHIE_BIT
  */
 bool L3G4200D::getZHighInterruptEnabled() {
-    return I2Cdev::readBit(devAddr, L3G4200D_RA_INT1_CFG, L3G4200D_ZHIE_BIT, 
+    I2Cdev::readBit(devAddr, L3G4200D_RA_INT1_CFG, L3G4200D_ZHIE_BIT, 
         buffer);
+    return buffer[0];
 }
 
 /** Set whether the interrupt for Z low is enabled
@@ -1173,8 +1182,9 @@ void L3G4200D::setZLowInterruptEnabled(bool enabled) {
  * @see L3G4200D_ZLIE_BIT
  */
 bool L3G4200D::getZLowInterruptEnabled() {
-    return I2Cdev::readBit(devAddr, L3G4200D_RA_INT1_CFG, L3G4200D_ZLIE_BIT, 
+    I2Cdev::readBit(devAddr, L3G4200D_RA_INT1_CFG, L3G4200D_ZLIE_BIT, 
         buffer);
+    return buffer[0];
 }
 
 /** Set whether the interrupt for Y high is enabled
@@ -1192,8 +1202,9 @@ void L3G4200D::setYHighInterruptEnabled(bool enabled) {
  * @see L3G4200D_YHIE_BIT
  */
 bool L3G4200D::getYHighInterruptEnabled() {
-    return I2Cdev::readBit(devAddr, L3G4200D_RA_INT1_CFG, L3G4200D_YHIE_BIT, 
+    I2Cdev::readBit(devAddr, L3G4200D_RA_INT1_CFG, L3G4200D_YHIE_BIT, 
         buffer);
+    return buffer[0];
 }
 
 /** Set whether the interrupt for Y low is enabled
@@ -1211,8 +1222,9 @@ void L3G4200D::setYLowInterruptEnabled(bool enabled) {
  * @see L3G4200D_YLIE_BIT
  */
 bool L3G4200D::getYLowInterruptEnabled() {
-    return I2Cdev::readBit(devAddr, L3G4200D_RA_INT1_CFG, L3G4200D_YLIE_BIT, 
+    I2Cdev::readBit(devAddr, L3G4200D_RA_INT1_CFG, L3G4200D_YLIE_BIT, 
         buffer);
+    return buffer[0];
 }
 
 /** Set whether the interrupt for X high is enabled
@@ -1230,8 +1242,9 @@ void L3G4200D::setXHighInterruptEnabled(bool enabled) {
  * @see L3G4200D_XHIE_BIT
  */
 bool L3G4200D::getXHighInterruptEnabled() {
-    return I2Cdev::readBit(devAddr, L3G4200D_RA_INT1_CFG, L3G4200D_XHIE_BIT, 
+    I2Cdev::readBit(devAddr, L3G4200D_RA_INT1_CFG, L3G4200D_XHIE_BIT, 
         buffer);
+    return buffer[0];
 }
 
 /** Set whether the interrupt for X low is enabled
@@ -1249,8 +1262,9 @@ void L3G4200D::setXLowInterruptEnabled(bool enabled) {
  * @see L3G4200D_XLIE_BIT
  */
 bool L3G4200D::getXLowInterruptEnabled() {
-    return I2Cdev::readBit(devAddr, L3G4200D_RA_INT1_CFG, L3G4200D_XLIE_BIT, 
+    I2Cdev::readBit(devAddr, L3G4200D_RA_INT1_CFG, L3G4200D_XLIE_BIT, 
         buffer);
+    return buffer[0];
 }
 
 // INT1_SRC register, read-only
