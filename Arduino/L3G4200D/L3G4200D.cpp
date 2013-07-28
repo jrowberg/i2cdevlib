@@ -954,12 +954,21 @@ void L3G4200D::getAngularVelocity(int16_t* x, int16_t* y, int16_t* z) {
  * @see L3G4200D_RA_OUT_X_H
  */
 int16_t L3G4200D::getAngularVelocityX() {
-	I2Cdev::readBytes(devAddr, L3G4200D_RA_OUT_X_L, 2, buffer);
-	if (getEndianMode() == L3G4200D_LITTLE_ENDIAN) {
-		return (((int16_t)buffer[1]) << 8) | buffer[0];
+	int8_t msb, lsb;
+
+	if (getEndianMode() == L3G4200D_BIG_ENDIAN) {
+		I2Cdev::readByte(devAddr, L3G4200D_RA_OUT_X_L, buffer);
+		msb = buffer[0];
+		I2Cdev::readByte(devAddr, L3G4200D_RA_OUT_X_H, buffer);
+		lsb = buffer[0];
 	} else {
-		return (((int16_t)buffer[0]) << 8) | buffer[1];
+		I2Cdev::readByte(devAddr, L3G4200D_RA_OUT_X_L, buffer);
+		lsb = buffer[0];
+		I2Cdev::readByte(devAddr, L3G4200D_RA_OUT_X_H, buffer);
+		msb = buffer[0];
 	}
+
+	return ((int16_t)msb << 8) | lsb;
 }
 	
 /** Get the angular velocity about the Y-axis
@@ -969,7 +978,7 @@ int16_t L3G4200D::getAngularVelocityX() {
  */
 int16_t L3G4200D::getAngularVelocityY() {
 	I2Cdev::readBytes(devAddr, L3G4200D_RA_OUT_Y_L, 2, buffer);
-	if (getEndianMode() == L3G4200D_LITTLE_ENDIAN) {
+	if (getEndianMode() == L3G4200D_BIG_ENDIAN) {
 		return (((int16_t)buffer[1]) << 8) | buffer[0];
 	} else {
 		return (((int16_t)buffer[0]) << 8) | buffer[1];
@@ -983,7 +992,7 @@ int16_t L3G4200D::getAngularVelocityY() {
  */
 int16_t L3G4200D::getAngularVelocityZ() {
 	I2Cdev::readBytes(devAddr, L3G4200D_RA_OUT_Z_L, 2, buffer);
-	if (getEndianMode() == L3G4200D_LITTLE_ENDIAN) {
+	if (getEndianMode() == L3G4200D_BIG_ENDIAN) {
 		return (((int16_t)buffer[1]) << 8) | buffer[0];
 	} else {
 		return (((int16_t)buffer[0]) << 8) | buffer[1];
@@ -1275,8 +1284,9 @@ bool L3G4200D::getXLowInterruptEnabled() {
  * @see L3G4200D_INT1_IA_BIT
  */
 bool L3G4200D::getInterruptActive() {
-    return I2Cdev::readBit(devAddr, L3G4200D_RA_INT1_SRC, L3G4200D_INT1_IA_BIT,
+    I2Cdev::readBit(devAddr, L3G4200D_RA_INT1_SRC, L3G4200D_INT1_IA_BIT,
         buffer);
+    return buffer[0];
 }
 
 /** Get whether a Z high event has occurred
@@ -1285,8 +1295,9 @@ bool L3G4200D::getInterruptActive() {
  * @see L3G4200D_INT1_ZH_BIT
  */
 bool L3G4200D::getZHigh() {
-    return I2Cdev::readBit(devAddr, L3G4200D_RA_INT1_SRC, L3G4200D_INT1_ZH_BIT,
+    I2Cdev::readBit(devAddr, L3G4200D_RA_INT1_SRC, L3G4200D_INT1_ZH_BIT,
         buffer);
+    return buffer[0];
 }
 
 /** Get whether a Z low event has occurred
@@ -1295,8 +1306,9 @@ bool L3G4200D::getZHigh() {
  * @see L3G4200D_INT1_ZL_BIT
  */
 bool L3G4200D::getZLow() {
-    return I2Cdev::readBit(devAddr, L3G4200D_RA_INT1_SRC, L3G4200D_INT1_ZL_BIT,
+    I2Cdev::readBit(devAddr, L3G4200D_RA_INT1_SRC, L3G4200D_INT1_ZL_BIT,
         buffer);
+    return buffer[0];
 }
 
 /** Get whether a Y high event has occurred
@@ -1305,8 +1317,9 @@ bool L3G4200D::getZLow() {
  * @see L3G4200D_INT1_YH_BIT
  */
 bool L3G4200D::getYHigh() {
-    return I2Cdev::readBit(devAddr, L3G4200D_RA_INT1_SRC, L3G4200D_INT1_YH_BIT,
+    I2Cdev::readBit(devAddr, L3G4200D_RA_INT1_SRC, L3G4200D_INT1_YH_BIT,
         buffer);
+    return buffer[0];
 }
 
 /** Get whether a Y low event has occurred
@@ -1315,8 +1328,9 @@ bool L3G4200D::getYHigh() {
  * @see L3G4200D_INT1_YL_BIT
  */
 bool L3G4200D::getYLow() {
-    return I2Cdev::readBit(devAddr, L3G4200D_RA_INT1_SRC, L3G4200D_INT1_YL_BIT,
+   	I2Cdev::readBit(devAddr, L3G4200D_RA_INT1_SRC, L3G4200D_INT1_YL_BIT,
         buffer);
+    return buffer[0];
 }
 
 /** Get whether a X high event has occurred
@@ -1325,8 +1339,9 @@ bool L3G4200D::getYLow() {
  * @see L3G4200D_INT1_XH_BIT
  */
 bool L3G4200D::getXHigh() {
-    return I2Cdev::readBit(devAddr, L3G4200D_RA_INT1_SRC, L3G4200D_INT1_XH_BIT,
+    I2Cdev::readBit(devAddr, L3G4200D_RA_INT1_SRC, L3G4200D_INT1_XH_BIT,
         buffer);
+    return buffer[0];
 }
 
 /** Get whether a X low event has occurred
@@ -1335,8 +1350,9 @@ bool L3G4200D::getXHigh() {
  * @see L3G4200D_INT1_XL_BIT
  */
 bool L3G4200D::getXLow() {
-    return I2Cdev::readBit(devAddr, L3G4200D_RA_INT1_SRC, L3G4200D_INT1_XL_BIT,
+    I2Cdev::readBit(devAddr, L3G4200D_RA_INT1_SRC, L3G4200D_INT1_XL_BIT,
         buffer);
+    return buffer[0];
 }
 
 // INT1_THS_* registers, r/w
@@ -1349,12 +1365,30 @@ void L3G4200D::setXHighThreshold(uint8_t threshold) {
     I2Cdev::writeByte(devAddr, L3G4200D_RA_INT1_THS_XH, threshold);
 }
 
+/** Retrieve the threshold for a high interrupt on the X axis
+ * @return X high interrupt threshold
+ * @see L3G4200D_INT1_THS_XH
+ */
+uint8_t L3G4200D::getXHighThreshold() {
+	I2Cdev::readByte(devAddr, L3G4200D_RA_INT1_THS_XH, buffer);
+	return buffer[0];
+}
+
 /** Set the threshold for a low interrupt on the X axis
  * @param threshold The new threshold for a low interrupt on the X axis
  * @see L3G4200D_INT1_THS_XL
  */
 void L3G4200D::setXLowThreshold(uint8_t threshold) {
     I2Cdev::writeByte(devAddr, L3G4200D_RA_INT1_THS_XL, threshold);
+}
+
+/** Retrieve the threshold for a low interrupt on the X axis
+ * @return X low interrupt threshold
+ * @see L3G4200D_INT1_THS_XL
+ */
+uint8_t L3G4200D::getXLowThreshold() {
+	I2Cdev::readByte(devAddr, L3G4200D_RA_INT1_THS_XL, buffer);
+	return buffer[0];
 }
 
 /** Set the threshold for a high interrupt on the Y axis
@@ -1365,12 +1399,30 @@ void L3G4200D::setYHighThreshold(uint8_t threshold) {
     I2Cdev::writeByte(devAddr, L3G4200D_RA_INT1_THS_YH, threshold);
 }
 
+/** Retrieve the threshold for a high interrupt on the Y axis
+ * @return Y high interrupt threshold
+ * @see L3G4200D_INT1_THS_YH
+ */
+uint8_t L3G4200D::getYHighThreshold() {
+	I2Cdev::readByte(devAddr, L3G4200D_RA_INT1_THS_YH, buffer);
+	return buffer[0];
+}
+
 /** Set the threshold for a low interrupt on the Y axis
  * @param threshold The new threshold for a low interrupt on the Y axis
  * @see L3G4200D_INT1_THS_YL
  */
 void L3G4200D::setYLowThreshold(uint8_t threshold) {
     I2Cdev::writeByte(devAddr, L3G4200D_RA_INT1_THS_YL, threshold);
+}
+
+/** Retrieve the threshold for a low interrupt on the Y axis
+ * @return Y low interrupt threshold
+ * @see L3G4200D_INT1_THS_YL
+ */
+uint8_t L3G4200D::getYLowThreshold() {
+	I2Cdev::readByte(devAddr, L3G4200D_RA_INT1_THS_YL, buffer);
+	return buffer[0];
 }
 
 /** Set the threshold for a high interrupt on the Z axis
@@ -1381,12 +1433,30 @@ void L3G4200D::setZHighThreshold(uint8_t threshold) {
     I2Cdev::writeByte(devAddr, L3G4200D_RA_INT1_THS_ZH, threshold);
 }
 
+/** Retrieve the threshold for a high interrupt on the Z axis
+ * @return Z high interrupt threshold
+ * @see L3G4200D_INT1_THS_ZH
+ */
+uint8_t L3G4200D::getZHighThreshold() {
+	I2Cdev::readByte(devAddr, L3G4200D_RA_INT1_THS_ZH, buffer);
+	return buffer[0];
+}
+
 /** Set the threshold for a low interrupt on the Z axis
  * @param threshold The new threshold for a low interrupt on the Z axis
  * @see L3G4200D_RA_INT1_THS_ZL
  */
 void L3G4200D::setZLowThreshold(uint8_t threshold) {
     I2Cdev::writeByte(devAddr, L3G4200D_RA_INT1_THS_ZL, threshold);
+}
+
+/** Retrieve the threshold for a low interrupt on the Z axis
+ * @return Z low interrupt threshold
+ * @see L3G4200D_INT1_THS_ZL
+ */
+uint8_t L3G4200D::getZLowThreshold() {
+	I2Cdev::readByte(devAddr, L3G4200D_RA_INT1_THS_ZL, buffer);
+	return buffer[0];
 }
 
 // INT1_DURATION register, r/w
@@ -1408,8 +1478,9 @@ void L3G4200D::setDuration(uint8_t duration) {
  * @see L3G4200D_INT1_DUR_LENGTH
  */
 uint8_t L3G4200D::getDuration() {
-	return I2Cdev::readBits(devAddr, L3G4200D_RA_INT1_DURATION, 
+	I2Cdev::readBits(devAddr, L3G4200D_RA_INT1_DURATION, 
 		L3G4200D_INT1_DUR_BIT, L3G4200D_INT1_DUR_LENGTH, buffer);
+	return buffer[0];
 }
 
 /** Set whether the interrupt wait feature is enabled
@@ -1432,6 +1503,7 @@ void L3G4200D::setWaitEnabled(bool enabled) {
  * @see L3G4200D_INT1_WAIT_BIT
  */
 bool L3G4200D::getWaitEnabled() {
-	return I2Cdev::readBit(devAddr, L3G4200D_RA_INT1_DURATION, 
+	I2Cdev::readBit(devAddr, L3G4200D_RA_INT1_DURATION, 
 		L3G4200D_INT1_WAIT_BIT, buffer);
+	return buffer[0];
 }
