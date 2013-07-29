@@ -549,7 +549,7 @@ bool L3G4200D::getINT2FIFOEmptyInterruptEnabled() {
 // CTRL_REG4 register, r/w
 
 /** Set the Block Data Update (BDU) enabled state
- * @param enabled The new BDU enabled state
+ * @param enabled New BDU enabled state
  * @see L3G4200D_RA_CTRL_REG4
  * @see L3G4200D_BDU_BIT
  */
@@ -558,7 +558,7 @@ void L3G4200D::setBlockDataUpdateEnabled(bool enabled) {
 }
 
 /** Get the BDU enabled state
- * @return the BDU enabled state
+ * @return BDU enabled state
  * @see L3G4200D_RA_CTRL_REG4
  * @see L3G4200D_BDU_BIT
  */
@@ -567,9 +567,11 @@ bool L3G4200D::getBlockDataUpdateEnabled() {
 	return buffer[0];
 }
 
-/** Set the data endian mode
- * @param endianness The new endianness mode (TRUE for Big Endian, FALSE for 
- * Little Endian)
+/** Set the data endian modes
+ * In Big Endian mode, the Most Significat Byte (MSB) is on the lower address, 
+ * and the Least Significant Byte (LSB) is on the higher address. Little Endian 
+ * mode reverses this order. Little Endian is the default mode.
+ * @param endianness New endian mode
  * @see L3G4200D_RA_CTRL_REG4
  * @see L3G4200D_BLE_BIT
  * @see L3G4200D_BIG_ENDIAN
@@ -581,8 +583,7 @@ void L3G4200D::setEndianMode(bool endianness) {
 }
 
 /** Get the data endian mode
- * @return the current endian mode (TRUE for Big Endian, FALSE for Little 
- * Endian) 
+ * @return Current endian mode
  * @see L3G4200D_RA_CTRL_REG4
  * @see L3G4200D_BLE_BIT
  * @see L3G4200D_BIG_ENDIAN
@@ -611,7 +612,6 @@ void L3G4200D::setFullScale(uint16_t scale) {
 	} else if (scale == 500) {
 		writeBits = L3G4200D_FS_500;
 	} else {
-		// If none of the above, assumed is 2000
 		writeBits = L3G4200D_FS_2000;
 	}
 
@@ -620,7 +620,7 @@ void L3G4200D::setFullScale(uint16_t scale) {
 }
 
 /** Get the current full scale of the output data (in dps)
- * @return the current scale of the output data
+ * @return Current scale of the output data
  * @see L3G4200D_RA_CTRL_REG4
  * @see L3G4200D_FS_BIT
  * @see L3G4200D_FS_LENGTH
@@ -638,13 +638,12 @@ uint16_t L3G4200D::getFullScale() {
 	} else if (readBits == L3G4200D_FS_500) {
 		return 500;
 	} else {
-		// Assumed if none of the above, is 2000
 		return 2000;
 	}
 }
 
 /** Set the self test mode
- * @param mode The new self test mode (Normal, 0, 1)
+ * @param mode New self test mode (Normal, 0, 1)
  * @see L3G4200D_RA_CTRL_REG4
  * @see L3G4200D_ST_BIT
  * @see L3G4200D_ST_LENGTH
@@ -658,7 +657,7 @@ void L3G4200D::setSelfTestMode(uint8_t mode) {
 }
 
 /** Get the current self test mode
- * @return the current self test mode
+ * @return Current self test mode
  * @see L3G4200D_RA_CTRL_REG4
  * @see L3G4200D_ST_BIT
  * @see L3G4200D_ST_LENGTH
@@ -673,7 +672,7 @@ uint8_t L3G4200D::getSelfTestMode() {
 }
 
 /** Set the SPI mode
- * @param mode The new SPI mode (TRUE for 4 wire, FALSE for 3 wire)
+ * @param mode New SPI mode
  * @see L3G4200D_RA_CTRL_REG4
  * @see L3G4200D_SIM_BIT
  * @see L3G4200D_SPI_4_WIRE
@@ -684,7 +683,7 @@ void L3G4200D::setSPIMode(bool mode) {
 }
 
 /** Get the SPI mode
- * @return the current SPI mode (TRUE for 4 wire, FALSE for 3 wire)
+ * @return Current SPI mode
  * @see L3G4200D_RA_CTRL_REG4
  * @see L3G4200D_SIM_BIT
  * @see L3G4200D_SPI_4_WIRE
