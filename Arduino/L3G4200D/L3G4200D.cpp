@@ -1,12 +1,11 @@
-// I2Cdev library collection - L3G4200D I2C device class header file
+// I2Cdev library collection - L3G4200D I2C device class
 // Based on STMicroelectronics L3G4200D datasheet rev. 3, 12/2010
-// TODO Add release date here
+// 7/29/2013 by Jonathan "j3rn" Arnett <j3rn@j3rn.com>
 // [current release date] by Jonathan "j3rn" Arnett <j3rn@j3rn.com>
 // Updates should (hopefully) always be available at https://github.com/jrowberg/i2cdevlib
 //
-// TODO Add initial release date here as well
 // Changelog:
-//     [YYYY-mm-dd] - initial release
+//     2013-07-29 - initial release
 
 /* ============================================
 I2Cdev device library code is placed under the MIT license
@@ -52,8 +51,6 @@ L3G4200D::L3G4200D(uint8_t address) {
 
 /** Power on and prepare for general usage.
  * All values are defaults except for the power on bit in CTRL_REG_1
- * A delay after initialization may be necessary for the device to function 
- * properly
  * @see L3G4200D_RA_CTRL_REG1
  * @see L3G4200D_RA_CTRL_REG2
  * @see L3G4200D_RA_CTRL_REG3
@@ -84,7 +81,6 @@ bool L3G4200D::testConnection() {
  * @see L3G4200D_RA_WHO_AM_I
  */
 uint8_t L3G4200D::getDeviceID() {
-    // read a single byte and return it
     I2Cdev::readByte(devAddr, L3G4200D_RA_WHO_AM_I, buffer);
     return buffer[0];
 }
@@ -111,7 +107,6 @@ void L3G4200D::setOutputDataRate(uint16_t rate) {
 	} else if (rate == 400) {
 		writeVal = L3G4200D_RATE_400;
 	} else {
-		// Default/fallback is 800
 		writeVal = L3G4200D_RATE_800;
 	}
 	
@@ -130,7 +125,6 @@ void L3G4200D::setOutputDataRate(uint16_t rate) {
  * @see L3G4200D_RATE_800
  */
 uint16_t L3G4200D::getOutputDataRate() {
-	// Get rate from device
 	I2Cdev::readBits(devAddr, L3G4200D_RA_CTRL_REG1, L3G4200D_ODR_BIT, 
 		L3G4200D_ODR_LENGTH, buffer);
 	uint8_t rate = buffer[0];
@@ -236,7 +230,7 @@ float L3G4200D::getBandwidthCutOff() {
 }
 
 /** Set power on or off
- * @param enabled The new power setting (TRUE for ON, FALSE for OFF)
+ * @param enabled The new power setting (true for on, false for off)
  * @see L3G4200D_RA_CTRL_REG1
  * @see L3G4200D_PD_BIT
  */
@@ -245,7 +239,7 @@ void L3G4200D::setPowerOn(bool on) {
 }
 
 /** Get the current power state
- * @return The powered on state (TRUE for ON, FALSE for OFF)
+ * @return The powered on state (true for on, false for off)
  * @see L3G4200D_RA_CTRL_REG1
  * @see L3G4200D_PD_BIT
  */
