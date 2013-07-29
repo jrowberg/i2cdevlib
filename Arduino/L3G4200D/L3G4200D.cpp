@@ -384,7 +384,7 @@ uint8_t L3G4200D::getHighPassFilterCutOffFrequencyLevel() {
 // CTRL_REG3 register, r/w
 
 /** Set the INT1 interrupt enabled state
- * @param enabled The new enabled stat for the INT1 interrupt
+ * @param enabled New enabled state for the INT1 interrupt
  * @see L3G4200D_RA_CTRL_REG3
  * @see L3G4200D_I1_INT1_BIT
  */
@@ -394,7 +394,7 @@ void L3G4200D::setINT1InterruptEnabled(bool enabled) {
 }
 
 /** Get the INT1 interrupt enabled state
- * @return the INT1 interrupt enabled status
+ * @return INT1 interrupt enabled state
  * @see L3G4200D_RA_CTRL_REG3
  * @see L3G4200D_I1_INT1_BIT
  */
@@ -405,7 +405,7 @@ bool L3G4200D::getINT1InterruptEnabled() {
 }
 
 /** Set the INT1 boot status enabled state
- * @param enabled The new enabled state for the INT1 boot status
+ * @param enabled New enabled state for the INT1 boot status
  * @see L3G4200D_RA_CTRL_REG3
  * @see L3G4200D_I1_BOOT_BIT
  */
@@ -415,7 +415,7 @@ void L3G4200D::setINT1BootStatusEnabled(bool enabled) {
 }
 
 /** Get the INT1 boot status enabled state
- * @return the INT1 boot status status
+ * @return INT1 boot status status
  * @see L3G4200D_RA_CTRL_REG3
  * @see L3G4200D_I1_BOOT_BIT
  */
@@ -434,7 +434,7 @@ void L3G4200D::interruptActiveINT1Config() {
 }
 
 /** Set output mode to push-pull or open-drain
- * @param mode Set output mode (TRUE for push-pull, FALSE for open-drain)
+ * @param mode New output mode
  * @see L3G4200D_RA_CTRL_REG3
  * @see L3G4200D_PP_OD_BIT
  * @see L3G4200D_PUSH_PULL
@@ -446,7 +446,7 @@ void L3G4200D::setOutputMode(bool mode) {
 }
 
 /** Get whether mode is push-pull or open drain
- * @return the output mode (TRUE for push-pull, FALSE for open-drain)
+ * @return Output mode (TRUE for push-pull, FALSE for open-drain)
  * @see L3G4200D_RA_CTRL_REG3
  * @see L3G4200D_PP_OD_BIT
  * @see L3G4200D_PUSH_PULL
@@ -459,7 +459,7 @@ bool L3G4200D::getOutputMode() {
 }
 
 /** Set data ready interrupt enabled state on INT2 pin
- * @param enabled The new INT2 data ready interrupt enabled state
+ * @param enabled New INT2 data ready interrupt enabled state
  * @see L3G4200D_RA_CTRL_REG3
  * @see L3G4200D_I2_DRDY_BIT
  */
@@ -469,7 +469,7 @@ void L3G4200D::setINT2DataReadyEnabled(bool enabled) {
 }
 
 /** Get whether the data ready interrupt is enabled on the INT2 pin
- * @return the INT2 data ready interrupt enabled state
+ * @return INT2 data ready interrupt enabled state
  * @see L3G4200D_RA_CTRL_REG3
  * @see L3G4200D_I2_DRDY_BIT
  */
@@ -494,7 +494,7 @@ void L3G4200D::setINT2FIFOWatermarkInterruptEnabled(bool enabled) {
 }
 
 /** Get the INT2 FIFO watermark interrupt enabled state
- * @return whether the FIFO watermark is enabled
+ * @return true if the FIFO watermark is enabled, false otherwise
  * @see L3G4200D_RA_CTRL_REG3
  * @see L3G4200D_I2_WTM_BIT
  */ 
@@ -505,7 +505,7 @@ bool L3G4200D::getINT2FIFOWatermarkInterruptEnabled() {
 }
 
 /** Set whether an interrupt is triggered on INT2 when the FIFO is overrun
- * @param enabled The new FIFO overrun interrupt enabled state
+ * @param enabled New FIFO overrun interrupt enabled state
  * @see L3G4200D_RA_CTRL_REG3
  * @see L3G4200D_I2_ORUN_BIT
  */
@@ -515,7 +515,7 @@ void L3G4200D::setINT2FIFOOverrunInterruptEnabled(bool enabled) {
 }
 
 /** Get whether an interrupt is triggered on INT2 when the FIFO is overrun
- * @return the enabled state of the INT2 FIFO overrun interrupt
+ * @return Enabled state of the INT2 FIFO overrun interrupt
  * @see L3G4200D_RA_CTRL_REG3
  * @see L3G4200D_I2_ORUN_BIT
  */
@@ -526,7 +526,7 @@ bool L3G4200D::getINT2FIFOOverrunInterruptEnabled() {
 }
 
 /** Set whether an interrupt is triggered on INT2 when the FIFO buffer is empty
- * @param enabled The new INT2 FIFO empty interrupt state
+ * @param enabled New INT2 FIFO empty interrupt state
  * @see L3G4200D_RA_CTRL_REG3
  * @see L3G4200D_I2_EMPTY_BIT
  */
@@ -536,7 +536,7 @@ void L3G4200D::setINT2FIFOEmptyInterruptEnabled(bool enabled) {
 }
 
 /** Get whether the INT2 FIFO empty interrupt is enabled
- * @returns the INT2 FIFO empty interrupt enabled state
+ * @returns INT2 FIFO empty interrupt enabled state
  * @see L3G4200D_RA_CTRL_REG3
  * @see L3G4200D_I2_EMPTY_BIT
  */
