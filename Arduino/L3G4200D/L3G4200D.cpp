@@ -77,7 +77,7 @@ bool L3G4200D::testConnection() {
 
 /** Get the Device ID.
  * The WHO_AM_I register holds the device's id
- * @return the device ID (should be 0b11010011, 109, 0x69)
+ * @return Device ID (should be 0b11010011, 109, 0x69)
  * @see L3G4200D_RA_WHO_AM_I
  */
 uint8_t L3G4200D::getDeviceID() {
@@ -115,7 +115,7 @@ void L3G4200D::setOutputDataRate(uint16_t rate) {
 }
 
 /** Get the current output data rate
- * @return the current data output rate
+ * @return Current data output rate
  * @see L3G4200D_RA_CTRL_REG1
  * @see L3G4200D_ODR_BIT
  * @see L3G4200D_ODR_LENGTH
@@ -155,7 +155,7 @@ void L3G4200D::setBandwidthCutOffMode(uint8_t mode) {
 }
 
 /** Get the current bandwidth cut-off mode
- * @return the current bandwidth cut off mode
+ * @return Current bandwidth cut off mode
  * @see L3G4200D_RA_CTRL_REG1
  * @see L3G4200D_BW_BIT
  * @see L3G4200D_BW_LENGTH
@@ -171,7 +171,7 @@ uint8_t L3G4200D::getBandwidthCutOffMode() {
 }
 
 /** Gets the current bandwidth cutoff based on ODR and BW
- * @return the float value of the bandwidth cut off
+ * @return Float value of the bandwidth cut off
  * @see L3G4200D_RA_CTRL_REG1
  * @see L3G4200D_ODR_BIT
  * @see L3G4200D_ODR_LENGTH
@@ -239,7 +239,7 @@ void L3G4200D::setPowerOn(bool on) {
 }
 
 /** Get the current power state
- * @return The powered on state (true for on, false for off)
+ * @return Powered on state (true for on, false for off)
  * @see L3G4200D_RA_CTRL_REG1
  * @see L3G4200D_PD_BIT
  */
@@ -258,7 +258,7 @@ void L3G4200D::setZEnabled(bool enabled) {
 }
 
 /** Get whether Z axis data is enabled
- * @return the z axis enabled state
+ * @return True if the Z axis is enabled, false otherwise
  * @see L3G4200D_RA_CTRL_REG1
  * @see L3G4200D_ZEN_BIT
  */
@@ -277,7 +277,7 @@ void L3G4200D::setYEnabled(bool enabled) {
 }
 
 /** Get whether Y axis data is enabled
- * @return the y axis enabled state
+ * @return True if the Y axis is enabled, false otherwise
  * @see L3G4200D_RA_CTRL_REG1
  * @see L3G4200D_YEN_BIT
  */
@@ -296,7 +296,7 @@ void L3G4200D::setXEnabled(bool enabled) {
 }
 
 /** Get whether X axis data is enabled
- * @return the x axis enabled state
+ * @return True if the X axis is enabled, false otherwise
  * @see L3G4200D_RA_CTRL_REG1
  * @see L3G4200D_XEN_BIT
  */
@@ -323,7 +323,7 @@ void L3G4200D::setHighPassMode(uint8_t mode) {
 }
 
 /** Get the high pass mode
- * @return the high pass mode
+ * @return High pass mode
  * @see L3G4200D_RA_CTRL_REG2
  * @see L3G4200D_HPM_BIT
  * @see L3G4200D_HPM_LENGTH
@@ -360,7 +360,7 @@ void L3G4200D::setHighPassFilterCutOffFrequencyLevel(uint8_t level) {
 }
 
 /** Get the high pass filter cut off frequency level (1 - 10)
- * @return the high pass filter cut off frequency level
+ * @return High pass filter cut off frequency level
  * @see L3G4200D_RA_CTRL_REG2
  * @see L3G4200D_HPCF_BIT
  * @see L3G4200D_HPCF_LENGTH
@@ -394,7 +394,7 @@ void L3G4200D::setINT1InterruptEnabled(bool enabled) {
 }
 
 /** Get the INT1 interrupt enabled state
- * @return INT1 interrupt enabled state
+ * @return True if the INT1 interrupt is enabled, false otherwise
  * @see L3G4200D_RA_CTRL_REG3
  * @see L3G4200D_I1_INT1_BIT
  */
@@ -469,7 +469,7 @@ void L3G4200D::setINT2DataReadyEnabled(bool enabled) {
 }
 
 /** Get whether the data ready interrupt is enabled on the INT2 pin
- * @return INT2 data ready interrupt enabled state
+ * @return True if the INT2 data ready interrupt is enabled, false otherwise
  * @see L3G4200D_RA_CTRL_REG3
  * @see L3G4200D_I2_DRDY_BIT
  */
@@ -484,7 +484,7 @@ bool L3G4200D::getINT2DataReadyEnabled() {
  * read later. If enabled, the sensor will generate an interrupt on the 
  * INT2/DRDY pin when the watermark has been reached. The watermark can be 
  * configured through the setFIFOWatermark function.
- * @param enabled The new enabled state of the INT2 FIFO watermark
+ * @param enabled New enabled state of the INT2 FIFO watermark
  * @see L3G4200D_RA_CTRL_REG3
  * @see L3G4200D_I2_WTM_BIT
  */
@@ -515,7 +515,7 @@ void L3G4200D::setINT2FIFOOverrunInterruptEnabled(bool enabled) {
 }
 
 /** Get whether an interrupt is triggered on INT2 when the FIFO is overrun
- * @return Enabled state of the INT2 FIFO overrun interrupt
+ * @return True if the INT2 FIFO overrun interrupt is enabled, false otherwise
  * @see L3G4200D_RA_CTRL_REG3
  * @see L3G4200D_I2_ORUN_BIT
  */
@@ -536,7 +536,7 @@ void L3G4200D::setINT2FIFOEmptyInterruptEnabled(bool enabled) {
 }
 
 /** Get whether the INT2 FIFO empty interrupt is enabled
- * @returns INT2 FIFO empty interrupt enabled state
+ * @returns Trur if the INT2 FIFO empty interrupt is enabled, false otherwise
  * @see L3G4200D_RA_CTRL_REG3
  * @see L3G4200D_I2_EMPTY_BIT
  */
@@ -558,7 +558,7 @@ void L3G4200D::setBlockDataUpdateEnabled(bool enabled) {
 }
 
 /** Get the BDU enabled state
- * @return BDU enabled state
+ * @return True if Block Data Update is enabled, false otherwise
  * @see L3G4200D_RA_CTRL_REG4
  * @see L3G4200D_BDU_BIT
  */
@@ -716,7 +716,7 @@ void L3G4200D::setFIFOEnabled(bool enabled) {
 }
 
 /** Get whether the FIFO buffer is enabled
- * @return Current enabled state of the FIFO buffer
+ * @return True if the FIFO buffer is enabled, false otherwise
  * @see L3G4200D_RA_CTRL_REG5
  * @see L3G4200D_FIFO_EN_BIT
  */
@@ -737,7 +737,7 @@ void L3G4200D::setHighPassFilterEnabled(bool enabled) {
 }
 
 /** Get whether the high pass filter is enabled
- * @return Enabled state of the high pass filter
+ * @return True if the high pass filter is enabled, false otherwise
  * @see L3G4200D_RA_CTRL_REG5
  * @see L3G4200D_HPEN_BIT
  */
@@ -837,7 +837,8 @@ uint8_t L3G4200D::getTemperature() {
 // STATUS register, read-only
 
 /** Get whether new data overwrote the last set of data before it was read
- * @return Whether the last set of data was overwritten before being read
+ * @return True if the last set of data was overwritten before being read, false
+ * otherwise
  * @see L3G4200D_RA_STATUS
  * @see L3G4200D_ZYXOR_BIT
  */
@@ -848,7 +849,8 @@ bool L3G4200D::getXYZOverrun() {
 }
 
 /** Get whether new Z data overwrote the last set of data before it was read
- * @return Whether the last set of Z data was overwritten before being read
+ * @return True if the last set of Z data was overwritten before being read,
+ * false otherwise
  * @see L3G4200D_RA_STATUS
  * @see L3G4200D_ZOR_BIT
  */
@@ -859,7 +861,8 @@ bool L3G4200D::getZOverrun() {
 }
 
 /** Get whether new Y data overwrote the last set of data before it was read
- * @return Whether the last set of Y data was overwritten before being read
+ * @return True if the last set of Y data was overwritten before being read, 
+ * false otherwise
  * @see L3G4200D_RA_STATUS
  * @see L3G4200D_YOR_BIT
  */
@@ -870,7 +873,8 @@ bool L3G4200D::getYOverrun() {
 }
 
 /** Get whether new X data overwrote the last set of data before it was read
- * @return Whether the last set of X data was overwritten before being read
+ * @return True if the last set of X data was overwritten before being read, 
+ * false otherwise
  * @see L3G4200D_RA_STATUS
  * @see L3G4200D_XOR_BIT
  */
@@ -881,7 +885,7 @@ bool L3G4200D::getXOverrun() {
 }
 
 /** Get whether there is new data avaialable
- * @return Whether there is new data available
+ * @return True if there is new data available, false otherwise
  * @see L3G4200D_RA_STATUS
  * @see L3G4200D_ZYXDA_BIT
  */
@@ -892,7 +896,7 @@ bool L3G4200D::getXYZDataAvailable() {
 }
 
 /** Get whether there is new Z data avaialable
- * @return Whether there is new Z data available
+ * @return True if there is new Z data available, false otherwise
  * @see L3G4200D_RA_STATUS
  * @see L3G4200D_ZDA_BIT
  */
@@ -903,7 +907,7 @@ bool L3G4200D::getZDataAvailable() {
 }
 
 /** Get whether there is new Y data avaialable
- * @return Whether there is new Y data available
+ * @return True if there is new Y data available, false otherwise
  * @see L3G4200D_RA_STATUS
  * @see L3G4200D_YDA_BIT
  */
@@ -914,7 +918,7 @@ bool L3G4200D::getYDataAvailable() {
 }
 
 /** Get whether there is new X data avaialable
- * @return Whether there is new X data available
+ * @return True if there is new X data available, false otherwise
  * @see L3G4200D_RA_STATUS
  * @see L3G4200D_XDA_BIT
  */
@@ -986,7 +990,7 @@ int16_t L3G4200D::getAngularVelocityZ() {
 // FIFO_CTRL register, r/w
 
 /** Set the FIFO mode to one of the defined modes
- * @param mode The new FIFO mode
+ * @param mode New FIFO mode
  * @see L3G4200D_RA_FIFO_CTRL
  * @see L3G4200D_FIFO_MODE_BIT
  * @see L3G4200D_FIFO_MODE_LENGTH
@@ -1002,7 +1006,7 @@ void L3G4200D::setFIFOMode(uint8_t mode) {
 }
 
 /** Get the FIFO mode to one of the defined modes
- * @return the current FIFO mode
+ * @return Current FIFO mode
  * @see L3G4200D_RA_FIFO_CTRL
  * @see L3G4200D_FIFO_MODE_BIT
  * @see L3G4200D_FIFO_MODE_LENGTH
@@ -1019,7 +1023,7 @@ uint8_t L3G4200D::getFIFOMode() {
 }
 
 /** Set the FIFO watermark threshold
- * @param wtm The new FIFO watermark threshold
+ * @param wtm New FIFO watermark threshold
  * @see L3G4200D_RA_FIFO_CTRL
  * @see L3G4200D_FIFO_WTM_BIT
  * @see L3G4200D_FIFO_WTM_LENGTH
@@ -1030,7 +1034,7 @@ void L3G4200D::setFIFOThreshold(uint8_t wtm) {
 }
 
 /** Get the FIFO watermark threshold
- * @return the FIFO watermark threshold
+ * @return FIFO watermark threshold
  * @see L3G4200D_RA_FIFO_CTRL
  * @see L3G4200D_FIFO_WTM_BIT
  * @see L3G4200D_FIFO_WTM_LENGTH
@@ -1045,7 +1049,7 @@ uint8_t L3G4200D::getFIFOThreshold() {
 
 /** Get whether the number of data sets in the FIFO buffer is less than the 
  * watermark
- * @return true if the number of data sets in the FIFO buffer is more than or 
+ * @return True if the number of data sets in the FIFO buffer is more than or 
  * equal to the watermark, false otherwise.
  * @see L3G4200D_RA_FIFO_SRC
  * @see L3G4200D_FIFO_STATUS_BIT
@@ -1057,7 +1061,7 @@ bool L3G4200D::getFIFOAtWatermark() {
 }
 
 /** Get whether the FIFO buffer is full
- * @return true if the FIFO buffer is full, false otherwise
+ * @return True if the FIFO buffer is full, false otherwise
  * @see L3G4200D_RA_FIFO_SRC
  * @see L3G4200D_FIFO_OVRN_BIT
  */
@@ -1068,7 +1072,7 @@ bool L3G4200D::getFIFOOverrun() {
 }
 
 /** Get whether the FIFO buffer is empty
- * @return true if the FIFO buffer is empty, false otherwise
+ * @return True if the FIFO buffer is empty, false otherwise
  * @see L3G4200D_RA_FIFO_SRC
  * @see L3G4200D_FIFO_EMPTY_BIT
  */
@@ -1079,7 +1083,7 @@ bool L3G4200D::getFIFOEmpty() {
 }
 
 /** Get the number of filled FIFO buffer slots
- * @return the number of filled slots in the FIFO buffer
+ * @return Number of filled slots in the FIFO buffer
  * @see L3G4200D_RA_FIFO_SRC
  * @see L3G4200D_FIFO_FSS_BIT
  * @see L3G4200D_FIFO_FSS_LENGTH
@@ -1093,7 +1097,7 @@ uint8_t L3G4200D::getFIFOStoredDataLevel() {
 // INT1_CFG register, r/w
 
 /** Set the combination mode for interrupt events
- * @param combination The new combination mode for interrupt events. 
+ * @param combination New combination mode for interrupt events. 
  * L3G4200D_INT1_OR for OR and L3G4200D_INT1_AND for AND
  * @see L3G4200D_RA_INT1_CFG
  * @see L3G4200D_INT1_AND_OR_BIT
@@ -1106,8 +1110,8 @@ void L3G4200D::setInterruptCombination(bool combination) {
 }
 
 /** Get the combination mode for interrupt events
- * @return the combination mode for interrupt events. L3G4200D_INT1_OR for OR
- * and L3G4200D_INT1_AND for AND
+ * @return Combination mode for interrupt events. L3G4200D_INT1_OR for OR and 
+ * L3G4200D_INT1_AND for AND
  * @see L3G4200D_RA_INT1_CFG
  * @see L3G4200D_INT1_AND_OR_BIT
  * @see L3G4200D_INT1_OR
@@ -1121,7 +1125,7 @@ bool L3G4200D::getInterruptCombination() {
 
 /** Set whether an interrupt request is latched
  * This bit is cleared when the INT1_SRC register is read
- * @param latched The new status of the latched request
+ * @param latched New status of the latched request
  * @see L3G4200D_RA_INT1_CFG
  * @see L3G4200D_INT1_LIR_BIT
  */
@@ -1130,7 +1134,7 @@ void L3G4200D::setInterruptRequestLatched(bool latched) {
 }
 
 /** Get whether an interrupt request is latched
- * @return whether and interrupt request is latched
+ * @return True if an interrupt request is latched, false otherwise
  * @see L3G4200D_RA_INT1_CFG
  * @see L3G4200D_INT1_LIR_BIT
  */
@@ -1141,7 +1145,7 @@ bool L3G4200D::getInterruptRequestLatched() {
 };
 
 /** Set whether the interrupt for Z high is enabled
- * @param enabled Whether the interrupt for Z high is enabled 
+ * @param enabled New enabled state for Z high interrupt.
  * @see L3G4200D_INT1_CFG
  * @see L3G4200D_ZHIE_BIT
  */
@@ -1150,7 +1154,7 @@ void L3G4200D::setZHighInterruptEnabled(bool enabled) {
 }
 
 /** Get whether the interrupt for Z high is enabled
- * @return whether the interrupt for Z high is enabled 
+ * @return True if the interrupt for Z high is enabled, false otherwise 
  * @see L3G4200D_INT1_CFG
  * @see L3G4200D_ZHIE_BIT
  */
@@ -1161,7 +1165,7 @@ bool L3G4200D::getZHighInterruptEnabled() {
 }
 
 /** Set whether the interrupt for Z low is enabled
- * @param enabled Whether the interrupt for Z low is enabled 
+ * @param enabled New enabled state for Z low interrupt.
  * @see L3G4200D_INT1_CFG
  * @see L3G4200D_ZLIE_BIT
  */
@@ -1170,7 +1174,7 @@ void L3G4200D::setZLowInterruptEnabled(bool enabled) {
 }
 
 /** Get whether the interrupt for Z low is enabled
- * @return whether the interrupt for Z low is enabled 
+ * @return True if the interrupt for Z low is enabled, false otherwise
  * @see L3G4200D_INT1_CFG
  * @see L3G4200D_ZLIE_BIT
  */
@@ -1181,7 +1185,7 @@ bool L3G4200D::getZLowInterruptEnabled() {
 }
 
 /** Set whether the interrupt for Y high is enabled
- * @param enabled Whether the interrupt for Y high is enabled 
+ * @param enabled New enabled state for Y high interrupt.
  * @see L3G4200D_INT1_CFG
  * @see L3G4200D_YHIE_BIT
  */
@@ -1190,7 +1194,7 @@ void L3G4200D::setYHighInterruptEnabled(bool enabled) {
 }
 
 /** Get whether the interrupt for Y high is enabled
- * @return whether the interrupt for Y high is enabled 
+ * @return True if the interrupt for Y high is enabled, false otherwise
  * @see L3G4200D_INT1_CFG
  * @see L3G4200D_YHIE_BIT
  */
@@ -1201,7 +1205,7 @@ bool L3G4200D::getYHighInterruptEnabled() {
 }
 
 /** Set whether the interrupt for Y low is enabled
- * @param enabled Whether the interrupt for Y low is enabled 
+ * @param enabled New enabled state for Y low interrupt.
  * @see L3G4200D_INT1_CFG
  * @see L3G4200D_YLIE_BIT
  */
@@ -1210,7 +1214,7 @@ void L3G4200D::setYLowInterruptEnabled(bool enabled) {
 }
 
 /** Get whether the interrupt for Y low is enabled
- * @return whether the interrupt for Y low is enabled 
+ * @return True if the interrupt for Y low is enabled, false otherwise 
  * @see L3G4200D_INT1_CFG
  * @see L3G4200D_YLIE_BIT
  */
@@ -1221,7 +1225,7 @@ bool L3G4200D::getYLowInterruptEnabled() {
 }
 
 /** Set whether the interrupt for X high is enabled
- * @param enabled Whether the interrupt for X high is enabled 
+ * @param enabled New enabled state for X high interrupt.
  * @see L3G4200D_INT1_CFG
  * @see L3G4200D_XHIE_BIT
  */
@@ -1230,7 +1234,7 @@ void L3G4200D::setXHighInterruptEnabled(bool enabled) {
 }
 
 /** Get whether the interrupt for X high is enabled
- * @return whether the interrupt for X high is enabled 
+ * @return True if the interrupt for X high is enabled, false otherwise
  * @see L3G4200D_INT1_CFG
  * @see L3G4200D_XHIE_BIT
  */
@@ -1241,7 +1245,7 @@ bool L3G4200D::getXHighInterruptEnabled() {
 }
 
 /** Set whether the interrupt for X low is enabled
- * @param enabled Whether the interrupt for X low is enabled 
+ * @param enabled New enabled state for X low interrupt.
  * @see L3G4200D_INT1_CFG
  * @see L3G4200D_XLIE_BIT
  */
@@ -1250,7 +1254,7 @@ void L3G4200D::setXLowInterruptEnabled(bool enabled) {
 }
 
 /** Get whether the interrupt for X low is enabled
- * @return whether the interrupt for X low is enabled 
+ * @return True if the interrupt for X low is enabled, false otherwise
  * @see L3G4200D_INT1_CFG
  * @see L3G4200D_XLIE_BIT
  */
@@ -1263,7 +1267,7 @@ bool L3G4200D::getXLowInterruptEnabled() {
 // INT1_SRC register, read-only
 
 /** Get whether an interrupt has been generated
- * @return true if one or more interrupts has been generated, false otherwise
+ * @return True if one or more interrupts has been generated, false otherwise
  * @see L3G4200D_RA_INT1_SRC
  * @see L3G4200D_INT1_IA_BIT
  */
@@ -1274,7 +1278,7 @@ bool L3G4200D::getInterruptActive() {
 }
 
 /** Get whether a Z high event has occurred
- * @return true if a Z high event has occurred, false otherwise
+ * @return True if a Z high event has occurred, false otherwise
  * @see L3G4200D_RA_INT1_SRC
  * @see L3G4200D_INT1_ZH_BIT
  */
@@ -1285,7 +1289,7 @@ bool L3G4200D::getZHigh() {
 }
 
 /** Get whether a Z low event has occurred
- * @return true if a Z low event has occurred, false otherwise
+ * @return True if a Z low event has occurred, false otherwise
  * @see L3G4200D_RA_INT1_SRC
  * @see L3G4200D_INT1_ZL_BIT
  */
@@ -1296,7 +1300,7 @@ bool L3G4200D::getZLow() {
 }
 
 /** Get whether a Y high event has occurred
- * @return true if a Y high event has occurred, false otherwise
+ * @return True if a Y high event has occurred, false otherwise
  * @see L3G4200D_RA_INT1_SRC
  * @see L3G4200D_INT1_YH_BIT
  */
@@ -1307,7 +1311,7 @@ bool L3G4200D::getYHigh() {
 }
 
 /** Get whether a Y low event has occurred
- * @return true if a Y low event has occurred, false otherwise
+ * @return True if a Y low event has occurred, false otherwise
  * @see L3G4200D_RA_INT1_SRC
  * @see L3G4200D_INT1_YL_BIT
  */
@@ -1318,7 +1322,7 @@ bool L3G4200D::getYLow() {
 }
 
 /** Get whether a X high event has occurred
- * @return true if a X high event has occurred, false otherwise
+ * @return True if a X high event has occurred, false otherwise
  * @see L3G4200D_RA_INT1_SRC
  * @see L3G4200D_INT1_XH_BIT
  */
@@ -1329,7 +1333,7 @@ bool L3G4200D::getXHigh() {
 }
 
 /** Get whether a X low event has occurred
- * @return true if a X low event has occurred, false otherwise
+ * @return True if a X low event has occurred, false otherwise
  * @see L3G4200D_RA_INT1_SRC
  * @see L3G4200D_INT1_XL_BIT
  */
@@ -1342,7 +1346,7 @@ bool L3G4200D::getXLow() {
 // INT1_THS_* registers, r/w
 
 /** Set the threshold for a high interrupt on the X axis
- * @param threshold The new threshold for a high interrupt on the X axis
+ * @param threshold New threshold for a high interrupt on the X axis
  * @see L3G4200D_INT1_THS_XH
  */
 void L3G4200D::setXHighThreshold(uint8_t threshold) {
@@ -1359,7 +1363,7 @@ uint8_t L3G4200D::getXHighThreshold() {
 }
 
 /** Set the threshold for a low interrupt on the X axis
- * @param threshold The new threshold for a low interrupt on the X axis
+ * @param threshold New threshold for a low interrupt on the X axis
  * @see L3G4200D_INT1_THS_XL
  */
 void L3G4200D::setXLowThreshold(uint8_t threshold) {
@@ -1376,7 +1380,7 @@ uint8_t L3G4200D::getXLowThreshold() {
 }
 
 /** Set the threshold for a high interrupt on the Y axis
- * @param threshold The new threshold for a high interrupt on the Y axis
+ * @param threshold New threshold for a high interrupt on the Y axis
  * @see L3G4200D_INT1_THS_YH
  */
 void L3G4200D::setYHighThreshold(uint8_t threshold) {
@@ -1393,7 +1397,7 @@ uint8_t L3G4200D::getYHighThreshold() {
 }
 
 /** Set the threshold for a low interrupt on the Y axis
- * @param threshold The new threshold for a low interrupt on the Y axis
+ * @param threshold New threshold for a low interrupt on the Y axis
  * @see L3G4200D_INT1_THS_YL
  */
 void L3G4200D::setYLowThreshold(uint8_t threshold) {
@@ -1410,7 +1414,7 @@ uint8_t L3G4200D::getYLowThreshold() {
 }
 
 /** Set the threshold for a high interrupt on the Z axis
- * @param threshold The new threshold for a high interrupt on the Z axis
+ * @param threshold New threshold for a high interrupt on the Z axis
  * @see L3G4200D_INT1_THS_ZH
  */
 void L3G4200D::setZHighThreshold(uint8_t threshold) {
@@ -1427,7 +1431,7 @@ uint8_t L3G4200D::getZHighThreshold() {
 }
 
 /** Set the threshold for a low interrupt on the Z axis
- * @param threshold The new threshold for a low interrupt on the Z axis
+ * @param threshold New threshold for a low interrupt on the Z axis
  * @see L3G4200D_RA_INT1_THS_ZL
  */
 void L3G4200D::setZLowThreshold(uint8_t threshold) {
@@ -1447,6 +1451,8 @@ uint8_t L3G4200D::getZLowThreshold() {
 
 /* Set the minimum duration for an interrupt event to be recognized
  * This depends on the chosen output data rate
+ * @param duration New duration necessary for an interrupt event to be 
+ * recognized
  * @see L3G4200D_RA_INT1_DURATION
  * @see L3G4200D_INT1_DUR_BIT
  * @see L3G4200D_INT1_DUR_LENGTH
@@ -1457,6 +1463,7 @@ void L3G4200D::setDuration(uint8_t duration) {
 }
 
 /** Get the minimum duration for an interrupt event to be recognized
+ * @return Duration necessary for an interrupt event to be recognized
  * @see L3G4200D_RA_INT1_DURATION
  * @see L3G4200D_INT1_DUR_BIT
  * @see L3G4200D_INT1_DUR_LENGTH
@@ -1472,7 +1479,7 @@ uint8_t L3G4200D::getDuration() {
  * threshold. Otherwise, if signal crosses the selected threshold, the interrupt
  * falls only after the duration has counted number of samples at the selected 
  * data rate, written into the duration counter register.
- * @param enabled The new enabled state of the interrupt wait
+ * @param enabled New enabled state of the interrupt wait
  * @see L3G4200D_RA_INT1_DURATION
  * @see L3G4200D_INT1_WAIT_BIT
  */
@@ -1482,7 +1489,7 @@ void L3G4200D::setWaitEnabled(bool enabled) {
 }
 
 /** Get whether the interrupt wait feature is enabled
- * @return true if the wait feature is enabled, false otherwise
+ * @return True if the wait feature is enabled, false otherwise
  * @see L3G4200D_RA_INT1_DURATION
  * @see L3G4200D_INT1_WAIT_BIT
  */
