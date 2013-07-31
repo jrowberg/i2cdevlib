@@ -1,11 +1,10 @@
 // I2Cdev library collection - L3G4200D I2C device class header file
 // Based on STMicroelectronics L3G4200D datasheet rev. 3, 12/2010
-// TODO Add release date here
-// 7/29/2013 by Jonathan "j3rn" Arnett <j3rn@j3rn.com>
+// 7/31/2013 by Jonathan Arnett <j3rn@j3rn.com>
 // Updates should (hopefully) always be available at https://github.com/jrowberg/i2cdevlib
 //
 // Changelog:
-//     2013-07-29 - initial release
+//     2013-07-31 - initial release
 
 /* ============================================
 I2Cdev device library code is placed under the MIT license
