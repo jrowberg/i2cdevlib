@@ -706,7 +706,7 @@ void L3G4200D::rebootMemoryContent() {
 }
 
 /** Set whether the FIFO buffer is enabled
- * @param enabled The new enabled state of the FIFO buffer
+ * @param enabled New enabled state of the FIFO buffer
  * @see L3G4200D_RA_CTRL_REG5
  * @see L3G4200D_FIFO_EN_BIT
  */
@@ -716,7 +716,7 @@ void L3G4200D::setFIFOEnabled(bool enabled) {
 }
 
 /** Get whether the FIFO buffer is enabled
- * @return the current enabled state of the FIFO buffer
+ * @return Current enabled state of the FIFO buffer
  * @see L3G4200D_RA_CTRL_REG5
  * @see L3G4200D_FIFO_EN_BIT
  */
@@ -727,7 +727,7 @@ bool L3G4200D::getFIFOEnabled() {
 }
 
 /** Set the high pass filter enabled state
- * @param enabled The new high pass filter enabled state
+ * @param enabled New high pass filter enabled state
  * @see L3G4200D_RA_CTRL_REG5
  * @see L3G4200D_HPEN_BIT
  */
@@ -737,7 +737,7 @@ void L3G4200D::setHighPassFilterEnabled(bool enabled) {
 }
 
 /** Get whether the high pass filter is enabled
- * @return the enabled state of the high pass filter
+ * @return Enabled state of the high pass filter
  * @see L3G4200D_RA_CTRL_REG5
  * @see L3G4200D_HPEN_BIT
  */
@@ -750,11 +750,11 @@ bool L3G4200D::getHighPassFilterEnabled() {
 /** Sets the filter mode to one of the four provided.
  * This function also uses the setHighPassFilterEnabled function in order to set
  * the mode. That function does not haved to be called in addition to this one. 
- * In addition to setting the filtering for the data in the FIFO buffer 
- * (controlled by the bits written to OUT_SEL), this function also sets that the
- * filter used for the FIFO buffer is the same used in interrupt generation (the
- * bits written to INT1_SEL).
- * @param filter The new method to be used when filtering data
+ * In addition to setting the filter for the data in the FIFO buffer 
+ * (controlled by the bits written to OUT_SEL), this function also sets the
+ * filter used for interrupt generation (the bits written to INT1_SEL) to be the
+ * same as the filter used for the FIFO buffer.
+ * @param filter New method to be used when filtering data
  * @see L3G4200D_RA_CTRL_REG5
  * @see L3G4200D_INT1_SEL_BIT
  * @see L3G4200D_INT1_SEL_LENGTH
@@ -779,7 +779,7 @@ void L3G4200D::setDataFilter(uint8_t filter) {
 }
 
 /** Gets the data filter currently in use
- * @return the defined value that represents the filter in use
+ * @return Defined value that represents the filter in use
  * @see L3G4200D_RA_CTRL_REG5
  * @see L3G4200D_OUT_SEL_BIT
  * @see L3G4200D_OUT_SEL_LENGTH
@@ -807,7 +807,7 @@ uint8_t L3G4200D::getDataFilter() {
 // REFERENCE/DATACAPTURE register, r/w
 
 /** Set the reference value for interrupt generation
- * @param reference The new reference value for interrupt generation
+ * @param reference New reference value for interrupt generation
  * @see L3G4200D_RA_REFERENCE
  */
 void L3G4200D::setInterruptReference(uint8_t reference) {
@@ -815,7 +815,7 @@ void L3G4200D::setInterruptReference(uint8_t reference) {
 }
 
 /** Get the 8-bit reference value for interrupt generation
- * @return The 8-bit reference value for interrupt generation
+ * @return 8-bit reference value for interrupt generation
  * @see L3G4200D_RA_REFERENCE
  */
 uint8_t L3G4200D::getInterruptReference() {
@@ -826,7 +826,7 @@ uint8_t L3G4200D::getInterruptReference() {
 // OUT_TEMP register, read-only
 
 /** Gets the current temperature reading from the sensor
- * @return The current temperature
+ * @return Current temperature
  * @see L3G4200D_RA_OUT_TEMP
  */
 uint8_t L3G4200D::getTemperature() {
@@ -837,7 +837,7 @@ uint8_t L3G4200D::getTemperature() {
 // STATUS register, read-only
 
 /** Get whether new data overwrote the last set of data before it was read
- * @return whether the last set of data was overwritten before being read
+ * @return Whether the last set of data was overwritten before being read
  * @see L3G4200D_RA_STATUS
  * @see L3G4200D_ZYXOR_BIT
  */
@@ -848,7 +848,7 @@ bool L3G4200D::getXYZOverrun() {
 }
 
 /** Get whether new Z data overwrote the last set of data before it was read
- * @return whether the last set of Z data was overwritten before being read
+ * @return Whether the last set of Z data was overwritten before being read
  * @see L3G4200D_RA_STATUS
  * @see L3G4200D_ZOR_BIT
  */
@@ -859,7 +859,7 @@ bool L3G4200D::getZOverrun() {
 }
 
 /** Get whether new Y data overwrote the last set of data before it was read
- * @return whether the last set of Y data was overwritten before being read
+ * @return Whether the last set of Y data was overwritten before being read
  * @see L3G4200D_RA_STATUS
  * @see L3G4200D_YOR_BIT
  */
@@ -870,7 +870,7 @@ bool L3G4200D::getYOverrun() {
 }
 
 /** Get whether new X data overwrote the last set of data before it was read
- * @return whether the last set of X data was overwritten before being read
+ * @return Whether the last set of X data was overwritten before being read
  * @see L3G4200D_RA_STATUS
  * @see L3G4200D_XOR_BIT
  */
@@ -881,7 +881,7 @@ bool L3G4200D::getXOverrun() {
 }
 
 /** Get whether there is new data avaialable
- * @return whether there is new data available
+ * @return Whether there is new data available
  * @see L3G4200D_RA_STATUS
  * @see L3G4200D_ZYXDA_BIT
  */
@@ -892,7 +892,7 @@ bool L3G4200D::getXYZDataAvailable() {
 }
 
 /** Get whether there is new Z data avaialable
- * @return whether there is new Z data available
+ * @return Whether there is new Z data available
  * @see L3G4200D_RA_STATUS
  * @see L3G4200D_ZDA_BIT
  */
@@ -903,7 +903,7 @@ bool L3G4200D::getZDataAvailable() {
 }
 
 /** Get whether there is new Y data avaialable
- * @return whether there is new Y data available
+ * @return Whether there is new Y data available
  * @see L3G4200D_RA_STATUS
  * @see L3G4200D_YDA_BIT
  */
@@ -914,7 +914,7 @@ bool L3G4200D::getYDataAvailable() {
 }
 
 /** Get whether there is new X data avaialable
- * @return whether there is new X data available
+ * @return Whether there is new X data available
  * @see L3G4200D_RA_STATUS
  * @see L3G4200D_XDA_BIT
  */
@@ -927,13 +927,13 @@ bool L3G4200D::getXDataAvailable() {
 // OUT_* registers, read-only
 
 /** Get the angular velocity for all 3 axes
- * Due to the fact that this device support two difference Endian modes, both 
+ * Due to the fact that this device supports two difference Endian modes, both 
  * must be accounted for when reading data. In Little Endian mode, the first 
  * byte (lowest address) is the least significant and in Big Endian mode the 
  * first byte is the most significant.
- * @param x the 16-bit integer container for the X-axis angular velocity
- * @param y the 16-bit integer container for the Y-axis angular velocity
- * @param z the 16-bit integer container for the Z-axis angular velocity
+ * @param x 16-bit integer container for the X-axis angular velocity
+ * @param y 16-bit integer container for the Y-axis angular velocity
+ * @param z 16-bit integer container for the Z-axis angular velocity
  */
 void L3G4200D::getAngularVelocity(int16_t* x, int16_t* y, int16_t* z) {
 	*x = getAngularVelocityX();
@@ -942,30 +942,21 @@ void L3G4200D::getAngularVelocity(int16_t* x, int16_t* y, int16_t* z) {
 }
 
 /** Get the angular velocity about the X-axis
- * @return the angular velocity about the X-axis
+ * @return Angular velocity about the X-axis
  * @see L3G4200D_RA_OUT_X_L
  * @see L3G4200D_RA_OUT_X_H
  */
 int16_t L3G4200D::getAngularVelocityX() {
-	int8_t msb, lsb;
-
+	I2Cdev::readBytes(devAddr, L3G4200D_RA_OUT_X_L, 2, buffer);
 	if (getEndianMode() == L3G4200D_BIG_ENDIAN) {
-		I2Cdev::readByte(devAddr, L3G4200D_RA_OUT_X_L, buffer);
-		msb = buffer[0];
-		I2Cdev::readByte(devAddr, L3G4200D_RA_OUT_X_H, buffer);
-		lsb = buffer[0];
+		return (((int16_t)buffer[1]) << 8) | buffer[0];
 	} else {
-		I2Cdev::readByte(devAddr, L3G4200D_RA_OUT_X_L, buffer);
-		lsb = buffer[0];
-		I2Cdev::readByte(devAddr, L3G4200D_RA_OUT_X_H, buffer);
-		msb = buffer[0];
+		return (((int16_t)buffer[0]) << 8) | buffer[1];
 	}
-
-	return ((int16_t)msb << 8) | lsb;
 }
 	
 /** Get the angular velocity about the Y-axis
- * @return the angular velocity about the Y-axis
+ * @return Angular velocity about the Y-axis
  * @see L3G4200D_RA_OUT_Y_L
  * @see L3G4200D_RA_OUT_Y_H
  */
@@ -979,7 +970,7 @@ int16_t L3G4200D::getAngularVelocityY() {
 }
 
 /** Get the angular velocity about the Z-axis
- * @return the angular velocity about the Z-axis
+ * @return Angular velocity about the Z-axis
  * @see L3G4200D_RA_OUT_Z_L
  * @see L3G4200D_RA_OUT_Z_H
  */
