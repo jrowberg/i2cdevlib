@@ -293,8 +293,6 @@ int8_t I2Cdev::readBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8
                         if (count + 1 < length) Serial.print(" ");
                     #endif
                 }
-        
-                Wire.endTransmission();
             }
         #endif
 
@@ -451,8 +449,6 @@ int8_t I2Cdev::readWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint1
                     }
                     msb = !msb;
                 }
-        
-                Wire.endTransmission();
             }
         #endif
 
