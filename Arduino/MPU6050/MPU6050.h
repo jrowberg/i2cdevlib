@@ -38,7 +38,7 @@ THE SOFTWARE.
 #define _MPU6050_H_
 
 #include "I2Cdev.h"
-#include <avr/pgmspace.h>
+//#include <avr/pgmspace.h>
 
 
 

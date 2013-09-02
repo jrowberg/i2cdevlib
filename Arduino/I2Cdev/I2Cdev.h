@@ -3,24 +3,25 @@
 // 6/9/2012 by Jeff Rowberg <jeff@rowberg.net>
 //
 // Changelog:
-//     2013-05-05 - fix issue with writing bit values to words (Sasquatch/Farzanegan)
-//     2012-06-09 - fix major issue with reading > 32 bytes at a time with Arduino Wire
-//                - add compiler warnings when using outdated or IDE or limited I2Cdev implementation
-//     2011-11-01 - fix write*Bits mask calculation (thanks sasquatch @ Arduino forums)
-//     2011-10-03 - added automatic Arduino version detection for ease of use
-//     2011-10-02 - added Gene Knight's NBWire TwoWire class implementation with small modifications
-//     2011-08-31 - added support for Arduino 1.0 Wire library (methods are different from 0.x)
-//     2011-08-03 - added optional timeout parameter to read* methods to easily change from default
-//     2011-08-02 - added support for 16-bit registers
-//                - fixed incorrect Doxygen comments on some methods
-//                - added timeout value for read operations (thanks mem @ Arduino forums)
-//     2011-07-30 - changed read/write function structures to return success or byte counts
-//                - made all methods static for multi-device memory savings
-//     2011-07-28 - initial release
+//      2013-05-06 - add Francesco Ferrara's Fastwire v0.24 implementation with small modifications
+//      2013-05-05 - fix issue with writing bit values to words (Sasquatch/Farzanegan)
+//      2012-06-09 - fix major issue with reading > 32 bytes at a time with Arduino Wire
+//                 - add compiler warnings when using outdated or IDE or limited I2Cdev implementation
+//      2011-11-01 - fix write*Bits mask calculation (thanks sasquatch @ Arduino forums)
+//      2011-10-03 - added automatic Arduino version detection for ease of use
+//      2011-10-02 - added Gene Knight's NBWire TwoWire class implementation with small modifications
+//      2011-08-31 - added support for Arduino 1.0 Wire library (methods are different from 0.x)
+//      2011-08-03 - added optional timeout parameter to read* methods to easily change from default
+//      2011-08-02 - added support for 16-bit registers
+//                 - fixed incorrect Doxygen comments on some methods
+//                 - added timeout value for read operations (thanks mem @ Arduino forums)
+//      2011-07-30 - changed read/write function structures to return success or byte counts
+//                 - made all methods static for multi-device memory savings
+//      2011-07-28 - initial release
 
 /* ============================================
 I2Cdev device library code is placed under the MIT license
-Copyright (c) 2012 Jeff Rowberg
+Copyright (c) 2013 Jeff Rowberg
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -45,6 +46,12 @@ THE SOFTWARE.
 #ifndef _I2CDEV_H_
 #define _I2CDEV_H_
 
+// -----------------------------------------------------------------------------
+// I2C interface implementation setting
+// -----------------------------------------------------------------------------
+#define I2CDEV_IMPLEMENTATION       I2CDEV_ARDUINO_WIRE
+//#define I2CDEV_IMPLEMENTATION       I2CDEV_BUILTIN_FASTWIRE
+
 // comment this out if you are using a non-optimal IDE/implementation setting
 // but want the compiler to shut up about it
 #define I2CDEV_IMPLEMENTATION_WARNINGS
@@ -56,14 +63,6 @@ THE SOFTWARE.
 #define I2CDEV_BUILTIN_NBWIRE       2 // Tweaked Wire object from Gene Knight's NBWire project
                                       // ^^^ NBWire implementation is still buggy w/some interrupts!
 #define I2CDEV_BUILTIN_FASTWIRE     3 // FastWire object from Francesco Ferrara's project
-                                      // ^^^ FastWire implementation in I2Cdev is INCOMPLETE!
-#define I2CDEV_I2CMASTER_LIBRARY    4 // I2C object from DSSCircuits I2C-Master Library at
-                                      //  https://github.com/DSSCircuits/I2C-Master-Library
-
-// -----------------------------------------------------------------------------
-// I2C interface implementation setting
-// -----------------------------------------------------------------------------
-#define I2CDEV_IMPLEMENTATION       I2CDEV_ARDUINO_WIRE
 
 // -----------------------------------------------------------------------------
 // Arduino-style "Serial.print" debug constant (uncomment to enable)
@@ -78,13 +77,7 @@ THE SOFTWARE.
     #endif
     #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
         #include <Wire.h>
-    #else
-    #if I2CDEV_IMPLEMENTATION == I2CDEV_I2CMASTER_LIBRARY
-        #include <I2C.h>
     #endif
-    #endif
-#else
-    #include "ArduinoWrapper.h"
 #endif
 
 // 1000ms default read timeout (modify with "I2Cdev::readTimeout = [ms];")
@@ -117,9 +110,9 @@ class I2Cdev {
 
 #if I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_FASTWIRE
     //////////////////////
-    // FastWire 0.2
+    // FastWire 0.24
     // This is a library to help faster programs to read I2C devices.
-    // Copyright(C) 2011
+    // Copyright(C) 2012
     // Francesco Ferrara
     //////////////////////
     
@@ -150,8 +143,12 @@ class I2Cdev {
 
         public:
             static void setup(int khz, boolean pullup);
-            static byte write(byte device, byte address, byte value);
+            static byte beginTransmission(byte device);
+            static byte write(byte value);
+            static byte writeBuf(byte device, byte address, byte *data, byte num);
             static byte readBuf(byte device, byte address, byte *data, byte num);
+            static void reset();
+            static byte stop();
     };
 #endif
 

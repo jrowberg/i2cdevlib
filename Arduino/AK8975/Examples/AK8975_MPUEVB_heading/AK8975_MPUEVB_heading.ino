@@ -60,7 +60,7 @@ THE SOFTWARE.
 // Addr pins low/high = 0x0D
 // Addr pins high/low = 0x0E (default for InvenSense MPU6050 evaluation board)
 // Addr pins high/high = 0x0F
-AK8975 mag(0x0E);
+AK8975 mag(0x0C);
 MPU6050 accelgyro; // address = 0x68, the default, on MPU6050 EVB
 
 int16_t mx, my, mz;
