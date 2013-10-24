@@ -146,6 +146,7 @@ void serialEvent(Serial port) {
     while (port.available() > 0) {
         int ch = port.read();
         print((char)ch);
+        if (ch == '$') {serialCount = 0;} // this will help with alignment
         if (aligned < 4) {
             // make sure we are properly aligned on a 14-byte packet
             if (serialCount == 0) {
