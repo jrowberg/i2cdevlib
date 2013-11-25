@@ -31,6 +31,7 @@ THE SOFTWARE.
 */
 
 #include "BMP085.h"
+#include <math.h>
 
 /**
  * Default constructor, uses default I2C device address.
@@ -207,6 +208,7 @@ float BMP085::getTemperatureC() {
         T = (B5 + 8) / 2^4
     */
     int32_t ut = getRawTemperature();
+    if(ut == 0) return NAN;
     int32_t x1 = ((ut - (int32_t)ac6) * (int32_t)ac5) >> 15;
     int32_t x2 = ((int32_t)mc << 11) / (x1 + md);
     b5 = x1 + x2;
@@ -244,6 +246,7 @@ float BMP085::getPressure() {
         p = p + (X1 + X2 + 3791) / 2^4
     */
     uint32_t up = getRawPressure();
+    if(up == 0) return NAN;
     uint8_t oss = (measureMode & 0xC0) >> 6;
     int32_t p;
     int32_t b6 = b5 - 4000;
