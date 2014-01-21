@@ -1,4 +1,4 @@
-// I2Cdev library collection - BMA085 I2C device class
+// I2Cdev library collection - BMP085 I2C device class
 // Based on register information stored in the I2Cdevlib internal database
 // 2012-06-28 by Jeff Rowberg <jeff@rowberg.net>
 // Updates should (hopefully) always be available at https://github.com/jrowberg/i2cdevlib
@@ -30,29 +30,29 @@ THE SOFTWARE.
 ===============================================
 */
 
-#include "BMA085.h"
+#include "BMP085.h"
 
 /**
  * Default constructor, uses default I2C device address.
- * @see BMA085_DEFAULT_ADDRESS
+ * @see BMP085_DEFAULT_ADDRESS
  */
-BMA085::BMA085() {
-    devAddr = BMA085_DEFAULT_ADDRESS;
+BMP085::BMP085() {
+    devAddr = BMP085_DEFAULT_ADDRESS;
 }
 
 /**
  * Specific address constructor.
  * @param address Specific device address
- * @see BMA085_DEFAULT_ADDRESS
+ * @see BMP085_DEFAULT_ADDRESS
  */
-BMA085::BMA085(uint8_t address) {
+BMP085::BMP085(uint8_t address) {
     devAddr = address;
 }
 
 /**
  * Prepare device for normal usage.
  */
-void BMA085::initialize() {
+void BMP085::initialize() {
     // load sensor's calibration constants
     loadCalibration();
 }
@@ -60,16 +60,16 @@ void BMA085::initialize() {
 /**
  * Verify the device is connected and available.
  */
-bool BMA085::testConnection() {
+bool BMP085::testConnection() {
     // test for a response, though this is very basic
-    return I2Cdev::readByte(devAddr, BMA085_RA_AC1_H, buffer) == 1;
+    return I2Cdev::readByte(devAddr, BMP085_RA_AC1_H, buffer) == 1;
 }
 
 /* calibration register methods */
 
-void BMA085::loadCalibration() {
+void BMP085::loadCalibration() {
     uint8_t buf2[22];
-    I2Cdev::readBytes(devAddr, BMA085_RA_AC1_H, 22, buf2);
+    I2Cdev::readBytes(devAddr, BMP085_RA_AC1_H, 22, buf2);
     ac1 = ((int16_t)buf2[0] << 8) + buf2[1];
     ac2 = ((int16_t)buf2[2] << 8) + buf2[3];
     ac3 = ((int16_t)buf2[4] << 8) + buf2[5];
@@ -84,96 +84,96 @@ void BMA085::loadCalibration() {
     calibrationLoaded = true;
 }
 
-#ifdef BMA085_INCLUDE_INDIVIDUAL_CALIBRATION_ACCESS
-    int16_t BMA085::getAC1() {
+#ifdef BMP085_INCLUDE_INDIVIDUAL_CALIBRATION_ACCESS
+    int16_t BMP085::getAC1() {
         if (calibrationLoaded) return ac1;
-        I2Cdev::readBytes(devAddr, BMA085_RA_AC1_H, 2, buffer);
+        I2Cdev::readBytes(devAddr, BMP085_RA_AC1_H, 2, buffer);
         return ((int16_t)buffer[1] << 8) + buffer[0];
     }
 
-    int16_t BMA085::getAC2() {
+    int16_t BMP085::getAC2() {
         if (calibrationLoaded) return ac2;
-        I2Cdev::readBytes(devAddr, BMA085_RA_AC2_H, 2, buffer);
+        I2Cdev::readBytes(devAddr, BMP085_RA_AC2_H, 2, buffer);
         return ((int16_t)buffer[1] << 8) + buffer[0];
     }
 
-    int16_t BMA085::getAC3() {
+    int16_t BMP085::getAC3() {
         if (calibrationLoaded) return ac3;
-        I2Cdev::readBytes(devAddr, BMA085_RA_AC3_H, 2, buffer);
+        I2Cdev::readBytes(devAddr, BMP085_RA_AC3_H, 2, buffer);
         return ((int16_t)buffer[1] << 8) + buffer[0];
     }
 
-    uint16_t BMA085::getAC4() {
+    uint16_t BMP085::getAC4() {
         if (calibrationLoaded) return ac4;
-        I2Cdev::readBytes(devAddr, BMA085_RA_AC4_H, 2, buffer);
+        I2Cdev::readBytes(devAddr, BMP085_RA_AC4_H, 2, buffer);
         return ((uint16_t)buffer[1] << 8) + buffer[0];
     }
 
-    uint16_t BMA085::getAC5() {
+    uint16_t BMP085::getAC5() {
         if (calibrationLoaded) return ac5;
-        I2Cdev::readBytes(devAddr, BMA085_RA_AC5_H, 2, buffer);
+        I2Cdev::readBytes(devAddr, BMP085_RA_AC5_H, 2, buffer);
         return ((uint16_t)buffer[1] << 8) + buffer[0];
     }
 
-    uint16_t BMA085::getAC6() {
+    uint16_t BMP085::getAC6() {
         if (calibrationLoaded) return ac6;
-        I2Cdev::readBytes(devAddr, BMA085_RA_AC6_H, 2, buffer);
+        I2Cdev::readBytes(devAddr, BMP085_RA_AC6_H, 2, buffer);
         return ((uint16_t)buffer[1] << 8) + buffer[0];
     }
 
-    int16_t BMA085::getB1() {
+    int16_t BMP085::getB1() {
         if (calibrationLoaded) return b1;
-        I2Cdev::readBytes(devAddr, BMA085_RA_B1_H, 2, buffer);
+        I2Cdev::readBytes(devAddr, BMP085_RA_B1_H, 2, buffer);
         return ((int16_t)buffer[1] << 8) + buffer[0];
     }
 
-    int16_t BMA085::getB2() {
+    int16_t BMP085::getB2() {
         if (calibrationLoaded) return b2;
-        I2Cdev::readBytes(devAddr, BMA085_RA_B2_H, 2, buffer);
+        I2Cdev::readBytes(devAddr, BMP085_RA_B2_H, 2, buffer);
         return ((int16_t)buffer[1] << 8) + buffer[0];
     }
 
-    int16_t BMA085::getMB() {
+    int16_t BMP085::getMB() {
         if (calibrationLoaded) return mb;
-        I2Cdev::readBytes(devAddr, BMA085_RA_MB_H, 2, buffer);
+        I2Cdev::readBytes(devAddr, BMP085_RA_MB_H, 2, buffer);
         return ((int16_t)buffer[1] << 8) + buffer[0];
     }
 
-    int16_t BMA085::getMC() {
+    int16_t BMP085::getMC() {
         if (calibrationLoaded) return mc;
-        I2Cdev::readBytes(devAddr, BMA085_RA_MC_H, 2, buffer);
+        I2Cdev::readBytes(devAddr, BMP085_RA_MC_H, 2, buffer);
         return ((int16_t)buffer[1] << 8) + buffer[0];
     }
 
-    int16_t BMA085::getMD() {
+    int16_t BMP085::getMD() {
         if (calibrationLoaded) return md;
-        I2Cdev::readBytes(devAddr, BMA085_RA_MD_H, 2, buffer);
+        I2Cdev::readBytes(devAddr, BMP085_RA_MD_H, 2, buffer);
         return ((int16_t)buffer[1] << 8) + buffer[0];
     }
 #endif
 
 /* control register methods */
 
-uint8_t BMA085::getControl() {
-    I2Cdev::readByte(devAddr, BMA085_RA_CONTROL, buffer);
+uint8_t BMP085::getControl() {
+    I2Cdev::readByte(devAddr, BMP085_RA_CONTROL, buffer);
     return buffer[0];
 }
-void BMA085::setControl(uint8_t value) {
-    I2Cdev::writeByte(devAddr, BMA085_RA_CONTROL, value);
+void BMP085::setControl(uint8_t value) {
+    I2Cdev::writeByte(devAddr, BMP085_RA_CONTROL, value);
     measureMode = value;
 }
 
 /* measurement register methods */
 
-uint16_t BMA085::getMeasurement2() {
-    I2Cdev::readBytes(devAddr, BMA085_RA_MSB, 2, buffer);
+uint16_t BMP085::getMeasurement2() {
+    I2Cdev::readBytes(devAddr, BMP085_RA_MSB, 2, buffer);
     return ((uint16_t)buffer[0] << 8) + buffer[1];
 }
-uint32_t BMA085::getMeasurement3() {
-    I2Cdev::readBytes(devAddr, BMA085_RA_MSB, 3, buffer);
+uint32_t BMP085::getMeasurement3() {
+    I2Cdev::readBytes(devAddr, BMP085_RA_MSB, 3, buffer);
     return ((uint32_t)buffer[0] << 16) + ((uint16_t)buffer[1] << 8) + buffer[2];
 }
-uint8_t BMA085::getMeasureDelayMilliseconds(uint8_t mode) {
+uint8_t BMP085::getMeasureDelayMilliseconds(uint8_t mode) {
     if (mode == 0) mode = measureMode;
     if (measureMode == 0x2E) return 5;
     else if (measureMode == 0x34) return 5;
@@ -182,7 +182,7 @@ uint8_t BMA085::getMeasureDelayMilliseconds(uint8_t mode) {
     else if (measureMode == 0xF4) return 26;
     return 0; // invalid mode
 }
-uint16_t BMA085::getMeasureDelayMicroseconds(uint8_t mode) {
+uint16_t BMP085::getMeasureDelayMicroseconds(uint8_t mode) {
     if (mode == 0) mode = measureMode;
     if (measureMode == 0x2E) return 4500;
     else if (measureMode == 0x34) return 4500;
@@ -192,12 +192,12 @@ uint16_t BMA085::getMeasureDelayMicroseconds(uint8_t mode) {
     return 0; // invalid mode
 }
 
-uint16_t BMA085::getRawTemperature() {
+uint16_t BMP085::getRawTemperature() {
     if (measureMode == 0x2E) return getMeasurement2();
     return 0; // wrong measurement mode for temperature request
 }
 
-float BMA085::getTemperatureC() {
+float BMP085::getTemperatureC() {
     /*
     Datasheet formula:
         UT = raw temperature
@@ -213,16 +213,16 @@ float BMA085::getTemperatureC() {
     return (float)((b5 + 8) >> 4) / 10.0f;
 }
 
-float BMA085::getTemperatureF() {
+float BMP085::getTemperatureF() {
     return getTemperatureC() * 9.0f / 5.0f + 32;
 }
 
-uint32_t BMA085::getRawPressure() {
+uint32_t BMP085::getRawPressure() {
     if (measureMode & 0x34) return getMeasurement3() >> (8 - ((measureMode & 0xC0) >> 6));
     return 0; // wrong measurement mode for pressure request
 }
 
-float BMA085::getPressure() {
+float BMP085::getPressure() {
     /*
     Datasheet forumla
         UP = raw pressure
@@ -267,6 +267,6 @@ float BMA085::getPressure() {
     return p + ((x1 + x2 + (int32_t)3791) >> 4);
 }
 
-float BMA085::getAltitude(float pressure, float seaLevelPressure) {
+float BMP085::getAltitude(float pressure, float seaLevelPressure) {
     return 44330 * (1.0 - pow(pressure / seaLevelPressure, 0.1903));
 }

@@ -1,4 +1,4 @@
-// I2Cdev library collection - BMA085 basic Arduino example sketch
+// I2Cdev library collection - BMP085 basic Arduino example sketch
 // Based on register information stored in the I2Cdevlib internal database
 // 2012-06-28 by Jeff Rowberg <jeff@rowberg.net>
 // Updates should (hopefully) always be available at https://github.com/jrowberg/i2cdevlib
@@ -34,15 +34,15 @@ THE SOFTWARE.
 // is used in I2Cdev.h
 #include "Wire.h"
 
-// I2Cdev and BMA085 must be installed as libraries, or else the .cpp/.h files
+// I2Cdev and BMP085 must be installed as libraries, or else the .cpp/.h files
 // for both classes must be in the include path of your project
 #include "I2Cdev.h"
-#include "BMA085.h"
+#include "BMP085.h"
 
 // class default I2C address is 0x77
 // specific I2C addresses may be passed as a parameter here
-// (though the BMA085 supports only one address)
-BMA085 barometer;
+// (though the BMP085 supports only one address)
+BMP085 barometer;
 
 float temperature;
 float pressure;
@@ -67,7 +67,7 @@ void setup() {
 
     // verify connection
     Serial.println("Testing device connections...");
-    Serial.println(barometer.testConnection() ? "BMA085 connection successful" : "BMA085 connection failed");
+    Serial.println(barometer.testConnection() ? "BMP085 connection successful" : "BMP085 connection failed");
 
     // configure LED pin for activity indication
     pinMode(LED_PIN, OUTPUT);
@@ -75,7 +75,7 @@ void setup() {
 
 void loop() {
     // request temperature
-    barometer.setControl(BMA085_MODE_TEMPERATURE);
+    barometer.setControl(BMP085_MODE_TEMPERATURE);
     
     // wait appropriate time for conversion (4.5ms delay)
     lastMicros = micros();
@@ -85,7 +85,7 @@ void loop() {
     temperature = barometer.getTemperatureC();
 
     // request pressure (3x oversampling mode, high detail, 23.5ms delay)
-    barometer.setControl(BMA085_MODE_PRESSURE_3);
+    barometer.setControl(BMP085_MODE_PRESSURE_3);
     while (micros() - lastMicros < barometer.getMeasureDelayMicroseconds());
 
     // read calibrated pressure value in Pascals (Pa)

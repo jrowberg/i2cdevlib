@@ -263,7 +263,7 @@ bool MPU6050::getAccelXSelfTest() {
     I2Cdev::readBit(devAddr, MPU6050_RA_ACCEL_CONFIG, MPU6050_ACONFIG_XA_ST_BIT, buffer);
     return buffer[0];
 }
-/** Get self-test enabled setting for accelerometer X axis.
+/** Set self-test enabled setting for accelerometer X axis.
  * @param enabled Self-test enabled value
  * @see MPU6050_RA_ACCEL_CONFIG
  */
@@ -278,7 +278,7 @@ bool MPU6050::getAccelYSelfTest() {
     I2Cdev::readBit(devAddr, MPU6050_RA_ACCEL_CONFIG, MPU6050_ACONFIG_YA_ST_BIT, buffer);
     return buffer[0];
 }
-/** Get self-test enabled value for accelerometer Y axis.
+/** Set self-test enabled value for accelerometer Y axis.
  * @param enabled Self-test enabled value
  * @see MPU6050_RA_ACCEL_CONFIG
  */
@@ -1699,7 +1699,7 @@ bool MPU6050::getIntDataReadyStatus() {
 
 // ACCEL_*OUT_* registers
 
-/** Get raw 9-axis motion sensor readings (accel/gyro/compass).
+/** Get raw 9-axis motion sensor readings (accel/gyro/compass) + temperature.
  * FUNCTION NOT FULLY IMPLEMENTED YET.
  * @param ax 16-bit signed integer container for accelerometer X-axis value
  * @param ay 16-bit signed integer container for accelerometer Y-axis value
@@ -1716,9 +1716,57 @@ bool MPU6050::getIntDataReadyStatus() {
  * @see MPU6050_RA_ACCEL_XOUT_H
  */
 void MPU6050::getMotion9(int16_t* ax, int16_t* ay, int16_t* az, int16_t* gx, int16_t* gy, int16_t* gz, int16_t* mx, int16_t* my, int16_t* mz) {
-    getMotion6(ax, ay, az, gx, gy, gz);
-    // TODO: magnetometer integration
+    I2Cdev::readBytes(MPU6050_DEFAULT_ADDRESS, MPU6050_RA_ACCEL_XOUT_H, 22, buffer);
+	*ax = (((int16_t)buffer[0]) << 8) | buffer[1];
+	*ay = (((int16_t)buffer[2]) << 8) | buffer[3];
+	*az = (((int16_t)buffer[4]) << 8) | buffer[5];
+//	*t  = (((int16_t)buffer[6]) << 8) | buffer[7];
+	*gx = (((int16_t)buffer[8]) << 8) | buffer[9];
+	*gy = (((int16_t)buffer[10]) << 8) | buffer[11];
+	*gz = (((int16_t)buffer[12]) << 8) | buffer[13];
+	//buffer[14] is register 0x02 (ST1) of AK8975. Contains DRDY in BIT0
+	*mx = (((int16_t)buffer[16]) << 8) | buffer[15]; // equals register 0x03 (HXL) and 0x04 (HXH) of AK8975
+	*my = (((int16_t)buffer[18]) << 8) | buffer[17]; // equals register 0x05 (HYL) and 0x06 (HYH) of AK8975
+	*mz = (((int16_t)buffer[20]) << 8) | buffer[19]; // equals register 0x07 (HZL) and 0x08 (HZH) of AK8975
+	//buffer[21] is register 0x09 (ST2) of AK8975. Contains Data Error (DERR) in BIT2 and Sensor Overflow (HOFL) in BIT3
+
 }
+
+/** Get raw 9-axis motion sensor readings (accel/gyro/compass) + temperature.
+ * assumes setup of compass with setup_compass
+ * @param ax 16-bit signed integer container for accelerometer X-axis value
+ * @param ay 16-bit signed integer container for accelerometer Y-axis value
+ * @param az 16-bit signed integer container for accelerometer Z-axis value
+ * @param gx 16-bit signed integer container for gyroscope X-axis value
+ * @param gy 16-bit signed integer container for gyroscope Y-axis value
+ * @param gz 16-bit signed integer container for gyroscope Z-axis value
+ * @param mx 16-bit signed integer container for magnetometer X-axis value
+ * @param my 16-bit signed integer container for magnetometer Y-axis value
+ * @param mz 16-bit signed integer container for magnetometer Z-axis value
+ * @param t  16-bit signed integer container for temperature value
+ * @see getMotion6()
+ * @see getAcceleration()
+ * @see getRotation()
+ * @see MPU6050_RA_ACCEL_XOUT_H
+ * @see setup_compass
+ */
+void MPU6050::getMotion9t(int16_t* ax, int16_t* ay, int16_t* az, int16_t* gx, int16_t* gy, int16_t* gz, int16_t* mx, int16_t* my, int16_t* mz, int16_t* t) {
+    I2Cdev::readBytes(MPU6050_DEFAULT_ADDRESS, MPU6050_RA_ACCEL_XOUT_H, 22, buffer);
+	*ax = (((int16_t)buffer[0]) << 8) | buffer[1];
+	*ay = (((int16_t)buffer[2]) << 8) | buffer[3];
+	*az = (((int16_t)buffer[4]) << 8) | buffer[5];
+	*t  = (((int16_t)buffer[6]) << 8) | buffer[7];
+	*gx = (((int16_t)buffer[8]) << 8) | buffer[9];
+	*gy = (((int16_t)buffer[10]) << 8) | buffer[11];
+	*gz = (((int16_t)buffer[12]) << 8) | buffer[13];
+	//buffer[14] is register 0x02 (ST1) of AK8975. Contains DRDY in BIT0
+	*mx = (((int16_t)buffer[16]) << 8) | buffer[15]; // equals register 0x03 (HXL) and 0x04 (HXH) of AK8975
+	*my = (((int16_t)buffer[18]) << 8) | buffer[17]; // equals register 0x05 (HYL) and 0x06 (HYH) of AK8975
+	*mz = (((int16_t)buffer[20]) << 8) | buffer[19]; // equals register 0x07 (HZL) and 0x08 (HZH) of AK8975
+	//buffer[21] is register 0x09 (ST2) of AK8975. Contains Data Error (DERR) in BIT2 and Sensor Overflow (HOFL) in BIT3
+
+}
+
 /** Get raw 6-axis motion sensor readings (accel/gyro).
  * Retrieves all currently available motion sensor values.
  * @param ax 16-bit signed integer container for accelerometer X-axis value
@@ -1733,6 +1781,7 @@ void MPU6050::getMotion9(int16_t* ax, int16_t* ay, int16_t* az, int16_t* gx, int
  */
 void MPU6050::getMotion6(int16_t* ax, int16_t* ay, int16_t* az, int16_t* gx, int16_t* gy, int16_t* gz) {
     I2Cdev::readBytes(devAddr, MPU6050_RA_ACCEL_XOUT_H, 14, buffer);
+    //fixme the following code needs to be examined. causes a interrupt to NMI_VECTOR
     *ax = (((int16_t)buffer[0]) << 8) | buffer[1];
     *ay = (((int16_t)buffer[2]) << 8) | buffer[3];
     *az = (((int16_t)buffer[4]) << 8) | buffer[5];
@@ -1740,6 +1789,32 @@ void MPU6050::getMotion6(int16_t* ax, int16_t* ay, int16_t* az, int16_t* gx, int
     *gy = (((int16_t)buffer[10]) << 8) | buffer[11];
     *gz = (((int16_t)buffer[12]) << 8) | buffer[13];
 }
+
+/** Get raw 6-axis motion sensor readings (accel/gyro) + temperature.
+ * Retrieves all currently available motion sensor values.
+ * @param ax 16-bit signed integer container for accelerometer X-axis value
+ * @param ay 16-bit signed integer container for accelerometer Y-axis value
+ * @param az 16-bit signed integer container for accelerometer Z-axis value
+ * @param gx 16-bit signed integer container for gyroscope X-axis value
+ * @param gy 16-bit signed integer container for gyroscope Y-axis value
+ * @param gz 16-bit signed integer container for gyroscope Z-axis value
+ * @param t  16-bit signed integer container for temperature value
+ * @see getAcceleration()
+ * @see getRotation()
+ * @see getTemperature()
+ * @see MPU6050_RA_ACCEL_XOUT_H
+ */
+void MPU6050::getMotion6t(int16_t* ax, int16_t* ay, int16_t* az, int16_t* gx, int16_t* gy, int16_t* gz, int16_t* t) {
+    I2Cdev::readBytes(devAddr, MPU6050_RA_ACCEL_XOUT_H, 14, buffer);
+    *ax = (((int16_t)buffer[0]) << 8) | buffer[1];
+    *ay = (((int16_t)buffer[2]) << 8) | buffer[3];
+    *az = (((int16_t)buffer[4]) << 8) | buffer[5];
+    *t  = (((int16_t)buffer[6]) << 8) | buffer[7];
+    *gx = (((int16_t)buffer[8]) << 8) | buffer[9];
+    *gy = (((int16_t)buffer[10]) << 8) | buffer[11];
+    *gz = (((int16_t)buffer[12]) << 8) | buffer[13];
+}
+
 /** Get 3-axis accelerometer readings.
  * These registers store the most recent accelerometer measurements.
  * Accelerometer measurements are written to these registers at the Sample Rate
@@ -2357,6 +2432,7 @@ void MPU6050::resetSensors() {
  * @see MPU6050_PWR1_DEVICE_RESET_BIT
  */
 void MPU6050::reset() {
+	//todo consider writing byte 0x80 without reading the register before since it is reset anyways
     I2Cdev::writeBit(devAddr, MPU6050_RA_PWR_MGMT_1, MPU6050_PWR1_DEVICE_RESET_BIT, true);
 }
 /** Get sleep mode status.
@@ -2722,31 +2798,31 @@ uint8_t MPU6050::getOTPBankValid() {
 void MPU6050::setOTPBankValid(bool enabled) {
     I2Cdev::writeBit(devAddr, MPU6050_RA_XG_OFFS_TC, MPU6050_TC_OTP_BNK_VLD_BIT, enabled);
 }
-int8_t MPU6050::getXGyroOffsetTC() {
+int8_t MPU6050::getXGyroOffset() {
     I2Cdev::readBits(devAddr, MPU6050_RA_XG_OFFS_TC, MPU6050_TC_OFFSET_BIT, MPU6050_TC_OFFSET_LENGTH, buffer);
     return buffer[0];
 }
-void MPU6050::setXGyroOffsetTC(int8_t offset) {
+void MPU6050::setXGyroOffset(int8_t offset) {
     I2Cdev::writeBits(devAddr, MPU6050_RA_XG_OFFS_TC, MPU6050_TC_OFFSET_BIT, MPU6050_TC_OFFSET_LENGTH, offset);
 }
 
 // YG_OFFS_TC register
 
-int8_t MPU6050::getYGyroOffsetTC() {
+int8_t MPU6050::getYGyroOffset() {
     I2Cdev::readBits(devAddr, MPU6050_RA_YG_OFFS_TC, MPU6050_TC_OFFSET_BIT, MPU6050_TC_OFFSET_LENGTH, buffer);
     return buffer[0];
 }
-void MPU6050::setYGyroOffsetTC(int8_t offset) {
+void MPU6050::setYGyroOffset(int8_t offset) {
     I2Cdev::writeBits(devAddr, MPU6050_RA_YG_OFFS_TC, MPU6050_TC_OFFSET_BIT, MPU6050_TC_OFFSET_LENGTH, offset);
 }
 
 // ZG_OFFS_TC register
 
-int8_t MPU6050::getZGyroOffsetTC() {
+int8_t MPU6050::getZGyroOffset() {
     I2Cdev::readBits(devAddr, MPU6050_RA_ZG_OFFS_TC, MPU6050_TC_OFFSET_BIT, MPU6050_TC_OFFSET_LENGTH, buffer);
     return buffer[0];
 }
-void MPU6050::setZGyroOffsetTC(int8_t offset) {
+void MPU6050::setZGyroOffset(int8_t offset) {
     I2Cdev::writeBits(devAddr, MPU6050_RA_ZG_OFFS_TC, MPU6050_TC_OFFSET_BIT, MPU6050_TC_OFFSET_LENGTH, offset);
 }
 
@@ -2812,31 +2888,31 @@ void MPU6050::setZAccelOffset(int16_t offset) {
 
 // XG_OFFS_USR* registers
 
-int16_t MPU6050::getXGyroOffset() {
+int16_t MPU6050::getXGyroOffsetUser() {
     I2Cdev::readBytes(devAddr, MPU6050_RA_XG_OFFS_USRH, 2, buffer);
     return (((int16_t)buffer[0]) << 8) | buffer[1];
 }
-void MPU6050::setXGyroOffset(int16_t offset) {
+void MPU6050::setXGyroOffsetUser(int16_t offset) {
     I2Cdev::writeWord(devAddr, MPU6050_RA_XG_OFFS_USRH, offset);
 }
 
 // YG_OFFS_USR* register
 
-int16_t MPU6050::getYGyroOffset() {
+int16_t MPU6050::getYGyroOffsetUser() {
     I2Cdev::readBytes(devAddr, MPU6050_RA_YG_OFFS_USRH, 2, buffer);
     return (((int16_t)buffer[0]) << 8) | buffer[1];
 }
-void MPU6050::setYGyroOffset(int16_t offset) {
+void MPU6050::setYGyroOffsetUser(int16_t offset) {
     I2Cdev::writeWord(devAddr, MPU6050_RA_YG_OFFS_USRH, offset);
 }
 
 // ZG_OFFS_USR* register
 
-int16_t MPU6050::getZGyroOffset() {
+int16_t MPU6050::getZGyroOffsetUser() {
     I2Cdev::readBytes(devAddr, MPU6050_RA_ZG_OFFS_USRH, 2, buffer);
     return (((int16_t)buffer[0]) << 8) | buffer[1];
 }
-void MPU6050::setZGyroOffset(int16_t offset) {
+void MPU6050::setZGyroOffsetUser(int16_t offset) {
     I2Cdev::writeWord(devAddr, MPU6050_RA_ZG_OFFS_USRH, offset);
 }
 
@@ -2963,6 +3039,7 @@ void MPU6050::readMemoryBlock(uint8_t *data, uint16_t dataSize, uint8_t bank, ui
         }
     }
 }
+#if !(I2CDEV_IMPLEMENTATION == I2CDEV_MSP430)
 bool MPU6050::writeMemoryBlock(const uint8_t *data, uint16_t dataSize, uint8_t bank, uint8_t address, bool verify, bool useProgMem) {
     setMemoryBank(bank);
     setMemoryStartAddress(address);
@@ -3117,10 +3194,11 @@ bool MPU6050::writeDMPConfigurationSet(const uint8_t *data, uint16_t dataSize, b
     if (useProgMem) free(progBuffer);
     return true;
 }
+
 bool MPU6050::writeProgDMPConfigurationSet(const uint8_t *data, uint16_t dataSize) {
     return writeDMPConfigurationSet(data, dataSize, true);
 }
-
+#endif
 // DMP_CFG_1 register
 
 uint8_t MPU6050::getDMPConfig1() {
@@ -3139,4 +3217,49 @@ uint8_t MPU6050::getDMPConfig2() {
 }
 void MPU6050::setDMPConfig2(uint8_t config) {
     I2Cdev::writeByte(devAddr, MPU6050_RA_DMP_CFG_2, config);
+}
+
+
+#define BIT_I2C_READ 0x80
+#define AKM_REG_ST1         (0x02)
+#define AKM_REG_HXL			(0x03)
+#define BIT_SLAVE_EN        (0x80)
+#define AKM_REG_CNTL        (0x0A)
+#define SUPPORTS_AK89xx_HIGH_SENS   (0x00)
+#define AKM_SINGLE_MEASUREMENT  (0x01 | SUPPORTS_AK89xx_HIGH_SENS)
+#define BIT_I2C_MST_VDDIO   (0x80)
+/** Setup Magnetometer to write to external sensor data registers
+ * based on motion_driver-2.0 sample code in inv_mpu.c
+ */
+void MPU6050::setup_compass() {
+//todo make more general and use MPU6050 methods and defines
+	MPU6050::setI2CBypassEnabled(false);
+	//    mpu.setWaitForExternalSensorEnabled(true);
+	//    mpu.setSlaveAddress(0,MPU6050_ADDRESS_COMPASS);
+	//    mpu.setSlaveAddress(1,MPU6050_ADDRESS_COMPASS);
+
+    /* Set up master mode, master clock, and ES bit. */
+    I2Cdev::writeByte(MPU6050_DEFAULT_ADDRESS, MPU6050_RA_I2C_MST_CTRL, 0x40);
+    /* Slave 0 reads from AKM data registers. */
+    I2Cdev::writeByte(MPU6050_DEFAULT_ADDRESS, MPU6050_RA_I2C_SLV0_ADDR, BIT_I2C_READ | MPU6050_ADDRESS_COMPASS);
+    /* Compass reads start at this register, the first data register. */
+    I2Cdev::writeByte(MPU6050_DEFAULT_ADDRESS, MPU6050_RA_I2C_SLV0_REG, AKM_REG_HXL);
+    /* Enable slave 0, 6-byte reads. */
+    I2Cdev::writeByte(MPU6050_DEFAULT_ADDRESS, MPU6050_RA_I2C_SLV0_CTRL, BIT_SLAVE_EN | 6);
+    /* Slave 1 changes AKM measurement mode. */
+    I2Cdev::writeByte(MPU6050_DEFAULT_ADDRESS, MPU6050_RA_I2C_SLV1_ADDR, MPU6050_ADDRESS_COMPASS);
+    /* AKM measurement mode register. */
+    I2Cdev::writeByte(MPU6050_DEFAULT_ADDRESS, MPU6050_RA_I2C_SLV1_REG, AKM_REG_CNTL);
+    /* Enable slave 1, 1-byte writes. */
+    I2Cdev::writeByte(MPU6050_DEFAULT_ADDRESS, MPU6050_RA_I2C_SLV1_CTRL, BIT_SLAVE_EN | 1);
+    /* Set slave 1 data. */
+    I2Cdev::writeByte(MPU6050_DEFAULT_ADDRESS, MPU6050_RA_I2C_SLV1_DO,AKM_SINGLE_MEASUREMENT);
+    /* Trigger slave 0 and slave 1 actions at each sample. */
+    I2Cdev::writeByte(MPU6050_DEFAULT_ADDRESS, MPU6050_RA_I2C_MST_DELAY_CTRL, 0x03);
+#ifdef MPU9150
+    /* For the MPU9150, the auxiliary I2C bus needs to be set to VDD. */
+    I2Cdev::writeByte(MPU6050_DEFAULT_ADDRESS, MPU6050_RA_YG_OFFS_TC, BIT_I2C_MST_VDDIO);
+#endif
+    //enable I2C Master Mode
+    MPU6050::setI2CMasterModeEnabled(true);
 }

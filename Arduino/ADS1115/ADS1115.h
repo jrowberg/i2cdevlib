@@ -5,8 +5,10 @@
 // Updates should (hopefully) always be available at https://github.com/jrowberg/i2cdevlib
 //
 // Changelog:
-//     2011-08-02 - initial release
+//     2013-05-05 - Add debug information.  Clean up Single Shot implementation
 //     2011-10-29 - added getDifferentialx() methods, F. Farzanegan
+//     2011-08-02 - initial release
+
 
 /* ============================================
 I2Cdev device library code is placed under the MIT license
@@ -36,6 +38,11 @@ THE SOFTWARE.
 #define _ADS1115_H_
 
 #include "I2Cdev.h"
+
+// -----------------------------------------------------------------------------
+// Arduino-style "Serial.print" debug constant (uncomment to enable)
+// -----------------------------------------------------------------------------
+//#define ADS1115_SERIAL_DEBUG
 
 #define ADS1115_ADDRESS_ADDR_GND    0x48 // address pin low (GND)
 #define ADS1115_ADDRESS_ADDR_VDD    0x49 // address pin high (VCC)
@@ -118,6 +125,11 @@ THE SOFTWARE.
 #define ADS1115_COMP_QUE_ASSERT4    0x02
 #define ADS1115_COMP_QUE_DISABLE    0x03 // default
 
+// -----------------------------------------------------------------------------
+// Arduino-style "Serial.print" debug constant (uncomment to enable)
+// -----------------------------------------------------------------------------
+//#define ADS1115_SERIAL_DEBUG
+
 
 class ADS1115 {
     public:
@@ -126,23 +138,32 @@ class ADS1115 {
         
         void initialize();
         bool testConnection();
+        
+        // SINGLE SHOT utilities
+        void waitBusy(uint16_t max_retries);
 
-        // CONVERSION register
-        int16_t getDifferential();
-        int16_t getDifferential0();
-        int16_t getDifferential1();
-        int16_t getDifferential2();
-        int16_t getDifferential3();
-        int16_t getDiff0();
-        int16_t getDiff1();
-        int16_t getDiff2();
-        int16_t getDiff3();
+        // Read the current CONVERSION register
+        int16_t getConversion();
+        
+        // Differential
+        int16_t getConversionP0N1();
+        int16_t getConversionP0N3();
+        int16_t getConversionP1N3();
+        int16_t getConversionP2N3();
+        
+        // Single-ended
+        int16_t getConversionP0GND();
+        int16_t getConversionP1GND();
+        int16_t getConversionP2GND();
+        int16_t getConversionP3GND();
+
+        // Utility
         float getMilliVolts(); 
         float getMvPerCount();
 
         // CONFIG register
         uint8_t getOpStatus();
-        void setOpStatus(uint8_t mux);
+        void setOpStatus(uint8_t op);
         uint8_t getMultiplexer();
         void setMultiplexer(uint8_t mux);
         uint8_t getGain();
@@ -165,6 +186,9 @@ class ADS1115 {
         void setLowThreshold(int16_t threshold);
         int16_t getHighThreshold();
         void setHighThreshold(int16_t threshold);
+        
+        // DEBUG
+        void showConfigRegister();
 
     private:
         uint8_t devAddr;

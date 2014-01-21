@@ -1642,11 +1642,11 @@ void ADXL345::setFIFOSamples(uint8_t size) {
  * A 1 in the FIFO_TRIG bit corresponds to a trigger event occurring, and a 0
  * means that a FIFO trigger event has not occurred.
  * @return FIFO trigger occurred status
- * @see ADXL345_RA_FIFO_CTL
+ * @see ADXL345_RA_FIFO_STATUS
  * @see ADXL345_FIFOSTAT_TRIGGER_BIT
  */
 bool ADXL345::getFIFOTriggerOccurred() {
-    I2Cdev::readBit(devAddr, ADXL345_RA_FIFO_CTL, ADXL345_FIFOSTAT_TRIGGER_BIT, buffer);
+    I2Cdev::readBit(devAddr, ADXL345_RA_FIFO_STATUS, ADXL345_FIFOSTAT_TRIGGER_BIT, buffer);
     return buffer[0];
 }
 /** Get FIFO length.
@@ -1658,11 +1658,11 @@ bool ADXL345::getFIFOTriggerOccurred() {
  * available at any given time because an additional entry is available at the
  * output filter of the I2Cdev::
  * @return Current FIFO length
- * @see ADXL345_RA_FIFO_CTL
+ * @see ADXL345_RA_FIFO_STATUS
  * @see ADXL345_FIFOSTAT_LENGTH_BIT
  * @see ADXL345_FIFOSTAT_LENGTH_LENGTH
  */
 uint8_t ADXL345::getFIFOLength() {
-    I2Cdev::readBits(devAddr, ADXL345_RA_FIFO_CTL, ADXL345_FIFOSTAT_LENGTH_BIT, ADXL345_FIFOSTAT_LENGTH_LENGTH, buffer);
+    I2Cdev::readBits(devAddr, ADXL345_RA_FIFO_STATUS, ADXL345_FIFOSTAT_LENGTH_BIT, ADXL345_FIFOSTAT_LENGTH_LENGTH, buffer);
     return buffer[0];
 }
