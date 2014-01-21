@@ -38,8 +38,18 @@ THE SOFTWARE.
 #define _MPU6050_H_
 
 #include "I2Cdev.h"
-//#include <avr/pgmspace.h>
 
+// supporting link:  http://forum.arduino.cc/index.php?&topic=143444.msg1079517#msg1079517
+// also: http://forum.arduino.cc/index.php?&topic=141571.msg1062899#msg1062899s
+#ifndef __arm__
+#include <avr/pgmspace.h>
+#else
+#define PROGMEM /* empty */
+#define pgm_read_byte(x) (*(x))
+#define pgm_read_word(x) (*(x))
+#define pgm_read_float(x) (*(x))
+#define PSTR(STR) STR
+#endif
 
 
 #define MPU6050_ADDRESS_AD0_LOW     0x68 // address pin low (GND), default for InvenSense evaluation board
