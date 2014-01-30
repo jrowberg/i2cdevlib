@@ -1716,8 +1716,19 @@ bool MPU6050::getIntDataReadyStatus() {
  * @see MPU6050_RA_ACCEL_XOUT_H
  */
 void MPU6050::getMotion9(int16_t* ax, int16_t* ay, int16_t* az, int16_t* gx, int16_t* gy, int16_t* gz, int16_t* mx, int16_t* my, int16_t* mz) {
+
+    //get accel and gyro
     getMotion6(ax, ay, az, gx, gy, gz);
-    // TODO: magnetometer integration
+
+    //read mag
+    I2Cdev::writeByte(devAddr, MPU6050_RA_INT_PIN_CFG, 0x02); //set i2c bypass enable pin to true to access magnetometer
+    delay(10);
+    I2Cdev::writeByte(MPU9150_RA_MAG_ADDRESS, 0x0A, 0x01); //enable the magnetometer
+    delay(10);
+    I2Cdev::readBytes(MPU9150_RA_MAG_ADDRESS, MPU9150_RA_MAG_XOUT_L, 6, buffer);
+    *mx = (((int16_t)buffer[0]) << 8) | buffer[1];
+    *my = (((int16_t)buffer[2]) << 8) | buffer[3];
+    *mz = (((int16_t)buffer[4]) << 8) | buffer[5];
 }
 /** Get raw 6-axis motion sensor readings (accel/gyro).
  * Retrieves all currently available motion sensor values.
