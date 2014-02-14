@@ -1,4 +1,4 @@
-// I2C device class (I2Cdev) demonstration Processing sketch for MPU6050 DMP output
+// I2C device class (I2Cdev) demonstration Processing sketch for MPU9150 DMP output
 // 6/20/2012 by Jeff Rowberg <jeff@rowberg.net>
 // Updates should (hopefully) always be available at https://github.com/jrowberg/i2cdevlib
 //
@@ -77,7 +77,7 @@ void setup() {
     port = new Serial(this, portName, 115200);
     
     // send single character to trigger DMP init/start
-    // (expected by MPU6050_DMP6 example Arduino sketch)
+    // (expected by MPU9150_DMP6 example Arduino sketch)
     port.write('r');
 }
 
