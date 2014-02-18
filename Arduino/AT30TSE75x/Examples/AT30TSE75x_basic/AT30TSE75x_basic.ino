@@ -1,6 +1,6 @@
 // I2Cdev library collection - AT30TSE752/754/758 I2C device class header file
 // Based on ATMEL AT30TSE75 datasheet, 2013 Rev. Atmel-8751F-DTS-AT30TSE752-754-758-Datasheet_092013
-// [current release date] by Bartosz Kryza <bkryza@gmail.com>
+// 2014-02-16 by Bartosz Kryza <bkryza@gmail.com>
 // Updates should (hopefully) always be available at https://github.com/jrowberg/i2cdevlib
 //
 // Changelog:
