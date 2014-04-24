@@ -262,7 +262,7 @@ void MPU6050::setFullScaleGyroRange(uint8_t range) {
 uint8_t MPU6050::getAccelXSelfTestFactoryTrim() {
     I2Cdev::readByte(devAddr, MPU6050_RA_SELF_TEST_X, &buffer[0]);
 	I2Cdev::readByte(devAddr, MPU6050_RA_SELF_TEST_A, &buffer[1]);	
-    return (buffer[0]>>3) || ((buffer[1]>>4) & 0x03);
+    return (buffer[0]>>3) | ((buffer[1]>>4) & 0x03);
 }
 
 /** Get self-test factory trim value for accelerometer Y axis.
@@ -272,7 +272,7 @@ uint8_t MPU6050::getAccelXSelfTestFactoryTrim() {
 uint8_t MPU6050::getAccelYSelfTestFactoryTrim() {
     I2Cdev::readByte(devAddr, MPU6050_RA_SELF_TEST_Y, &buffer[0]);
 	I2Cdev::readByte(devAddr, MPU6050_RA_SELF_TEST_A, &buffer[1]);	
-    return (buffer[0]>>3) || ((buffer[1]>>2) & 0x03);
+    return (buffer[0]>>3) | ((buffer[1]>>2) & 0x03);
 }
 
 /** Get self-test factory trim value for accelerometer Z axis.
@@ -281,7 +281,7 @@ uint8_t MPU6050::getAccelYSelfTestFactoryTrim() {
  */
 uint8_t MPU6050::getAccelZSelfTestFactoryTrim() {
     I2Cdev::readBytes(devAddr, MPU6050_RA_SELF_TEST_Z, 2, buffer);	
-    return (buffer[0]>>3) || (buffer[1] & 0x03);
+    return (buffer[0]>>3) | (buffer[1] & 0x03);
 }
 
 /** Get self-test factory trim value for gyro X axis.
