@@ -34,7 +34,7 @@ THE SOFTWARE.
 ===============================================
 */
 
-#include "MPU6050.h"
+#include "MPU6050new.h"
 
 /** Default constructor, uses default I2C address.
  * @see MPU6050_DEFAULT_ADDRESS
@@ -2710,6 +2710,16 @@ uint8_t MPU6050::getDeviceID() {
 void MPU6050::setDeviceID(uint8_t id) {
     I2Cdev::writeBits(devAddr, MPU6050_RA_WHO_AM_I, MPU6050_WHO_AM_I_BIT, MPU6050_WHO_AM_I_LENGTH, id);
 }
+
+
+
+
+uint8_t MPU6050::getMotionStatus() {
+    I2Cdev::readBits(devAddr,MPU6050_RA_MOT_DETECT_STATUS,MPU6050_MOTION_MOT_XNEG_BIT,6,buffer);
+    return (buffer[0]);
+}
+
+
 
 // ======== UNDOCUMENTED/DMP REGISTERS/METHODS ========
 
