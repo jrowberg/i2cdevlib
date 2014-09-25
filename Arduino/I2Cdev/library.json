@@ -1,0 +1,11 @@
+{
+  "name": "i2cdevlib-Arduino-i2cdev",
+  "keywords": "i2cdevlib, i2c",
+  "description": "The I2C Device Library (i2cdevlib) is a collection of uniform and well-documented classes to provide simple and intuitive interfaces to I2C devices.",
+  "include": "Arduino/I2Cdev",
+  "repository":
+  {
+    "type": "git",
+    "url": "https://github.com/jrowberg/i2cdevlib.git"
+  }
+}
