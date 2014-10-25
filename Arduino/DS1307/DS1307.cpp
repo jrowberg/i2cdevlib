@@ -456,11 +456,13 @@ void DS1307::setDateTime24(uint16_t year, uint8_t month, uint8_t day, uint8_t ho
     }
     
     uint32_t DateTime::unixtime(void) const {
+        return secondstime() + SECONDS_FROM_1970_TO_2000;
+    }
+    
+    long DateTime::secondstime(void) const {
         uint32_t t;
         uint16_t days = date2days(yOff, m, d);
-        t = time2long(days, hh, mm, ss);
-        t += SECONDS_FROM_1970_TO_2000;  // seconds from 1970 to 2000
-    
+        t = time2long(days, hh, mm, ss);    
         return t;
     }
 #endif
