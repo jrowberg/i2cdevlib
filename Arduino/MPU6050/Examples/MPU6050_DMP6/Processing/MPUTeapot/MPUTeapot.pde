@@ -145,9 +145,7 @@ void serialEvent(Serial port) {
     interval = millis();
     while (port.available() > 0) {
         int ch = port.read();
-<<<<<<< HEAD:Arduino/MPU6050/Examples/MPU6050_DMP6/Processing/MPUTeapot/MPUTeapot.pde
         if (synced == 0 && ch != '$') return;   // initial synchronization - also used to resync/realign if needed
-=======
         print((char)ch);
         if (ch == '$') {serialCount = 0;} // this will help with alignment
         if (aligned < 4) {
