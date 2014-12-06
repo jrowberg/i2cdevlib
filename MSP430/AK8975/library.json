@@ -9,10 +9,16 @@
     "url": "https://github.com/jrowberg/i2cdevlib.git"
   },
   "dependencies":
-  {
-    "name": "I2Cdevlib-Core",
-    "platforms": "timsp430"
-  },
+  [
+    {
+      "name": "I2Cdevlib-Core",
+      "platforms": "timsp430"
+    },
+    {
+      "name": "I2Cdevlib-MPU6050",
+      "platforms": "timsp430"
+    }    
+  ],  
   "frameworks": "energia",
   "platforms": "timsp430"
 }
