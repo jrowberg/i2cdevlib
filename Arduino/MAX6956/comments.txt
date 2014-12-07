@@ -1,0 +1,64 @@
+/**
+ 
+void MAX6956::configPort(uint8_t port, uint8_t portConfig) example math
+
+    0x0B  11   MAX6956_RA_CONFIG_P15P14P13P12
+    0x0C  12   MAX6956_RA_CONFIG_P19P18P17P16
+    0x0D  13   MAX6956_RA_CONFIG_P23P22P21P20
+    0x0E  14   MAX6956_RA_CONFIG_P27P26P25P24
+    0x0F  15   MAX6956_RA_CONFIG_P31P30P29P28
+    
+    (56, 2)  port 24, input without pullup
+    bitPosition = (((56 - 44) % 4) * 2) + 1
+                      ((12 % 4) * 2) + 1
+                        ( 0 * 2 ) + 1
+                            0 + 1
+                              1
+                         
+    pcArrayIndex = ((56 - 44) / 4)
+                     (12 / 4)
+                      3  (any remainder is dropped when stored as an int ... I think)
+                              
+    portConfigRA = pcArrayIndex + 11
+                         14
+    
+    bitPosition = 0
+    mask       = 0000 0011  
+                 0000 0011 << 0
+                 0000 0011
+                ~1111 1100
+                 0011 1111 & portsConfig[x] 
+                 
+    portConfig = 0000 0010 << 0
+                 0000 0010
+              
+                 xxxx xx00 | 0000 0010
+                 xxxx xx10
+                 
+    (63, 2)  port 31, input without pullup
+    bitPosition = (((63 - 44) % 4) * 2) + 1
+                      ((19 % 4) * 2) + 1
+                        ( 3 * 2 ) + 1
+                            6 + 1
+                              7
+                         
+    pcArrayIndex = ((63 - 44) / 4)
+                     (19 / 4)
+                      4.75  (any remainder is dropped when stored as an int ... I think)
+                              
+    portConfigRA = pcArrayIndex + 11
+                         15
+    
+    bitPosition = 07
+    mask       = 0000 0011  
+                 0000 0011 << 6
+                 1100 0000
+                ~0011 1111
+                 0011 1111 & portsConfig[x] 
+                 
+    portConfig = 0000 0010 << 6
+                 1000 0000
+              
+                 00xx xxxx | 1000 0000
+                 10xx xxxx
+*/

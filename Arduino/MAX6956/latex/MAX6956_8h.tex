@@ -1,0 +1,1937 @@
+\hypertarget{MAX6956_8h}{\section{M\-A\-X6956.\-h File Reference}
+\label{MAX6956_8h}\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}}
+}
+{\ttfamily \#include \char`\"{}I2\-Cdev.\-h\char`\"{}}\\*
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{classMAX6956}{M\-A\-X6956}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{MAX6956_8h_a33e60623a4c5b483d4604fe2c9b91be7}{M\-A\-X6956\-\_\-\-A\-D\-D\-R\-E\-S\-S}~0x40
+\item 
+\#define \hyperlink{MAX6956_8h_a4ca90873afdfdacaa730ed5db53e2f5b}{M\-A\-X6956\-\_\-\-D\-E\-F\-A\-U\-L\-T\-\_\-\-A\-D\-D\-R\-E\-S\-S}~0x40
+\item 
+\#define \hyperlink{MAX6956_8h_a0f205428de0679650e54dbe8250d57b4}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-N\-O\-\_\-\-O\-P}~0x00
+\begin{DoxyCompactList}\small\item\em No-\/op. \end{DoxyCompactList}\item 
+\#define \hyperlink{MAX6956_8h_a6a6c2bfe9bfbe4930731829baae7c8f6}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-G\-L\-O\-B\-A\-L\-\_\-\-C\-U\-R\-R\-E\-N\-T}~0x02
+\item 
+\#define \hyperlink{MAX6956_8h_a5c3d1c00491596887e211bfa630c1b94}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-O\-N\-F\-I\-G\-U\-R\-A\-T\-I\-O\-N}~0x04
+\item 
+\#define \hyperlink{MAX6956_8h_a4a2b4c395e47e0ec9ef49d3236b8a465}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-D\-E\-T\-E\-C\-T}~0x06
+\item 
+\#define \hyperlink{MAX6956_8h_a709a5193fd2aa9274997dfc22ef73a19}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-D\-I\-S\-P\-L\-A\-Y\-\_\-\-T\-E\-S\-T}~0x07
+\item 
+\#define \hyperlink{MAX6956_8h_a1c4db4957c22f8767b2f1a06e5cb9a32}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-O\-N\-F\-I\-G\-\_\-\-P7\-P6\-P5\-P4}~0x09
+\item 
+\#define \hyperlink{MAX6956_8h_a3a2fa6f7cc985cfeea00ebd1dd64ae8c}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-O\-N\-F\-I\-G\-\_\-\-P11\-P10\-P9\-P8}~0x0\-A
+\item 
+\#define \hyperlink{MAX6956_8h_a119a0a92d4ccdb0e8f27fd565b1220bd}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-O\-N\-F\-I\-G\-\_\-\-P15\-P14\-P13\-P12}~0x0\-B
+\item 
+\#define \hyperlink{MAX6956_8h_a8f199d21b14cf933d5093d3001d0400d}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-O\-N\-F\-I\-G\-\_\-\-P19\-P18\-P17\-P16}~0x0\-C
+\item 
+\#define \hyperlink{MAX6956_8h_a025ce0245fb957ef58afc5f4920e19f3}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-O\-N\-F\-I\-G\-\_\-\-P23\-P22\-P21\-P20}~0x0\-D
+\item 
+\#define \hyperlink{MAX6956_8h_a4e813aab18cbd7462e1ac5a59b0a53ab}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-O\-N\-F\-I\-G\-\_\-\-P27\-P26\-P25\-P24}~0x0\-E
+\item 
+\#define \hyperlink{MAX6956_8h_a98b5c2d8359fbb7e07eb2eade7e8870a}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-O\-N\-F\-I\-G\-\_\-\-P31\-P30\-P29\-P28}~0x0\-F
+\item 
+\#define \hyperlink{MAX6956_8h_adebbf4c1afdeb688bf5d3887b80c75b2}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P5\-P4}~0x12
+\item 
+\#define \hyperlink{MAX6956_8h_a42db4570a3f848d62f3f906a920161b6}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P7\-P6}~0x13
+\item 
+\#define \hyperlink{MAX6956_8h_a51eb40018dff593fa84c319832a1a957}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P9\-P8}~0x14
+\item 
+\#define \hyperlink{MAX6956_8h_aa2304dec8420451a881876948e1cba43}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P11\-P10}~0x15
+\item 
+\#define \hyperlink{MAX6956_8h_add5533d08bfa791cf8cf95d7dd3f16d3}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P13\-P12}~0x16
+\item 
+\#define \hyperlink{MAX6956_8h_ae51b720b2bd4868c1986e2d314822778}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P15\-P14}~0x17
+\item 
+\#define \hyperlink{MAX6956_8h_a77820b1e4acee07a338e179ab35a7836}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P17\-P16}~0x18
+\item 
+\#define \hyperlink{MAX6956_8h_aa84fef4207af57fddf6468ae84ebd829}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P19\-P18}~0x19
+\item 
+\#define \hyperlink{MAX6956_8h_a11974f06951fb9051f9dd1d154d7c530}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P21\-P20}~0x1\-A
+\item 
+\#define \hyperlink{MAX6956_8h_aa971a2bb392832476e3b91970f7fffe7}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P23\-P22}~0x1\-B
+\item 
+\#define \hyperlink{MAX6956_8h_a040daea6fe73e819adcbcaed7cd3ceaf}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P25\-P24}~0x1\-C
+\item 
+\#define \hyperlink{MAX6956_8h_ac5e5f779975977348022381487c2dfa2}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P27\-P26}~0x1\-D
+\item 
+\#define \hyperlink{MAX6956_8h_a32623717f92442a1acfd42cdd3253302}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P29\-P28}~0x1\-E
+\item 
+\#define \hyperlink{MAX6956_8h_a64f61d29f7ede042a397c21f33cf6124}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P31\-P30}~0x1\-F
+\item 
+\#define \hyperlink{MAX6956_8h_a7e8973b61716ae09a84b95ea2f2f5914}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T0}~0x20
+\begin{DoxyCompactList}\small\item\em (virtual port, no action) \end{DoxyCompactList}\item 
+\#define \hyperlink{MAX6956_8h_a1e4fdb2886a119328bdd6807f3720eea}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T1}~0x21
+\begin{DoxyCompactList}\small\item\em (virtual port, no action) \end{DoxyCompactList}\item 
+\#define \hyperlink{MAX6956_8h_ac4cc75132151b2f662b7c54128391187}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T2}~0x22
+\begin{DoxyCompactList}\small\item\em (virtual port, no action) \end{DoxyCompactList}\item 
+\#define \hyperlink{MAX6956_8h_aa3e011deb16e7054e78e6f71ac33fcba}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T3}~0x23
+\begin{DoxyCompactList}\small\item\em (virtual port, no action) \end{DoxyCompactList}\item 
+\#define \hyperlink{MAX6956_8h_a68339cee27681486c99dabf398f487a0}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T4}~0x24
+\item 
+\#define \hyperlink{MAX6956_8h_a92c4653a42f8400a30aa13a60dbc056f}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T5}~0x25
+\item 
+\#define \hyperlink{MAX6956_8h_a5af96fba8e40466303a2bcec16df6c6f}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T6}~0x26
+\item 
+\#define \hyperlink{MAX6956_8h_a20de98d6d2102960000a70b4bcf6007c}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T7}~0x27
+\item 
+\#define \hyperlink{MAX6956_8h_ad0ea7dd1027b558df290150b664b0222}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T8}~0x28
+\item 
+\#define \hyperlink{MAX6956_8h_a7d31adbda8965d0d7df0c521571e135c}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T9}~0x29
+\item 
+\#define \hyperlink{MAX6956_8h_a2528a76a2e91cd1dfd11b8aefda01473}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T10}~0x2\-A
+\item 
+\#define \hyperlink{MAX6956_8h_a3a6abf1d9e71015255d821419e3ffa5a}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T11}~0x2\-B
+\item 
+\#define \hyperlink{MAX6956_8h_a3c089b77cbd25ffa27e3cd46af415a9c}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T12}~0x2\-C
+\item 
+\#define \hyperlink{MAX6956_8h_a2d6ee01536f1fb0ec843479948141cbc}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T13}~0x2\-D
+\item 
+\#define \hyperlink{MAX6956_8h_aba5e5ff9b4aea95fedff9f6421c5f47c}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T14}~0x2\-E
+\item 
+\#define \hyperlink{MAX6956_8h_ad366a7c1b65fb3496f5b9ba392d6ba9c}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T15}~0x2\-F
+\item 
+\#define \hyperlink{MAX6956_8h_ac483e6007b4e6a780c14c7a78ff7a134}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T16}~0x30
+\item 
+\#define \hyperlink{MAX6956_8h_ab6f3b8bbd8ac56bacf4a57691eb41aaf}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T17}~0x31
+\item 
+\#define \hyperlink{MAX6956_8h_a082486ab9eace7838acd56b6ac6301df}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T18}~0x32
+\item 
+\#define \hyperlink{MAX6956_8h_a04e65b34862a48ae022c994bbc5968dd}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T19}~0x33
+\item 
+\#define \hyperlink{MAX6956_8h_aed99f35f5ba961711c4e5bed769aa369}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T20}~0x34
+\item 
+\#define \hyperlink{MAX6956_8h_a361dcd71b3da6c5fb57d33951c9e4c54}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T21}~0x35
+\item 
+\#define \hyperlink{MAX6956_8h_a67c57767c9f6eda6124ff7368df4293b}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T22}~0x36
+\item 
+\#define \hyperlink{MAX6956_8h_a29699b356f81b9fc971a29fc04e68a59}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T23}~0x37
+\item 
+\#define \hyperlink{MAX6956_8h_ad053ff9eac065beaa10ad52dcc3d1e3e}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T24}~0x38
+\item 
+\#define \hyperlink{MAX6956_8h_a367103a7d8364b916a70f37d0880e334}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T25}~0x39
+\item 
+\#define \hyperlink{MAX6956_8h_ae0c19d326ab47406a138d4b66c601de0}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T26}~0x3\-A
+\item 
+\#define \hyperlink{MAX6956_8h_ae1219ad62d3ea1b3a86c52736d347618}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T27}~0x3\-B
+\item 
+\#define \hyperlink{MAX6956_8h_a07ff69092b95f43595762554c3e35329}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T28}~0x3\-C
+\item 
+\#define \hyperlink{MAX6956_8h_a6be82fa185d6c3dd272200727c15f4ac}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T29}~0x3\-D
+\item 
+\#define \hyperlink{MAX6956_8h_a34c02dca8e8a97488eb0be51f682cf73}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T30}~0x3\-E
+\item 
+\#define \hyperlink{MAX6956_8h_a891d2a47a2fe5a4da056a7732fb6098b}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T31}~0x3\-F
+\item 
+\#define \hyperlink{MAX6956_8h_a00bff40ca66a7c82b7093536c5047da4}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S4\-\_\-7}~0x40
+\begin{DoxyCompactList}\small\item\em data bits D0-\/\-D3; D4-\/\-D7 read as 0 \end{DoxyCompactList}\item 
+\#define \hyperlink{MAX6956_8h_a3d1cd4727f1748e42a0426c0b70d9c2c}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S4\-\_\-8}~0x41
+\begin{DoxyCompactList}\small\item\em data bits D0-\/\-D4; D5-\/\-D7 read as 0 \end{DoxyCompactList}\item 
+\#define \hyperlink{MAX6956_8h_ad1b71a2b24de60a4d0128576c0e1278b}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S4\-\_\-9}~0x42
+\begin{DoxyCompactList}\small\item\em data bits D0-\/\-D5; D6-\/\-D7 read as 0 \end{DoxyCompactList}\item 
+\#define \hyperlink{MAX6956_8h_ac32650edffdebee3cfeb90c9daece88b}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S4\-\_\-10}~0x43
+\begin{DoxyCompactList}\small\item\em data bits D0-\/\-D6; D7 reads as 0 \end{DoxyCompactList}\item 
+\#define \hyperlink{MAX6956_8h_a4b0cc79ee765d2f477953a890b2f6209}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S4\-\_\-11}~0x44
+\item 
+\#define \hyperlink{MAX6956_8h_a13b8eb94b73c20a02397e50c81bccb57}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S5\-\_\-12}~0x45
+\item 
+\#define \hyperlink{MAX6956_8h_af01fef127c33b806d570f1d46a90362f}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S6\-\_\-13}~0x46
+\item 
+\#define \hyperlink{MAX6956_8h_ae0f37de2a929dc6f37733c3f112e0fa7}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S7\-\_\-14}~0x47
+\item 
+\#define \hyperlink{MAX6956_8h_ae2bd6458f4aa0271d7fb9c8c8fdd0e4f}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S8\-\_\-15}~0x48
+\item 
+\#define \hyperlink{MAX6956_8h_aedb8b7ecadabaf8290ac1eacde7db918}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S9\-\_\-16}~0x49
+\item 
+\#define \hyperlink{MAX6956_8h_aa9837d30cb5f9c9badf20fe50ea3ba26}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S10\-\_\-17}~0x4\-A
+\item 
+\#define \hyperlink{MAX6956_8h_a40bf1528e6a7345e0aaa3b86869f3af3}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S11\-\_\-18}~0x4\-B
+\item 
+\#define \hyperlink{MAX6956_8h_ab3e1f8d0b913acae6d73f9b5b0d491ff}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S12\-\_\-19}~0x4\-C
+\item 
+\#define \hyperlink{MAX6956_8h_ad33d71fa8457fcdb444179768a6376e9}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S13\-\_\-20}~0x4\-D
+\item 
+\#define \hyperlink{MAX6956_8h_aeae655678f9a39b8a7f6e9de1a09c59e}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S14\-\_\-21}~0x4\-E
+\item 
+\#define \hyperlink{MAX6956_8h_a853b18f366e225131135f6576268a461}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S15\-\_\-22}~0x4\-F
+\item 
+\#define \hyperlink{MAX6956_8h_a39c1bb286953031fad9c101604d6f56e}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S16\-\_\-23}~0x50
+\item 
+\#define \hyperlink{MAX6956_8h_a8a4536b80e588a3ed6bb2f487499efeb}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S17\-\_\-24}~0x51
+\item 
+\#define \hyperlink{MAX6956_8h_a1ae324a27c0648b831978991a44ee33f}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S18\-\_\-25}~0x52
+\item 
+\#define \hyperlink{MAX6956_8h_a981a54414024fdd2877704d4d242b748}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S19\-\_\-26}~0x53
+\item 
+\#define \hyperlink{MAX6956_8h_abd2280465476a9e3cae302d5e9bf7b62}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S20\-\_\-27}~0x54
+\item 
+\#define \hyperlink{MAX6956_8h_adfca6218829cec2697e0975fc7965008}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S21\-\_\-28}~0x55
+\item 
+\#define \hyperlink{MAX6956_8h_aa190f6504c585b64f355ce45a24057f1}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S22\-\_\-29}~0x56
+\item 
+\#define \hyperlink{MAX6956_8h_a9ae64dcdc091a17982f4888bcd7b1981}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S23\-\_\-30}~0x57
+\item 
+\#define \hyperlink{MAX6956_8h_a5054da2b077f91e7f6106373a84476ed}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S24\-\_\-31}~0x58
+\item 
+\#define \hyperlink{MAX6956_8h_a38a7fe545ab1b4ca108dabcef50d015f}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S25\-\_\-31}~0x59
+\begin{DoxyCompactList}\small\item\em data bits D0-\/\-D6; D7 reads as 0 \end{DoxyCompactList}\item 
+\#define \hyperlink{MAX6956_8h_ac804c8074d5a6baf79b0595415ae0679}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S26\-\_\-31}~0x5\-A
+\begin{DoxyCompactList}\small\item\em data bits D0-\/\-D5; D6-\/\-D7 read as 0 \end{DoxyCompactList}\item 
+\#define \hyperlink{MAX6956_8h_a5307d28ebcae5028fc482c914eecf48f}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S27\-\_\-31}~0x5\-B
+\begin{DoxyCompactList}\small\item\em data bits D0-\/\-D4; D5-\/\-D7 read as 0 \end{DoxyCompactList}\item 
+\#define \hyperlink{MAX6956_8h_a7554adf2b4214f33584001f4e7c81053}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S28\-\_\-31}~0x5\-C
+\begin{DoxyCompactList}\small\item\em data bits D0-\/\-D3; D4-\/\-D7 read as 0 \end{DoxyCompactList}\item 
+\#define \hyperlink{MAX6956_8h_ab278f8cb075460b9318c029bca24e68a}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S29\-\_\-31}~0x5\-D
+\begin{DoxyCompactList}\small\item\em data bits D0-\/\-D2; D3-\/\-D7 read as 0 \end{DoxyCompactList}\item 
+\#define \hyperlink{MAX6956_8h_ae5873266ac57220286709a468781c3ff}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S30\-\_\-31}~0x5\-E
+\begin{DoxyCompactList}\small\item\em data bits D0-\/\-D1; D2-\/\-D7 read as 0 \end{DoxyCompactList}\item 
+\#define \hyperlink{MAX6956_8h_ad12b528f7fa63249d37126a8d4049aab}{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S31\-\_\-31}~0x5\-F
+\begin{DoxyCompactList}\small\item\em data bit D0; D1-\/\-D7 read as 0. Port 31 only. \end{DoxyCompactList}\item 
+\#define \hyperlink{MAX6956_8h_a03faf0490eddbb2f0405616ad6ac4052}{M\-A\-X6956\-\_\-\-C\-O\-N\-F\-I\-G\-\_\-\-P\-O\-W\-E\-R\-\_\-\-B\-I\-T}~0
+\begin{DoxyCompactList}\small\item\em 0 = Shutdown, 1 = Normal operation \end{DoxyCompactList}\item 
+\#define \hyperlink{MAX6956_8h_a4288d838d55461c66c0ba2e904f588a7}{M\-A\-X6956\-\_\-\-C\-O\-N\-F\-I\-G\-\_\-\-G\-L\-O\-B\-A\-L\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}~6
+\begin{DoxyCompactList}\small\item\em 0 = Global control, 1 = Individual control \end{DoxyCompactList}\item 
+\#define \hyperlink{MAX6956_8h_af1d61c00ae2e56dd5e7f04dc4b0c1663}{M\-A\-X6956\-\_\-\-C\-O\-N\-F\-I\-G\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-B\-I\-T}~7
+\begin{DoxyCompactList}\small\item\em 0 = Disabled, 1 = Enabled \end{DoxyCompactList}\item 
+\#define \hyperlink{MAX6956_8h_a85368204ba368978f814d46d81335c35}{M\-A\-X6956\-\_\-\-G\-L\-O\-B\-A\-L\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}~0
+\begin{DoxyCompactList}\small\item\em Global current start bit. \end{DoxyCompactList}\item 
+\#define \hyperlink{MAX6956_8h_afbcb8bf5ecc4e5afada48446f8dac809}{M\-A\-X6956\-\_\-\-G\-L\-O\-B\-A\-L\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}~4
+\begin{DoxyCompactList}\small\item\em nybble long \end{DoxyCompactList}\item 
+\#define \hyperlink{MAX6956_8h_ae1cb8088b95a2e19f293dbeee7ef7892}{M\-A\-X6956\-\_\-\-P\-O\-R\-T12\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}~3
+\begin{DoxyCompactList}\small\item\em L\-S\-Nybble. \end{DoxyCompactList}\item 
+\#define \hyperlink{MAX6956_8h_a8b0c452aa9a3f66de931d4a226f865e6}{M\-A\-X6956\-\_\-\-P\-O\-R\-T12\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}~4
+\begin{DoxyCompactList}\small\item\em nybble long \end{DoxyCompactList}\item 
+\#define \hyperlink{MAX6956_8h_a0c413303648e14359c311fb9478cfce7}{M\-A\-X6956\-\_\-\-P\-O\-R\-T13\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}~7
+\begin{DoxyCompactList}\small\item\em M\-S\-Nybble. \end{DoxyCompactList}\item 
+\#define \hyperlink{MAX6956_8h_abaee1f6920a6a6770468cb7def42bff7}{M\-A\-X6956\-\_\-\-P\-O\-R\-T13\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}~4
+\begin{DoxyCompactList}\small\item\em nybble long \end{DoxyCompactList}\item 
+\#define \hyperlink{MAX6956_8h_a0fcb35fa292905862765e99dd03e63b2}{M\-A\-X6956\-\_\-\-P\-O\-R\-T14\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}~3
+\begin{DoxyCompactList}\small\item\em L\-S\-Nybble. \end{DoxyCompactList}\item 
+\#define \hyperlink{MAX6956_8h_aa98b4176c22631122a00948e5a54e91f}{M\-A\-X6956\-\_\-\-P\-O\-R\-T14\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}~4
+\begin{DoxyCompactList}\small\item\em nybble long \end{DoxyCompactList}\item 
+\#define \hyperlink{MAX6956_8h_a659a1777dac35a14930720029b786aed}{M\-A\-X6956\-\_\-\-P\-O\-R\-T15\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}~7
+\begin{DoxyCompactList}\small\item\em M\-S\-Nybble. \end{DoxyCompactList}\item 
+\#define \hyperlink{MAX6956_8h_ab377c2d0463246bfc66c9df01087285d}{M\-A\-X6956\-\_\-\-P\-O\-R\-T15\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}~4
+\begin{DoxyCompactList}\small\item\em nybble long \end{DoxyCompactList}\item 
+\#define \hyperlink{MAX6956_8h_a977fb8ce0e696e764ae098dce361e446}{M\-A\-X6956\-\_\-\-P\-O\-R\-T16\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}~3
+\begin{DoxyCompactList}\small\item\em L\-S\-Nybble. \end{DoxyCompactList}\item 
+\#define \hyperlink{MAX6956_8h_a04c2dcf166214a43fbdd9ae5f7a0ca00}{M\-A\-X6956\-\_\-\-P\-O\-R\-T16\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}~4
+\begin{DoxyCompactList}\small\item\em nybble long \end{DoxyCompactList}\item 
+\#define \hyperlink{MAX6956_8h_ab59b7f618ff0788a6bd21313bf14673f}{M\-A\-X6956\-\_\-\-P\-O\-R\-T17\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}~7
+\begin{DoxyCompactList}\small\item\em M\-S\-Nybble. \end{DoxyCompactList}\item 
+\#define \hyperlink{MAX6956_8h_adf0428deb9192d621f837d7951e539be}{M\-A\-X6956\-\_\-\-P\-O\-R\-T17\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}~4
+\begin{DoxyCompactList}\small\item\em nybble long \end{DoxyCompactList}\item 
+\#define \hyperlink{MAX6956_8h_ab0d4c28bc6747482ab33a027fd93b5d7}{M\-A\-X6956\-\_\-\-P\-O\-R\-T18\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}~3
+\begin{DoxyCompactList}\small\item\em L\-S\-Nybble. \end{DoxyCompactList}\item 
+\#define \hyperlink{MAX6956_8h_a9bb781fca7fadebb28918c05d2f1605c}{M\-A\-X6956\-\_\-\-P\-O\-R\-T18\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}~4
+\begin{DoxyCompactList}\small\item\em nybble long \end{DoxyCompactList}\item 
+\#define \hyperlink{MAX6956_8h_aea0128f7b979e68785b78cfc7e480a32}{M\-A\-X6956\-\_\-\-P\-O\-R\-T19\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}~7
+\begin{DoxyCompactList}\small\item\em M\-S\-Nybble. \end{DoxyCompactList}\item 
+\#define \hyperlink{MAX6956_8h_a5c2f25a82e8b442abb28a9544a3d4088}{M\-A\-X6956\-\_\-\-P\-O\-R\-T19\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}~4
+\begin{DoxyCompactList}\small\item\em nybble long \end{DoxyCompactList}\item 
+\#define \hyperlink{MAX6956_8h_a95789ffe1e677c75090556342763c6ac}{M\-A\-X6956\-\_\-\-P\-O\-R\-T23\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}~3
+\begin{DoxyCompactList}\small\item\em L\-S\-Nybble. \end{DoxyCompactList}\item 
+\#define \hyperlink{MAX6956_8h_a0f492bea7bf9e0906ba13f447327d5a8}{M\-A\-X6956\-\_\-\-P\-O\-R\-T23\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}~4
+\begin{DoxyCompactList}\small\item\em nybble long \end{DoxyCompactList}\item 
+\#define \hyperlink{MAX6956_8h_abd855e00543729cc87ab4a48e3d98649}{M\-A\-X6956\-\_\-\-P\-O\-R\-T21\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}~7
+\begin{DoxyCompactList}\small\item\em M\-S\-Nybble. \end{DoxyCompactList}\item 
+\#define \hyperlink{MAX6956_8h_a65cd02d7f498266b224c035a3809126a}{M\-A\-X6956\-\_\-\-P\-O\-R\-T21\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}~4
+\begin{DoxyCompactList}\small\item\em nybble long \end{DoxyCompactList}\item 
+\#define \hyperlink{MAX6956_8h_a061947a1484a8449fd4301a1022cafe5}{M\-A\-X6956\-\_\-\-P\-O\-R\-T22\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}~3
+\begin{DoxyCompactList}\small\item\em L\-S\-Nybble. \end{DoxyCompactList}\item 
+\#define \hyperlink{MAX6956_8h_aa64238ebb3bf6d8ee2d0d368992e7613}{M\-A\-X6956\-\_\-\-P\-O\-R\-T22\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}~4
+\begin{DoxyCompactList}\small\item\em nybble long \end{DoxyCompactList}\item 
+\#define \hyperlink{MAX6956_8h_a95789ffe1e677c75090556342763c6ac}{M\-A\-X6956\-\_\-\-P\-O\-R\-T23\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}~7
+\begin{DoxyCompactList}\small\item\em L\-S\-Nybble. \end{DoxyCompactList}\item 
+\#define \hyperlink{MAX6956_8h_a0f492bea7bf9e0906ba13f447327d5a8}{M\-A\-X6956\-\_\-\-P\-O\-R\-T23\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}~4
+\begin{DoxyCompactList}\small\item\em nybble long \end{DoxyCompactList}\item 
+\#define \hyperlink{MAX6956_8h_a50e41ea8c3ec1bb3d55e5a4eb03563a2}{M\-A\-X6956\-\_\-\-P\-O\-R\-T24\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}~3
+\begin{DoxyCompactList}\small\item\em L\-S\-Nybble. \end{DoxyCompactList}\item 
+\#define \hyperlink{MAX6956_8h_a11ee583606d04516bc2fc5812b05cd3d}{M\-A\-X6956\-\_\-\-P\-O\-R\-T24\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}~4
+\begin{DoxyCompactList}\small\item\em nybble long \end{DoxyCompactList}\item 
+\#define \hyperlink{MAX6956_8h_a75f6b93cf7558a38adba5bb4a91d05f8}{M\-A\-X6956\-\_\-\-P\-O\-R\-T25\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}~7
+\begin{DoxyCompactList}\small\item\em M\-S\-Nybble. \end{DoxyCompactList}\item 
+\#define \hyperlink{MAX6956_8h_a3b1a7a5f82da6b43bd5a24d2297a2f75}{M\-A\-X6956\-\_\-\-P\-O\-R\-T25\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}~4
+\begin{DoxyCompactList}\small\item\em nybble long \end{DoxyCompactList}\item 
+\#define \hyperlink{MAX6956_8h_abd400d2f356832d21b1787e2501a8644}{M\-A\-X6956\-\_\-\-P\-O\-R\-T26\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}~3
+\begin{DoxyCompactList}\small\item\em L\-S\-Nybble. \end{DoxyCompactList}\item 
+\#define \hyperlink{MAX6956_8h_a28bf5ca7da83928eeec3f4f302d12c45}{M\-A\-X6956\-\_\-\-P\-O\-R\-T26\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}~4
+\begin{DoxyCompactList}\small\item\em nybble long \end{DoxyCompactList}\item 
+\#define \hyperlink{MAX6956_8h_a62bf02cd8e4d8a9dfa975d0e319f68f5}{M\-A\-X6956\-\_\-\-P\-O\-R\-T27\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}~7
+\begin{DoxyCompactList}\small\item\em M\-S\-Nybble. \end{DoxyCompactList}\item 
+\#define \hyperlink{MAX6956_8h_a0a0f99c166b5a60d7e6c6c7d99306b45}{M\-A\-X6956\-\_\-\-P\-O\-R\-T27\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}~4
+\begin{DoxyCompactList}\small\item\em nybble long \end{DoxyCompactList}\item 
+\#define \hyperlink{MAX6956_8h_ab6135c4105c3b39625e7361a438e1511}{M\-A\-X6956\-\_\-\-P\-O\-R\-T28\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}~3
+\begin{DoxyCompactList}\small\item\em L\-S\-Nybble. \end{DoxyCompactList}\item 
+\#define \hyperlink{MAX6956_8h_ac2bcdc199d348dba281a4371675bd428}{M\-A\-X6956\-\_\-\-P\-O\-R\-T28\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}~4
+\begin{DoxyCompactList}\small\item\em nybble long \end{DoxyCompactList}\item 
+\#define \hyperlink{MAX6956_8h_ae98448e4aa991d16d9b1d9d6071078d8}{M\-A\-X6956\-\_\-\-P\-O\-R\-T29\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}~7
+\begin{DoxyCompactList}\small\item\em M\-S\-Nybble. \end{DoxyCompactList}\item 
+\#define \hyperlink{MAX6956_8h_a6b0d8a1c63777d016e1cb22076b91377}{M\-A\-X6956\-\_\-\-P\-O\-R\-T29\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}~4
+\begin{DoxyCompactList}\small\item\em nybble long \end{DoxyCompactList}\item 
+\#define \hyperlink{MAX6956_8h_aa5acefc0723ea8d2b804aa7eccae705b}{M\-A\-X6956\-\_\-\-P\-O\-R\-T33\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}~3
+\begin{DoxyCompactList}\small\item\em L\-S\-Nybble. \end{DoxyCompactList}\item 
+\#define \hyperlink{MAX6956_8h_a2fb02a7e77abefcbf7c194ff6b994ae9}{M\-A\-X6956\-\_\-\-P\-O\-R\-T33\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}~4
+\begin{DoxyCompactList}\small\item\em nybble long \end{DoxyCompactList}\item 
+\#define \hyperlink{MAX6956_8h_a1cdbea93ca621e5fc4c747286bdf90e1}{M\-A\-X6956\-\_\-\-P\-O\-R\-T31\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}~7
+\begin{DoxyCompactList}\small\item\em M\-S\-Nybble. \end{DoxyCompactList}\item 
+\#define \hyperlink{MAX6956_8h_a40a075605dfcfc2736aab5ffa10e3e2c}{M\-A\-X6956\-\_\-\-P\-O\-R\-T31\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}~4
+\begin{DoxyCompactList}\small\item\em nybble long \end{DoxyCompactList}\item 
+\#define \hyperlink{MAX6956_8h_a7e110f7b5949bf63dd7c5b4e9a59a5b0}{M\-A\-X6956\-\_\-\-D\-I\-S\-P\-L\-A\-Y\-\_\-\-T\-E\-S\-T\-\_\-\-B\-I\-T}~0
+\begin{DoxyCompactList}\small\item\em 0 = Normal operation, 1 = Display test \end{DoxyCompactList}\item 
+\#define \hyperlink{MAX6956_8h_a29bd01905e66b503151e6d9cdfb035a1}{M\-A\-X6956\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-S\-T\-A\-T\-U\-S\-\_\-\-B\-I\-T}~7
+\begin{DoxyCompactList}\small\item\em I\-N\-T Status, I\-N\-T is automatically cleared after it is read. \end{DoxyCompactList}\item 
+\#define \hyperlink{MAX6956_8h_abc801853bdfe66591265d04865aba78f}{M\-A\-X6956\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-M\-A\-S\-K\-\_\-\-B\-I\-T}~0
+\begin{DoxyCompactList}\small\item\em Ports 24-\/30. \end{DoxyCompactList}\item 
+\#define \hyperlink{MAX6956_8h_a332868e8a1596e785072ddb8c4a2b4c1}{M\-A\-X6956\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-M\-A\-S\-K\-\_\-\-L\-E\-N\-G\-T\-H}~7
+\item 
+\#define \hyperlink{MAX6956_8h_a0e7f62a1c7d77019ca8ca2c2511f2644}{M\-A\-X6956\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-M\-A\-S\-K\-\_\-\-P\-O\-R\-T30\-\_\-\-B\-I\-T}~6
+\item 
+\#define \hyperlink{MAX6956_8h_a74adf7234472da3287cb98af583750c9}{M\-A\-X6956\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-M\-A\-S\-K\-\_\-\-P\-O\-R\-T29\-\_\-\-B\-I\-T}~5
+\item 
+\#define \hyperlink{MAX6956_8h_a927e5369f33337fdea8d89ccc3b3919d}{M\-A\-X6956\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-M\-A\-S\-K\-\_\-\-P\-O\-R\-T28\-\_\-\-B\-I\-T}~4
+\item 
+\#define \hyperlink{MAX6956_8h_a282091cda715bb27f96266f5ae22b492}{M\-A\-X6956\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-M\-A\-S\-K\-\_\-\-P\-O\-R\-T27\-\_\-\-B\-I\-T}~3
+\item 
+\#define \hyperlink{MAX6956_8h_ac4f63f4afc199c41dd9b1445259b8d50}{M\-A\-X6956\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-M\-A\-S\-K\-\_\-\-P\-O\-R\-T26\-\_\-\-B\-I\-T}~2
+\item 
+\#define \hyperlink{MAX6956_8h_a04d331f867fa51822f5910ce2b6b891c}{M\-A\-X6956\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-M\-A\-S\-K\-\_\-\-P\-O\-R\-T25\-\_\-\-B\-I\-T}~1
+\item 
+\#define \hyperlink{MAX6956_8h_a0a2eb488b9b8d16b5c076d25790ec28e}{M\-A\-X6956\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-M\-A\-S\-K\-\_\-\-P\-O\-R\-T24\-\_\-\-B\-I\-T}~0
+\item 
+\#define \hyperlink{MAX6956_8h_ad6490a909085059c4300a51dcebbf7bc}{M\-A\-X6956\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-L\-E\-D}~0x00
+\item 
+\#define \hyperlink{MAX6956_8h_a27f6ca524d4c18623762c722d9993c10}{M\-A\-X6956\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-G\-P\-I\-O}~0x01
+\item 
+\#define \hyperlink{MAX6956_8h_ab05f3186e2515bab3a536ad9f1cbb7db}{M\-A\-X6956\-\_\-\-I\-N\-P\-U\-T\-\_\-\-W\-O\-\_\-\-P\-U\-L\-L}~0x02
+\item 
+\#define \hyperlink{MAX6956_8h_a68fc1bc750b7959fbab7e64f79589b83}{M\-A\-X6956\-\_\-\-I\-N\-P\-U\-T\-\_\-\-W\-\_\-\-P\-U\-L\-L}~0x03
+\item 
+\#define \hyperlink{MAX6956_8h_a003fe60fa8da81e67da2ad7900d1196f}{M\-A\-X6956\-\_\-\-O\-F\-F}~0x00
+\item 
+\#define \hyperlink{MAX6956_8h_a4e151161e190a9f45aebfd712064b034}{M\-A\-X6956\-\_\-\-O\-N}~0x01
+\item 
+\#define \hyperlink{MAX6956_8h_a930221b73d0e7327ffce1e3072ed69e3}{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0}~0x00
+\item 
+\#define \hyperlink{MAX6956_8h_afd6a3c0f560b7b7190805416e1ad00f5}{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-1}~0x01
+\item 
+\#define \hyperlink{MAX6956_8h_ab7558038e4f723efa4b406e988a93990}{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-2}~0x02
+\item 
+\#define \hyperlink{MAX6956_8h_a8b8800a153cf4869a6c4d399f8d46035}{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-3}~0x03
+\item 
+\#define \hyperlink{MAX6956_8h_a2678f20d0e18e036e13ff5f422fcf609}{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-4}~0x04
+\item 
+\#define \hyperlink{MAX6956_8h_af808e1e791b9a640d6b6c62cb145f169}{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-5}~0x05
+\item 
+\#define \hyperlink{MAX6956_8h_a0c97726477caef4c0f54eb1beaffbdff}{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-6}~0x06
+\item 
+\#define \hyperlink{MAX6956_8h_a55c66763c65c8554d12a71a4c20e35a6}{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-7}~0x07
+\item 
+\#define \hyperlink{MAX6956_8h_a11c425ee14938c667e63e7df4cf8afa2}{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-8}~0x08
+\item 
+\#define \hyperlink{MAX6956_8h_a4da9aedd07982408005da31fda78463a}{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-9}~0x09
+\item 
+\#define \hyperlink{MAX6956_8h_a62f09fbe807ce97d3558748808ed3a11}{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-10}~0x0\-A
+\item 
+\#define \hyperlink{MAX6956_8h_a5b97f8927dd861189567ad1fda6d692a}{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-11}~0x0\-B
+\item 
+\#define \hyperlink{MAX6956_8h_a8fb88850c74ecc2080971984c817b860}{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-12}~0x0\-C
+\item 
+\#define \hyperlink{MAX6956_8h_a8bfeeb7d88d4284dec7174b65724877d}{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-13}~0x0\-D
+\item 
+\#define \hyperlink{MAX6956_8h_aad136273ced9dea0ef4a8821f4a5f368}{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-14}~0x0\-E
+\item 
+\#define \hyperlink{MAX6956_8h_a4c0ac1cc939ecfb7992dac2834521eb6}{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-15}~0x0\-F
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\hypertarget{MAX6956_8h_a33e60623a4c5b483d4604fe2c9b91be7}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-A\-D\-D\-R\-E\-S\-S@{M\-A\-X6956\-\_\-\-A\-D\-D\-R\-E\-S\-S}}
+\index{M\-A\-X6956\-\_\-\-A\-D\-D\-R\-E\-S\-S@{M\-A\-X6956\-\_\-\-A\-D\-D\-R\-E\-S\-S}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-A\-D\-D\-R\-E\-S\-S}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-A\-D\-D\-R\-E\-S\-S~0x40}}\label{MAX6956_8h_a33e60623a4c5b483d4604fe2c9b91be7}
+\subsection*{Table 3. I2\-C Address Map }
+
+Pin$|$\-Pin$|$\-D\-E\-V\-I\-C\-E A\-D\-D\-R\-E\-S\-S $|$ \-:-\/\-:$|$\-:-\/\-:$|$\-:-\/\-:$|$\-:-\/\-:$|$\-:-\/\-:$|$\-:-\/\-:$|$\-:-\/\-:$|$\-:-\/\-:$|$\-:-\/\-:$|$\-:-\/\-:$|$\-:--\-: A\-D1$|$\-A\-D0$|$\-A7 $|$\-A6 $|$\-A5 $|$\-A4 $|$\-A3 $|$\-A2 $|$\-A1 $|$\-A0 $|$\-H\-E\-X G\-N\-D$|$\-G\-N\-D$|$1 $|$0 $|$0 $|$0 $|$0 $|$0 $|$0 $|$\-R\-W $|$0x40 G\-N\-D$|$\-V+ $|$1 $|$0 $|$0 $|$0 $|$0 $|$0 $|$1 $|$\-R\-W $|$0x41 G\-N\-D$|$\-S\-D\-A$|$1 $|$0 $|$0 $|$0 $|$0 $|$1 $|$0 $|$\-R\-W $|$0x42 G\-N\-D$|$\-S\-C\-L$|$1 $|$0 $|$0 $|$0 $|$0 $|$1 $|$1 $|$\-R\-W $|$0x43 V+ $|$\-G\-N\-D$|$1 $|$0 $|$0 $|$0 $|$1 $|$0 $|$0 $|$\-R\-W $|$0x44 V+ $|$\-V+ $|$1 $|$0 $|$0 $|$0 $|$1 $|$0 $|$1 $|$\-R\-W $|$0x45 V+ $|$\-S\-D\-A$|$1 $|$0 $|$0 $|$0 $|$1 $|$1 $|$0 $|$\-R\-W $|$0x46 V+ $|$\-S\-C\-L$|$1 $|$0 $|$0 $|$0 $|$1 $|$1 $|$1 $|$\-R\-W $|$0x47 S\-D\-A$|$\-G\-N\-D$|$1 $|$0 $|$0 $|$1 $|$0 $|$0 $|$0 $|$\-R\-W $|$0x48 S\-D\-A$|$\-V+ $|$1 $|$0 $|$0 $|$1 $|$0 $|$0 $|$1 $|$\-R\-W $|$0x49 S\-D\-A$|$\-S\-D\-A$|$1 $|$0 $|$0 $|$1 $|$0 $|$1 $|$0 $|$\-R\-W $|$0x50 S\-D\-A$|$\-S\-C\-L$|$1 $|$0 $|$0 $|$1 $|$0 $|$1 $|$1 $|$\-R\-W $|$0x51 S\-C\-L$|$\-G\-N\-D$|$1 $|$0 $|$0 $|$1 $|$1 $|$0 $|$0 $|$\-R\-W $|$0x52 S\-C\-L$|$\-V+ $|$1 $|$0 $|$0 $|$1 $|$1 $|$0 $|$1 $|$\-R\-W $|$0x53 S\-C\-L$|$\-S\-D\-A$|$1 $|$0 $|$0 $|$1 $|$1 $|$1 $|$0 $|$\-R\-W $|$0x54 S\-C\-L$|$\-S\-C\-L$|$1 $|$0 $|$0 $|$1 $|$1 $|$1 $|$1 $|$\-R\-W $|$0x55
+
+R\-W bit 0 = Write 1 = Read 
+
+Definition at line 71 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a4288d838d55461c66c0ba2e904f588a7}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-C\-O\-N\-F\-I\-G\-\_\-\-G\-L\-O\-B\-A\-L\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T@{M\-A\-X6956\-\_\-\-C\-O\-N\-F\-I\-G\-\_\-\-G\-L\-O\-B\-A\-L\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}}
+\index{M\-A\-X6956\-\_\-\-C\-O\-N\-F\-I\-G\-\_\-\-G\-L\-O\-B\-A\-L\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T@{M\-A\-X6956\-\_\-\-C\-O\-N\-F\-I\-G\-\_\-\-G\-L\-O\-B\-A\-L\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-C\-O\-N\-F\-I\-G\-\_\-\-G\-L\-O\-B\-A\-L\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-C\-O\-N\-F\-I\-G\-\_\-\-G\-L\-O\-B\-A\-L\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T~6}}\label{MAX6956_8h_a4288d838d55461c66c0ba2e904f588a7}
+
+
+0 = Global control, 1 = Individual control 
+
+
+
+Definition at line 344 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a03faf0490eddbb2f0405616ad6ac4052}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-C\-O\-N\-F\-I\-G\-\_\-\-P\-O\-W\-E\-R\-\_\-\-B\-I\-T@{M\-A\-X6956\-\_\-\-C\-O\-N\-F\-I\-G\-\_\-\-P\-O\-W\-E\-R\-\_\-\-B\-I\-T}}
+\index{M\-A\-X6956\-\_\-\-C\-O\-N\-F\-I\-G\-\_\-\-P\-O\-W\-E\-R\-\_\-\-B\-I\-T@{M\-A\-X6956\-\_\-\-C\-O\-N\-F\-I\-G\-\_\-\-P\-O\-W\-E\-R\-\_\-\-B\-I\-T}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-C\-O\-N\-F\-I\-G\-\_\-\-P\-O\-W\-E\-R\-\_\-\-B\-I\-T}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-C\-O\-N\-F\-I\-G\-\_\-\-P\-O\-W\-E\-R\-\_\-\-B\-I\-T~0}}\label{MAX6956_8h_a03faf0490eddbb2f0405616ad6ac4052}
+
+
+0 = Shutdown, 1 = Normal operation 
+
+
+
+Definition at line 343 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_af1d61c00ae2e56dd5e7f04dc4b0c1663}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-C\-O\-N\-F\-I\-G\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-B\-I\-T@{M\-A\-X6956\-\_\-\-C\-O\-N\-F\-I\-G\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-B\-I\-T}}
+\index{M\-A\-X6956\-\_\-\-C\-O\-N\-F\-I\-G\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-B\-I\-T@{M\-A\-X6956\-\_\-\-C\-O\-N\-F\-I\-G\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-B\-I\-T}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-C\-O\-N\-F\-I\-G\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-B\-I\-T}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-C\-O\-N\-F\-I\-G\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-B\-I\-T~7}}\label{MAX6956_8h_af1d61c00ae2e56dd5e7f04dc4b0c1663}
+
+
+0 = Disabled, 1 = Enabled 
+
+
+
+Definition at line 345 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a930221b73d0e7327ffce1e3072ed69e3}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0@{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0}}
+\index{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0@{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0~0x00}}\label{MAX6956_8h_a930221b73d0e7327ffce1e3072ed69e3}
+
+
+Definition at line 414 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_afd6a3c0f560b7b7190805416e1ad00f5}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-1@{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-1}}
+\index{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-1@{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-1}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-1}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-1~0x01}}\label{MAX6956_8h_afd6a3c0f560b7b7190805416e1ad00f5}
+
+
+Definition at line 415 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a62f09fbe807ce97d3558748808ed3a11}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-10@{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-10}}
+\index{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-10@{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-10}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-10}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-10~0x0\-A}}\label{MAX6956_8h_a62f09fbe807ce97d3558748808ed3a11}
+
+
+Definition at line 424 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a5b97f8927dd861189567ad1fda6d692a}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-11@{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-11}}
+\index{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-11@{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-11}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-11}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-11~0x0\-B}}\label{MAX6956_8h_a5b97f8927dd861189567ad1fda6d692a}
+
+
+Definition at line 425 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a8fb88850c74ecc2080971984c817b860}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-12@{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-12}}
+\index{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-12@{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-12}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-12}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-12~0x0\-C}}\label{MAX6956_8h_a8fb88850c74ecc2080971984c817b860}
+
+
+Definition at line 426 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a8bfeeb7d88d4284dec7174b65724877d}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-13@{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-13}}
+\index{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-13@{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-13}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-13}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-13~0x0\-D}}\label{MAX6956_8h_a8bfeeb7d88d4284dec7174b65724877d}
+
+
+Definition at line 427 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_aad136273ced9dea0ef4a8821f4a5f368}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-14@{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-14}}
+\index{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-14@{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-14}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-14}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-14~0x0\-E}}\label{MAX6956_8h_aad136273ced9dea0ef4a8821f4a5f368}
+
+
+Definition at line 428 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a4c0ac1cc939ecfb7992dac2834521eb6}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-15@{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-15}}
+\index{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-15@{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-15}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-15}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-15~0x0\-F}}\label{MAX6956_8h_a4c0ac1cc939ecfb7992dac2834521eb6}
+
+
+Definition at line 429 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_ab7558038e4f723efa4b406e988a93990}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-2@{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-2}}
+\index{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-2@{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-2}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-2}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-2~0x02}}\label{MAX6956_8h_ab7558038e4f723efa4b406e988a93990}
+
+
+Definition at line 416 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a8b8800a153cf4869a6c4d399f8d46035}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-3@{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-3}}
+\index{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-3@{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-3}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-3}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-3~0x03}}\label{MAX6956_8h_a8b8800a153cf4869a6c4d399f8d46035}
+
+
+Definition at line 417 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a2678f20d0e18e036e13ff5f422fcf609}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-4@{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-4}}
+\index{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-4@{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-4}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-4}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-4~0x04}}\label{MAX6956_8h_a2678f20d0e18e036e13ff5f422fcf609}
+
+
+Definition at line 418 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_af808e1e791b9a640d6b6c62cb145f169}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-5@{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-5}}
+\index{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-5@{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-5}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-5}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-5~0x05}}\label{MAX6956_8h_af808e1e791b9a640d6b6c62cb145f169}
+
+
+Definition at line 419 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a0c97726477caef4c0f54eb1beaffbdff}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-6@{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-6}}
+\index{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-6@{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-6}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-6}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-6~0x06}}\label{MAX6956_8h_a0c97726477caef4c0f54eb1beaffbdff}
+
+
+Definition at line 420 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a55c66763c65c8554d12a71a4c20e35a6}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-7@{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-7}}
+\index{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-7@{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-7}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-7}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-7~0x07}}\label{MAX6956_8h_a55c66763c65c8554d12a71a4c20e35a6}
+
+
+Definition at line 421 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a11c425ee14938c667e63e7df4cf8afa2}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-8@{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-8}}
+\index{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-8@{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-8}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-8}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-8~0x08}}\label{MAX6956_8h_a11c425ee14938c667e63e7df4cf8afa2}
+
+
+Definition at line 422 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a4da9aedd07982408005da31fda78463a}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-9@{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-9}}
+\index{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-9@{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-9}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-9}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-9~0x09}}\label{MAX6956_8h_a4da9aedd07982408005da31fda78463a}
+
+
+Definition at line 423 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a4ca90873afdfdacaa730ed5db53e2f5b}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-D\-E\-F\-A\-U\-L\-T\-\_\-\-A\-D\-D\-R\-E\-S\-S@{M\-A\-X6956\-\_\-\-D\-E\-F\-A\-U\-L\-T\-\_\-\-A\-D\-D\-R\-E\-S\-S}}
+\index{M\-A\-X6956\-\_\-\-D\-E\-F\-A\-U\-L\-T\-\_\-\-A\-D\-D\-R\-E\-S\-S@{M\-A\-X6956\-\_\-\-D\-E\-F\-A\-U\-L\-T\-\_\-\-A\-D\-D\-R\-E\-S\-S}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-D\-E\-F\-A\-U\-L\-T\-\_\-\-A\-D\-D\-R\-E\-S\-S}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-D\-E\-F\-A\-U\-L\-T\-\_\-\-A\-D\-D\-R\-E\-S\-S~0x40}}\label{MAX6956_8h_a4ca90873afdfdacaa730ed5db53e2f5b}
+
+
+Definition at line 72 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a7e110f7b5949bf63dd7c5b4e9a59a5b0}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-D\-I\-S\-P\-L\-A\-Y\-\_\-\-T\-E\-S\-T\-\_\-\-B\-I\-T@{M\-A\-X6956\-\_\-\-D\-I\-S\-P\-L\-A\-Y\-\_\-\-T\-E\-S\-T\-\_\-\-B\-I\-T}}
+\index{M\-A\-X6956\-\_\-\-D\-I\-S\-P\-L\-A\-Y\-\_\-\-T\-E\-S\-T\-\_\-\-B\-I\-T@{M\-A\-X6956\-\_\-\-D\-I\-S\-P\-L\-A\-Y\-\_\-\-T\-E\-S\-T\-\_\-\-B\-I\-T}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-D\-I\-S\-P\-L\-A\-Y\-\_\-\-T\-E\-S\-T\-\_\-\-B\-I\-T}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-D\-I\-S\-P\-L\-A\-Y\-\_\-\-T\-E\-S\-T\-\_\-\-B\-I\-T~0}}\label{MAX6956_8h_a7e110f7b5949bf63dd7c5b4e9a59a5b0}
+
+
+0 = Normal operation, 1 = Display test 
+
+
+
+Definition at line 391 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a85368204ba368978f814d46d81335c35}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-G\-L\-O\-B\-A\-L\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T@{M\-A\-X6956\-\_\-\-G\-L\-O\-B\-A\-L\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}}
+\index{M\-A\-X6956\-\_\-\-G\-L\-O\-B\-A\-L\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T@{M\-A\-X6956\-\_\-\-G\-L\-O\-B\-A\-L\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-G\-L\-O\-B\-A\-L\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-G\-L\-O\-B\-A\-L\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T~0}}\label{MAX6956_8h_a85368204ba368978f814d46d81335c35}
+
+
+Global current start bit. 
+
+
+
+Definition at line 347 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_afbcb8bf5ecc4e5afada48446f8dac809}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-G\-L\-O\-B\-A\-L\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H@{M\-A\-X6956\-\_\-\-G\-L\-O\-B\-A\-L\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}}
+\index{M\-A\-X6956\-\_\-\-G\-L\-O\-B\-A\-L\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H@{M\-A\-X6956\-\_\-\-G\-L\-O\-B\-A\-L\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-G\-L\-O\-B\-A\-L\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-G\-L\-O\-B\-A\-L\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H~4}}\label{MAX6956_8h_afbcb8bf5ecc4e5afada48446f8dac809}
+
+
+nybble long 
+
+
+
+Definition at line 348 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a68fc1bc750b7959fbab7e64f79589b83}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-I\-N\-P\-U\-T\-\_\-\-W\-\_\-\-P\-U\-L\-L@{M\-A\-X6956\-\_\-\-I\-N\-P\-U\-T\-\_\-\-W\-\_\-\-P\-U\-L\-L}}
+\index{M\-A\-X6956\-\_\-\-I\-N\-P\-U\-T\-\_\-\-W\-\_\-\-P\-U\-L\-L@{M\-A\-X6956\-\_\-\-I\-N\-P\-U\-T\-\_\-\-W\-\_\-\-P\-U\-L\-L}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-I\-N\-P\-U\-T\-\_\-\-W\-\_\-\-P\-U\-L\-L}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-I\-N\-P\-U\-T\-\_\-\-W\-\_\-\-P\-U\-L\-L~0x03}}\label{MAX6956_8h_a68fc1bc750b7959fbab7e64f79589b83}
+
+
+Definition at line 409 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_ab05f3186e2515bab3a536ad9f1cbb7db}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-I\-N\-P\-U\-T\-\_\-\-W\-O\-\_\-\-P\-U\-L\-L@{M\-A\-X6956\-\_\-\-I\-N\-P\-U\-T\-\_\-\-W\-O\-\_\-\-P\-U\-L\-L}}
+\index{M\-A\-X6956\-\_\-\-I\-N\-P\-U\-T\-\_\-\-W\-O\-\_\-\-P\-U\-L\-L@{M\-A\-X6956\-\_\-\-I\-N\-P\-U\-T\-\_\-\-W\-O\-\_\-\-P\-U\-L\-L}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-I\-N\-P\-U\-T\-\_\-\-W\-O\-\_\-\-P\-U\-L\-L}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-I\-N\-P\-U\-T\-\_\-\-W\-O\-\_\-\-P\-U\-L\-L~0x02}}\label{MAX6956_8h_ab05f3186e2515bab3a536ad9f1cbb7db}
+
+
+Definition at line 408 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a003fe60fa8da81e67da2ad7900d1196f}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-O\-F\-F@{M\-A\-X6956\-\_\-\-O\-F\-F}}
+\index{M\-A\-X6956\-\_\-\-O\-F\-F@{M\-A\-X6956\-\_\-\-O\-F\-F}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-O\-F\-F}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-O\-F\-F~0x00}}\label{MAX6956_8h_a003fe60fa8da81e67da2ad7900d1196f}
+
+
+Definition at line 411 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a4e151161e190a9f45aebfd712064b034}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-O\-N@{M\-A\-X6956\-\_\-\-O\-N}}
+\index{M\-A\-X6956\-\_\-\-O\-N@{M\-A\-X6956\-\_\-\-O\-N}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-O\-N}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-O\-N~0x01}}\label{MAX6956_8h_a4e151161e190a9f45aebfd712064b034}
+
+
+Definition at line 412 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a27f6ca524d4c18623762c722d9993c10}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-G\-P\-I\-O@{M\-A\-X6956\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-G\-P\-I\-O}}
+\index{M\-A\-X6956\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-G\-P\-I\-O@{M\-A\-X6956\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-G\-P\-I\-O}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-G\-P\-I\-O}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-G\-P\-I\-O~0x01}}\label{MAX6956_8h_a27f6ca524d4c18623762c722d9993c10}
+
+
+Definition at line 407 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_ad6490a909085059c4300a51dcebbf7bc}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-L\-E\-D@{M\-A\-X6956\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-L\-E\-D}}
+\index{M\-A\-X6956\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-L\-E\-D@{M\-A\-X6956\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-L\-E\-D}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-L\-E\-D}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-O\-U\-T\-P\-U\-T\-\_\-\-L\-E\-D~0x00}}\label{MAX6956_8h_ad6490a909085059c4300a51dcebbf7bc}
+
+
+Definition at line 406 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_ae1cb8088b95a2e19f293dbeee7ef7892}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-P\-O\-R\-T12\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T@{M\-A\-X6956\-\_\-\-P\-O\-R\-T12\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}}
+\index{M\-A\-X6956\-\_\-\-P\-O\-R\-T12\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T@{M\-A\-X6956\-\_\-\-P\-O\-R\-T12\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-P\-O\-R\-T12\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-P\-O\-R\-T12\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T~3}}\label{MAX6956_8h_ae1cb8088b95a2e19f293dbeee7ef7892}
+
+
+L\-S\-Nybble. 
+
+
+
+Definition at line 350 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a8b0c452aa9a3f66de931d4a226f865e6}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-P\-O\-R\-T12\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H@{M\-A\-X6956\-\_\-\-P\-O\-R\-T12\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}}
+\index{M\-A\-X6956\-\_\-\-P\-O\-R\-T12\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H@{M\-A\-X6956\-\_\-\-P\-O\-R\-T12\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-P\-O\-R\-T12\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-P\-O\-R\-T12\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H~4}}\label{MAX6956_8h_a8b0c452aa9a3f66de931d4a226f865e6}
+
+
+nybble long 
+
+
+
+Definition at line 351 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a0c413303648e14359c311fb9478cfce7}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-P\-O\-R\-T13\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T@{M\-A\-X6956\-\_\-\-P\-O\-R\-T13\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}}
+\index{M\-A\-X6956\-\_\-\-P\-O\-R\-T13\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T@{M\-A\-X6956\-\_\-\-P\-O\-R\-T13\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-P\-O\-R\-T13\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-P\-O\-R\-T13\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T~7}}\label{MAX6956_8h_a0c413303648e14359c311fb9478cfce7}
+
+
+M\-S\-Nybble. 
+
+
+
+Definition at line 352 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_abaee1f6920a6a6770468cb7def42bff7}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-P\-O\-R\-T13\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H@{M\-A\-X6956\-\_\-\-P\-O\-R\-T13\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}}
+\index{M\-A\-X6956\-\_\-\-P\-O\-R\-T13\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H@{M\-A\-X6956\-\_\-\-P\-O\-R\-T13\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-P\-O\-R\-T13\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-P\-O\-R\-T13\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H~4}}\label{MAX6956_8h_abaee1f6920a6a6770468cb7def42bff7}
+
+
+nybble long 
+
+
+
+Definition at line 353 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a0fcb35fa292905862765e99dd03e63b2}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-P\-O\-R\-T14\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T@{M\-A\-X6956\-\_\-\-P\-O\-R\-T14\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}}
+\index{M\-A\-X6956\-\_\-\-P\-O\-R\-T14\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T@{M\-A\-X6956\-\_\-\-P\-O\-R\-T14\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-P\-O\-R\-T14\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-P\-O\-R\-T14\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T~3}}\label{MAX6956_8h_a0fcb35fa292905862765e99dd03e63b2}
+
+
+L\-S\-Nybble. 
+
+
+
+Definition at line 354 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_aa98b4176c22631122a00948e5a54e91f}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-P\-O\-R\-T14\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H@{M\-A\-X6956\-\_\-\-P\-O\-R\-T14\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}}
+\index{M\-A\-X6956\-\_\-\-P\-O\-R\-T14\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H@{M\-A\-X6956\-\_\-\-P\-O\-R\-T14\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-P\-O\-R\-T14\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-P\-O\-R\-T14\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H~4}}\label{MAX6956_8h_aa98b4176c22631122a00948e5a54e91f}
+
+
+nybble long 
+
+
+
+Definition at line 355 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a659a1777dac35a14930720029b786aed}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-P\-O\-R\-T15\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T@{M\-A\-X6956\-\_\-\-P\-O\-R\-T15\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}}
+\index{M\-A\-X6956\-\_\-\-P\-O\-R\-T15\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T@{M\-A\-X6956\-\_\-\-P\-O\-R\-T15\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-P\-O\-R\-T15\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-P\-O\-R\-T15\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T~7}}\label{MAX6956_8h_a659a1777dac35a14930720029b786aed}
+
+
+M\-S\-Nybble. 
+
+
+
+Definition at line 356 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_ab377c2d0463246bfc66c9df01087285d}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-P\-O\-R\-T15\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H@{M\-A\-X6956\-\_\-\-P\-O\-R\-T15\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}}
+\index{M\-A\-X6956\-\_\-\-P\-O\-R\-T15\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H@{M\-A\-X6956\-\_\-\-P\-O\-R\-T15\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-P\-O\-R\-T15\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-P\-O\-R\-T15\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H~4}}\label{MAX6956_8h_ab377c2d0463246bfc66c9df01087285d}
+
+
+nybble long 
+
+
+
+Definition at line 357 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a977fb8ce0e696e764ae098dce361e446}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-P\-O\-R\-T16\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T@{M\-A\-X6956\-\_\-\-P\-O\-R\-T16\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}}
+\index{M\-A\-X6956\-\_\-\-P\-O\-R\-T16\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T@{M\-A\-X6956\-\_\-\-P\-O\-R\-T16\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-P\-O\-R\-T16\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-P\-O\-R\-T16\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T~3}}\label{MAX6956_8h_a977fb8ce0e696e764ae098dce361e446}
+
+
+L\-S\-Nybble. 
+
+
+
+Definition at line 358 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a04c2dcf166214a43fbdd9ae5f7a0ca00}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-P\-O\-R\-T16\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H@{M\-A\-X6956\-\_\-\-P\-O\-R\-T16\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}}
+\index{M\-A\-X6956\-\_\-\-P\-O\-R\-T16\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H@{M\-A\-X6956\-\_\-\-P\-O\-R\-T16\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-P\-O\-R\-T16\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-P\-O\-R\-T16\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H~4}}\label{MAX6956_8h_a04c2dcf166214a43fbdd9ae5f7a0ca00}
+
+
+nybble long 
+
+
+
+Definition at line 359 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_ab59b7f618ff0788a6bd21313bf14673f}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-P\-O\-R\-T17\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T@{M\-A\-X6956\-\_\-\-P\-O\-R\-T17\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}}
+\index{M\-A\-X6956\-\_\-\-P\-O\-R\-T17\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T@{M\-A\-X6956\-\_\-\-P\-O\-R\-T17\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-P\-O\-R\-T17\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-P\-O\-R\-T17\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T~7}}\label{MAX6956_8h_ab59b7f618ff0788a6bd21313bf14673f}
+
+
+M\-S\-Nybble. 
+
+
+
+Definition at line 360 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_adf0428deb9192d621f837d7951e539be}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-P\-O\-R\-T17\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H@{M\-A\-X6956\-\_\-\-P\-O\-R\-T17\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}}
+\index{M\-A\-X6956\-\_\-\-P\-O\-R\-T17\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H@{M\-A\-X6956\-\_\-\-P\-O\-R\-T17\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-P\-O\-R\-T17\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-P\-O\-R\-T17\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H~4}}\label{MAX6956_8h_adf0428deb9192d621f837d7951e539be}
+
+
+nybble long 
+
+
+
+Definition at line 361 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_ab0d4c28bc6747482ab33a027fd93b5d7}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-P\-O\-R\-T18\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T@{M\-A\-X6956\-\_\-\-P\-O\-R\-T18\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}}
+\index{M\-A\-X6956\-\_\-\-P\-O\-R\-T18\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T@{M\-A\-X6956\-\_\-\-P\-O\-R\-T18\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-P\-O\-R\-T18\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-P\-O\-R\-T18\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T~3}}\label{MAX6956_8h_ab0d4c28bc6747482ab33a027fd93b5d7}
+
+
+L\-S\-Nybble. 
+
+
+
+Definition at line 362 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a9bb781fca7fadebb28918c05d2f1605c}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-P\-O\-R\-T18\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H@{M\-A\-X6956\-\_\-\-P\-O\-R\-T18\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}}
+\index{M\-A\-X6956\-\_\-\-P\-O\-R\-T18\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H@{M\-A\-X6956\-\_\-\-P\-O\-R\-T18\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-P\-O\-R\-T18\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-P\-O\-R\-T18\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H~4}}\label{MAX6956_8h_a9bb781fca7fadebb28918c05d2f1605c}
+
+
+nybble long 
+
+
+
+Definition at line 363 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_aea0128f7b979e68785b78cfc7e480a32}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-P\-O\-R\-T19\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T@{M\-A\-X6956\-\_\-\-P\-O\-R\-T19\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}}
+\index{M\-A\-X6956\-\_\-\-P\-O\-R\-T19\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T@{M\-A\-X6956\-\_\-\-P\-O\-R\-T19\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-P\-O\-R\-T19\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-P\-O\-R\-T19\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T~7}}\label{MAX6956_8h_aea0128f7b979e68785b78cfc7e480a32}
+
+
+M\-S\-Nybble. 
+
+
+
+Definition at line 364 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a5c2f25a82e8b442abb28a9544a3d4088}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-P\-O\-R\-T19\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H@{M\-A\-X6956\-\_\-\-P\-O\-R\-T19\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}}
+\index{M\-A\-X6956\-\_\-\-P\-O\-R\-T19\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H@{M\-A\-X6956\-\_\-\-P\-O\-R\-T19\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-P\-O\-R\-T19\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-P\-O\-R\-T19\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H~4}}\label{MAX6956_8h_a5c2f25a82e8b442abb28a9544a3d4088}
+
+
+nybble long 
+
+
+
+Definition at line 365 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_abd855e00543729cc87ab4a48e3d98649}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-P\-O\-R\-T21\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T@{M\-A\-X6956\-\_\-\-P\-O\-R\-T21\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}}
+\index{M\-A\-X6956\-\_\-\-P\-O\-R\-T21\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T@{M\-A\-X6956\-\_\-\-P\-O\-R\-T21\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-P\-O\-R\-T21\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-P\-O\-R\-T21\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T~7}}\label{MAX6956_8h_abd855e00543729cc87ab4a48e3d98649}
+
+
+M\-S\-Nybble. 
+
+
+
+Definition at line 368 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a65cd02d7f498266b224c035a3809126a}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-P\-O\-R\-T21\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H@{M\-A\-X6956\-\_\-\-P\-O\-R\-T21\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}}
+\index{M\-A\-X6956\-\_\-\-P\-O\-R\-T21\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H@{M\-A\-X6956\-\_\-\-P\-O\-R\-T21\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-P\-O\-R\-T21\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-P\-O\-R\-T21\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H~4}}\label{MAX6956_8h_a65cd02d7f498266b224c035a3809126a}
+
+
+nybble long 
+
+
+
+Definition at line 369 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a061947a1484a8449fd4301a1022cafe5}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-P\-O\-R\-T22\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T@{M\-A\-X6956\-\_\-\-P\-O\-R\-T22\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}}
+\index{M\-A\-X6956\-\_\-\-P\-O\-R\-T22\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T@{M\-A\-X6956\-\_\-\-P\-O\-R\-T22\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-P\-O\-R\-T22\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-P\-O\-R\-T22\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T~3}}\label{MAX6956_8h_a061947a1484a8449fd4301a1022cafe5}
+
+
+L\-S\-Nybble. 
+
+
+
+Definition at line 370 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_aa64238ebb3bf6d8ee2d0d368992e7613}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-P\-O\-R\-T22\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H@{M\-A\-X6956\-\_\-\-P\-O\-R\-T22\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}}
+\index{M\-A\-X6956\-\_\-\-P\-O\-R\-T22\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H@{M\-A\-X6956\-\_\-\-P\-O\-R\-T22\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-P\-O\-R\-T22\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-P\-O\-R\-T22\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H~4}}\label{MAX6956_8h_aa64238ebb3bf6d8ee2d0d368992e7613}
+
+
+nybble long 
+
+
+
+Definition at line 371 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a95789ffe1e677c75090556342763c6ac}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-P\-O\-R\-T23\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T@{M\-A\-X6956\-\_\-\-P\-O\-R\-T23\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}}
+\index{M\-A\-X6956\-\_\-\-P\-O\-R\-T23\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T@{M\-A\-X6956\-\_\-\-P\-O\-R\-T23\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-P\-O\-R\-T23\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-P\-O\-R\-T23\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T~3}}\label{MAX6956_8h_a95789ffe1e677c75090556342763c6ac}
+
+
+L\-S\-Nybble. 
+
+M\-S\-Nybble. 
+
+Definition at line 372 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a95789ffe1e677c75090556342763c6ac}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-P\-O\-R\-T23\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T@{M\-A\-X6956\-\_\-\-P\-O\-R\-T23\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}}
+\index{M\-A\-X6956\-\_\-\-P\-O\-R\-T23\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T@{M\-A\-X6956\-\_\-\-P\-O\-R\-T23\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-P\-O\-R\-T23\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-P\-O\-R\-T23\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T~7}}\label{MAX6956_8h_a95789ffe1e677c75090556342763c6ac}
+
+
+L\-S\-Nybble. 
+
+M\-S\-Nybble. 
+
+Definition at line 372 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a0f492bea7bf9e0906ba13f447327d5a8}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-P\-O\-R\-T23\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H@{M\-A\-X6956\-\_\-\-P\-O\-R\-T23\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}}
+\index{M\-A\-X6956\-\_\-\-P\-O\-R\-T23\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H@{M\-A\-X6956\-\_\-\-P\-O\-R\-T23\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-P\-O\-R\-T23\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-P\-O\-R\-T23\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H~4}}\label{MAX6956_8h_a0f492bea7bf9e0906ba13f447327d5a8}
+
+
+nybble long 
+
+
+
+Definition at line 373 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a0f492bea7bf9e0906ba13f447327d5a8}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-P\-O\-R\-T23\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H@{M\-A\-X6956\-\_\-\-P\-O\-R\-T23\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}}
+\index{M\-A\-X6956\-\_\-\-P\-O\-R\-T23\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H@{M\-A\-X6956\-\_\-\-P\-O\-R\-T23\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-P\-O\-R\-T23\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-P\-O\-R\-T23\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H~4}}\label{MAX6956_8h_a0f492bea7bf9e0906ba13f447327d5a8}
+
+
+nybble long 
+
+
+
+Definition at line 373 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a50e41ea8c3ec1bb3d55e5a4eb03563a2}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-P\-O\-R\-T24\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T@{M\-A\-X6956\-\_\-\-P\-O\-R\-T24\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}}
+\index{M\-A\-X6956\-\_\-\-P\-O\-R\-T24\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T@{M\-A\-X6956\-\_\-\-P\-O\-R\-T24\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-P\-O\-R\-T24\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-P\-O\-R\-T24\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T~3}}\label{MAX6956_8h_a50e41ea8c3ec1bb3d55e5a4eb03563a2}
+
+
+L\-S\-Nybble. 
+
+
+
+Definition at line 374 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a11ee583606d04516bc2fc5812b05cd3d}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-P\-O\-R\-T24\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H@{M\-A\-X6956\-\_\-\-P\-O\-R\-T24\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}}
+\index{M\-A\-X6956\-\_\-\-P\-O\-R\-T24\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H@{M\-A\-X6956\-\_\-\-P\-O\-R\-T24\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-P\-O\-R\-T24\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-P\-O\-R\-T24\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H~4}}\label{MAX6956_8h_a11ee583606d04516bc2fc5812b05cd3d}
+
+
+nybble long 
+
+
+
+Definition at line 375 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a75f6b93cf7558a38adba5bb4a91d05f8}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-P\-O\-R\-T25\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T@{M\-A\-X6956\-\_\-\-P\-O\-R\-T25\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}}
+\index{M\-A\-X6956\-\_\-\-P\-O\-R\-T25\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T@{M\-A\-X6956\-\_\-\-P\-O\-R\-T25\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-P\-O\-R\-T25\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-P\-O\-R\-T25\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T~7}}\label{MAX6956_8h_a75f6b93cf7558a38adba5bb4a91d05f8}
+
+
+M\-S\-Nybble. 
+
+
+
+Definition at line 376 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a3b1a7a5f82da6b43bd5a24d2297a2f75}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-P\-O\-R\-T25\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H@{M\-A\-X6956\-\_\-\-P\-O\-R\-T25\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}}
+\index{M\-A\-X6956\-\_\-\-P\-O\-R\-T25\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H@{M\-A\-X6956\-\_\-\-P\-O\-R\-T25\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-P\-O\-R\-T25\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-P\-O\-R\-T25\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H~4}}\label{MAX6956_8h_a3b1a7a5f82da6b43bd5a24d2297a2f75}
+
+
+nybble long 
+
+
+
+Definition at line 377 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_abd400d2f356832d21b1787e2501a8644}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-P\-O\-R\-T26\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T@{M\-A\-X6956\-\_\-\-P\-O\-R\-T26\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}}
+\index{M\-A\-X6956\-\_\-\-P\-O\-R\-T26\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T@{M\-A\-X6956\-\_\-\-P\-O\-R\-T26\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-P\-O\-R\-T26\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-P\-O\-R\-T26\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T~3}}\label{MAX6956_8h_abd400d2f356832d21b1787e2501a8644}
+
+
+L\-S\-Nybble. 
+
+
+
+Definition at line 378 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a28bf5ca7da83928eeec3f4f302d12c45}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-P\-O\-R\-T26\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H@{M\-A\-X6956\-\_\-\-P\-O\-R\-T26\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}}
+\index{M\-A\-X6956\-\_\-\-P\-O\-R\-T26\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H@{M\-A\-X6956\-\_\-\-P\-O\-R\-T26\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-P\-O\-R\-T26\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-P\-O\-R\-T26\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H~4}}\label{MAX6956_8h_a28bf5ca7da83928eeec3f4f302d12c45}
+
+
+nybble long 
+
+
+
+Definition at line 379 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a62bf02cd8e4d8a9dfa975d0e319f68f5}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-P\-O\-R\-T27\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T@{M\-A\-X6956\-\_\-\-P\-O\-R\-T27\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}}
+\index{M\-A\-X6956\-\_\-\-P\-O\-R\-T27\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T@{M\-A\-X6956\-\_\-\-P\-O\-R\-T27\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-P\-O\-R\-T27\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-P\-O\-R\-T27\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T~7}}\label{MAX6956_8h_a62bf02cd8e4d8a9dfa975d0e319f68f5}
+
+
+M\-S\-Nybble. 
+
+
+
+Definition at line 380 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a0a0f99c166b5a60d7e6c6c7d99306b45}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-P\-O\-R\-T27\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H@{M\-A\-X6956\-\_\-\-P\-O\-R\-T27\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}}
+\index{M\-A\-X6956\-\_\-\-P\-O\-R\-T27\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H@{M\-A\-X6956\-\_\-\-P\-O\-R\-T27\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-P\-O\-R\-T27\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-P\-O\-R\-T27\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H~4}}\label{MAX6956_8h_a0a0f99c166b5a60d7e6c6c7d99306b45}
+
+
+nybble long 
+
+
+
+Definition at line 381 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_ab6135c4105c3b39625e7361a438e1511}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-P\-O\-R\-T28\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T@{M\-A\-X6956\-\_\-\-P\-O\-R\-T28\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}}
+\index{M\-A\-X6956\-\_\-\-P\-O\-R\-T28\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T@{M\-A\-X6956\-\_\-\-P\-O\-R\-T28\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-P\-O\-R\-T28\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-P\-O\-R\-T28\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T~3}}\label{MAX6956_8h_ab6135c4105c3b39625e7361a438e1511}
+
+
+L\-S\-Nybble. 
+
+
+
+Definition at line 382 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_ac2bcdc199d348dba281a4371675bd428}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-P\-O\-R\-T28\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H@{M\-A\-X6956\-\_\-\-P\-O\-R\-T28\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}}
+\index{M\-A\-X6956\-\_\-\-P\-O\-R\-T28\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H@{M\-A\-X6956\-\_\-\-P\-O\-R\-T28\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-P\-O\-R\-T28\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-P\-O\-R\-T28\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H~4}}\label{MAX6956_8h_ac2bcdc199d348dba281a4371675bd428}
+
+
+nybble long 
+
+
+
+Definition at line 383 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_ae98448e4aa991d16d9b1d9d6071078d8}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-P\-O\-R\-T29\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T@{M\-A\-X6956\-\_\-\-P\-O\-R\-T29\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}}
+\index{M\-A\-X6956\-\_\-\-P\-O\-R\-T29\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T@{M\-A\-X6956\-\_\-\-P\-O\-R\-T29\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-P\-O\-R\-T29\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-P\-O\-R\-T29\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T~7}}\label{MAX6956_8h_ae98448e4aa991d16d9b1d9d6071078d8}
+
+
+M\-S\-Nybble. 
+
+
+
+Definition at line 384 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a6b0d8a1c63777d016e1cb22076b91377}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-P\-O\-R\-T29\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H@{M\-A\-X6956\-\_\-\-P\-O\-R\-T29\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}}
+\index{M\-A\-X6956\-\_\-\-P\-O\-R\-T29\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H@{M\-A\-X6956\-\_\-\-P\-O\-R\-T29\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-P\-O\-R\-T29\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-P\-O\-R\-T29\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H~4}}\label{MAX6956_8h_a6b0d8a1c63777d016e1cb22076b91377}
+
+
+nybble long 
+
+
+
+Definition at line 385 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a1cdbea93ca621e5fc4c747286bdf90e1}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-P\-O\-R\-T31\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T@{M\-A\-X6956\-\_\-\-P\-O\-R\-T31\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}}
+\index{M\-A\-X6956\-\_\-\-P\-O\-R\-T31\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T@{M\-A\-X6956\-\_\-\-P\-O\-R\-T31\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-P\-O\-R\-T31\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-P\-O\-R\-T31\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T~7}}\label{MAX6956_8h_a1cdbea93ca621e5fc4c747286bdf90e1}
+
+
+M\-S\-Nybble. 
+
+
+
+Definition at line 388 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a40a075605dfcfc2736aab5ffa10e3e2c}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-P\-O\-R\-T31\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H@{M\-A\-X6956\-\_\-\-P\-O\-R\-T31\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}}
+\index{M\-A\-X6956\-\_\-\-P\-O\-R\-T31\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H@{M\-A\-X6956\-\_\-\-P\-O\-R\-T31\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-P\-O\-R\-T31\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-P\-O\-R\-T31\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H~4}}\label{MAX6956_8h_a40a075605dfcfc2736aab5ffa10e3e2c}
+
+
+nybble long 
+
+
+
+Definition at line 389 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_aa5acefc0723ea8d2b804aa7eccae705b}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-P\-O\-R\-T33\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T@{M\-A\-X6956\-\_\-\-P\-O\-R\-T33\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}}
+\index{M\-A\-X6956\-\_\-\-P\-O\-R\-T33\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T@{M\-A\-X6956\-\_\-\-P\-O\-R\-T33\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-P\-O\-R\-T33\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-P\-O\-R\-T33\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-B\-I\-T~3}}\label{MAX6956_8h_aa5acefc0723ea8d2b804aa7eccae705b}
+
+
+L\-S\-Nybble. 
+
+
+
+Definition at line 386 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a2fb02a7e77abefcbf7c194ff6b994ae9}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-P\-O\-R\-T33\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H@{M\-A\-X6956\-\_\-\-P\-O\-R\-T33\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}}
+\index{M\-A\-X6956\-\_\-\-P\-O\-R\-T33\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H@{M\-A\-X6956\-\_\-\-P\-O\-R\-T33\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-P\-O\-R\-T33\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-P\-O\-R\-T33\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-\-L\-E\-N\-G\-T\-H~4}}\label{MAX6956_8h_a2fb02a7e77abefcbf7c194ff6b994ae9}
+
+
+nybble long 
+
+
+
+Definition at line 387 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a3a2fa6f7cc985cfeea00ebd1dd64ae8c}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-O\-N\-F\-I\-G\-\_\-\-P11\-P10\-P9\-P8@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-O\-N\-F\-I\-G\-\_\-\-P11\-P10\-P9\-P8}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-O\-N\-F\-I\-G\-\_\-\-P11\-P10\-P9\-P8@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-O\-N\-F\-I\-G\-\_\-\-P11\-P10\-P9\-P8}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-O\-N\-F\-I\-G\-\_\-\-P11\-P10\-P9\-P8}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-O\-N\-F\-I\-G\-\_\-\-P11\-P10\-P9\-P8~0x0\-A}}\label{MAX6956_8h_a3a2fa6f7cc985cfeea00ebd1dd64ae8c}
+
+
+Definition at line 204 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a119a0a92d4ccdb0e8f27fd565b1220bd}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-O\-N\-F\-I\-G\-\_\-\-P15\-P14\-P13\-P12@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-O\-N\-F\-I\-G\-\_\-\-P15\-P14\-P13\-P12}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-O\-N\-F\-I\-G\-\_\-\-P15\-P14\-P13\-P12@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-O\-N\-F\-I\-G\-\_\-\-P15\-P14\-P13\-P12}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-O\-N\-F\-I\-G\-\_\-\-P15\-P14\-P13\-P12}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-O\-N\-F\-I\-G\-\_\-\-P15\-P14\-P13\-P12~0x0\-B}}\label{MAX6956_8h_a119a0a92d4ccdb0e8f27fd565b1220bd}
+
+
+Definition at line 205 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a8f199d21b14cf933d5093d3001d0400d}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-O\-N\-F\-I\-G\-\_\-\-P19\-P18\-P17\-P16@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-O\-N\-F\-I\-G\-\_\-\-P19\-P18\-P17\-P16}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-O\-N\-F\-I\-G\-\_\-\-P19\-P18\-P17\-P16@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-O\-N\-F\-I\-G\-\_\-\-P19\-P18\-P17\-P16}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-O\-N\-F\-I\-G\-\_\-\-P19\-P18\-P17\-P16}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-O\-N\-F\-I\-G\-\_\-\-P19\-P18\-P17\-P16~0x0\-C}}\label{MAX6956_8h_a8f199d21b14cf933d5093d3001d0400d}
+
+
+Definition at line 206 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a025ce0245fb957ef58afc5f4920e19f3}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-O\-N\-F\-I\-G\-\_\-\-P23\-P22\-P21\-P20@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-O\-N\-F\-I\-G\-\_\-\-P23\-P22\-P21\-P20}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-O\-N\-F\-I\-G\-\_\-\-P23\-P22\-P21\-P20@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-O\-N\-F\-I\-G\-\_\-\-P23\-P22\-P21\-P20}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-O\-N\-F\-I\-G\-\_\-\-P23\-P22\-P21\-P20}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-O\-N\-F\-I\-G\-\_\-\-P23\-P22\-P21\-P20~0x0\-D}}\label{MAX6956_8h_a025ce0245fb957ef58afc5f4920e19f3}
+
+
+Definition at line 207 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a4e813aab18cbd7462e1ac5a59b0a53ab}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-O\-N\-F\-I\-G\-\_\-\-P27\-P26\-P25\-P24@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-O\-N\-F\-I\-G\-\_\-\-P27\-P26\-P25\-P24}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-O\-N\-F\-I\-G\-\_\-\-P27\-P26\-P25\-P24@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-O\-N\-F\-I\-G\-\_\-\-P27\-P26\-P25\-P24}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-O\-N\-F\-I\-G\-\_\-\-P27\-P26\-P25\-P24}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-O\-N\-F\-I\-G\-\_\-\-P27\-P26\-P25\-P24~0x0\-E}}\label{MAX6956_8h_a4e813aab18cbd7462e1ac5a59b0a53ab}
+
+
+Definition at line 208 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a98b5c2d8359fbb7e07eb2eade7e8870a}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-O\-N\-F\-I\-G\-\_\-\-P31\-P30\-P29\-P28@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-O\-N\-F\-I\-G\-\_\-\-P31\-P30\-P29\-P28}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-O\-N\-F\-I\-G\-\_\-\-P31\-P30\-P29\-P28@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-O\-N\-F\-I\-G\-\_\-\-P31\-P30\-P29\-P28}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-O\-N\-F\-I\-G\-\_\-\-P31\-P30\-P29\-P28}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-O\-N\-F\-I\-G\-\_\-\-P31\-P30\-P29\-P28~0x0\-F}}\label{MAX6956_8h_a98b5c2d8359fbb7e07eb2eade7e8870a}
+
+
+Definition at line 209 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a1c4db4957c22f8767b2f1a06e5cb9a32}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-O\-N\-F\-I\-G\-\_\-\-P7\-P6\-P5\-P4@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-O\-N\-F\-I\-G\-\_\-\-P7\-P6\-P5\-P4}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-O\-N\-F\-I\-G\-\_\-\-P7\-P6\-P5\-P4@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-O\-N\-F\-I\-G\-\_\-\-P7\-P6\-P5\-P4}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-O\-N\-F\-I\-G\-\_\-\-P7\-P6\-P5\-P4}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-O\-N\-F\-I\-G\-\_\-\-P7\-P6\-P5\-P4~0x09}}\label{MAX6956_8h_a1c4db4957c22f8767b2f1a06e5cb9a32}
+\subsection*{Table 1. Port Configuration Map }
+
+\begin{TabularC}{6}
+\hline
+\rowcolor{lightgray}{\bf R\-E\-G\-I\-S\-T\-E\-R }&{\bf A\-D\-D\-R\-E\-S\-S}&{\bf D7 D6}&{\bf D5 D4}&{\bf D3 D2}&{\bf D1 D0  }\\\cline{1-6}
+Port Configuration for P7, P6, P5, P4 &0x09 &P7 &P6 &P5 &P4 \\\cline{1-6}
+Port Configuration for P11, P10, P9, P8 &0x0\-A &P11 &P10 &P9 &P8 \\\cline{1-6}
+Port Configuration for P15, P14, P13, P12&0x0\-B &P15 &P14 &P13 &P12 \\\cline{1-6}
+Port Configuration for P19, P18, P17, P16&0x0\-C &P19 &P18 &P17 &P16 \\\cline{1-6}
+Port Configuration for P23, P22, P21, P20&0x0\-D &P23 &P22 &P21 &P20 \\\cline{1-6}
+Port Configuration for P27, P26, P25, P24&0x0\-E &P27 &P26 &P25 &P24 \\\cline{1-6}
+Port Configuration for P31, P30, P29, P28&0x0\-F &P31 &P30 &P29 &P28 \\\cline{1-6}
+\end{TabularC}
+\subsection*{Table 2. P4-\/\-P31 configuration bit pairs }
+
+
+\begin{DoxyPre}
+    00 - Output, LED Segment Driver
+             Controlled  using port registers 0x20-0x5F. 
+             0 = High impedance
+             1 = Open-drain current sink, with sink current (up to 24mA) 
+                 determined by the appropriate current register
+    01 - Output, GPIO Output
+             Controlled  using port registers 0x20-0x5F. 
+             0 = Active-low logic output
+             1 = Active-high logic output
+    10 - Input, GPIO Input Without Pullup
+             Read port registers 0x20-0x5F.
+             Schmitt logic input 
+    11 - Input, GPIO Input with Pullup
+             Read port registers 0x20-0x5F.
+             Schmitt logic input with pullup
+\end{DoxyPre}
+ 
+
+Definition at line 203 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a5c3d1c00491596887e211bfa630c1b94}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-O\-N\-F\-I\-G\-U\-R\-A\-T\-I\-O\-N@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-O\-N\-F\-I\-G\-U\-R\-A\-T\-I\-O\-N}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-O\-N\-F\-I\-G\-U\-R\-A\-T\-I\-O\-N@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-O\-N\-F\-I\-G\-U\-R\-A\-T\-I\-O\-N}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-O\-N\-F\-I\-G\-U\-R\-A\-T\-I\-O\-N}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-O\-N\-F\-I\-G\-U\-R\-A\-T\-I\-O\-N~0x04}}\label{MAX6956_8h_a5c3d1c00491596887e211bfa630c1b94}
+\subsection*{Table 7. Configuration Register Format }
+
+\begin{TabularC}{9}
+\hline
+\rowcolor{lightgray}\PBS\centering {\bf A\-D\-D\-R\-E\-S\-S }&\PBS\centering {\bf D7 }&\PBS\centering {\bf D6 }&\PBS\centering {\bf D5 }&\PBS\centering {\bf D4 }&\PBS\centering {\bf D3 }&\PBS\centering {\bf D2 }&\PBS\centering {\bf D1 }&\PBS\centering {\bf D0  }\\\cline{1-9}
+\PBS\centering 0x04 &\PBS\centering M &\PBS\centering I &\PBS\centering x &\PBS\centering x &\PBS\centering x &\PBS\centering x &\PBS\centering x &\PBS\centering S \\\cline{1-9}
+\end{TabularC}
+\subsection*{Table 8. Shutdown Control (S Data Bit D0) Format }
+
+\begin{TabularC}{10}
+\hline
+\rowcolor{lightgray}\PBS\centering {\bf F\-U\-N\-C\-T\-I\-O\-N }&\PBS\centering {\bf A\-D\-D\-R\-E\-S\-S}&\PBS\centering {\bf D7 }&\PBS\centering {\bf D6 }&\PBS\centering {\bf D5 }&\PBS\centering {\bf D4 }&\PBS\centering {\bf D3 }&\PBS\centering {\bf D2 }&\PBS\centering {\bf D1 }&\PBS\centering {\bf D0  }\\\cline{1-10}
+\PBS\centering Shutdown &\PBS\centering 0x04 &\PBS\centering M &\PBS\centering I &\PBS\centering x &\PBS\centering x &\PBS\centering x &\PBS\centering x &\PBS\centering x &\PBS\centering 0 \\\cline{1-10}
+\PBS\centering Normal Operation&\PBS\centering 0x04 &\PBS\centering M &\PBS\centering I &\PBS\centering x &\PBS\centering x &\PBS\centering x &\PBS\centering x &\PBS\centering x &\PBS\centering 1 \\\cline{1-10}
+\end{TabularC}
+\subsection*{Table 9. Global Current Control (I Data Bit D6) Format }
+
+\begin{TabularC}{10}
+\hline
+\rowcolor{lightgray}\PBS\centering {\bf F\-U\-N\-C\-T\-I\-O\-N }&\PBS\centering {\bf A\-D\-D\-R\-E\-S\-S}&\PBS\centering {\bf D7 }&\PBS\centering {\bf D6 }&\PBS\centering {\bf D5 }&\PBS\centering {\bf D4 }&\PBS\centering {\bf D3 }&\PBS\centering {\bf D2 }&\PBS\centering {\bf D1 }&\PBS\centering {\bf D0  }\\\cline{1-10}
+\PBS\centering Global &\PBS\centering 0x04 &\PBS\centering M &\PBS\centering 0 &\PBS\centering x &\PBS\centering x &\PBS\centering x &\PBS\centering x &\PBS\centering x &\PBS\centering S \\\cline{1-10}
+\PBS\centering Individual Segment&\PBS\centering 0x04 &\PBS\centering M &\PBS\centering 1 &\PBS\centering x &\PBS\centering x &\PBS\centering x &\PBS\centering x &\PBS\centering x &\PBS\centering S \\\cline{1-10}
+\end{TabularC}
+\subsection*{Table 10. Transition Detection Control (M-\/\-Data Bit D7) Format }
+
+\begin{TabularC}{10}
+\hline
+\rowcolor{lightgray}\PBS\centering {\bf F\-U\-N\-C\-T\-I\-O\-N }&\PBS\centering {\bf A\-D\-D\-R\-E\-S\-S}&\PBS\centering {\bf D7 }&\PBS\centering {\bf D6 }&\PBS\centering {\bf D5 }&\PBS\centering {\bf D4 }&\PBS\centering {\bf D3 }&\PBS\centering {\bf D2 }&\PBS\centering {\bf D1 }&\PBS\centering {\bf D0  }\\\cline{1-10}
+\PBS\centering Disabled &\PBS\centering 0x04 &\PBS\centering 0 &\PBS\centering I &\PBS\centering x &\PBS\centering x &\PBS\centering x &\PBS\centering x &\PBS\centering x &\PBS\centering S \\\cline{1-10}
+\PBS\centering Enabled &\PBS\centering 0x04 &\PBS\centering 1 &\PBS\centering I &\PBS\centering x &\PBS\centering x &\PBS\centering x &\PBS\centering x &\PBS\centering x &\PBS\centering S \\\cline{1-10}
+\end{TabularC}
+
+
+Definition at line 137 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_aa2304dec8420451a881876948e1cba43}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P11\-P10@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P11\-P10}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P11\-P10@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P11\-P10}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P11\-P10}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P11\-P10~0x15}}\label{MAX6956_8h_aa2304dec8420451a881876948e1cba43}
+
+
+Definition at line 244 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_add5533d08bfa791cf8cf95d7dd3f16d3}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P13\-P12@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P13\-P12}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P13\-P12@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P13\-P12}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P13\-P12}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P13\-P12~0x16}}\label{MAX6956_8h_add5533d08bfa791cf8cf95d7dd3f16d3}
+
+
+Definition at line 245 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_ae51b720b2bd4868c1986e2d314822778}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P15\-P14@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P15\-P14}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P15\-P14@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P15\-P14}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P15\-P14}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P15\-P14~0x17}}\label{MAX6956_8h_ae51b720b2bd4868c1986e2d314822778}
+
+
+Definition at line 246 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a77820b1e4acee07a338e179ab35a7836}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P17\-P16@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P17\-P16}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P17\-P16@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P17\-P16}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P17\-P16}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P17\-P16~0x18}}\label{MAX6956_8h_a77820b1e4acee07a338e179ab35a7836}
+
+
+Definition at line 247 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_aa84fef4207af57fddf6468ae84ebd829}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P19\-P18@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P19\-P18}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P19\-P18@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P19\-P18}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P19\-P18}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P19\-P18~0x19}}\label{MAX6956_8h_aa84fef4207af57fddf6468ae84ebd829}
+
+
+Definition at line 248 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a11974f06951fb9051f9dd1d154d7c530}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P21\-P20@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P21\-P20}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P21\-P20@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P21\-P20}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P21\-P20}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P21\-P20~0x1\-A}}\label{MAX6956_8h_a11974f06951fb9051f9dd1d154d7c530}
+
+
+Definition at line 249 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_aa971a2bb392832476e3b91970f7fffe7}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P23\-P22@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P23\-P22}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P23\-P22@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P23\-P22}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P23\-P22}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P23\-P22~0x1\-B}}\label{MAX6956_8h_aa971a2bb392832476e3b91970f7fffe7}
+
+
+Definition at line 250 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a040daea6fe73e819adcbcaed7cd3ceaf}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P25\-P24@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P25\-P24}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P25\-P24@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P25\-P24}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P25\-P24}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P25\-P24~0x1\-C}}\label{MAX6956_8h_a040daea6fe73e819adcbcaed7cd3ceaf}
+
+
+Definition at line 251 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_ac5e5f779975977348022381487c2dfa2}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P27\-P26@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P27\-P26}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P27\-P26@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P27\-P26}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P27\-P26}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P27\-P26~0x1\-D}}\label{MAX6956_8h_ac5e5f779975977348022381487c2dfa2}
+
+
+Definition at line 252 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a32623717f92442a1acfd42cdd3253302}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P29\-P28@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P29\-P28}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P29\-P28@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P29\-P28}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P29\-P28}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P29\-P28~0x1\-E}}\label{MAX6956_8h_a32623717f92442a1acfd42cdd3253302}
+
+
+Definition at line 253 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a64f61d29f7ede042a397c21f33cf6124}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P31\-P30@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P31\-P30}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P31\-P30@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P31\-P30}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P31\-P30}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P31\-P30~0x1\-F}}\label{MAX6956_8h_a64f61d29f7ede042a397c21f33cf6124}
+
+
+Definition at line 254 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_adebbf4c1afdeb688bf5d3887b80c75b2}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P5\-P4@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P5\-P4}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P5\-P4@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P5\-P4}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P5\-P4}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P5\-P4~0x12}}\label{MAX6956_8h_adebbf4c1afdeb688bf5d3887b80c75b2}
+Constant-\/current limit for each digit is individually controlled by the settings in the Current054 through Current1\-F\-E registers
+
+\subsection*{Table 12. Individual Port Current Registers }
+
+\begin{DoxyVerb}                | ADDRESS |            |
+\end{DoxyVerb}
+ \begin{TabularC}{4}
+\hline
+\rowcolor{lightgray}{\bf F\-U\-N\-C\-T\-I\-O\-N }&{\bf C\-O\-D\-E(\-H\-E\-X)}&{\bf D7 D6 D5 D4 }&{\bf D3 D2 D1 D0  }\\\cline{1-4}
+Current054 register &0x12 &Segment 5 &Segment 4 \\\cline{1-4}
+Current076 register &0x13 &Segment 7 &Segment 6 \\\cline{1-4}
+Current098 register &0x14 &Segment 9 &Segment 8 \\\cline{1-4}
+Current0\-B\-A register &0x15 &Segment 11 &Segment 10 \\\cline{1-4}
+Current0\-D\-C register &0x16 &Segment 13 &Segment 12 \\\cline{1-4}
+Current0\-F\-E register &0x17 &Segment 15 &Segment 14 \\\cline{1-4}
+Current110 register &0x18 &Segment 17 &Segment 16 \\\cline{1-4}
+Current132 register &0x19 &Segment 19 &Segment 18 \\\cline{1-4}
+Current154 register &0x1\-A &Segment 21 &Segment 20 \\\cline{1-4}
+Current176 register &0x1\-B &Segment 23 &Segment 22 \\\cline{1-4}
+Current198 register &0x1\-C &Segment 25 &Segment 24 \\\cline{1-4}
+Current1\-B\-A register &0x1\-D &Segment 27 &Segment 26 \\\cline{1-4}
+Current1\-D\-C register &0x1\-E &Segment 29 &Segment 28 \\\cline{1-4}
+Current1\-F\-E register &0x1\-F &Segment 31 &Segment 30 \\\cline{1-4}
+\end{TabularC}
+Register data is 0-\/\-Fx0-\/\-F for 1-\/16(0-\/\-F) brightness levels. To completely blank an output turn it off (0) using port configuration registers. 
+
+Definition at line 241 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a42db4570a3f848d62f3f906a920161b6}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P7\-P6@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P7\-P6}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P7\-P6@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P7\-P6}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P7\-P6}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P7\-P6~0x13}}\label{MAX6956_8h_a42db4570a3f848d62f3f906a920161b6}
+
+
+Definition at line 242 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a51eb40018dff593fa84c319832a1a957}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P9\-P8@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P9\-P8}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P9\-P8@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P9\-P8}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P9\-P8}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-C\-U\-R\-R\-E\-N\-T\-\_\-0x\-P9\-P8~0x14}}\label{MAX6956_8h_a51eb40018dff593fa84c319832a1a957}
+
+
+Definition at line 243 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a709a5193fd2aa9274997dfc22ef73a19}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-D\-I\-S\-P\-L\-A\-Y\-\_\-\-T\-E\-S\-T@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-D\-I\-S\-P\-L\-A\-Y\-\_\-\-T\-E\-S\-T}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-D\-I\-S\-P\-L\-A\-Y\-\_\-\-T\-E\-S\-T@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-D\-I\-S\-P\-L\-A\-Y\-\_\-\-T\-E\-S\-T}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-D\-I\-S\-P\-L\-A\-Y\-\_\-\-T\-E\-S\-T}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-D\-I\-S\-P\-L\-A\-Y\-\_\-\-T\-E\-S\-T~0x07}}\label{MAX6956_8h_a709a5193fd2aa9274997dfc22ef73a19}
+\subsection*{Table 16. Display Test Register }
+
+\begin{DoxyVerb}             |ADDR |
+\end{DoxyVerb}
+ \begin{TabularC}{10}
+\hline
+\rowcolor{lightgray}\PBS\centering {\bf M\-O\-D\-E }&\PBS\centering {\bf C\-O\-D\-E }&\PBS\centering {\bf D7 }&\PBS\centering {\bf D6 }&\PBS\centering {\bf D5 }&\PBS\centering {\bf D4 }&\PBS\centering {\bf D3 }&\PBS\centering {\bf D2 }&\PBS\centering {\bf D1 }&\PBS\centering {\bf D0  }\\\cline{1-10}
+\PBS\centering Normal Operation &\PBS\centering 0x07 &\PBS\centering x &\PBS\centering x &\PBS\centering x &\PBS\centering x &\PBS\centering x &\PBS\centering x &\PBS\centering x &\PBS\centering 0 \\\cline{1-10}
+\PBS\centering Display Test Mode&\PBS\centering 0x07 &\PBS\centering x &\PBS\centering x &\PBS\centering x &\PBS\centering x &\PBS\centering x &\PBS\centering x &\PBS\centering x &\PBS\centering 1 \\\cline{1-10}
+\end{TabularC}
+
+
+Definition at line 165 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a6a6c2bfe9bfbe4930731829baae7c8f6}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-G\-L\-O\-B\-A\-L\-\_\-\-C\-U\-R\-R\-E\-N\-T@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-G\-L\-O\-B\-A\-L\-\_\-\-C\-U\-R\-R\-E\-N\-T}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-G\-L\-O\-B\-A\-L\-\_\-\-C\-U\-R\-R\-E\-N\-T@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-G\-L\-O\-B\-A\-L\-\_\-\-C\-U\-R\-R\-E\-N\-T}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-G\-L\-O\-B\-A\-L\-\_\-\-C\-U\-R\-R\-E\-N\-T}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-G\-L\-O\-B\-A\-L\-\_\-\-C\-U\-R\-R\-E\-N\-T~0x02}}\label{MAX6956_8h_a6a6c2bfe9bfbe4930731829baae7c8f6}
+\subsection*{Table 11. Global Segment Current Register Format }
+
+L\-E\-D D\-R\-I\-V\-E $|$\-T\-Y\-P\-I\-C\-A\-L S\-E\-G\-M\-E\-N\-T $|$ A\-D\-D\-R\-E\-S\-S $|$ \begin{TabularC}{12}
+\hline
+\rowcolor{lightgray}\PBS\centering {\bf F\-R\-A\-C\-T\-I\-O\-N }&\PBS\centering {\bf C\-U\-R\-R\-E\-N\-T(m\-A) }&\PBS\centering {\bf C\-O\-D\-E (H\-E\-X) }&\PBS\centering {\bf D7 }&\PBS\centering {\bf D6 }&\PBS\centering {\bf D5 }&\PBS\centering {\bf D4 }&\PBS\centering {\bf D3 }&\PBS\centering {\bf D2 }&\PBS\centering {\bf D1 }&\PBS\centering {\bf D0 }&\PBS\centering {\bf H\-E\-X C\-O\-D\-E  }\\\cline{1-12}
+\PBS\centering 1/16 &\PBS\centering 1.\-5 &\PBS\centering 0x02 &\PBS\centering x &\PBS\centering x &\PBS\centering x &\PBS\centering x &\PBS\centering 0 &\PBS\centering 0 &\PBS\centering 0 &\PBS\centering 0 &\PBS\centering 0x\-X0 \\\cline{1-12}
+\PBS\centering 2/16 &\PBS\centering 3 &\PBS\centering 0x02 &\PBS\centering x &\PBS\centering x &\PBS\centering x &\PBS\centering x &\PBS\centering 0 &\PBS\centering 0 &\PBS\centering 0 &\PBS\centering 1 &\PBS\centering 0x\-X1 \\\cline{1-12}
+\PBS\centering 3/16 &\PBS\centering 4.\-5 &\PBS\centering 0x02 &\PBS\centering x &\PBS\centering x &\PBS\centering x &\PBS\centering x &\PBS\centering 0 &\PBS\centering 0 &\PBS\centering 1 &\PBS\centering 0 &\PBS\centering 0x\-X2 \\\cline{1-12}
+\PBS\centering 4/16 &\PBS\centering 6 &\PBS\centering 0x02 &\PBS\centering x &\PBS\centering x &\PBS\centering x &\PBS\centering x &\PBS\centering 0 &\PBS\centering 0 &\PBS\centering 1 &\PBS\centering 1 &\PBS\centering 0x\-X3 \\\cline{1-12}
+\PBS\centering 5/16 &\PBS\centering 7.\-5 &\PBS\centering 0x02 &\PBS\centering x &\PBS\centering x &\PBS\centering x &\PBS\centering x &\PBS\centering 0 &\PBS\centering 1 &\PBS\centering 0 &\PBS\centering 0 &\PBS\centering 0x\-X4 \\\cline{1-12}
+\PBS\centering 6/16 &\PBS\centering 9 &\PBS\centering 0x02 &\PBS\centering x &\PBS\centering x &\PBS\centering x &\PBS\centering x &\PBS\centering 0 &\PBS\centering 1 &\PBS\centering 0 &\PBS\centering 1 &\PBS\centering 0x\-X5 \\\cline{1-12}
+\PBS\centering 7/16 &\PBS\centering 10.\-5 &\PBS\centering 0x02 &\PBS\centering x &\PBS\centering x &\PBS\centering x &\PBS\centering x &\PBS\centering 0 &\PBS\centering 1 &\PBS\centering 1 &\PBS\centering 0 &\PBS\centering 0x\-X6 \\\cline{1-12}
+\PBS\centering 8/16 &\PBS\centering 12 &\PBS\centering 0x02 &\PBS\centering x &\PBS\centering x &\PBS\centering x &\PBS\centering x &\PBS\centering 0 &\PBS\centering 1 &\PBS\centering 1 &\PBS\centering 1 &\PBS\centering 0x\-X7 \\\cline{1-12}
+\PBS\centering 9/16 &\PBS\centering 13.\-5 &\PBS\centering 0x02 &\PBS\centering x &\PBS\centering x &\PBS\centering x &\PBS\centering x &\PBS\centering 1 &\PBS\centering 0 &\PBS\centering 0 &\PBS\centering 0 &\PBS\centering 0x\-X8 \\\cline{1-12}
+\PBS\centering 10/16 &\PBS\centering 15 &\PBS\centering 0x02 &\PBS\centering x &\PBS\centering x &\PBS\centering x &\PBS\centering x &\PBS\centering 1 &\PBS\centering 0 &\PBS\centering 0 &\PBS\centering 1 &\PBS\centering 0x\-X9 \\\cline{1-12}
+\PBS\centering 11/16 &\PBS\centering 16.\-5 &\PBS\centering 0x02 &\PBS\centering x &\PBS\centering x &\PBS\centering x &\PBS\centering x &\PBS\centering 1 &\PBS\centering 0 &\PBS\centering 1 &\PBS\centering 0 &\PBS\centering 0x\-X\-A \\\cline{1-12}
+\PBS\centering 12/16 &\PBS\centering 18 &\PBS\centering 0x02 &\PBS\centering x &\PBS\centering x &\PBS\centering x &\PBS\centering x &\PBS\centering 1 &\PBS\centering 0 &\PBS\centering 1 &\PBS\centering 1 &\PBS\centering 0x\-X\-B \\\cline{1-12}
+\PBS\centering 13/16 &\PBS\centering 19.\-5 &\PBS\centering 0x02 &\PBS\centering x &\PBS\centering x &\PBS\centering x &\PBS\centering x &\PBS\centering 1 &\PBS\centering 1 &\PBS\centering 0 &\PBS\centering 0 &\PBS\centering 0x\-X\-C \\\cline{1-12}
+\PBS\centering 14/16 &\PBS\centering 21 &\PBS\centering 0x02 &\PBS\centering x &\PBS\centering x &\PBS\centering x &\PBS\centering x &\PBS\centering 1 &\PBS\centering 1 &\PBS\centering 0 &\PBS\centering 1 &\PBS\centering 0x\-X\-D \\\cline{1-12}
+\PBS\centering 15/16 &\PBS\centering 22.\-5 &\PBS\centering 0x02 &\PBS\centering x &\PBS\centering x &\PBS\centering x &\PBS\centering x &\PBS\centering 1 &\PBS\centering 1 &\PBS\centering 1 &\PBS\centering 0 &\PBS\centering 0x\-X\-E \\\cline{1-12}
+\PBS\centering 16/16 &\PBS\centering 24 &\PBS\centering 0x02 &\PBS\centering x &\PBS\centering x &\PBS\centering x &\PBS\centering x &\PBS\centering 1 &\PBS\centering 1 &\PBS\centering 1 &\PBS\centering 1 &\PBS\centering 0x\-X\-F \\\cline{1-12}
+\end{TabularC}
+
+
+Definition at line 102 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a0f205428de0679650e54dbe8250d57b4}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-N\-O\-\_\-\-O\-P@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-N\-O\-\_\-\-O\-P}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-N\-O\-\_\-\-O\-P@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-N\-O\-\_\-\-O\-P}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-N\-O\-\_\-\-O\-P}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-N\-O\-\_\-\-O\-P~0x00}}\label{MAX6956_8h_a0f205428de0679650e54dbe8250d57b4}
+
+
+No-\/op. 
+
+
+
+Definition at line 76 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a7e8973b61716ae09a84b95ea2f2f5914}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T0@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T0}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T0@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T0}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T0}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T0~0x20}}\label{MAX6956_8h_a7e8973b61716ae09a84b95ea2f2f5914}
+
+
+(virtual port, no action) 
+
+\subsection*{Individiual Port Registers }
+
+\begin{DoxyVerb}data bit D0; D7-D1 read as 0\end{DoxyVerb}
+ 
+
+Definition at line 262 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a1e4fdb2886a119328bdd6807f3720eea}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T1@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T1}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T1@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T1}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T1}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T1~0x21}}\label{MAX6956_8h_a1e4fdb2886a119328bdd6807f3720eea}
+
+
+(virtual port, no action) 
+
+
+
+Definition at line 263 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a2528a76a2e91cd1dfd11b8aefda01473}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T10@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T10}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T10@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T10}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T10}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T10~0x2\-A}}\label{MAX6956_8h_a2528a76a2e91cd1dfd11b8aefda01473}
+
+
+Definition at line 273 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a3a6abf1d9e71015255d821419e3ffa5a}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T11@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T11}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T11@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T11}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T11}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T11~0x2\-B}}\label{MAX6956_8h_a3a6abf1d9e71015255d821419e3ffa5a}
+
+
+Definition at line 274 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a3c089b77cbd25ffa27e3cd46af415a9c}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T12@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T12}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T12@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T12}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T12}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T12~0x2\-C}}\label{MAX6956_8h_a3c089b77cbd25ffa27e3cd46af415a9c}
+
+
+Definition at line 276 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a2d6ee01536f1fb0ec843479948141cbc}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T13@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T13}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T13@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T13}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T13}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T13~0x2\-D}}\label{MAX6956_8h_a2d6ee01536f1fb0ec843479948141cbc}
+
+
+Definition at line 277 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_aba5e5ff9b4aea95fedff9f6421c5f47c}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T14@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T14}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T14@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T14}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T14}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T14~0x2\-E}}\label{MAX6956_8h_aba5e5ff9b4aea95fedff9f6421c5f47c}
+
+
+Definition at line 278 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_ad366a7c1b65fb3496f5b9ba392d6ba9c}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T15@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T15}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T15@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T15}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T15}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T15~0x2\-F}}\label{MAX6956_8h_ad366a7c1b65fb3496f5b9ba392d6ba9c}
+
+
+Definition at line 279 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_ac483e6007b4e6a780c14c7a78ff7a134}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T16@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T16}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T16@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T16}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T16}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T16~0x30}}\label{MAX6956_8h_ac483e6007b4e6a780c14c7a78ff7a134}
+
+
+Definition at line 280 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_ab6f3b8bbd8ac56bacf4a57691eb41aaf}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T17@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T17}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T17@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T17}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T17}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T17~0x31}}\label{MAX6956_8h_ab6f3b8bbd8ac56bacf4a57691eb41aaf}
+
+
+Definition at line 281 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a082486ab9eace7838acd56b6ac6301df}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T18@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T18}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T18@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T18}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T18}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T18~0x32}}\label{MAX6956_8h_a082486ab9eace7838acd56b6ac6301df}
+
+
+Definition at line 282 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a04e65b34862a48ae022c994bbc5968dd}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T19@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T19}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T19@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T19}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T19}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T19~0x33}}\label{MAX6956_8h_a04e65b34862a48ae022c994bbc5968dd}
+
+
+Definition at line 283 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_ac4cc75132151b2f662b7c54128391187}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T2@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T2}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T2@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T2}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T2}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T2~0x22}}\label{MAX6956_8h_ac4cc75132151b2f662b7c54128391187}
+
+
+(virtual port, no action) 
+
+
+
+Definition at line 264 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_aed99f35f5ba961711c4e5bed769aa369}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T20@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T20}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T20@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T20}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T20}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T20~0x34}}\label{MAX6956_8h_aed99f35f5ba961711c4e5bed769aa369}
+
+
+Definition at line 285 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a361dcd71b3da6c5fb57d33951c9e4c54}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T21@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T21}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T21@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T21}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T21}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T21~0x35}}\label{MAX6956_8h_a361dcd71b3da6c5fb57d33951c9e4c54}
+
+
+Definition at line 286 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a67c57767c9f6eda6124ff7368df4293b}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T22@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T22}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T22@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T22}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T22}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T22~0x36}}\label{MAX6956_8h_a67c57767c9f6eda6124ff7368df4293b}
+
+
+Definition at line 287 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a29699b356f81b9fc971a29fc04e68a59}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T23@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T23}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T23@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T23}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T23}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T23~0x37}}\label{MAX6956_8h_a29699b356f81b9fc971a29fc04e68a59}
+
+
+Definition at line 288 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_ad053ff9eac065beaa10ad52dcc3d1e3e}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T24@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T24}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T24@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T24}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T24}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T24~0x38}}\label{MAX6956_8h_ad053ff9eac065beaa10ad52dcc3d1e3e}
+
+
+Definition at line 289 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a367103a7d8364b916a70f37d0880e334}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T25@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T25}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T25@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T25}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T25}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T25~0x39}}\label{MAX6956_8h_a367103a7d8364b916a70f37d0880e334}
+
+
+Definition at line 290 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_ae0c19d326ab47406a138d4b66c601de0}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T26@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T26}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T26@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T26}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T26}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T26~0x3\-A}}\label{MAX6956_8h_ae0c19d326ab47406a138d4b66c601de0}
+
+
+Definition at line 291 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_ae1219ad62d3ea1b3a86c52736d347618}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T27@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T27}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T27@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T27}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T27}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T27~0x3\-B}}\label{MAX6956_8h_ae1219ad62d3ea1b3a86c52736d347618}
+
+
+Definition at line 292 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a07ff69092b95f43595762554c3e35329}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T28@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T28}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T28@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T28}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T28}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T28~0x3\-C}}\label{MAX6956_8h_a07ff69092b95f43595762554c3e35329}
+
+
+Definition at line 294 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a6be82fa185d6c3dd272200727c15f4ac}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T29@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T29}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T29@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T29}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T29}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T29~0x3\-D}}\label{MAX6956_8h_a6be82fa185d6c3dd272200727c15f4ac}
+
+
+Definition at line 295 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_aa3e011deb16e7054e78e6f71ac33fcba}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T3@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T3}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T3@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T3}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T3}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T3~0x23}}\label{MAX6956_8h_aa3e011deb16e7054e78e6f71ac33fcba}
+
+
+(virtual port, no action) 
+
+
+
+Definition at line 265 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a34c02dca8e8a97488eb0be51f682cf73}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T30@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T30}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T30@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T30}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T30}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T30~0x3\-E}}\label{MAX6956_8h_a34c02dca8e8a97488eb0be51f682cf73}
+
+
+Definition at line 296 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a891d2a47a2fe5a4da056a7732fb6098b}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T31@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T31}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T31@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T31}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T31}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T31~0x3\-F}}\label{MAX6956_8h_a891d2a47a2fe5a4da056a7732fb6098b}
+
+
+Definition at line 297 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a68339cee27681486c99dabf398f487a0}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T4@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T4}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T4@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T4}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T4}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T4~0x24}}\label{MAX6956_8h_a68339cee27681486c99dabf398f487a0}
+
+
+Definition at line 267 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a92c4653a42f8400a30aa13a60dbc056f}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T5@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T5}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T5@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T5}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T5}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T5~0x25}}\label{MAX6956_8h_a92c4653a42f8400a30aa13a60dbc056f}
+
+
+Definition at line 268 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a5af96fba8e40466303a2bcec16df6c6f}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T6@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T6}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T6@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T6}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T6}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T6~0x26}}\label{MAX6956_8h_a5af96fba8e40466303a2bcec16df6c6f}
+
+
+Definition at line 269 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a20de98d6d2102960000a70b4bcf6007c}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T7@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T7}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T7@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T7}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T7}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T7~0x27}}\label{MAX6956_8h_a20de98d6d2102960000a70b4bcf6007c}
+
+
+Definition at line 270 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_ad0ea7dd1027b558df290150b664b0222}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T8@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T8}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T8@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T8}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T8}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T8~0x28}}\label{MAX6956_8h_ad0ea7dd1027b558df290150b664b0222}
+
+
+Definition at line 271 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a7d31adbda8965d0d7df0c521571e135c}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T9@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T9}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T9@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T9}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T9}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T9~0x29}}\label{MAX6956_8h_a7d31adbda8965d0d7df0c521571e135c}
+
+
+Definition at line 272 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_aa9837d30cb5f9c9badf20fe50ea3ba26}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S10\-\_\-17@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S10\-\_\-17}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S10\-\_\-17@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S10\-\_\-17}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S10\-\_\-17}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S10\-\_\-17~0x4\-A}}\label{MAX6956_8h_aa9837d30cb5f9c9badf20fe50ea3ba26}
+
+
+Definition at line 315 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a40bf1528e6a7345e0aaa3b86869f3af3}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S11\-\_\-18@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S11\-\_\-18}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S11\-\_\-18@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S11\-\_\-18}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S11\-\_\-18}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S11\-\_\-18~0x4\-B}}\label{MAX6956_8h_a40bf1528e6a7345e0aaa3b86869f3af3}
+
+
+Definition at line 316 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_ab3e1f8d0b913acae6d73f9b5b0d491ff}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S12\-\_\-19@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S12\-\_\-19}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S12\-\_\-19@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S12\-\_\-19}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S12\-\_\-19}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S12\-\_\-19~0x4\-C}}\label{MAX6956_8h_ab3e1f8d0b913acae6d73f9b5b0d491ff}
+
+
+Definition at line 317 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_ad33d71fa8457fcdb444179768a6376e9}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S13\-\_\-20@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S13\-\_\-20}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S13\-\_\-20@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S13\-\_\-20}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S13\-\_\-20}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S13\-\_\-20~0x4\-D}}\label{MAX6956_8h_ad33d71fa8457fcdb444179768a6376e9}
+
+
+Definition at line 318 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_aeae655678f9a39b8a7f6e9de1a09c59e}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S14\-\_\-21@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S14\-\_\-21}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S14\-\_\-21@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S14\-\_\-21}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S14\-\_\-21}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S14\-\_\-21~0x4\-E}}\label{MAX6956_8h_aeae655678f9a39b8a7f6e9de1a09c59e}
+
+
+Definition at line 319 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a853b18f366e225131135f6576268a461}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S15\-\_\-22@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S15\-\_\-22}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S15\-\_\-22@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S15\-\_\-22}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S15\-\_\-22}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S15\-\_\-22~0x4\-F}}\label{MAX6956_8h_a853b18f366e225131135f6576268a461}
+
+
+Definition at line 320 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a39c1bb286953031fad9c101604d6f56e}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S16\-\_\-23@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S16\-\_\-23}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S16\-\_\-23@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S16\-\_\-23}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S16\-\_\-23}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S16\-\_\-23~0x50}}\label{MAX6956_8h_a39c1bb286953031fad9c101604d6f56e}
+
+
+Definition at line 321 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a8a4536b80e588a3ed6bb2f487499efeb}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S17\-\_\-24@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S17\-\_\-24}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S17\-\_\-24@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S17\-\_\-24}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S17\-\_\-24}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S17\-\_\-24~0x51}}\label{MAX6956_8h_a8a4536b80e588a3ed6bb2f487499efeb}
+
+
+Definition at line 322 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a1ae324a27c0648b831978991a44ee33f}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S18\-\_\-25@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S18\-\_\-25}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S18\-\_\-25@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S18\-\_\-25}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S18\-\_\-25}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S18\-\_\-25~0x52}}\label{MAX6956_8h_a1ae324a27c0648b831978991a44ee33f}
+
+
+Definition at line 323 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a981a54414024fdd2877704d4d242b748}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S19\-\_\-26@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S19\-\_\-26}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S19\-\_\-26@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S19\-\_\-26}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S19\-\_\-26}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S19\-\_\-26~0x53}}\label{MAX6956_8h_a981a54414024fdd2877704d4d242b748}
+
+
+Definition at line 324 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_abd2280465476a9e3cae302d5e9bf7b62}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S20\-\_\-27@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S20\-\_\-27}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S20\-\_\-27@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S20\-\_\-27}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S20\-\_\-27}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S20\-\_\-27~0x54}}\label{MAX6956_8h_abd2280465476a9e3cae302d5e9bf7b62}
+
+
+Definition at line 325 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_adfca6218829cec2697e0975fc7965008}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S21\-\_\-28@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S21\-\_\-28}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S21\-\_\-28@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S21\-\_\-28}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S21\-\_\-28}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S21\-\_\-28~0x55}}\label{MAX6956_8h_adfca6218829cec2697e0975fc7965008}
+
+
+Definition at line 326 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_aa190f6504c585b64f355ce45a24057f1}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S22\-\_\-29@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S22\-\_\-29}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S22\-\_\-29@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S22\-\_\-29}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S22\-\_\-29}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S22\-\_\-29~0x56}}\label{MAX6956_8h_aa190f6504c585b64f355ce45a24057f1}
+
+
+Definition at line 327 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a9ae64dcdc091a17982f4888bcd7b1981}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S23\-\_\-30@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S23\-\_\-30}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S23\-\_\-30@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S23\-\_\-30}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S23\-\_\-30}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S23\-\_\-30~0x57}}\label{MAX6956_8h_a9ae64dcdc091a17982f4888bcd7b1981}
+
+
+Definition at line 328 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a5054da2b077f91e7f6106373a84476ed}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S24\-\_\-31@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S24\-\_\-31}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S24\-\_\-31@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S24\-\_\-31}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S24\-\_\-31}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S24\-\_\-31~0x58}}\label{MAX6956_8h_a5054da2b077f91e7f6106373a84476ed}
+
+
+Definition at line 329 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a38a7fe545ab1b4ca108dabcef50d015f}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S25\-\_\-31@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S25\-\_\-31}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S25\-\_\-31@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S25\-\_\-31}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S25\-\_\-31}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S25\-\_\-31~0x59}}\label{MAX6956_8h_a38a7fe545ab1b4ca108dabcef50d015f}
+
+
+data bits D0-\/\-D6; D7 reads as 0 
+
+
+
+Definition at line 333 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_ac804c8074d5a6baf79b0595415ae0679}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S26\-\_\-31@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S26\-\_\-31}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S26\-\_\-31@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S26\-\_\-31}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S26\-\_\-31}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S26\-\_\-31~0x5\-A}}\label{MAX6956_8h_ac804c8074d5a6baf79b0595415ae0679}
+
+
+data bits D0-\/\-D5; D6-\/\-D7 read as 0 
+
+
+
+Definition at line 334 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a5307d28ebcae5028fc482c914eecf48f}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S27\-\_\-31@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S27\-\_\-31}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S27\-\_\-31@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S27\-\_\-31}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S27\-\_\-31}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S27\-\_\-31~0x5\-B}}\label{MAX6956_8h_a5307d28ebcae5028fc482c914eecf48f}
+
+
+data bits D0-\/\-D4; D5-\/\-D7 read as 0 
+
+
+
+Definition at line 335 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a7554adf2b4214f33584001f4e7c81053}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S28\-\_\-31@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S28\-\_\-31}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S28\-\_\-31@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S28\-\_\-31}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S28\-\_\-31}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S28\-\_\-31~0x5\-C}}\label{MAX6956_8h_a7554adf2b4214f33584001f4e7c81053}
+
+
+data bits D0-\/\-D3; D4-\/\-D7 read as 0 
+
+
+
+Definition at line 336 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_ab278f8cb075460b9318c029bca24e68a}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S29\-\_\-31@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S29\-\_\-31}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S29\-\_\-31@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S29\-\_\-31}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S29\-\_\-31}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S29\-\_\-31~0x5\-D}}\label{MAX6956_8h_ab278f8cb075460b9318c029bca24e68a}
+
+
+data bits D0-\/\-D2; D3-\/\-D7 read as 0 
+
+
+
+Definition at line 337 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_ae5873266ac57220286709a468781c3ff}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S30\-\_\-31@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S30\-\_\-31}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S30\-\_\-31@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S30\-\_\-31}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S30\-\_\-31}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S30\-\_\-31~0x5\-E}}\label{MAX6956_8h_ae5873266ac57220286709a468781c3ff}
+
+
+data bits D0-\/\-D1; D2-\/\-D7 read as 0 
+
+
+
+Definition at line 338 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_ad12b528f7fa63249d37126a8d4049aab}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S31\-\_\-31@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S31\-\_\-31}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S31\-\_\-31@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S31\-\_\-31}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S31\-\_\-31}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S31\-\_\-31~0x5\-F}}\label{MAX6956_8h_ad12b528f7fa63249d37126a8d4049aab}
+
+
+data bit D0; D1-\/\-D7 read as 0. Port 31 only. 
+
+
+
+Definition at line 339 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_ac32650edffdebee3cfeb90c9daece88b}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S4\-\_\-10@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S4\-\_\-10}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S4\-\_\-10@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S4\-\_\-10}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S4\-\_\-10}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S4\-\_\-10~0x43}}\label{MAX6956_8h_ac32650edffdebee3cfeb90c9daece88b}
+
+
+data bits D0-\/\-D6; D7 reads as 0 
+
+
+
+Definition at line 304 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a4b0cc79ee765d2f477953a890b2f6209}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S4\-\_\-11@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S4\-\_\-11}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S4\-\_\-11@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S4\-\_\-11}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S4\-\_\-11}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S4\-\_\-11~0x44}}\label{MAX6956_8h_a4b0cc79ee765d2f477953a890b2f6209}
+
+
+Definition at line 309 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a00bff40ca66a7c82b7093536c5047da4}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S4\-\_\-7@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S4\-\_\-7}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S4\-\_\-7@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S4\-\_\-7}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S4\-\_\-7}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S4\-\_\-7~0x40}}\label{MAX6956_8h_a00bff40ca66a7c82b7093536c5047da4}
+
+
+data bits D0-\/\-D3; D4-\/\-D7 read as 0 
+
+
+
+Definition at line 301 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a3d1cd4727f1748e42a0426c0b70d9c2c}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S4\-\_\-8@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S4\-\_\-8}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S4\-\_\-8@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S4\-\_\-8}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S4\-\_\-8}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S4\-\_\-8~0x41}}\label{MAX6956_8h_a3d1cd4727f1748e42a0426c0b70d9c2c}
+
+
+data bits D0-\/\-D4; D5-\/\-D7 read as 0 
+
+
+
+Definition at line 302 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_ad1b71a2b24de60a4d0128576c0e1278b}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S4\-\_\-9@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S4\-\_\-9}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S4\-\_\-9@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S4\-\_\-9}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S4\-\_\-9}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S4\-\_\-9~0x42}}\label{MAX6956_8h_ad1b71a2b24de60a4d0128576c0e1278b}
+
+
+data bits D0-\/\-D5; D6-\/\-D7 read as 0 
+
+
+
+Definition at line 303 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a13b8eb94b73c20a02397e50c81bccb57}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S5\-\_\-12@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S5\-\_\-12}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S5\-\_\-12@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S5\-\_\-12}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S5\-\_\-12}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S5\-\_\-12~0x45}}\label{MAX6956_8h_a13b8eb94b73c20a02397e50c81bccb57}
+
+
+Definition at line 310 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_af01fef127c33b806d570f1d46a90362f}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S6\-\_\-13@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S6\-\_\-13}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S6\-\_\-13@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S6\-\_\-13}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S6\-\_\-13}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S6\-\_\-13~0x46}}\label{MAX6956_8h_af01fef127c33b806d570f1d46a90362f}
+
+
+Definition at line 311 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_ae0f37de2a929dc6f37733c3f112e0fa7}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S7\-\_\-14@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S7\-\_\-14}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S7\-\_\-14@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S7\-\_\-14}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S7\-\_\-14}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S7\-\_\-14~0x47}}\label{MAX6956_8h_ae0f37de2a929dc6f37733c3f112e0fa7}
+
+
+Definition at line 312 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_ae2bd6458f4aa0271d7fb9c8c8fdd0e4f}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S8\-\_\-15@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S8\-\_\-15}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S8\-\_\-15@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S8\-\_\-15}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S8\-\_\-15}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S8\-\_\-15~0x48}}\label{MAX6956_8h_ae2bd6458f4aa0271d7fb9c8c8fdd0e4f}
+
+
+Definition at line 313 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_aedb8b7ecadabaf8290ac1eacde7db918}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S9\-\_\-16@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S9\-\_\-16}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S9\-\_\-16@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S9\-\_\-16}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S9\-\_\-16}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-P\-O\-R\-T\-S9\-\_\-16~0x49}}\label{MAX6956_8h_aedb8b7ecadabaf8290ac1eacde7db918}
+
+
+Definition at line 314 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a4a2b4c395e47e0ec9ef49d3236b8a465}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-R\-A\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-D\-E\-T\-E\-C\-T@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-D\-E\-T\-E\-C\-T}}
+\index{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-D\-E\-T\-E\-C\-T@{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-D\-E\-T\-E\-C\-T}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-R\-A\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-D\-E\-T\-E\-C\-T}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-R\-A\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-D\-E\-T\-E\-C\-T~0x06}}\label{MAX6956_8h_a4a2b4c395e47e0ec9ef49d3236b8a465}
+\subsection*{Table 15. Transition Detection Mask Register }
+
+\begin{TabularC}{11}
+\hline
+\rowcolor{lightgray}{\bf F\-U\-N\-C\-T\-I\-O\-N }&{\bf R\-E\-G\-I\-S\-T\-E\-R A\-D\-D\-R\-E\-S\-S }&{\bf R\-E\-A\-D/\-W\-R\-I\-T\-E }&{\bf D7 }&{\bf D6 }&{\bf D5 }&{\bf D4 }&{\bf D3 }&{\bf D2 }&{\bf D1 }&{\bf D0  }\\\cline{1-11}
+Mask Register &0x06 &Read &I\-N\-T Status$\ast$&Port&Port&Port&Port&Port&Port&Port \\\cline{1-11}
+&&&&30 &29 &28 &27 &26 &25 &24 \\\cline{1-11}
+&&Write &Unchanged &mask&mask&mask&mask&mask&mask&mask \\\cline{1-11}
+\end{TabularC}
+I\-N\-T is automatically cleared after it is read. 
+
+Definition at line 152 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_abc801853bdfe66591265d04865aba78f}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-M\-A\-S\-K\-\_\-\-B\-I\-T@{M\-A\-X6956\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-M\-A\-S\-K\-\_\-\-B\-I\-T}}
+\index{M\-A\-X6956\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-M\-A\-S\-K\-\_\-\-B\-I\-T@{M\-A\-X6956\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-M\-A\-S\-K\-\_\-\-B\-I\-T}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-M\-A\-S\-K\-\_\-\-B\-I\-T}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-M\-A\-S\-K\-\_\-\-B\-I\-T~0}}\label{MAX6956_8h_abc801853bdfe66591265d04865aba78f}
+
+
+Ports 24-\/30. 
+
+
+
+Definition at line 394 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a332868e8a1596e785072ddb8c4a2b4c1}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-M\-A\-S\-K\-\_\-\-L\-E\-N\-G\-T\-H@{M\-A\-X6956\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-M\-A\-S\-K\-\_\-\-L\-E\-N\-G\-T\-H}}
+\index{M\-A\-X6956\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-M\-A\-S\-K\-\_\-\-L\-E\-N\-G\-T\-H@{M\-A\-X6956\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-M\-A\-S\-K\-\_\-\-L\-E\-N\-G\-T\-H}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-M\-A\-S\-K\-\_\-\-L\-E\-N\-G\-T\-H}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-M\-A\-S\-K\-\_\-\-L\-E\-N\-G\-T\-H~7}}\label{MAX6956_8h_a332868e8a1596e785072ddb8c4a2b4c1}
+
+
+Definition at line 395 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a0a2eb488b9b8d16b5c076d25790ec28e}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-M\-A\-S\-K\-\_\-\-P\-O\-R\-T24\-\_\-\-B\-I\-T@{M\-A\-X6956\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-M\-A\-S\-K\-\_\-\-P\-O\-R\-T24\-\_\-\-B\-I\-T}}
+\index{M\-A\-X6956\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-M\-A\-S\-K\-\_\-\-P\-O\-R\-T24\-\_\-\-B\-I\-T@{M\-A\-X6956\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-M\-A\-S\-K\-\_\-\-P\-O\-R\-T24\-\_\-\-B\-I\-T}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-M\-A\-S\-K\-\_\-\-P\-O\-R\-T24\-\_\-\-B\-I\-T}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-M\-A\-S\-K\-\_\-\-P\-O\-R\-T24\-\_\-\-B\-I\-T~0}}\label{MAX6956_8h_a0a2eb488b9b8d16b5c076d25790ec28e}
+
+
+Definition at line 402 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a04d331f867fa51822f5910ce2b6b891c}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-M\-A\-S\-K\-\_\-\-P\-O\-R\-T25\-\_\-\-B\-I\-T@{M\-A\-X6956\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-M\-A\-S\-K\-\_\-\-P\-O\-R\-T25\-\_\-\-B\-I\-T}}
+\index{M\-A\-X6956\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-M\-A\-S\-K\-\_\-\-P\-O\-R\-T25\-\_\-\-B\-I\-T@{M\-A\-X6956\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-M\-A\-S\-K\-\_\-\-P\-O\-R\-T25\-\_\-\-B\-I\-T}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-M\-A\-S\-K\-\_\-\-P\-O\-R\-T25\-\_\-\-B\-I\-T}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-M\-A\-S\-K\-\_\-\-P\-O\-R\-T25\-\_\-\-B\-I\-T~1}}\label{MAX6956_8h_a04d331f867fa51822f5910ce2b6b891c}
+
+
+Definition at line 401 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_ac4f63f4afc199c41dd9b1445259b8d50}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-M\-A\-S\-K\-\_\-\-P\-O\-R\-T26\-\_\-\-B\-I\-T@{M\-A\-X6956\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-M\-A\-S\-K\-\_\-\-P\-O\-R\-T26\-\_\-\-B\-I\-T}}
+\index{M\-A\-X6956\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-M\-A\-S\-K\-\_\-\-P\-O\-R\-T26\-\_\-\-B\-I\-T@{M\-A\-X6956\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-M\-A\-S\-K\-\_\-\-P\-O\-R\-T26\-\_\-\-B\-I\-T}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-M\-A\-S\-K\-\_\-\-P\-O\-R\-T26\-\_\-\-B\-I\-T}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-M\-A\-S\-K\-\_\-\-P\-O\-R\-T26\-\_\-\-B\-I\-T~2}}\label{MAX6956_8h_ac4f63f4afc199c41dd9b1445259b8d50}
+
+
+Definition at line 400 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a282091cda715bb27f96266f5ae22b492}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-M\-A\-S\-K\-\_\-\-P\-O\-R\-T27\-\_\-\-B\-I\-T@{M\-A\-X6956\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-M\-A\-S\-K\-\_\-\-P\-O\-R\-T27\-\_\-\-B\-I\-T}}
+\index{M\-A\-X6956\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-M\-A\-S\-K\-\_\-\-P\-O\-R\-T27\-\_\-\-B\-I\-T@{M\-A\-X6956\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-M\-A\-S\-K\-\_\-\-P\-O\-R\-T27\-\_\-\-B\-I\-T}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-M\-A\-S\-K\-\_\-\-P\-O\-R\-T27\-\_\-\-B\-I\-T}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-M\-A\-S\-K\-\_\-\-P\-O\-R\-T27\-\_\-\-B\-I\-T~3}}\label{MAX6956_8h_a282091cda715bb27f96266f5ae22b492}
+
+
+Definition at line 399 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a927e5369f33337fdea8d89ccc3b3919d}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-M\-A\-S\-K\-\_\-\-P\-O\-R\-T28\-\_\-\-B\-I\-T@{M\-A\-X6956\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-M\-A\-S\-K\-\_\-\-P\-O\-R\-T28\-\_\-\-B\-I\-T}}
+\index{M\-A\-X6956\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-M\-A\-S\-K\-\_\-\-P\-O\-R\-T28\-\_\-\-B\-I\-T@{M\-A\-X6956\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-M\-A\-S\-K\-\_\-\-P\-O\-R\-T28\-\_\-\-B\-I\-T}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-M\-A\-S\-K\-\_\-\-P\-O\-R\-T28\-\_\-\-B\-I\-T}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-M\-A\-S\-K\-\_\-\-P\-O\-R\-T28\-\_\-\-B\-I\-T~4}}\label{MAX6956_8h_a927e5369f33337fdea8d89ccc3b3919d}
+
+
+Definition at line 398 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a74adf7234472da3287cb98af583750c9}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-M\-A\-S\-K\-\_\-\-P\-O\-R\-T29\-\_\-\-B\-I\-T@{M\-A\-X6956\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-M\-A\-S\-K\-\_\-\-P\-O\-R\-T29\-\_\-\-B\-I\-T}}
+\index{M\-A\-X6956\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-M\-A\-S\-K\-\_\-\-P\-O\-R\-T29\-\_\-\-B\-I\-T@{M\-A\-X6956\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-M\-A\-S\-K\-\_\-\-P\-O\-R\-T29\-\_\-\-B\-I\-T}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-M\-A\-S\-K\-\_\-\-P\-O\-R\-T29\-\_\-\-B\-I\-T}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-M\-A\-S\-K\-\_\-\-P\-O\-R\-T29\-\_\-\-B\-I\-T~5}}\label{MAX6956_8h_a74adf7234472da3287cb98af583750c9}
+
+
+Definition at line 397 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a0e7f62a1c7d77019ca8ca2c2511f2644}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-M\-A\-S\-K\-\_\-\-P\-O\-R\-T30\-\_\-\-B\-I\-T@{M\-A\-X6956\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-M\-A\-S\-K\-\_\-\-P\-O\-R\-T30\-\_\-\-B\-I\-T}}
+\index{M\-A\-X6956\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-M\-A\-S\-K\-\_\-\-P\-O\-R\-T30\-\_\-\-B\-I\-T@{M\-A\-X6956\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-M\-A\-S\-K\-\_\-\-P\-O\-R\-T30\-\_\-\-B\-I\-T}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-M\-A\-S\-K\-\_\-\-P\-O\-R\-T30\-\_\-\-B\-I\-T}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-M\-A\-S\-K\-\_\-\-P\-O\-R\-T30\-\_\-\-B\-I\-T~6}}\label{MAX6956_8h_a0e7f62a1c7d77019ca8ca2c2511f2644}
+
+
+Definition at line 396 of file M\-A\-X6956.\-h.
+
+\hypertarget{MAX6956_8h_a29bd01905e66b503151e6d9cdfb035a1}{\index{M\-A\-X6956.\-h@{M\-A\-X6956.\-h}!M\-A\-X6956\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-S\-T\-A\-T\-U\-S\-\_\-\-B\-I\-T@{M\-A\-X6956\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-S\-T\-A\-T\-U\-S\-\_\-\-B\-I\-T}}
+\index{M\-A\-X6956\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-S\-T\-A\-T\-U\-S\-\_\-\-B\-I\-T@{M\-A\-X6956\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-S\-T\-A\-T\-U\-S\-\_\-\-B\-I\-T}!MAX6956.h@{M\-A\-X6956.\-h}}
+\subsubsection[{M\-A\-X6956\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-S\-T\-A\-T\-U\-S\-\_\-\-B\-I\-T}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X6956\-\_\-\-T\-R\-A\-N\-S\-I\-T\-I\-O\-N\-\_\-\-S\-T\-A\-T\-U\-S\-\_\-\-B\-I\-T~7}}\label{MAX6956_8h_a29bd01905e66b503151e6d9cdfb035a1}
+
+
+I\-N\-T Status, I\-N\-T is automatically cleared after it is read. 
+
+
+
+Definition at line 393 of file M\-A\-X6956.\-h.
+
