@@ -1,0 +1,18 @@
+{
+  "name": "I2Cdevlib-ADXL345",
+  "keywords": "accelerometer, sensor, i2cdevlib, i2c",
+  "description": "The ADXL345 is a small, thin, ultralow power, 3-axis accelerometer with high resolution (13-bit) measurement",
+  "include": "Arduino/ADXL345",
+  "repository":
+  {
+    "type": "git",
+    "url": "https://github.com/jrowberg/i2cdevlib.git"
+  },
+  "dependencies":
+  {
+    "name": "I2Cdevlib-Core",
+    "frameworks": "arduino"
+  },
+  "frameworks": "arduino",
+  "platforms": "atmelavr"
+}
