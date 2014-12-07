@@ -1,0 +1,18 @@
+{
+  "name": "I2Cdevlib-HMC5883L",
+  "keywords": "magnetometer, compass, sensor, i2cdevlib, i2c",
+  "description": "The HMC5883L is 3-Axis digital compass/magnetometer",
+  "include": "Arduino/HMC5883L",
+  "repository":
+  {
+    "type": "git",
+    "url": "https://github.com/jrowberg/i2cdevlib.git"
+  },
+  "dependencies":
+  {
+    "name": "I2Cdevlib-Core",
+    "frameworks": "arduino"
+  },
+  "frameworks": "arduino",
+  "platforms": "atmelavr"
+}
