@@ -1,0 +1,71 @@
+#######################################
+# Syntax Coloring Map For MAX6956
+#######################################
+
+#######################################
+# Classes, datatypes, and C++ keywords (KEYWORD1)
+#######################################
+
+MAX6956	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+reset                           KEYWORD2
+getConfigReg                    KEYWORD2
+setConfigReg                    KEYWORD2
+getPower                        KEYWORD2
+togglePower                     KEYWORD2
+setPower                        KEYWORD2
+getEnableIndividualCurrent      KEYWORD2
+setEnableIndividualCurrent      KEYWORD2
+getEnableTransitionDetection    KEYWORD2
+setEnableTransitionDetection    KEYWORD2
+getGlobalCurrent                KEYWORD2
+setGlobalCurrent                KEYWORD2
+getTestMode                     KEYWORD2
+setTestMode                     KEYWORD2 
+getInputMask                    KEYWORD2 
+setInputMask                    KEYWORD2
+configPort                      KEYWORD2
+configPorts                     KEYWORD2
+configAllPorts                  KEYWORD2 
+setPortLevel                    KEYWORD2 
+setPortCurrent                  KEYWORD2 
+setAllPortsCurrent              KEYWORD2
+enableAllPorts                  KEYWORD2
+disableAllPorts                 KEYWORD2 
+
+
+#######################################
+# InstancesKEYWORD3 setup and loop functions, 
+# as well as the Serial keywords (KEYWORD3)
+#######################################
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+
+
+MAX6956_OUTPUT_LED			    LITERAL1
+MAX6956_OUTPUT_GPIO			    LITERAL1
+MAX6956_INPUT_WO_PULL		    LITERAL1
+MAX6956_INPUT_W_PULL   		    LITERAL1
+
+MAX6956_OFF					    LITERAL1
+MAX6956_CURRENT_1               LITERAL1
+MAX6956_CURRENT_2               LITERAL1
+MAX6956_CURRENT_3               LITERAL1
+MAX6956_CURRENT_4               LITERAL1
+MAX6956_CURRENT_5               LITERAL1
+MAX6956_CURRENT_6               LITERAL1
+MAX6956_CURRENT_7               LITERAL1
+MAX6956_CURRENT_8               LITERAL1
+MAX6956_CURRENT_9               LITERAL1
+MAX6956_CURRENT_10              LITERAL1
+MAX6956_CURRENT_11              LITERAL1
+MAX6956_CURRENT_12              LITERAL1
+MAX6956_CURRENT_13              LITERAL1
+MAX6956_CURRENT_14              LITERAL1
+MAX6956_CURRENT_15              LITERAL1
