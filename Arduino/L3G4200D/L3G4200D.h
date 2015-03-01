@@ -114,8 +114,8 @@ THE SOFTWARE.
 #define L3G4200D_I2_ORUN_BIT       1
 #define L3G4200D_I2_EMPTY_BIT      0
 
-#define L3G4200D_PUSH_PULL         1
-#define L3G4200D_OPEN_DRAIN        0
+#define L3G4200D_PUSH_PULL         0
+#define L3G4200D_OPEN_DRAIN        1
 
 #define L3G4200D_BDU_BIT           7
 #define L3G4200D_BLE_BIT           6
