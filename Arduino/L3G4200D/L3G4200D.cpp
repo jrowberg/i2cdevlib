@@ -445,7 +445,7 @@ void L3G4200D::setOutputMode(bool mode) {
 }
 
 /** Get whether mode is push-pull or open drain
- * @return Output mode (TRUE for push-pull, FALSE for open-drain)
+ * @return Output mode (FALSE for push-pull, TRUE for open-drain)
  * @see L3G4200D_RA_CTRL_REG3
  * @see L3G4200D_PP_OD_BIT
  * @see L3G4200D_PUSH_PULL
