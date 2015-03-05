@@ -1,10 +1,10 @@
 // I2Cdev library collection - L3GD20H I2C device class header file
 // Based on STMicroelectronics L3GD20H datasheet rev. 2, 3/2013
-// X/XX/2015 by Nate Costello <natecostello at gmail dot com>
+// 3/05/2015 by Nate Costello <natecostello at gmail dot com>
 // Updates should (hopefully) always be available at https://github.com/jrowberg/i2cdevlib
 //
 // Changelog:
-//     2015-XX-XX - initial release
+//     2015-03-05 - initial release
 
 /* ============================================
 I2Cdev device library code is placed under the MIT license

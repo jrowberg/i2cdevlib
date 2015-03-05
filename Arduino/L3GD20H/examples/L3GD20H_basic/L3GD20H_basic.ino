@@ -1,9 +1,9 @@
 // I2C device class (I2Cdev) demonstration Arduino sketch for L3GD20H class
-// X/XX/2015 by Nate Costello <natecostello at gmail dot com>
+// 3/05/2015 by Nate Costello <natecostello at gmail dot com>
 // Updates should (hopefully) always be available at https://github.com/jrowberg/i2cdevlib
 //
 // Changelog:
-//     2015-XX-XX - initial release
+//     2015-03-05 - initial release
 
 /* ============================================
 I2Cdev device library code is placed under the MIT license
