@@ -1990,6 +1990,14 @@ uint32_t MPU6050::getExternalSensorDWord(int position) {
 
 // MOT_DETECT_STATUS register
 
+/** Get full motion detection status register content (all bits).
+ * @return Motion detection status byte
+ * @see MPU6050_RA_MOT_DETECT_STATUS
+ */
+bool MPU6050::getMotionStatus() {
+    I2Cdev::readByte(devAddr, MPU6050_RA_MOT_DETECT_STATUS, buffer);
+    return buffer[0];
+}
 /** Get X-axis negative motion detection interrupt status.
  * @return Motion detection status
  * @see MPU6050_RA_MOT_DETECT_STATUS

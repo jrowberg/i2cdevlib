@@ -608,6 +608,7 @@ class MPU6050 {
         uint32_t getExternalSensorDWord(int position);
 
         // MOT_DETECT_STATUS register
+        uint8_t getMotionStatus();
         bool getXNegMotionDetected();
         bool getXPosMotionDetected();
         bool getYNegMotionDetected();
