@@ -1994,7 +1994,7 @@ uint32_t MPU6050::getExternalSensorDWord(int position) {
  * @return Motion detection status byte
  * @see MPU6050_RA_MOT_DETECT_STATUS
  */
-bool MPU6050::getMotionStatus() {
+uint8_t MPU6050::getMotionStatus() {
     I2Cdev::readByte(devAddr, MPU6050_RA_MOT_DETECT_STATUS, buffer);
     return buffer[0];
 }
