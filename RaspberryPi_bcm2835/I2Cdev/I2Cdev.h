@@ -31,6 +31,10 @@ THE SOFTWARE.
 #define _I2CDEV_H_
 
 #include <bcm2835.h>
+#include <math.h> // required for BMP180
+#include <stdlib.h> // required for MPU6060
+#include <string.h> // required for MPU6060
+
 
 #define set_I2C_pins  false  
 /* used to boolean for setting RPi I2C pins P1-03 (SDA) and P1-05 (SCL) to alternate function ALT0, which enables those pins for I2C interface. 
