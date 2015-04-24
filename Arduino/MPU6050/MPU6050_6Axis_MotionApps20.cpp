@@ -639,5 +639,3 @@ uint8_t MPU6050::dmpReadAndProcessFIFOPacket(uint8_t numPackets, uint8_t *proces
 uint16_t MPU6050::dmpGetFIFOPacketSize() {
     return dmpPacketSize;
 }
-
-#endif /* _MPU6050_6AXIS_MOTIONAPPS20_H_ */
