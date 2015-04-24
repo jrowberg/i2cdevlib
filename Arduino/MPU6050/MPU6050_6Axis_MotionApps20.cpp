@@ -22,7 +22,7 @@ THE SOFTWARE.
 ===============================================
 */
 
-#include ".h"
+#include "MPU6050_6Axis_MotionApps20.h"
 
 const unsigned char dmpMemory[MPU6050_DMP_CODE_SIZE] PROGMEM = {
     // bank 0, 256 bytes
