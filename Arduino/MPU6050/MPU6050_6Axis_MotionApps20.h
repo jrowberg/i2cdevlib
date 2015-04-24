@@ -130,12 +130,8 @@ THE SOFTWARE.
 // this block of memory gets written to the MPU on start-up, and it seems
 // to be volatile memory, so it has to be done each time (it only takes ~1
 // second though)
-extern const unsigned char dmpMemory[MPU6050_DMP_CODE_SIZE] PROGMEM;
 
 // thanks to Noah Zerkin for piecing this stuff together!
-extern const unsigned char dmpConfig[MPU6050_DMP_CONFIG_SIZE] PROGMEM;
-
-extern const unsigned char dmpUpdates[MPU6050_DMP_UPDATES_SIZE] PROGMEM; 
 
 // uint8_t MPU6050::dmpSetFIFORate(uint8_t fifoRate);
 // uint8_t MPU6050::dmpGetFIFORate();
