@@ -464,7 +464,7 @@ uint8_t MPU6050::getMotionDetectionThreshold() {
     I2Cdev::readByte(devAddr, MPU6050_RA_MOT_THR, buffer);
     return buffer[0];
 }
-/** Set free-fall event acceleration threshold.
+/** Set motion detection event acceleration threshold.
  * @param threshold New motion detection acceleration threshold value (LSB = 2mg)
  * @see getMotionDetectionThreshold()
  * @see MPU6050_RA_MOT_THR
