@@ -3151,3 +3151,102 @@ uint8_t MPU9150::getDMPConfig2() {
 void MPU9150::setDMPConfig2(uint8_t config) {
     I2Cdev::writeByte(devAddr, MPU9150_RA_DMP_CFG_2, config);
 }
+
+
+// compass
+
+
+void MPU9150::setupCompas(){
+//http://pansenti.wordpress.com/2013/03/26/pansentis-invensense-mpu-9150-software-for-arduino-is-now-on-github/
+//Thank you to pansenti for setup code.
+
+//   MPU9150_I2C_ADDRESS = 0x0C;      //change Adress to Compass
+
+  I2Cdev::writeByte(MPU9150_RA_MAG_ADDRESS, 0x0A, 0x00); //PowerDownMode
+  I2Cdev::writeByte(MPU9150_RA_MAG_ADDRESS, 0x0A, 0x0F); //SelfTest
+  I2Cdev::writeByte(MPU9150_RA_MAG_ADDRESS, 0x0A, 0x00); //PowerDownMode
+//   MPU9150_writeSensor(0x0A, 0x00); //PowerDownMode
+//   MPU9150_writeSensor(0x0A, 0x0F); //SelfTest
+//   MPU9150_writeSensor(0x0A, 0x00); //PowerDownMode
+
+//   MPU9150_I2C_ADDRESS = devAddr;      //change Adress to MPU
+    I2Cdev::writeByte(devAddr, MPU9150_RA_I2C_MST_CTRL, 0x40); //Wait for Data at Slave0
+    I2Cdev::writeByte(devAddr, MPU9150_RA_I2C_SLV0_ADDR, 0x8C); //Set i2c address at slave0 at 0x0C
+    I2Cdev::writeByte(devAddr, MPU9150_RA_I2C_SLV0_REG, 0x02); //Set where reading at slave 0 starts    
+//   MPU9150_writeSensor(0x24, 0x40); //Wait for Data at Slave0
+//   MPU9150_writeSensor(0x25, 0x8C); //Set i2c address at slave0 at 0x0C
+//   MPU9150_writeSensor(0x26, 0x02); //Set where reading at slave 0 starts
+  
+    I2Cdev::writeByte(devAddr, MPU9150_RA_I2C_SLV0_CTRL, 0x88); //set offset at start reading and enable
+//   MPU9150_writeSensor(0x27, 0x88); //set offset at start reading and enable
+
+    I2Cdev::writeByte(devAddr, MPU9150_RA_I2C_SLV1_ADDR, 0x0C); //set i2c address at slv1 at 0x0C
+//     MPU9150_writeSensor(0x28, 0x0C); //set i2c address at slv1 at 0x0C
+    I2Cdev::writeByte(devAddr, MPU9150_RA_I2C_SLV1_REG, 0x0A); //Set where reading at slave 1 starts
+//     MPU9150_writeSensor(0x29, 0x0A); //Set where reading at slave 1 starts
+    I2Cdev::writeByte(devAddr, MPU9150_RA_I2C_SLV1_CTRL, 0x81);  //Enable at set length to 1    
+//   MPU9150_writeSensor(0x2A, 0x81); //Enable at set length to 1
+
+    I2Cdev::writeByte(devAddr, MPU9150_RA_I2C_SLV1_DO, 0x01);   //overvride register    
+//   MPU9150_writeSensor(0x64, 0x01); //overvride register
+    I2Cdev::writeByte(devAddr, MPU9150_RA_I2C_MST_DELAY_CTRL, 0x03);   //set delay rate
+//   MPU9150_writeSensor(0x67, 0x03); //set delay rate
+    I2Cdev::writeByte(devAddr, 0x01, 0x80);
+//   MPU9150_writeSensor(0x01, 0x80);
+
+    I2Cdev::writeByte(devAddr, MPU9150_RA_I2C_SLV4_CTRL, 0x04);  //set i2c slv4 delay
+//   MPU9150_writeSensor(0x34, 0x04); //set i2c slv4 delay
+    I2Cdev::writeByte(devAddr, MPU9150_RA_I2C_SLV1_DO, 0x00);   //overvride register    
+//   MPU9150_writeSensor(0x64, 0x00); //override register
+    I2Cdev::writeByte(devAddr, MPU9150_RA_USER_CTRL, 0x00);   //clear usr setting
+//   MPU9150_writeSensor(0x6A, 0x00); //clear usr setting
+    I2Cdev::writeByte(devAddr, MPU9150_RA_I2C_SLV1_DO, 0x01);   //overvride register    
+//   MPU9150_writeSensor(0x64, 0x01); //override register
+    I2Cdev::writeByte(devAddr, MPU9150_RA_USER_CTRL, 0x20);   //enable master i2c mode
+//   MPU9150_writeSensor(0x6A, 0x20); //enable master i2c mode
+      I2Cdev::writeByte(devAddr, MPU9150_RA_I2C_SLV4_CTRL, 0x13);  //disable i2c slv4 
+//   MPU9150_writeSensor(0x34, 0x13); //disable slv4 
+}
+
+/** Get raw 9-axis motion sensor readings (accel/gyro/compass).
+ * FUNCTION NOT FULLY IMPLEMENTED YET.
+ * @param ax 16-bit signed integer container for accelerometer X-axis value
+ * @param ay 16-bit signed integer container for accelerometer Y-axis value
+ * @param az 16-bit signed integer container for accelerometer Z-axis value
+ * @param gx 16-bit signed integer container for gyroscope X-axis value
+ * @param gy 16-bit signed integer container for gyroscope Y-axis value
+ * @param gz 16-bit signed integer container for gyroscope Z-axis value
+ * @param mx 16-bit signed integer container for magnetometer X-axis value
+ * @param my 16-bit signed integer container for magnetometer Y-axis value
+ * @param mz 16-bit signed integer container for magnetometer Z-axis value
+ * @see getMotion6()
+ * @see getAcceleration()
+ * @see getRotation()
+ * @see MPU9150_RA_ACCEL_XOUT_H
+ */
+
+#define MPU9150_CMPS_XOUT_L        0x4A   // R
+#define MPU9150_CMPS_XOUT_H        0x4B   // R
+#define MPU9150_CMPS_YOUT_L        0x4C   // R
+#define MPU9150_CMPS_YOUT_H        0x4D   // R
+#define MPU9150_CMPS_ZOUT_L        0x4E   // R
+#define MPU9150_CMPS_ZOUT_H        0x4F   // R
+
+void MPU9150::getMotion9new(int16_t* ax, int16_t* ay, int16_t* az, int16_t* gx, int16_t* gy, int16_t* gz, int16_t* mx, int16_t* my, int16_t* mz) {
+
+    //get accel and gyro
+    getMotion6(ax, ay, az, gx, gy, gz);
+    
+    I2Cdev::readBytes(devAddr, MPU9150_CMPS_XOUT_L, 6, buffer);
+    
+//     //read mag
+//     I2Cdev::writeByte(devAddr, MPU9150_RA_INT_PIN_CFG, 0x02); //set i2c bypass enable pin to true to access magnetometer
+//     delay(10);
+//     I2Cdev::writeByte(MPU9150_RA_MAG_ADDRESS, 0x0A, 0x01); //enable the magnetometer
+//     delay(10);
+//     I2Cdev::readBytes(MPU9150_RA_MAG_ADDRESS, MPU9150_RA_MAG_XOUT_L, 6, buffer);
+    *mx = (((int16_t)buffer[0]) << 8) | buffer[1];
+    *my = (((int16_t)buffer[2]) << 8) | buffer[3];
+    *mz = (((int16_t)buffer[4]) << 8) | buffer[5];
+}
+
