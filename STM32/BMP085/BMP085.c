@@ -33,14 +33,14 @@ THE SOFTWARE.
 
 #include "BMP085.h"
 
-uint8_t devAddr = BMP085_DEFAULT_ADDRESS;
-uint8_t buffer[2];
+static uint8_t devAddr = BMP085_DEFAULT_ADDRESS;
+static uint8_t buffer[3];
 
-bool calibrationLoaded;
-int16_t ac1, ac2, ac3, b1, b2, mb, mc, md;
-uint16_t ac4, ac5, ac6;
-int32_t b5;
-uint8_t measureMode;
+static bool calibrationLoaded;
+static int16_t ac1, ac2, ac3, b1, b2, mb, mc, md;
+static uint16_t ac4, ac5, ac6;
+static int32_t b5;
+static uint8_t measureMode;
 
 /**
  * Specific address constructor.
