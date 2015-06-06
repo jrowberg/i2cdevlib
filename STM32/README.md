@@ -1,15 +1,12 @@
 # I2C Device Library for STM32
 
-## I2Cdev
-Init your i2c device in HAL set its handler to 
-
 ## Devices
 Currently only BMP180/BMP085 is supported. MPU6050 and HMC5883L will come soon (GY-87 board).
 Adding more functions and devices should be straighforward after reading the source code of the driver.
 Porting drivers should be as simple, as renaming public methods from *DRIVER::func()* to *DRIVER_func()* and moving private fields and functions to *.c file
 
 ## Example for STM32F429I-DISCO board
-```
+```C
 #include "stm32f4xx.h"
 #include "stm32f4xx_hal.h"
 #include <stdint.h>
