@@ -1,11 +1,11 @@
 # I2C Device Library for STM32
 
 ## Devices
-Currently only BMP180/BMP085 is supported. MPU6050 and HMC5883L will come soon (GY-87 board).
+Currently MPU6050 (w/o DMP) and BMP180/BMP085 are ported. ADXL345 and HMC5883L coming soon (GY-87 board).
 Adding more functions and devices should be straighforward after reading the source code of the driver.
 Porting drivers should be as simple, as renaming public methods from *DRIVER::func()* to *DRIVER_func()* and moving private fields and functions to *.c file
 
-## Example for STM32F429I-DISCO board
+## BMP180 Example for STM32F429I-DISCO board
 ```C
 #include "stm32f4xx.h"
 #include "stm32f4xx_hal.h"
