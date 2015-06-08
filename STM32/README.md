@@ -1,7 +1,7 @@
 # I2C Device Library for STM32
 
 ## Devices
-Currently MPU6050 (w/o DMP) and BMP180/BMP085 are ported. ADXL345 and HMC5883L coming soon (GY-87 board).
+Currently MPU6050 (with DMP), HMC5883L and BMP180/BMP085 are ported (GY-87 board). ADXL345 is coming soon.
 Adding more functions and devices should be straighforward after reading the source code of the driver.
 Porting drivers should be as simple, as renaming public methods from *DRIVER::func()* to *DRIVER_func()* and moving private fields and functions to *.c file
 
