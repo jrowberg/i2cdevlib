@@ -3239,14 +3239,36 @@ void MPU9150::getMotion9new(int16_t* ax, int16_t* ay, int16_t* az, int16_t* gx, 
     
     I2Cdev::readBytes(devAddr, MPU9150_CMPS_XOUT_L, 6, buffer);
     
-//     //read mag
-//     I2Cdev::writeByte(devAddr, MPU9150_RA_INT_PIN_CFG, 0x02); //set i2c bypass enable pin to true to access magnetometer
-//     delay(10);
-//     I2Cdev::writeByte(MPU9150_RA_MAG_ADDRESS, 0x0A, 0x01); //enable the magnetometer
-//     delay(10);
-//     I2Cdev::readBytes(MPU9150_RA_MAG_ADDRESS, MPU9150_RA_MAG_XOUT_L, 6, buffer);
-    *mx = (((int16_t)buffer[0]) << 8) | buffer[1];
-    *my = (((int16_t)buffer[2]) << 8) | buffer[3];
-    *mz = (((int16_t)buffer[4]) << 8) | buffer[5];
+    *mx = (((int16_t)buffer[1]) << 8) | buffer[0]; // low and high other way around from others
+    *my = (((int16_t)buffer[3]) << 8) | buffer[2];
+    *mz = (((int16_t)buffer[5]) << 8) | buffer[4];
 }
 
+void MPU9150::getMotion6buffer(int8_t* inbuffer ) {
+    I2Cdev::readBytes(devAddr, MPU9150_RA_ACCEL_XOUT_H, 14, buffer);
+    uint8_t k = 0;
+    for ( uint8_t i=0; i<6; i++ ){
+	inbuffer[k] = buffer[i];
+	k++;
+    }
+    for ( uint8_t i=8; i<14; i++ ){
+	inbuffer[k] = buffer[i];
+	k++;
+    }
+}
+
+void MPU9150::getCompassBuffer(int8_t * inbuffer) {
+
+    //get accel and gyro
+//     getMotion6(ax, ay, az, gx, gy, gz);
+    
+    I2Cdev::readBytes(devAddr, MPU9150_CMPS_XOUT_L, 6, buffer);
+    
+    for ( uint8_t i=0; i<6; i++ ){
+	inbuffer[i] = buffer[i];
+    }
+
+//     *mx = (((int16_t)buffer[0]) << 8) | buffer[1];
+//     *my = (((int16_t)buffer[2]) << 8) | buffer[3];
+//     *mz = (((int16_t)buffer[4]) << 8) | buffer[5];
+}
