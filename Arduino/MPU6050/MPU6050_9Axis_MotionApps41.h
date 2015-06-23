@@ -108,4 +108,27 @@ THE SOFTWARE.
 #define MPU6050_DMP_CONFIG_SIZE     232     // dmpConfig[]
 #define MPU6050_DMP_UPDATES_SIZE    140     // dmpUpdates[]
 
+class MPU6050_9Axis_MotionApps41 : public MPU6050 {
+public:
+    uint8_t dmpInitialize();
+    bool dmpPacketAvailable();
+    uint8_t dmpGetAccel(int32_t *data, const uint8_t* packet);
+    uint8_t dmpGetAccel(int16_t *data, const uint8_t* packet);
+    uint8_t dmpGetAccel(VectorInt16 *v, const uint8_t* packet);
+    uint8_t dmpGetQuaternion(int32_t *data, const uint8_t* packet);
+    uint8_t dmpGetQuaternion(int16_t *data, const uint8_t* packet);
+    uint8_t dmpGetQuaternion(Quaternion *q, const uint8_t* packet);
+    uint8_t dmpGetGyro(int32_t *data, const uint8_t* packet);
+    uint8_t dmpGetGyro(int16_t *data, const uint8_t* packet);
+    uint8_t dmpGetMag(int16_t *data, const uint8_t* packet);
+    uint8_t dmpGetLinearAccel(VectorInt16 *v, VectorInt16 *vRaw, VectorFloat *gravity);
+    uint8_t dmpGetLinearAccelInWorld(VectorInt16 *v, VectorInt16 *vReal, Quaternion *q);
+    uint8_t dmpGetGravity(VectorFloat *v, Quaternion *q);
+    uint8_t dmpGetEuler(float *data, Quaternion *q);
+    uint8_t dmpGetYawPitchRoll(float *data, Quaternion *q, VectorFloat *gravity);
+    uint8_t dmpProcessFIFOPacket(const unsigned char *dmpData);
+    uint8_t dmpReadAndProcessFIFOPacket(uint8_t numPackets, uint8_t *processed);
+    uint16_t dmpGetFIFOPacketSize();
+};
+
 #endif /* _MPU6050_9AXIS_MOTIONAPPS41_H_ */

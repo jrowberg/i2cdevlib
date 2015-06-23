@@ -990,7 +990,7 @@ class MPU6050 {
             uint16_t dmpGetFIFOPacketSize();
         #endif
 
-    private:
+    protected:
         uint8_t devAddr;
         uint8_t buffer[14];
 };

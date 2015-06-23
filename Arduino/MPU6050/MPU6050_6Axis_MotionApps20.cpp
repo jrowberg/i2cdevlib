@@ -30,6 +30,8 @@ THE SOFTWARE.
 ===============================================
 */
 
+#include "MPU6050_6Axis_MotionApps20.h"
+
 /* ================================================================================================ *
  | Default MotionApps v2.0 42-byte FIFO packet structure:                                           |
  |                                                                                                  |
@@ -235,7 +237,7 @@ const static unsigned char dmpUpdates[MPU6050_DMP_UPDATES_SIZE] PROGMEM = {
     0x00,   0x60,   0x04,   0x00, 0x40, 0x00, 0x00
 };
 
-uint8_t MPU6050::dmpInitialize() {
+uint8_t MPU6050_6Axis_MotionApps20::dmpInitialize() {
     // reset device
     DEBUG_PRINTLN(F("\n\nResetting MPU6050..."));
     reset();
@@ -460,34 +462,34 @@ uint8_t MPU6050::dmpInitialize() {
     return 0; // success
 }
 
-bool MPU6050::dmpPacketAvailable() {
+bool MPU6050_6Axis_MotionApps20::dmpPacketAvailable() {
     return getFIFOCount() >= dmpGetFIFOPacketSize();
 }
 
-// uint8_t MPU6050::dmpSetFIFORate(uint8_t fifoRate);
-// uint8_t MPU6050::dmpGetFIFORate();
-// uint8_t MPU6050::dmpGetSampleStepSizeMS();
-// uint8_t MPU6050::dmpGetSampleFrequency();
-// int32_t MPU6050::dmpDecodeTemperature(int8_t tempReg);
+// uint8_t MPU6050_6Axis_MotionApps20::dmpSetFIFORate(uint8_t fifoRate);
+// uint8_t MPU6050_6Axis_MotionApps20::dmpGetFIFORate();
+// uint8_t MPU6050_6Axis_MotionApps20::dmpGetSampleStepSizeMS();
+// uint8_t MPU6050_6Axis_MotionApps20::dmpGetSampleFrequency();
+// int32_t MPU6050_6Axis_MotionApps20::dmpDecodeTemperature(int8_t tempReg);
 
-//uint8_t MPU6050::dmpRegisterFIFORateProcess(inv_obj_func func, int16_t priority);
-//uint8_t MPU6050::dmpUnregisterFIFORateProcess(inv_obj_func func);
-//uint8_t MPU6050::dmpRunFIFORateProcesses();
+//uint8_t MPU6050_6Axis_MotionApps20::dmpRegisterFIFORateProcess(inv_obj_func func, int16_t priority);
+//uint8_t MPU6050_6Axis_MotionApps20::dmpUnregisterFIFORateProcess(inv_obj_func func);
+//uint8_t MPU6050_6Axis_MotionApps20::dmpRunFIFORateProcesses();
 
-// uint8_t MPU6050::dmpSendQuaternion(uint_fast16_t accuracy);
-// uint8_t MPU6050::dmpSendGyro(uint_fast16_t elements, uint_fast16_t accuracy);
-// uint8_t MPU6050::dmpSendAccel(uint_fast16_t elements, uint_fast16_t accuracy);
-// uint8_t MPU6050::dmpSendLinearAccel(uint_fast16_t elements, uint_fast16_t accuracy);
-// uint8_t MPU6050::dmpSendLinearAccelInWorld(uint_fast16_t elements, uint_fast16_t accuracy);
-// uint8_t MPU6050::dmpSendControlData(uint_fast16_t elements, uint_fast16_t accuracy);
-// uint8_t MPU6050::dmpSendSensorData(uint_fast16_t elements, uint_fast16_t accuracy);
-// uint8_t MPU6050::dmpSendExternalSensorData(uint_fast16_t elements, uint_fast16_t accuracy);
-// uint8_t MPU6050::dmpSendGravity(uint_fast16_t elements, uint_fast16_t accuracy);
-// uint8_t MPU6050::dmpSendPacketNumber(uint_fast16_t accuracy);
-// uint8_t MPU6050::dmpSendQuantizedAccel(uint_fast16_t elements, uint_fast16_t accuracy);
-// uint8_t MPU6050::dmpSendEIS(uint_fast16_t elements, uint_fast16_t accuracy);
+// uint8_t MPU6050_6Axis_MotionApps20::dmpSendQuaternion(uint_fast16_t accuracy);
+// uint8_t MPU6050_6Axis_MotionApps20::dmpSendGyro(uint_fast16_t elements, uint_fast16_t accuracy);
+// uint8_t MPU6050_6Axis_MotionApps20::dmpSendAccel(uint_fast16_t elements, uint_fast16_t accuracy);
+// uint8_t MPU6050_6Axis_MotionApps20::dmpSendLinearAccel(uint_fast16_t elements, uint_fast16_t accuracy);
+// uint8_t MPU6050_6Axis_MotionApps20::dmpSendLinearAccelInWorld(uint_fast16_t elements, uint_fast16_t accuracy);
+// uint8_t MPU6050_6Axis_MotionApps20::dmpSendControlData(uint_fast16_t elements, uint_fast16_t accuracy);
+// uint8_t MPU6050_6Axis_MotionApps20::dmpSendSensorData(uint_fast16_t elements, uint_fast16_t accuracy);
+// uint8_t MPU6050_6Axis_MotionApps20::dmpSendExternalSensorData(uint_fast16_t elements, uint_fast16_t accuracy);
+// uint8_t MPU6050_6Axis_MotionApps20::dmpSendGravity(uint_fast16_t elements, uint_fast16_t accuracy);
+// uint8_t MPU6050_6Axis_MotionApps20::dmpSendPacketNumber(uint_fast16_t accuracy);
+// uint8_t MPU6050_6Axis_MotionApps20::dmpSendQuantizedAccel(uint_fast16_t elements, uint_fast16_t accuracy);
+// uint8_t MPU6050_6Axis_MotionApps20::dmpSendEIS(uint_fast16_t elements, uint_fast16_t accuracy);
 
-uint8_t MPU6050::dmpGetAccel(int32_t *data, const uint8_t* packet) {
+uint8_t MPU6050_6Axis_MotionApps20::dmpGetAccel(int32_t *data, const uint8_t* packet) {
     // TODO: accommodate different arrangements of sent data (ONLY default supported now)
     if (packet == 0) packet = dmpPacketBuffer;
     data[0] = ((packet[28] << 24) + (packet[29] << 16) + (packet[30] << 8) + packet[31]);
@@ -495,7 +497,7 @@ uint8_t MPU6050::dmpGetAccel(int32_t *data, const uint8_t* packet) {
     data[2] = ((packet[36] << 24) + (packet[37] << 16) + (packet[38] << 8) + packet[39]);
     return 0;
 }
-uint8_t MPU6050::dmpGetAccel(int16_t *data, const uint8_t* packet) {
+uint8_t MPU6050_6Axis_MotionApps20::dmpGetAccel(int16_t *data, const uint8_t* packet) {
     // TODO: accommodate different arrangements of sent data (ONLY default supported now)
     if (packet == 0) packet = dmpPacketBuffer;
     data[0] = (packet[28] << 8) + packet[29];
@@ -503,7 +505,7 @@ uint8_t MPU6050::dmpGetAccel(int16_t *data, const uint8_t* packet) {
     data[2] = (packet[36] << 8) + packet[37];
     return 0;
 }
-uint8_t MPU6050::dmpGetAccel(VectorInt16 *v, const uint8_t* packet) {
+uint8_t MPU6050_6Axis_MotionApps20::dmpGetAccel(VectorInt16 *v, const uint8_t* packet) {
     // TODO: accommodate different arrangements of sent data (ONLY default supported now)
     if (packet == 0) packet = dmpPacketBuffer;
     v -> x = (packet[28] << 8) + packet[29];
@@ -511,7 +513,7 @@ uint8_t MPU6050::dmpGetAccel(VectorInt16 *v, const uint8_t* packet) {
     v -> z = (packet[36] << 8) + packet[37];
     return 0;
 }
-uint8_t MPU6050::dmpGetQuaternion(int32_t *data, const uint8_t* packet) {
+uint8_t MPU6050_6Axis_MotionApps20::dmpGetQuaternion(int32_t *data, const uint8_t* packet) {
     // TODO: accommodate different arrangements of sent data (ONLY default supported now)
     if (packet == 0) packet = dmpPacketBuffer;
     data[0] = ((packet[0] << 24) + (packet[1] << 16) + (packet[2] << 8) + packet[3]);
@@ -520,7 +522,7 @@ uint8_t MPU6050::dmpGetQuaternion(int32_t *data, const uint8_t* packet) {
     data[3] = ((packet[12] << 24) + (packet[13] << 16) + (packet[14] << 8) + packet[15]);
     return 0;
 }
-uint8_t MPU6050::dmpGetQuaternion(int16_t *data, const uint8_t* packet) {
+uint8_t MPU6050_6Axis_MotionApps20::dmpGetQuaternion(int16_t *data, const uint8_t* packet) {
     // TODO: accommodate different arrangements of sent data (ONLY default supported now)
     if (packet == 0) packet = dmpPacketBuffer;
     data[0] = ((packet[0] << 8) + packet[1]);
@@ -529,7 +531,7 @@ uint8_t MPU6050::dmpGetQuaternion(int16_t *data, const uint8_t* packet) {
     data[3] = ((packet[12] << 8) + packet[13]);
     return 0;
 }
-uint8_t MPU6050::dmpGetQuaternion(Quaternion *q, const uint8_t* packet) {
+uint8_t MPU6050_6Axis_MotionApps20::dmpGetQuaternion(Quaternion *q, const uint8_t* packet) {
     // TODO: accommodate different arrangements of sent data (ONLY default supported now)
     int16_t qI[4];
     uint8_t status = dmpGetQuaternion(qI, packet);
@@ -542,9 +544,9 @@ uint8_t MPU6050::dmpGetQuaternion(Quaternion *q, const uint8_t* packet) {
     }
     return status; // int16 return value, indicates error if this line is reached
 }
-// uint8_t MPU6050::dmpGet6AxisQuaternion(long *data, const uint8_t* packet);
-// uint8_t MPU6050::dmpGetRelativeQuaternion(long *data, const uint8_t* packet);
-uint8_t MPU6050::dmpGetGyro(int32_t *data, const uint8_t* packet) {
+// uint8_t MPU6050_6Axis_MotionApps20::dmpGet6AxisQuaternion(long *data, const uint8_t* packet);
+// uint8_t MPU6050_6Axis_MotionApps20::dmpGetRelativeQuaternion(long *data, const uint8_t* packet);
+uint8_t MPU6050_6Axis_MotionApps20::dmpGetGyro(int32_t *data, const uint8_t* packet) {
     // TODO: accommodate different arrangements of sent data (ONLY default supported now)
     if (packet == 0) packet = dmpPacketBuffer;
     data[0] = ((packet[16] << 24) + (packet[17] << 16) + (packet[18] << 8) + packet[19]);
@@ -552,7 +554,7 @@ uint8_t MPU6050::dmpGetGyro(int32_t *data, const uint8_t* packet) {
     data[2] = ((packet[24] << 24) + (packet[25] << 16) + (packet[26] << 8) + packet[27]);
     return 0;
 }
-uint8_t MPU6050::dmpGetGyro(int16_t *data, const uint8_t* packet) {
+uint8_t MPU6050_6Axis_MotionApps20::dmpGetGyro(int16_t *data, const uint8_t* packet) {
     // TODO: accommodate different arrangements of sent data (ONLY default supported now)
     if (packet == 0) packet = dmpPacketBuffer;
     data[0] = (packet[16] << 8) + packet[17];
@@ -560,7 +562,7 @@ uint8_t MPU6050::dmpGetGyro(int16_t *data, const uint8_t* packet) {
     data[2] = (packet[24] << 8) + packet[25];
     return 0;
 }
-uint8_t MPU6050::dmpGetGyro(VectorInt16 *v, const uint8_t* packet) {
+uint8_t MPU6050_6Axis_MotionApps20::dmpGetGyro(VectorInt16 *v, const uint8_t* packet) {
     // TODO: accommodate different arrangements of sent data (ONLY default supported now)
     if (packet == 0) packet = dmpPacketBuffer;
     v -> x = (packet[16] << 8) + packet[17];
@@ -568,46 +570,46 @@ uint8_t MPU6050::dmpGetGyro(VectorInt16 *v, const uint8_t* packet) {
     v -> z = (packet[24] << 8) + packet[25];
     return 0;
 }
-// uint8_t MPU6050::dmpSetLinearAccelFilterCoefficient(float coef);
-// uint8_t MPU6050::dmpGetLinearAccel(long *data, const uint8_t* packet);
-uint8_t MPU6050::dmpGetLinearAccel(VectorInt16 *v, VectorInt16 *vRaw, VectorFloat *gravity) {
+// uint8_t MPU6050_6Axis_MotionApps20::dmpSetLinearAccelFilterCoefficient(float coef);
+// uint8_t MPU6050_6Axis_MotionApps20::dmpGetLinearAccel(long *data, const uint8_t* packet);
+uint8_t MPU6050_6Axis_MotionApps20::dmpGetLinearAccel(VectorInt16 *v, VectorInt16 *vRaw, VectorFloat *gravity) {
     // get rid of the gravity component (+1g = +8192 in standard DMP FIFO packet, sensitivity is 2g)
     v -> x = vRaw -> x - gravity -> x*8192;
     v -> y = vRaw -> y - gravity -> y*8192;
     v -> z = vRaw -> z - gravity -> z*8192;
     return 0;
 }
-// uint8_t MPU6050::dmpGetLinearAccelInWorld(long *data, const uint8_t* packet);
-uint8_t MPU6050::dmpGetLinearAccelInWorld(VectorInt16 *v, VectorInt16 *vReal, Quaternion *q) {
+// uint8_t MPU6050_6Axis_MotionApps20::dmpGetLinearAccelInWorld(long *data, const uint8_t* packet);
+uint8_t MPU6050_6Axis_MotionApps20::dmpGetLinearAccelInWorld(VectorInt16 *v, VectorInt16 *vReal, Quaternion *q) {
     // rotate measured 3D acceleration vector into original state
     // frame of reference based on orientation quaternion
     memcpy(v, vReal, sizeof(VectorInt16));
     v -> rotate(q);
     return 0;
 }
-// uint8_t MPU6050::dmpGetGyroAndAccelSensor(long *data, const uint8_t* packet);
-// uint8_t MPU6050::dmpGetGyroSensor(long *data, const uint8_t* packet);
-// uint8_t MPU6050::dmpGetControlData(long *data, const uint8_t* packet);
-// uint8_t MPU6050::dmpGetTemperature(long *data, const uint8_t* packet);
-// uint8_t MPU6050::dmpGetGravity(long *data, const uint8_t* packet);
-uint8_t MPU6050::dmpGetGravity(VectorFloat *v, Quaternion *q) {
+// uint8_t MPU6050_6Axis_MotionApps20::dmpGetGyroAndAccelSensor(long *data, const uint8_t* packet);
+// uint8_t MPU6050_6Axis_MotionApps20::dmpGetGyroSensor(long *data, const uint8_t* packet);
+// uint8_t MPU6050_6Axis_MotionApps20::dmpGetControlData(long *data, const uint8_t* packet);
+// uint8_t MPU6050_6Axis_MotionApps20::dmpGetTemperature(long *data, const uint8_t* packet);
+// uint8_t MPU6050_6Axis_MotionApps20::dmpGetGravity(long *data, const uint8_t* packet);
+uint8_t MPU6050_6Axis_MotionApps20::dmpGetGravity(VectorFloat *v, Quaternion *q) {
     v -> x = 2 * (q -> x*q -> z - q -> w*q -> y);
     v -> y = 2 * (q -> w*q -> x + q -> y*q -> z);
     v -> z = q -> w*q -> w - q -> x*q -> x - q -> y*q -> y + q -> z*q -> z;
     return 0;
 }
-// uint8_t MPU6050::dmpGetUnquantizedAccel(long *data, const uint8_t* packet);
-// uint8_t MPU6050::dmpGetQuantizedAccel(long *data, const uint8_t* packet);
-// uint8_t MPU6050::dmpGetExternalSensorData(long *data, int size, const uint8_t* packet);
-// uint8_t MPU6050::dmpGetEIS(long *data, const uint8_t* packet);
+// uint8_t MPU6050_6Axis_MotionApps20::dmpGetUnquantizedAccel(long *data, const uint8_t* packet);
+// uint8_t MPU6050_6Axis_MotionApps20::dmpGetQuantizedAccel(long *data, const uint8_t* packet);
+// uint8_t MPU6050_6Axis_MotionApps20::dmpGetExternalSensorData(long *data, int size, const uint8_t* packet);
+// uint8_t MPU6050_6Axis_MotionApps20::dmpGetEIS(long *data, const uint8_t* packet);
 
-uint8_t MPU6050::dmpGetEuler(float *data, Quaternion *q) {
+uint8_t MPU6050_6Axis_MotionApps20::dmpGetEuler(float *data, Quaternion *q) {
     data[0] = atan2(2*q -> x*q -> y - 2*q -> w*q -> z, 2*q -> w*q -> w + 2*q -> x*q -> x - 1);   // psi
     data[1] = -asin(2*q -> x*q -> z + 2*q -> w*q -> y);                              // theta
     data[2] = atan2(2*q -> y*q -> z - 2*q -> w*q -> x, 2*q -> w*q -> w + 2*q -> z*q -> z - 1);   // phi
     return 0;
 }
-uint8_t MPU6050::dmpGetYawPitchRoll(float *data, Quaternion *q, VectorFloat *gravity) {
+uint8_t MPU6050_6Axis_MotionApps20::dmpGetYawPitchRoll(float *data, Quaternion *q, VectorFloat *gravity) {
     // yaw: (about Z axis)
     data[0] = atan2(2*q -> x*q -> y - 2*q -> w*q -> z, 2*q -> w*q -> w + 2*q -> x*q -> x - 1);
     // pitch: (nose up/down, about Y axis)
@@ -617,10 +619,10 @@ uint8_t MPU6050::dmpGetYawPitchRoll(float *data, Quaternion *q, VectorFloat *gra
     return 0;
 }
 
-// uint8_t MPU6050::dmpGetAccelFloat(float *data, const uint8_t* packet);
-// uint8_t MPU6050::dmpGetQuaternionFloat(float *data, const uint8_t* packet);
+// uint8_t MPU6050_6Axis_MotionApps20::dmpGetAccelFloat(float *data, const uint8_t* packet);
+// uint8_t MPU6050_6Axis_MotionApps20::dmpGetQuaternionFloat(float *data, const uint8_t* packet);
 
-uint8_t MPU6050::dmpProcessFIFOPacket(const unsigned char *dmpData) {
+uint8_t MPU6050_6Axis_MotionApps20::dmpProcessFIFOPacket(const unsigned char *dmpData) {
     /*for (uint8_t k = 0; k < dmpPacketSize; k++) {
         if (dmpData[k] < 0x10) Serial.print("0");
         Serial.print(dmpData[k], HEX);
@@ -630,7 +632,7 @@ uint8_t MPU6050::dmpProcessFIFOPacket(const unsigned char *dmpData) {
     //Serial.println((uint16_t)dmpPacketBuffer);
     return 0;
 }
-uint8_t MPU6050::dmpReadAndProcessFIFOPacket(uint8_t numPackets, uint8_t *processed) {
+uint8_t MPU6050_6Axis_MotionApps20::dmpReadAndProcessFIFOPacket(uint8_t numPackets, uint8_t *processed) {
     uint8_t status;
     uint8_t buf[dmpPacketSize];
     for (uint8_t i = 0; i < numPackets; i++) {
@@ -646,15 +648,15 @@ uint8_t MPU6050::dmpReadAndProcessFIFOPacket(uint8_t numPackets, uint8_t *proces
     return 0;
 }
 
-// uint8_t MPU6050::dmpSetFIFOProcessedCallback(void (*func) (void));
+// uint8_t MPU6050_6Axis_MotionApps20::dmpSetFIFOProcessedCallback(void (*func) (void));
 
-// uint8_t MPU6050::dmpInitFIFOParam();
-// uint8_t MPU6050::dmpCloseFIFO();
-// uint8_t MPU6050::dmpSetGyroDataSource(uint_fast8_t source);
-// uint8_t MPU6050::dmpDecodeQuantizedAccel();
-// uint32_t MPU6050::dmpGetGyroSumOfSquare();
-// uint32_t MPU6050::dmpGetAccelSumOfSquare();
-// void MPU6050::dmpOverrideQuaternion(long *q);
-uint16_t MPU6050::dmpGetFIFOPacketSize() {
+// uint8_t MPU6050_6Axis_MotionApps20::dmpInitFIFOParam();
+// uint8_t MPU6050_6Axis_MotionApps20::dmpCloseFIFO();
+// uint8_t MPU6050_6Axis_MotionApps20::dmpSetGyroDataSource(uint_fast8_t source);
+// uint8_t MPU6050_6Axis_MotionApps20::dmpDecodeQuantizedAccel();
+// uint32_t MPU6050_6Axis_MotionApps20::dmpGetGyroSumOfSquare();
+// uint32_t MPU6050_6Axis_MotionApps20::dmpGetAccelSumOfSquare();
+// void MPU6050_6Axis_MotionApps20::dmpOverrideQuaternion(long *q);
+uint16_t MPU6050_6Axis_MotionApps20::dmpGetFIFOPacketSize() {
     return dmpPacketSize;
 }
