@@ -132,6 +132,10 @@ public:
 };
 
 typedef MPU6050_9Axis_MotionApps41 MPU6050_9Axis;
+
+#ifndef HAVE_MPU6050_TYPEDEF
+#define HAVE_MPU6050_TYPEDEF
 typedef MPU6050_9Axis_MotionApps41 MPU6050;
+#endif
 
 #endif /* _MPU6050_9AXIS_MOTIONAPPS41_H_ */
