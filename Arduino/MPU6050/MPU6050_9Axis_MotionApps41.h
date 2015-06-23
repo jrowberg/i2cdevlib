@@ -131,4 +131,6 @@ public:
     uint16_t dmpGetFIFOPacketSize();
 };
 
+typedef MPU6050_9Axis_MotionApps41 MPU6050_9Axis;
+
 #endif /* _MPU6050_9AXIS_MOTIONAPPS41_H_ */

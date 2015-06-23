@@ -140,4 +140,6 @@ public:
     uint16_t dmpGetFIFOPacketSize();
 };
 
+typedef MPU6050_6Axis_MotionApps20 MPU6050_6Axis;
+
 #endif /* _MPU6050_6AXIS_MOTIONAPPS20_H_ */
