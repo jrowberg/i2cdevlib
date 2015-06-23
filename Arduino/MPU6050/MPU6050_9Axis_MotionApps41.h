@@ -108,7 +108,7 @@ THE SOFTWARE.
 #define MPU6050_DMP_CONFIG_SIZE     232     // dmpConfig[]
 #define MPU6050_DMP_UPDATES_SIZE    140     // dmpUpdates[]
 
-class MPU6050_9Axis_MotionApps41 : public MPU6050 {
+class MPU6050_9Axis_MotionApps41 : public MPU6050_Base {
 public:
     uint8_t dmpInitialize();
     bool dmpPacketAvailable();
@@ -132,5 +132,6 @@ public:
 };
 
 typedef MPU6050_9Axis_MotionApps41 MPU6050_9Axis;
+typedef MPU6050_9Axis_MotionApps41 MPU6050;
 
 #endif /* _MPU6050_9AXIS_MOTIONAPPS41_H_ */
