@@ -362,11 +362,11 @@ uint8_t MPU6050::dmpInitialize() {
     int8_t ygOffsetTC = getYGyroOffsetTC();
     int8_t zgOffsetTC = getZGyroOffsetTC();
     DEBUG_PRINT(F("X gyro offset = "));
-    DEBUG_PRINTLN(xgOffset);
+    DEBUG_PRINTLN(xgOffsetTC);
     DEBUG_PRINT(F("Y gyro offset = "));
-    DEBUG_PRINTLN(ygOffset);
+    DEBUG_PRINTLN(ygOffsetTC);
     DEBUG_PRINT(F("Z gyro offset = "));
-    DEBUG_PRINTLN(zgOffset);
+    DEBUG_PRINTLN(zgOffsetTC);
 
     // setup weird slave stuff (?)
     DEBUG_PRINTLN(F("Setting slave 0 address to 0x7F..."));
