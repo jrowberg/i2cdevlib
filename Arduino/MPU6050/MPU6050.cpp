@@ -2560,7 +2560,7 @@ void MPU6050::setClockSource(uint8_t source) {
  * 1            | 2.5 Hz
  * 2            | 5 Hz
  * 3            | 10 Hz
- * <pre>
+ * </pre>
  *
  * For further information regarding the MPU-60X0's power modes, please refer to
  * Register 107.
