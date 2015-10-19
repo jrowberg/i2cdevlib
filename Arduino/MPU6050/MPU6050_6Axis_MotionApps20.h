@@ -344,17 +344,15 @@ uint8_t MPU6050::dmpInitialize() {
     DEBUG_PRINTLN(F("Selecting memory byte 6..."));
     setMemoryStartAddress(0x06);
     DEBUG_PRINTLN(F("Checking hardware revision..."));
-    uint8_t hwRevision = readMemoryByte();
     DEBUG_PRINT(F("Revision @ user[16][6] = "));
-    DEBUG_PRINTLNF(hwRevision, HEX);
+    DEBUG_PRINTLNF(readMemoryByte(), HEX);
     DEBUG_PRINTLN(F("Resetting memory bank selection to 0..."));
     setMemoryBank(0, false, false);
 
     // check OTP bank valid
     DEBUG_PRINTLN(F("Reading OTP bank valid flag..."));
-    uint8_t otpValid = getOTPBankValid();
     DEBUG_PRINT(F("OTP bank is "));
-    DEBUG_PRINTLN(otpValid ? F("valid!") : F("invalid!"));
+    DEBUG_PRINTLN(getOTPBankValid() ? F("valid!") : F("invalid!"));
 
     // get X/Y/Z gyro offsets
     DEBUG_PRINTLN(F("Reading gyro offset TC values..."));
@@ -494,10 +492,9 @@ uint8_t MPU6050::dmpInitialize() {
             getFIFOBytes(fifoBuffer, fifoCount);
 
             DEBUG_PRINTLN(F("Reading interrupt status..."));
-            uint8_t mpuIntStatus = getIntStatus();
 
             DEBUG_PRINT(F("Current interrupt status="));
-            DEBUG_PRINTLNF(mpuIntStatus, HEX);
+            DEBUG_PRINTLNF(getIntStatus(), HEX);
 
             DEBUG_PRINTLN(F("Reading final memory update 6/7 (function unknown)..."));
             for (j = 0; j < 4 || j < dmpUpdate[2] + 3; j++, pos++) dmpUpdate[j] = pgm_read_byte(&dmpUpdates[pos]);
@@ -513,10 +510,9 @@ uint8_t MPU6050::dmpInitialize() {
             getFIFOBytes(fifoBuffer, fifoCount);
 
             DEBUG_PRINTLN(F("Reading interrupt status..."));
-            mpuIntStatus = getIntStatus();
 
             DEBUG_PRINT(F("Current interrupt status="));
-            DEBUG_PRINTLNF(mpuIntStatus, HEX);
+            DEBUG_PRINTLNF(getIntStatus(), HEX);
 
             DEBUG_PRINTLN(F("Writing final memory update 7/7 (function unknown)..."));
             for (j = 0; j < 4 || j < dmpUpdate[2] + 3; j++, pos++) dmpUpdate[j] = pgm_read_byte(&dmpUpdates[pos]);
@@ -728,7 +724,7 @@ uint8_t MPU6050::dmpReadAndProcessFIFOPacket(uint8_t numPackets, uint8_t *proces
         if ((status = dmpProcessFIFOPacket(buf)) > 0) return status;
         
         // increment external process count variable, if supplied
-        if (processed != 0) *processed++;
+        if (processed != 0) (*processed)++;
     }
     return 0;
 }
