@@ -2741,7 +2741,11 @@ uint8_t MPU6050::getFIFOByte() {
     return buffer[0];
 }
 void MPU6050::getFIFOBytes(uint8_t *data, uint8_t length) {
-    I2Cdev::readBytes(devAddr, MPU6050_RA_FIFO_R_W, length, data);
+    if(length > 0){
+        I2Cdev::readBytes(devAddr, MPU6050_RA_FIFO_R_W, length, data);
+    } else {
+    	*data = 0;
+    }
 }
 /** Write byte to FIFO buffer.
  * @see getFIFOByte()
