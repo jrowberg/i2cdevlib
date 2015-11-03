@@ -86,7 +86,7 @@ int8_t I2Cdev::readBits(uint8_t devAddr, uint8_t regAddr, uint8_t bitStart, uint
   bcm2835_i2c_setSlaveAddress(devAddr);
   sendBuf[0] = regAddr;
   uint8_t response = bcm2835_i2c_write_read_rs(sendBuf, 1, recvBuf, 1);
-  uint8_t b = (uint8_t)recvBuf[0];
+  uint8_t b = (uint8_t) recvBuf[0];
   if (response == BCM2835_I2C_REASON_OK) {
     uint8_t mask = ((1 << length) - 1) << (bitStart - length + 1);
     b &= mask;
