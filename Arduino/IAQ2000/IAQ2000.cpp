@@ -7,6 +7,7 @@
 //
 // Changelog:
 //     2012-04-01 - initial release
+// 	   2012-11-08 - added TVoc and Status
 
 /* ============================================
 I2Cdev device library code is placed under the MIT license
@@ -62,7 +63,7 @@ void IAQ2000::initialize() {
  * @return True if connection is valid, false otherwise
  */
 bool IAQ2000::testConnection() {
-    if (getIaq() >= 450) {
+    if (getIaqpred() >= 450) {
         return true;
     }
     else {
@@ -73,11 +74,25 @@ bool IAQ2000::testConnection() {
 /** Read iAQ-2000 indoor air quality sensor.
  * @return Predicted CO2 concentration based on human induced volatile organic compounds (VOC) detection (in ppm VOC + CO2 equivalents)
  */
-uint16_t IAQ2000::getIaq() {
-  // read bytes from the DATA1 AND DATA2 registers and bit-shifting them into a 16-bit value
+uint16_t IAQ2000::getIaqpred() {
+  // read bytes from the DATA0 AND DATA1 registers and bit-shifting them into a 16-bit value
   readAllBytes(devAddr, 2, buffer);
   return ((buffer[0] << 8) | buffer[1]);
 }
+
+uint8_t IAQ2000::getIaqstatus() {
+  // read bytes from the DATA2 register
+  readAllBytes(devAddr, 3, buffer);
+  return (buffer[2]);
+}
+
+uint16_t IAQ2000::getIaqtvoc() {
+  // read bytes from the DATA7 AND DATA8 registers and bit-shifting them into a 16-bit value
+  readAllBytes(devAddr, 9, buffer);
+  return ((buffer[7] << 8) | buffer[8]);
+}
+
+
 
 /**  Read bytes from a slave device.
  * This is a "stripped-down" version of the standard Jeff Rowberg's I2Cdev::readBytes method
