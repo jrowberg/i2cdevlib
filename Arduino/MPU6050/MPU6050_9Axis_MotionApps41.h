@@ -43,7 +43,7 @@ THE SOFTWARE.
 
 // Tom Carpenter's conditional PROGMEM code
 // http://forum.arduino.cc/index.php?topic=129407.0
-#ifndef __arm__
+#ifdef __AVR__
     #include <avr/pgmspace.h>
 #else
     // Teensy 3.0 library conditional PROGMEM code from Paul Stoffregen

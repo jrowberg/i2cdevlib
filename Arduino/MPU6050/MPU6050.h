@@ -42,7 +42,7 @@ THE SOFTWARE.
 // supporting link:  http://forum.arduino.cc/index.php?&topic=143444.msg1079517#msg1079517
 // also: http://forum.arduino.cc/index.php?&topic=141571.msg1062899#msg1062899s
 
-#ifndef __arm__
+#ifdef __AVR__
 #include <avr/pgmspace.h>
 #else
 //#define PROGMEM /* empty */
