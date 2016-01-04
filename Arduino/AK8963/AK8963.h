@@ -72,6 +72,8 @@ THE SOFTWARE.
 #define AK8963_CNTL1_RES_BIT            4
 #define AK8963_CNTL1_MODE_LENGTH        4
 
+#define AK8963_CNTL2_RESET              0x01
+
 #define AK8963_MODE_POWERDOWN           0x0
 #define AK8963_MODE_SINGLE              0x1
 #define AK8963_MODE_CONTINUOUS_8HZ      0x2

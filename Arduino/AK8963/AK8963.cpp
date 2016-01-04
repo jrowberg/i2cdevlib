@@ -145,8 +145,10 @@ uint8_t AK8963::getResolution() {
 void AK8963::setResolution(uint8_t res) {
     I2Cdev::writeBit(devAddr, AK8963_RA_CNTL1, AK8963_CNTL1_RES_BIT, res);
 }
+
+// CNTL2 register
 void AK8963::reset() {
-    I2Cdev::writeBits(devAddr, AK8963_RA_CNTL1, AK8963_CNTL1_MODE_BIT, AK8963_CNTL1_MODE_LENGTH, AK8963_MODE_POWERDOWN);
+    I2Cdev::writeByte(devAddr, AK8963_RA_CNTL2, AK8963_CNTL2_RESET);
 }
 
 // ASTC register
