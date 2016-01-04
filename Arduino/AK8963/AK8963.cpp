@@ -94,28 +94,20 @@ bool AK8963::getDataOverrun() {
 
 // H* registers
 void AK8963::getHeading(int16_t *x, int16_t *y, int16_t *z) {
-    I2Cdev::writeByte(devAddr, AK8963_RA_CNTL1, AK8963_MODE_SINGLE);
-    delay(10);
     I2Cdev::readBytes(devAddr, AK8963_RA_HXL, 6, buffer);
     *x = (((int16_t)buffer[1]) << 8) | buffer[0];
     *y = (((int16_t)buffer[3]) << 8) | buffer[2];
     *z = (((int16_t)buffer[5]) << 8) | buffer[4];
 }
 int16_t AK8963::getHeadingX() {
-    I2Cdev::writeByte(devAddr, AK8963_RA_CNTL1, AK8963_MODE_SINGLE);
-    delay(10);
     I2Cdev::readBytes(devAddr, AK8963_RA_HXL, 2, buffer);
     return (((int16_t)buffer[1]) << 8) | buffer[0];
 }
 int16_t AK8963::getHeadingY() {
-    I2Cdev::writeByte(devAddr, AK8963_RA_CNTL1, AK8963_MODE_SINGLE);
-    delay(10);
     I2Cdev::readBytes(devAddr, AK8963_RA_HYL, 2, buffer);
     return (((int16_t)buffer[1]) << 8) | buffer[0];
 }
 int16_t AK8963::getHeadingZ() {
-    I2Cdev::writeByte(devAddr, AK8963_RA_CNTL1, AK8963_MODE_SINGLE);
-    delay(10);
     I2Cdev::readBytes(devAddr, AK8963_RA_HZL, 2, buffer);
     return (((int16_t)buffer[1]) << 8) | buffer[0];
 }

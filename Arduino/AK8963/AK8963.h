@@ -69,8 +69,8 @@ THE SOFTWARE.
 #define AK8963_ST2_BITM_BIT             4
 
 #define AK8963_CNTL1_MODE_BIT           3
-#define AK8963_CNTL1_RES_BIT            4
 #define AK8963_CNTL1_MODE_LENGTH        4
+#define AK8963_CNTL1_RES_BIT            4
 
 #define AK8963_CNTL2_RESET              0x01
 
