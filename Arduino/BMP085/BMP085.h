@@ -34,6 +34,7 @@ THE SOFTWARE.
 #define _BMP085_H_
 
 #include "I2Cdev.h"
+#include <math.h>
 
 #define BMP085_ADDRESS              0x77
 #define BMP085_DEFAULT_ADDRESS      BMP085_ADDRESS
@@ -75,7 +76,7 @@ class BMP085 {
     public:
         BMP085();
         BMP085(uint8_t address);
-        
+
         void initialize();
         bool testConnection();
 
