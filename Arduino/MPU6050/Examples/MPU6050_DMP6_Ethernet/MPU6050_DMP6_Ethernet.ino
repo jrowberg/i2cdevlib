@@ -529,6 +529,4 @@ void GetAjaxData(EthernetClient cl)
         cl.print("\t");
         cl.println("</p>");
     #endif
-        //Serial.println(cl.status(),DEC);
-
 }
