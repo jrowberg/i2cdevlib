@@ -1,4 +1,5 @@
 // I2C device class (I2Cdev) demonstration Arduino sketch for MPU6050 class using DMP (MotionApps v2.0) over Ethernet
+// 2/27/2016 by hellphoenix
 // Based on I2C device class (I2Cdev) demonstration Arduino sketch for MPU6050 class using DMP (MotionApps v2.0) (6/21/2012 by Jeff Rowberg <jeff@rowberg.net>)
 // Updates should (hopefully) always be available at https://github.com/jrowberg/i2cdevlib
 //
@@ -6,7 +7,9 @@
 //      2016-02-28 - Cleaned up code to be in line with other example codes 
  //                - Added Ethernet outputs for Quaternion, Euler, RealAccel, WorldAccel
 //      2016-02-27 - Initial working code compiled
-
+// Bugs:
+//                 - There is still a hangup after some time, though it only occurs when you are reading data from the website. 
+//                   If you only read the data from the serial port, there are no hangups.
 /* ============================================
 I2Cdev device library code is placed under the MIT license
 Copyright (c) 2012 Jeff Rowberg
