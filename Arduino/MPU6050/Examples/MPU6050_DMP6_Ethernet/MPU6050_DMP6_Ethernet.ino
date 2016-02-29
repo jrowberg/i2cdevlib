@@ -1,22 +1,15 @@
-// I2C device class (I2Cdev) demonstration Arduino sketch for MPU6050 class using DMP (MotionApps v2.0)
-// 6/21/2012 by Jeff Rowberg <jeff@rowberg.net>
+// I2C device class (I2Cdev) demonstration Arduino sketch for MPU6050 class using DMP (MotionApps v2.0) over Ethernet
+// 2/27/2016 by hellphoenix
+// Based on I2C device class (I2Cdev) demonstration Arduino sketch for MPU6050 class using DMP (MotionApps v2.0) (6/21/2012 by Jeff Rowberg <jeff@rowberg.net>)
 // Updates should (hopefully) always be available at https://github.com/jrowberg/i2cdevlib
 //
 // Changelog:
-//      2013-05-08 - added seamless Fastwire support
-//                 - added note about gyro calibration
-//      2012-06-21 - added note about Arduino 1.0.1 + Leonardo compatibility error
-//      2012-06-20 - improved FIFO overflow handling and simplified read process
-//      2012-06-19 - completely rearranged DMP initialization code and simplification
-//      2012-06-13 - pull gyro and accel data from FIFO packet instead of reading directly
-//      2012-06-09 - fix broken FIFO read sequence and change interrupt detection to RISING
-//      2012-06-05 - add gravity-compensated initial reference frame acceleration output
-//                 - add 3D math helper file to DMP6 example sketch
-//                 - add Euler output and Yaw/Pitch/Roll output formats
-//      2012-06-04 - remove accel offset clearing for better results (thanks Sungon Lee)
-//      2012-06-01 - fixed gyro sensitivity to be 2000 deg/sec instead of 250
-//      2012-05-30 - basic DMP initialization working
-
+//      2016-02-28 - Cleaned up code to be in line with other example codes 
+ //                - Added Ethernet outputs for Quaternion, Euler, RealAccel, WorldAccel
+//      2016-02-27 - Initial working code compiled
+// Bugs:
+//                 - There is still a hangup after some time, though it only occurs when you are reading data from the website. 
+//                   If you only read the data from the serial port, there are no hangups.
 /* ============================================
 I2Cdev device library code is placed under the MIT license
 Copyright (c) 2012 Jeff Rowberg
@@ -52,6 +45,7 @@ THE SOFTWARE.
 // is used in I2Cdev.h
 #include "Wire.h"
 #include "avr/wdt.h"// Watchdog library
+
 // class default I2C address is 0x68
 // specific I2C addresses may be passed as a parameter here
 // AD0 low = 0x68 (default for SparkFun breakout and InvenSense evaluation board)
@@ -96,7 +90,6 @@ String HTTP_req;            // stores the HTTP request
  * ========================================================================= */
 
 
-
 // uncomment "OUTPUT_READABLE_QUATERNION" if you want to see the actual
 // quaternion components in a [w, x, y, z] format (not best for parsing
 // on a remote host such as Processing or something though)
@@ -132,8 +125,6 @@ String HTTP_req;            // stores the HTTP request
 // format used for the InvenSense teapot demo
 //#define OUTPUT_TEAPOT
 
-
-
 #define LED_PIN 13 // (Arduino is 13, Teensy is 11, Teensy++ is 6)
 bool blinkState = false;
 
@@ -167,16 +158,15 @@ volatile bool mpuInterrupt = false;     // indicates whether MPU interrupt pin h
 void dmpDataReady() {
     mpuInterrupt = true;
 }
-
-
-
 // ================================================================
 // ===                      INITIAL SETUP                       ===
 // ================================================================
 
 void setup() {
-    wdt_enable(WDTO_1S); //Watchdog enable. WDTO_1S sets the watchdog timer to 1 second. The time set here is approximate.
+    wdt_enable(WDTO_1S); //Watchdog enable. 
+    //WDTO_1S sets the watchdog timer to 1 second. The time set here is approximate.
     // You can find more time settings at http://www.nongnu.org/avr-libc/user-manual/group__avr__watchdog.html .
+    
     // join I2C bus (I2Cdev library doesn't do this automatically)
     #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
         Wire.begin();
@@ -185,31 +175,30 @@ void setup() {
        Fastwire::setup(400, true);
     #endif
 
-    //Serial.print(mpu.getSleepEnabled());
     // initialize serial communication
     // (115200 chosen because it is required for Teapot Demo output, but it's
     // really up to you depending on your project)
-    Serial.begin(115200);
-    Ethernet.begin(mac, ip, gateway, subnet);
-    server.begin();
-    Serial.print("server is at ");
-    Serial.println(Ethernet.localIP());
-    while (!Serial); // wait for Leonardo enumeration, others continue immediately
-
+    Serial.begin(115200);   
     // NOTE: 8MHz or slower host processors, like the Teensy @ 3.3v or Ardunio
     // Pro Mini running at 3.3v, cannot handle this baud rate reliably due to
     // the baud timing being too misaligned with processor ticks. You must use
     // 38400 or slower in these cases, or use some kind of external separate
     // crystal solution for the UART timer.
 
+    Ethernet.begin(mac, ip, gateway, subnet);
+    server.begin();
+    Serial.print("server is at ");
+    Serial.println(Ethernet.localIP());
+    while (!Serial); // wait for Leonardo enumeration, others continue immediately
+
     // initialize device
     Serial.println(F("Initializing I2C devices..."));
     mpu.initialize();
-/*
+
     // verify connection
     Serial.println(F("Testing device connections..."));
     Serial.println(mpu.testConnection() ? F("MPU6050 connection successful") : F("MPU6050 connection failed"));
-*/
+
     // load and configure the DMP
     Serial.println(F("Initializing DMP..."));
     devStatus = mpu.dmpInitialize();
@@ -245,6 +234,7 @@ void setup() {
         Serial.print(F("DMP Initialization failed (code "));
         Serial.print(devStatus);
         Serial.println(F(")"));
+        return;
     }
 
     // configure LED for output
@@ -259,12 +249,11 @@ void setup() {
 
 void loop() {
     // if programming failed, don't try to do anything
-    //if (!dmpReady) return;
+    if (!dmpReady) return;
     wdt_reset();//Resets the watchdog timer. If the timer is not reset, and the timer expires, a watchdog-initiated device reset will occur.
     // wait for MPU interrupt or extra packet(s) available
     while (!mpuInterrupt && fifoCount < packetSize) {
-        // other program behavior stuff here
-        
+        // other program behavior stuff here        
         // .
         // .
         // if you are really paranoid you can frequently test in between other
@@ -281,7 +270,7 @@ void loop() {
 
     // get current FIFO count
     fifoCount = mpu.getFIFOCount();
-/*
+
     // check for overflow (this should never happen unless our code is too inefficient)
     if ((mpuIntStatus & 0x10) || fifoCount == 1024) {
         // reset so we can continue cleanly
@@ -289,36 +278,81 @@ void loop() {
         Serial.println(F("FIFO overflow!"));
 
     // otherwise, check for DMP data ready interrupt (this should happen frequently)
-    } else*/ if (mpuIntStatus & 0x02) {
+    } else if (mpuIntStatus & 0x02) {
         // wait for correct available data length, should be a VERY short wait
         while (fifoCount < packetSize) fifoCount = mpu.getFIFOCount();
 
         // read a packet from FIFO, then clear the buffer
         mpu.getFIFOBytes(fifoBuffer, packetSize);
-        mpu.resetFIFO();
+        //mpu.resetFIFO();
         
         // track FIFO count here in case there is > 1 packet available
         // (this lets us immediately read more without waiting for an interrupt)
         fifoCount -= packetSize;
 
-
+         #ifdef OUTPUT_READABLE_QUATERNION
+            // display quaternion values in easy matrix form: w x y z
+            mpu.dmpGetQuaternion(&q, fifoBuffer);
+            Serial.print("quat\t");
+            Serial.print(q.w);
+            Serial.print("\t");
+            Serial.print(q.x);
+            Serial.print("\t");
+            Serial.print(q.y);
+            Serial.print("\t");
+            Serial.println(q.z);
+        #endif
+        #ifdef OUTPUT_READABLE_EULER
+            // display Euler angles in degrees
+            mpu.dmpGetQuaternion(&q, fifoBuffer);
+            mpu.dmpGetEuler(euler, &q);
+            Serial.print("euler\t");
+            Serial.print(euler[0] * 180/M_PI);
+            Serial.print("\t");
+            Serial.print(euler[1] * 180/M_PI);
+            Serial.print("\t");
+            Serial.println(euler[2] * 180/M_PI);
+        #endif
         #ifdef OUTPUT_READABLE_YAWPITCHROLL
             // display Euler angles in degrees
             mpu.dmpGetQuaternion(&q, fifoBuffer);
             mpu.dmpGetGravity(&gravity, &q);
-            mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
-            
+            mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);            
             Serial.print("ypr\t");
             Serial.print(ypr[0] * 180/M_PI);
             Serial.print("\t");
             Serial.print(ypr[1] * 180/M_PI);
             Serial.print("\t");
             Serial.println(ypr[2] * 180/M_PI);
-            serversend();
-            delay(100);
         #endif
-
-    
+        #ifdef OUTPUT_READABLE_REALACCEL
+            // display real acceleration, adjusted to remove gravity
+            mpu.dmpGetQuaternion(&q, fifoBuffer);
+            mpu.dmpGetAccel(&aa, fifoBuffer);
+            mpu.dmpGetGravity(&gravity, &q);
+            mpu.dmpGetLinearAccel(&aaReal, &aa, &gravity);
+            Serial.print("areal\t");
+            Serial.print(aaReal.x);
+            Serial.print("\t");
+            Serial.print(aaReal.y);
+            Serial.print("\t");
+            Serial.println(aaReal.z);
+        #endif
+        #ifdef OUTPUT_READABLE_WORLDACCEL
+            // display initial world-frame acceleration, adjusted to remove gravity
+            // and rotated based on known orientation from quaternion
+            mpu.dmpGetQuaternion(&q, fifoBuffer);
+            mpu.dmpGetAccel(&aa, fifoBuffer);
+            mpu.dmpGetGravity(&gravity, &q);
+            mpu.dmpGetLinearAccel(&aaReal, &aa, &gravity);
+            mpu.dmpGetLinearAccelInWorld(&aaWorld, &aaReal, &q);
+            Serial.print("aworld\t");
+            Serial.print(aaWorld.x);
+            Serial.print("\t");
+            Serial.print(aaWorld.y);
+            Serial.print("\t");
+            Serial.println(aaWorld.z);
+        #endif    
         #ifdef OUTPUT_TEAPOT
             // display quaternion values in InvenSense Teapot demo format:
             teapotPacket[2] = fifoBuffer[0];
@@ -330,11 +364,9 @@ void loop() {
             teapotPacket[8] = fifoBuffer[12];
             teapotPacket[9] = fifoBuffer[13];
             Serial.write(teapotPacket, 14);
-            serversend();
-            delay(100);
             teapotPacket[11]++; // packetCount, loops at 0xFF on purpose
         #endif
-
+            serversend();
         // blink LED to indicate activity
         blinkState = !blinkState;
         digitalWrite(LED_PIN, blinkState);
@@ -385,7 +417,7 @@ void serversend(){
                         client.println(
                         "request.open(\"GET\", \"ajax_switch\" + nocache, true);");
                         client.println("request.send(null);");
-                        client.println("setTimeout('GetAjaxData()', 100);");
+                        client.println("setTimeout('GetAjaxData()', 10);");
                         client.println("}");
                         client.println("</script>");
                         client.println("</head>");
@@ -399,21 +431,54 @@ void serversend(){
                     // display received HTTP request on serial port
                     Serial.print(HTTP_req);
                     HTTP_req = "";            // finished with request, empty string
-                    delay(1);      // give the web browser time to receive the data
                     client.stop(); // close the connection
                     break;
-                }
-               
+                }              
             } 
-        } 
-        
+        }      
     } 
 }
 
 void GetAjaxData(EthernetClient cl)
 {
-    //#ifdef OUTPUT_READABLE_ACCELGYRO
-        // display tab-separated accel/gyro x/y/z values
+    #ifdef OUTPUT_READABLE_QUATERNION
+        // display quaternion values in easy matrix form: w x y z
+        cl.print("Quaternion Values:\t");
+        cl.print("<p>w:");
+        cl.print(q.w); 
+        cl.print("\t");
+        cl.println("</p>");
+        cl.print("<p>x:");
+        cl.print(q.x); 
+        cl.print("\t");
+        cl.println("</p>");
+        cl.print("<p>y:");
+        cl.print(q.y); 
+        cl.print("\t");
+        cl.println("</p>");
+        cl.print("<p>z:");
+        cl.print(q.z); 
+        cl.print("\t");
+        cl.println("</p>");
+     #endif
+     #ifdef OUTPUT_READABLE_EULER
+        // display Euler angles in degrees
+        cl.print("Euler Angles:\t");
+        cl.print("<p>Yaw:");
+        cl.print(euler[0] * 180/M_PI); 
+        cl.print("\t");
+        cl.println("</p>");
+        cl.print("<p>Pitch:");
+        cl.print(euler[2] * 180/M_PI); 
+        cl.print("\t");
+        cl.println("</p>");
+        cl.print("<p>Roll:");
+        cl.print(euler[1] * 180/M_PI); 
+        cl.print("\t");
+        cl.println("</p>");
+     #endif
+     #ifdef OUTPUT_READABLE_YAWPITCHROLL
+        // display Yaw/Pitch/Roll values in degrees
         cl.print("Yaw, Pitch, and Roll:\t");
         cl.print("<p>Yaw:");
         cl.print(ypr[0] * 180/M_PI); 
@@ -427,10 +492,44 @@ void GetAjaxData(EthernetClient cl)
         cl.print(ypr[1] * 180/M_PI); 
         cl.print("\t");
         cl.println("</p>");
-       /* cl.print("<p>teapotpacket:");
+     #endif
+     #ifdef OUTPUT_READABLE_REALACCEL
+        // display real acceleration, adjusted to remove gravity
+        cl.print("Real Accel:\t");
+        cl.print("<p>Yaw:");
+        cl.print(aaReal.x); 
+        cl.print("\t");
+        cl.println("</p>");
+        cl.print("<p>Pitch:");
+        cl.print(aaReal.z); 
+        cl.print("\t");
+        cl.println("</p>");
+        cl.print("<p>Roll:");
+        cl.print(aaReal.y); 
+        cl.print("\t");
+        cl.println("</p>");
+     #endif
+     #ifdef OUTPUT_READABLE_WORLDACCEL
+        // display initial world-frame acceleration, adjusted to remove gravity
+        // and rotated based on known orientation from quaternion
+        cl.print("World Accel:\t");
+        cl.print("<p>Yaw:");
+        cl.print(aaWorld.x); 
+        cl.print("\t");
+        cl.println("</p>");
+        cl.print("<p>Pitch:");
+        cl.print(aaWorld.z); 
+        cl.print("\t");
+        cl.println("</p>");
+        cl.print("<p>Roll:");
+        cl.print(aaWorld.y); 
+        cl.print("\t");
+        cl.println("</p>");
+     #endif
+     #ifdef OUTPUT_TEAPOT
+        cl.print("<p>teapotpacket:");
         cl.write(teapotPacket, 14); 
         cl.print("\t");
-        cl.println("</p>");*/
-
-
+        cl.println("</p>");
+    #endif
 }
