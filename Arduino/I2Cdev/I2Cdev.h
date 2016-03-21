@@ -52,6 +52,7 @@ THE SOFTWARE.
 // -----------------------------------------------------------------------------
 #ifndef I2CDEV_IMPLEMENTATION
 #define I2CDEV_IMPLEMENTATION       I2CDEV_ARDUINO_WIRE
+//#define I2CDEV_IMPLEMENTATION       I2CDEV_SOFTI2CMASTER_LIBRARY
 //#define I2CDEV_IMPLEMENTATION       I2CDEV_BUILTIN_FASTWIRE
 #endif // I2CDEV_IMPLEMENTATION
 
@@ -62,11 +63,12 @@ THE SOFTWARE.
 // -----------------------------------------------------------------------------
 // I2C interface implementation options
 // -----------------------------------------------------------------------------
-#define I2CDEV_ARDUINO_WIRE         1 // Wire object from Arduino
-#define I2CDEV_BUILTIN_NBWIRE       2 // Tweaked Wire object from Gene Knight's NBWire project
-                                      // ^^^ NBWire implementation is still buggy w/some interrupts!
-#define I2CDEV_BUILTIN_FASTWIRE     3 // FastWire object from Francesco Ferrara's project
-#define I2CDEV_I2CMASTER_LIBRARY    4 // I2C object from DSSCircuits I2C-Master Library at https://github.com/DSSCircuits/I2C-Master-Library
+#define I2CDEV_ARDUINO_WIRE           1 // Wire object from Arduino
+#define I2CDEV_BUILTIN_NBWIRE         2 // Tweaked Wire object from Gene Knight's NBWire project
+                                        // ^^^ NBWire implementation is still buggy w/some interrupts!
+#define I2CDEV_BUILTIN_FASTWIRE       3 // FastWire object from Francesco Ferrara's project
+#define I2CDEV_I2CMASTER_LIBRARY      4 // I2C object from DSSCircuits I2C-Master Library at https://github.com/DSSCircuits/I2C-Master-Library
+#define I2CDEV_SOFTI2CMASTER_LIBRARY  5 // Software based I2C library at https://github.com/felias-fogg/SoftI2CMaster
 
 // -----------------------------------------------------------------------------
 // Arduino-style "Serial.print" debug constant (uncomment to enable)
@@ -84,9 +86,20 @@ THE SOFTWARE.
         #define BUFFER_LENGTH 32
     #elif I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
         #include <Wire.h>
-    #endif
-    #if I2CDEV_IMPLEMENTATION == I2CDEV_I2CMASTER_LIBRARY
+    #elif I2CDEV_IMPLEMENTATION == I2CDEV_I2CMASTER_LIBRARY
         #include <I2C.h>
+    #elif I2CDEV_IMPLEMENTATION == I2CDEV_SOFTI2CMASTER_LIBRARY
+        // We can't include SoftI2CMaster.h here. The header file defines the softi2c functions.
+        // If the header file is included multiple times in a project it will generate 
+        // "multiple definition of" errors.
+        //#include <SoftI2CMaster.h>
+        
+        // when using the softi2cmaster these defines are required, change as you please
+        #define SDA_PORT PORTC
+        #define SDA_PIN 4
+        #define SCL_PORT PORTC
+        #define SCL_PIN 5
+    
     #endif
 #endif
 

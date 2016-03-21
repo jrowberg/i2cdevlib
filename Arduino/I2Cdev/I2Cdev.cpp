@@ -85,6 +85,8 @@ THE SOFTWARE.
     // Originally offered to the i2cdevlib project at http://arduino.cc/forum/index.php/topic,68210.30.html
     TwoWire Wire;
 
+#elif I2CDEV_IMPLEMENTATION == I2CDEV_SOFTI2CMASTER_LIBRARY
+    #include <SoftI2CMaster.h>
 #endif
 
 /** Default constructor.
@@ -301,6 +303,20 @@ int8_t I2Cdev::readBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8
             count = -1; // error
         }
 
+    #elif (I2CDEV_IMPLEMENTATION == I2CDEV_SOFTI2CMASTER_LIBRARY)
+        if (!i2c_start(devAddr<<1 | I2C_WRITE)) return -1;
+        if (!i2c_write(regAddr)) return -1;
+        if (!i2c_rep_start(devAddr<<1 | I2C_READ)) return -1;
+        for (; count < length && (timeout == 0 || millis() - t1 < timeout);) {
+             // second byte is bits 7-0 (LSb=0)
+             data[count] = i2c_read(count < length -1?false:true);
+             #ifdef I2CDEV_SERIAL_DEBUG
+             Serial.print(data[count], HEX);
+             if (count + 1 < length) Serial.print(" ");
+             #endif
+             count++;
+        }
+        i2c_stop();
     #endif
 
     // check for timeout
@@ -454,6 +470,28 @@ int8_t I2Cdev::readWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint1
             count = -1; // error
         }
 
+    #elif (I2CDEV_IMPLEMENTATION == I2CDEV_SOFTI2CMASTER_LIBRARY)
+        if (!i2c_start(devAddr<<1 | I2C_WRITE)) return -1;
+        if (!i2c_write(regAddr)) return -1;
+        if (!i2c_rep_start(devAddr<<1 | I2C_READ)) return -1;
+        bool msb = true; // starts with MSB, then LSB
+        for (; count < length && (timeout == 0 || millis() - t1 < timeout);) {
+            if (msb) {
+                // first byte is bits 15-8 (MSb=15)
+                data[count] = i2c_read(false) << 8;
+            } else {
+                // second byte is bits 7-0 (LSb=0)
+                data[count] |= i2c_read(count < length -1?false:true);
+                #ifdef I2CDEV_SERIAL_DEBUG
+                    Serial.print(data[count], HEX);
+                    if (count + 1 < length) Serial.print(" ");
+                #endif
+                count++;
+            }
+            msb = !msb;
+        }
+        i2c_stop();
+
     #endif
 
     if (timeout > 0 && millis() - t1 >= timeout && count < length) count = -1; // timeout
@@ -600,6 +638,9 @@ bool I2Cdev::writeBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8_
     #elif (I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_FASTWIRE)
         Fastwire::beginTransmission(devAddr);
         Fastwire::write(regAddr);
+    #elif (I2CDEV_IMPLEMENTATION == I2CDEV_SOFTI2CMASTER_LIBRARY)
+        i2c_start(devAddr<<1 | I2C_WRITE);
+        i2c_write(regAddr);
     #endif
     for (uint8_t i = 0; i < length; i++) {
         #ifdef I2CDEV_SERIAL_DEBUG
@@ -612,6 +653,8 @@ bool I2Cdev::writeBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8_
             Wire.write((uint8_t) data[i]);
         #elif (I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_FASTWIRE)
             Fastwire::write((uint8_t) data[i]);
+        #elif (I2CDEV_IMPLEMENTATION == I2CDEV_SOFTI2CMASTER_LIBRARY)
+            i2c_write((uint8_t) data[i]);
         #endif
     }
     #if ((I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE && ARDUINO < 100) || I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_NBWIRE)
@@ -621,6 +664,8 @@ bool I2Cdev::writeBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8_
     #elif (I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_FASTWIRE)
         Fastwire::stop();
         //status = Fastwire::endTransmission();
+    #elif (I2CDEV_IMPLEMENTATION == I2CDEV_SOFTI2CMASTER_LIBRARY)
+        i2c_stop();
     #endif
     #ifdef I2CDEV_SERIAL_DEBUG
         Serial.println(". Done.");
@@ -655,6 +700,9 @@ bool I2Cdev::writeWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint16
     #elif (I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_FASTWIRE)
         Fastwire::beginTransmission(devAddr);
         Fastwire::write(regAddr);
+    #elif (I2CDEV_IMPLEMENTATION == I2CDEV_SOFTI2CMASTER_LIBRARY)
+        i2c_start(devAddr<<1 | I2C_WRITE);
+        i2c_write(regAddr);
     #endif
     for (uint8_t i = 0; i < length * 2; i++) {
         #ifdef I2CDEV_SERIAL_DEBUG
@@ -671,6 +719,9 @@ bool I2Cdev::writeWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint16
             Fastwire::write((uint8_t)(data[i] >> 8));       // send MSB
             status = Fastwire::write((uint8_t)data[i++]);   // send LSB
             if (status != 0) break;
+        #elif (I2CDEV_IMPLEMENTATION == I2CDEV_SOFTI2CMASTER_LIBRARY)
+            i2c_write((uint8_t)(data[i] >> 8));       // send MSB
+            i2c_write((uint8_t)data[i++]);   // send LSB
         #endif
     }
     #if ((I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE && ARDUINO < 100) || I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_NBWIRE)
@@ -680,6 +731,8 @@ bool I2Cdev::writeWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint16
     #elif (I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_FASTWIRE)
         Fastwire::stop();
         //status = Fastwire::endTransmission();
+    #elif (I2CDEV_IMPLEMENTATION == I2CDEV_SOFTI2CMASTER_LIBRARY)
+        i2c_stop();
     #endif
     #ifdef I2CDEV_SERIAL_DEBUG
         Serial.println(". Done.");
