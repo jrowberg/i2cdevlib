@@ -1527,3 +1527,35 @@ uint16_t I2Cdev::readTimeout = I2CDEV_DEFAULT_READ_TIMEOUT;
     }
 
 #endif
+
+#if I2CDEV_IMPLEMENTATION == I2CDEV_SOFTI2CMASTER_LIBRARY
+
+    boolean SoftI2CMasterWire::init(void){
+        return i2c_init();
+    }
+
+    bool SoftI2CMasterWire::start(uint8_t addr){
+        return(i2c_start(addr));
+    }
+    
+    void SoftI2CMasterWire::start_wait(uint8_t addr){
+        i2c_start_wait(addr);
+    }
+    
+    bool SoftI2CMasterWire::rep_start(uint8_t addr){
+        return i2c_rep_start(addr);
+    }
+    
+    void SoftI2CMasterWire::stop(void){
+        i2c_stop();
+    }
+    
+    bool SoftI2CMasterWire::write(uint8_t value){
+        return i2c_write(value);
+    }
+     
+    uint8_t SoftI2CMasterWire::read(bool last){
+        return i2c_read(last);
+    }
+    
+#endif

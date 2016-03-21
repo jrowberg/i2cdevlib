@@ -92,9 +92,10 @@ THE SOFTWARE.
         // We can't include SoftI2CMaster.h here. The header file defines the softi2c functions.
         // If the header file is included multiple times in a project it will generate 
         // "multiple definition of" errors.
-        //#include <SoftI2CMaster.h>
+        // 
+        // The class SoftI2CMasterWire exposes the functions found in SoftI2CMaster.h.
         
-        // when using the softi2cmaster these defines are required, change as you please
+        // When using the softi2cmaster these defines are required, change as you please
         #define SDA_PORT PORTC
         #define SDA_PIN 4
         #define SCL_PORT PORTC
@@ -291,5 +292,24 @@ class I2Cdev {
     extern TwoWire Wire;
 
 #endif // I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_NBWIRE
+
+#if I2CDEV_IMPLEMENTATION == I2CDEV_SOFTI2CMASTER_LIBRARY
+
+    /* wrapper for SoftI2CMaster
+     * https://github.com/felias-fogg/SoftI2CMaster
+     * The library is defined in a header file, so it can only be included once in 
+     * a link unit. This wrapper exposes those functions, if needed.
+     */
+    class SoftI2CMasterWire {
+        public:
+            static boolean init(void);
+            static bool start(uint8_t addr); 
+            static void start_wait(uint8_t addr);
+            static bool rep_start(uint8_t addr);
+            static void stop(void) ;
+            static bool write(uint8_t value);
+            static uint8_t read(bool last);
+    };
+#endif // I2CDEV_IMPLEMENTATION == I2CDEV_SOFTI2CMASTER_LIBRARY
 
 #endif /* _I2CDEV_H_ */
