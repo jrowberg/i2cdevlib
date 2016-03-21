@@ -103,6 +103,7 @@ bool I2Cdev::begin() {
     return true;
     #elif I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_FASTWIRE
     // TODO: decide what to do here.
+    Fastwire::setup(400, true);
     return true;
     #elif I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_NBWIRE
     twi_init();
