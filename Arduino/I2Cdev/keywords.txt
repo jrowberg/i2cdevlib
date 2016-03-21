@@ -11,6 +11,7 @@ I2Cdev	KEYWORD1
 # Methods and Functions (KEYWORD2)
 #######################################
 
+begin	KEYWORD2
 readBit	KEYWORD2
 readBitW	KEYWORD2
 readBits	KEYWORD2

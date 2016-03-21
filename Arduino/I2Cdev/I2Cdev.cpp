@@ -94,6 +94,24 @@ THE SOFTWARE.
 I2Cdev::I2Cdev() {
 }
 
+/** Implementation agnostic begin method. Will call Wire.begin() if arduino wire library is selected.
+ * @return Status of operation (true = success)
+ */
+bool I2Cdev::begin() {
+    #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
+    Wire.begin();
+    return true;
+    #elif I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_FASTWIRE
+    // TODO: decide what to do here.
+    return true;
+    #elif I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_NBWIRE
+    twi_init();
+    return true;
+    #elif I2CDEV_IMPLEMENTATION == I2CDEV_SOFTI2CMASTER_LIBRARY
+    return i2c_init();
+    #endif
+}
+
 /** Read a single bit from an 8-bit device register.
  * @param devAddr I2C slave device address
  * @param regAddr Register regAddr to read from
