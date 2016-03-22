@@ -142,7 +142,7 @@ class ADS1115 {
         void triggerConversion();
 
         // Read the current CONVERSION register
-        int16_t getConversion();
+        int16_t getConversion(bool triggerAndPoll=true);
 
         // Differential
         int16_t getConversionP0N1();
@@ -157,7 +157,7 @@ class ADS1115 {
         int16_t getConversionP3GND();
 
         // Utility
-        float getMilliVolts(); 
+        float getMilliVolts(bool triggerAndPoll=true);
         float getMvPerCount();
 
         // CONFIG register

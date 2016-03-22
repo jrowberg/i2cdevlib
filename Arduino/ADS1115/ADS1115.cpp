@@ -107,6 +107,8 @@ bool ADS1115::pollConversion(uint16_t max_retries) {
  * effortless, but it has enormous potential to save power by only running the
  * comparison circuitry when needed.
  *
+ * @param triggerAndPoll If true (and only in singleshot mode) the conversion trigger 
+ *        will be executed and the conversion results will be polled.
  * @return 16-bit signed differential value
  * @see getConversionP0N1();
  * @see getConversionPON3();
@@ -127,12 +129,10 @@ bool ADS1115::pollConversion(uint16_t max_retries) {
  * @see ADS1115_MUX_P2_NG
  * @see ADS1115_MUX_P3_NG
  */
-int16_t ADS1115::getConversion() {
-    if (devMode == ADS1115_MODE_SINGLESHOT) 
-    {  
-      setOpStatus(ADS1115_OS_ACTIVE);
-      ADS1115::waitBusy(I2CDEV_DEFAULT_READ_TIMEOUT);
-      
+int16_t ADS1115::getConversion(bool triggerAndPoll) {
+    if (triggerAndPoll && devMode == ADS1115_MODE_SINGLESHOT) {
+      triggerConversion();
+      pollConversion(I2CDEV_DEFAULT_READ_TIMEOUT);
     }
     I2Cdev::readWord(devAddr, ADS1115_RA_CONVERSION, buffer);
     return buffer[0];
@@ -234,29 +234,30 @@ int16_t ADS1115::getConversionP3GND() {
  * Read the current differential and return it multiplied
  * by the constant for the current gain.  mV is returned to
  * increase the precision of the voltage
- *
+ * @param triggerAndPoll If true (and only in singleshot mode) the conversion trigger 
+ *        will be executed and the conversion results will be polled.
  */
-float ADS1115::getMilliVolts() {
+float ADS1115::getMilliVolts(bool triggerAndPoll) {
   switch (pgaMode) { 
     case ADS1115_PGA_6P144:
-      return (getConversion() * ADS1115_MV_6P144);
+      return (getConversion(triggerAndPoll) * ADS1115_MV_6P144);
       break;    
     case ADS1115_PGA_4P096:
-      return (getConversion() * ADS1115_MV_4P096);
+      return (getConversion(triggerAndPoll) * ADS1115_MV_4P096);
       break;             
     case ADS1115_PGA_2P048:    
-      return (getConversion() * ADS1115_MV_2P048);
+      return (getConversion(triggerAndPoll) * ADS1115_MV_2P048);
       break;       
     case ADS1115_PGA_1P024:     
-      return (getConversion() * ADS1115_MV_1P024);
+      return (getConversion(triggerAndPoll) * ADS1115_MV_1P024);
       break;       
     case ADS1115_PGA_0P512:      
-      return (getConversion() * ADS1115_MV_0P512);
+      return (getConversion(triggerAndPoll) * ADS1115_MV_0P512);
       break;       
     case ADS1115_PGA_0P256:           
     case ADS1115_PGA_0P256B:          
     case ADS1115_PGA_0P256C:      
-      return (getConversion() * ADS1115_MV_0P256);
+      return (getConversion(triggerAndPoll) * ADS1115_MV_0P256);
       break;       
   }
 }
