@@ -69,8 +69,6 @@ THE SOFTWARE.
 #define ADS1115_CFG_COMP_QUE_BIT    1
 #define ADS1115_CFG_COMP_QUE_LENGTH 2
 
-#define ADS1115_OS_INACTIVE         0x00
-#define ADS1115_OS_ACTIVE           0x01
 
 #define ADS1115_MUX_P0_N1           0x00 // default
 #define ADS1115_MUX_P0_N3           0x01
@@ -141,6 +139,7 @@ class ADS1115 {
 
         // SINGLE SHOT utilities
         void waitBusy(uint16_t max_retries);
+        void triggerConversion();
 
         // Read the current CONVERSION register
         int16_t getConversion();
@@ -162,8 +161,7 @@ class ADS1115 {
         float getMvPerCount();
 
         // CONFIG register
-        uint8_t getOpStatus();
-        void setOpStatus(uint8_t op);
+        bool isConversionReady();
         uint8_t getMultiplexer();
         void setMultiplexer(uint8_t mux);
         uint8_t getGain();

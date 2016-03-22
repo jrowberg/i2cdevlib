@@ -298,24 +298,21 @@ float ADS1115::getMvPerCount() {
 // CONFIG register
 
 /** Get operational status.
- * @return Current operational status (0 for active conversion, 1 for inactive)
- * @see ADS1115_OS_ACTIVE
- * @see ADS1115_OS_INACTIVE
+ * @return Current operational status (false for active conversion, true for inactive)
  * @see ADS1115_RA_CONFIG
  * @see ADS1115_CFG_OS_BIT
  */
-uint8_t ADS1115::getOpStatus() {
+bool ADS1115::isConversionReady() {
     I2Cdev::readBitW(devAddr, ADS1115_RA_CONFIG, ADS1115_CFG_OS_BIT, buffer);
-    return (uint8_t)buffer[0];
+    return !!buffer[0];
 }
 /** Set operational status.
  * This bit can only be written while in power-down mode (no conversions active).
- * @param status New operational status (0 does nothing, 1 to trigger conversion)
  * @see ADS1115_RA_CONFIG
  * @see ADS1115_CFG_OS_BIT
  */
-void ADS1115::setOpStatus(uint8_t status) { 
-    I2Cdev::writeBitW(devAddr, ADS1115_RA_CONFIG, ADS1115_CFG_OS_BIT, status);
+void ADS1115::triggerConversion() {
+    I2Cdev::writeBitW(devAddr, ADS1115_RA_CONFIG, ADS1115_CFG_OS_BIT, 1);
 }
 /** Get multiplexer connection.
  * @return Current multiplexer connection setting
