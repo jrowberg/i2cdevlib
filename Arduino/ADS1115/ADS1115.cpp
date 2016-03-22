@@ -310,7 +310,7 @@ bool ADS1115::isConversionReady() {
     return !!buffer[0];
 }
 /** Set operational status.
- * This bit can only be written while in power-down mode (no conversions active).
+ * Writing to this bit will only have effect while in power-down mode (no conversions active).
  * @see ADS1115_RA_CONFIG
  * @see ADS1115_CFG_OS_BIT
  */
