@@ -567,6 +567,18 @@ void ADS1115::setHighThreshold(int16_t threshold) {
     I2Cdev::writeWord(devAddr, ADS1115_RA_HI_THRESH, threshold);
 }
 
+/** Configures ALERT/RDY pin as a conversion ready pin.
+ *  It does this by setting the MSB of the high threshold register to '1' and the MSB 
+ *  of the low threshold register to '0'. COMP_POL and COMP_QUE bits will be set to '0'.
+ *  Note: ALERT/RDY pin requires a pull up resistor.
+ */
+void ADS1115::setConversionReadyPinMode() {
+    I2Cdev::writeBitW(devAddr, ADS1115_RA_HI_THRESH, 15, 1);
+    I2Cdev::writeBitW(devAddr, ADS1115_RA_LO_THRESH, 15, 0);
+    setComparatorPolarity(0);
+    setComparatorQueueMode(0);
+}
+
 // Create a mask between two bits
 unsigned createMask(unsigned a, unsigned b) {
    unsigned mask = 0;

@@ -178,6 +178,7 @@ class ADS1115 {
         void setComparatorLatchEnabled(bool enabled);
         uint8_t getComparatorQueueMode();
         void setComparatorQueueMode(uint8_t mode);
+        void setConversionReadyPinMode();
 
         // *_THRESH registers
         int16_t getLowThreshold();
