@@ -90,7 +90,6 @@ void ADS1115::waitBusy(uint16_t max_retries) {
   }
 }
 
-
 /** Read differential value based on current MUX configuration.
  * The default MUX setting sets the device to get the differential between the
  * AIN0 and AIN1 pins. There are 8 possible MUX settings, but if you are using
@@ -570,22 +569,19 @@ void ADS1115::setHighThreshold(int16_t threshold) {
 }
 
 // Create a mask between two bits
-unsigned createMask(unsigned a, unsigned b)
-{
+unsigned createMask(unsigned a, unsigned b) {
    unsigned mask = 0;
    for (unsigned i=a; i<=b; i++)
        mask |= 1 << i;
    return mask;
 }
 
-uint16_t shiftDown(uint16_t extractFrom, int places)
-{
+uint16_t shiftDown(uint16_t extractFrom, int places) {
   return (extractFrom >> places);
 }
 
 
-uint16_t getValueFromBits(uint16_t extractFrom, int high, int length) 
-{
+uint16_t getValueFromBits(uint16_t extractFrom, int high, int length) {
    int low= high-length +1;
    uint16_t mask = createMask(low ,high);
    return shiftDown(extractFrom & mask, low); 
@@ -593,8 +589,7 @@ uint16_t getValueFromBits(uint16_t extractFrom, int high, int length)
 
 /** Show all the config register settings
  */
-void ADS1115::showConfigRegister()
-{
+void ADS1115::showConfigRegister() {
     I2Cdev::readWord(devAddr, ADS1115_RA_CONFIG, buffer);
     uint16_t configRegister =buffer[0];    
     
@@ -638,6 +633,6 @@ void ADS1115::showConfigRegister()
       Serial.println(getValueFromBits(configRegister, 
         ADS1115_CFG_COMP_QUE_BIT,ADS1115_CFG_COMP_QUE_LENGTH), BIN);
     #endif
-    
+
 };
 
