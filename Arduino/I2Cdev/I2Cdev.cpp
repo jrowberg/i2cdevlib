@@ -95,21 +95,39 @@ I2Cdev::I2Cdev() {
 }
 
 /** Implementation agnostic begin method. Will call Wire.begin() if arduino wire library is selected.
+ * This is an Arduino convenience method, not part of the 'proper' I2Cdev API.
  * @return Status of operation (true = success)
  */
 bool I2Cdev::begin() {
     #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
-    Wire.begin();
-    return true;
+        #ifdef I2CDEV_SERIAL_DEBUG
+            Serial.println("I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE");
+        #endif
+        Wire.begin();
+        return true;
     #elif I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_FASTWIRE
-    // TODO: decide what to do here.
-    Fastwire::setup(400, true);
-    return true;
+        #ifdef I2CDEV_SERIAL_DEBUG
+            Serial.println("I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_FASTWIRE");
+        #endif
+        Fastwire::setup(400, true);
+        return true;
     #elif I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_NBWIRE
-    twi_init();
-    return true;
+        #ifdef I2CDEV_SERIAL_DEBUG
+            Serial.println("I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_NBWIRE");
+        #endif
+        twi_init();
+        return true;
     #elif I2CDEV_IMPLEMENTATION == I2CDEV_SOFTI2CMASTER_LIBRARY
-    return i2c_init();
+        #ifdef I2CDEV_SERIAL_DEBUG
+            Serial.println("I2CDEV_IMPLEMENTATION == I2CDEV_SOFTI2CMASTER_LIBRARY");
+        #endif
+        return i2c_init();
+    #else
+        #ifdef I2CDEV_SERIAL_DEBUG
+            Serial.print("Unrecognised I2CDEV_IMPLEMENTATION == ");
+            Serial.println(I2CDEV_IMPLEMENTATION);
+        #endif 
+        return false;
     #endif
 }
 
