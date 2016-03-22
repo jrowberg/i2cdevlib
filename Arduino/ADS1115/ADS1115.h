@@ -166,14 +166,14 @@ class ADS1115 {
         void setMultiplexer(uint8_t mux);
         uint8_t getGain();
         void setGain(uint8_t gain);
-        uint8_t getMode();
-        void setMode(uint8_t mode);
+        bool getMode();
+        void setMode(bool mode);
         uint8_t getRate();
         void setRate(uint8_t rate);
-        uint8_t getComparatorMode();
-        void setComparatorMode(uint8_t mode);
-        uint8_t getComparatorPolarity();
-        void setComparatorPolarity(uint8_t polarity);
+        bool getComparatorMode();
+        void setComparatorMode(bool mode);
+        bool getComparatorPolarity();
+        void setComparatorPolarity(bool polarity);
         bool getComparatorLatchEnabled();
         void setComparatorLatchEnabled(bool enabled);
         uint8_t getComparatorQueueMode();
@@ -192,7 +192,7 @@ class ADS1115 {
     private:
         uint8_t devAddr;
         uint16_t buffer[2];
-        uint8_t devMode;
+        bool    devMode;
         uint8_t muxMode;
         uint8_t pgaMode;
 };

@@ -307,9 +307,9 @@ float ADS1115::getMvPerCount() {
  */
 bool ADS1115::isConversionReady() {
     I2Cdev::readBitW(devAddr, ADS1115_RA_CONFIG, ADS1115_CFG_OS_BIT, buffer);
-    return !!buffer[0];
+    return buffer[0];
 }
-/** Set operational status.
+/** Trigger a new conversion.
  * Writing to this bit will only have effect while in power-down mode (no conversions active).
  * @see ADS1115_RA_CONFIG
  * @see ADS1115_CFG_OS_BIT
@@ -400,9 +400,9 @@ void ADS1115::setGain(uint8_t gain) {
  * @see ADS1115_RA_CONFIG
  * @see ADS1115_CFG_MODE_BIT
  */
-uint8_t ADS1115::getMode() {
+bool ADS1115::getMode() {
     I2Cdev::readBitW(devAddr, ADS1115_RA_CONFIG, ADS1115_CFG_MODE_BIT, buffer);
-    devMode = (uint8_t)buffer[0];
+    devMode = buffer[0];
     return devMode;
 }
 /** Set device mode.
@@ -412,7 +412,7 @@ uint8_t ADS1115::getMode() {
  * @see ADS1115_RA_CONFIG
  * @see ADS1115_CFG_MODE_BIT
  */
-void ADS1115::setMode(uint8_t mode) {
+void ADS1115::setMode(bool mode) {
     if (I2Cdev::writeBitW(devAddr, ADS1115_RA_CONFIG, ADS1115_CFG_MODE_BIT, mode)) {
         devMode = mode;
     }
@@ -451,9 +451,9 @@ void ADS1115::setRate(uint8_t rate) {
  * @see ADS1115_RA_CONFIG
  * @see ADS1115_CFG_COMP_MODE_BIT
  */
-uint8_t ADS1115::getComparatorMode() {
+bool ADS1115::getComparatorMode() {
     I2Cdev::readBitW(devAddr, ADS1115_RA_CONFIG, ADS1115_CFG_COMP_MODE_BIT, buffer);
-    return (uint8_t)buffer[0];
+    return buffer[0];
 }
 /** Set comparator mode.
  * @param mode New comparator mode
@@ -462,7 +462,7 @@ uint8_t ADS1115::getComparatorMode() {
  * @see ADS1115_RA_CONFIG
  * @see ADS1115_CFG_COMP_MODE_BIT
  */
-void ADS1115::setComparatorMode(uint8_t mode) {
+void ADS1115::setComparatorMode(bool mode) {
     I2Cdev::writeBitW(devAddr, ADS1115_RA_CONFIG, ADS1115_CFG_COMP_MODE_BIT, mode);
 }
 /** Get comparator polarity setting.
@@ -472,9 +472,9 @@ void ADS1115::setComparatorMode(uint8_t mode) {
  * @see ADS1115_RA_CONFIG
  * @see ADS1115_CFG_COMP_POL_BIT
  */
-uint8_t ADS1115::getComparatorPolarity() {
+bool ADS1115::getComparatorPolarity() {
     I2Cdev::readBitW(devAddr, ADS1115_RA_CONFIG, ADS1115_CFG_COMP_POL_BIT, buffer);
-    return (uint8_t)buffer[0];
+    return buffer[0];
 }
 /** Set comparator polarity setting.
  * @param polarity New comparator polarity setting
@@ -483,7 +483,7 @@ uint8_t ADS1115::getComparatorPolarity() {
  * @see ADS1115_RA_CONFIG
  * @see ADS1115_CFG_COMP_POL_BIT
  */
-void ADS1115::setComparatorPolarity(uint8_t polarity) {
+void ADS1115::setComparatorPolarity(bool polarity) {
     I2Cdev::writeBitW(devAddr, ADS1115_RA_CONFIG, ADS1115_CFG_COMP_POL_BIT, polarity);
 }
 /** Get comparator latch enabled value.
@@ -645,6 +645,5 @@ void ADS1115::showConfigRegister() {
       Serial.println(getValueFromBits(configRegister, 
         ADS1115_CFG_COMP_QUE_BIT,ADS1115_CFG_COMP_QUE_LENGTH), BIN);
     #endif
-
 };
 
