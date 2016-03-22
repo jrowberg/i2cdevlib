@@ -48,12 +48,6 @@ THE SOFTWARE.
 #include "MPU6050_6Axis_MotionApps20.h"
 //#include "MPU6050.h" // not necessary if using MotionApps include file
 
-// Arduino Wire library is required if I2Cdev I2CDEV_ARDUINO_WIRE implementation
-// is used in I2Cdev.h
-#if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
-    #include "Wire.h"
-#endif
-
 // class default I2C address is 0x68
 // specific I2C addresses may be passed as a parameter here
 // AD0 low = 0x68 (default for SparkFun breakout and InvenSense evaluation board)
@@ -160,11 +154,9 @@ void dmpDataReady() {
 
 void setup() {
     // join I2C bus (I2Cdev library doesn't do this automatically)
+    I2Cdev::begin();
     #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
-        Wire.begin();
         TWBR = 24; // 400kHz I2C clock (200kHz if CPU is 8MHz). Comment this line if having compilation difficulties with TWBR.
-    #elif I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_FASTWIRE
-        Fastwire::setup(400, true);
     #endif
 
     // initialize serial communication

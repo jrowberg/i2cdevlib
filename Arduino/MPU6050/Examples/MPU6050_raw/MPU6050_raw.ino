@@ -36,11 +36,6 @@ THE SOFTWARE.
 #include "I2Cdev.h"
 #include "MPU6050.h"
 
-// Arduino Wire library is required if I2Cdev I2CDEV_ARDUINO_WIRE implementation
-// is used in I2Cdev.h
-#if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
-    #include "Wire.h"
-#endif
 
 // class default I2C address is 0x68
 // specific I2C addresses may be passed as a parameter here
@@ -71,11 +66,7 @@ bool blinkState = false;
 
 void setup() {
     // join I2C bus (I2Cdev library doesn't do this automatically)
-    #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
-        Wire.begin();
-    #elif I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_FASTWIRE
-        Fastwire::setup(400, true);
-    #endif
+    I2Cdev::begin();
 
     // initialize serial communication
     // (38400 chosen because it works as well at 8MHz as it does at 16MHz, but

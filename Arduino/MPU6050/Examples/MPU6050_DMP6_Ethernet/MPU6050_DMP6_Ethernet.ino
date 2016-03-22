@@ -41,9 +41,6 @@ THE SOFTWARE.
 #include "MPU6050_6Axis_MotionApps20.h"
 //#include "MPU6050.h" // not necessary if using MotionApps include file
 
-// Arduino Wire library is required if I2Cdev I2CDEV_ARDUINO_WIRE implementation
-// is used in I2Cdev.h
-#include "Wire.h"
 #include "avr/wdt.h"// Watchdog library
 
 // class default I2C address is 0x68
@@ -168,11 +165,9 @@ void setup() {
     // You can find more time settings at http://www.nongnu.org/avr-libc/user-manual/group__avr__watchdog.html .
     
     // join I2C bus (I2Cdev library doesn't do this automatically)
+    I2Cdev::begin();
     #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
-        Wire.begin();
         TWBR = 24; // 400kHz I2C clock (200kHz if CPU is 8MHz)
-    #elif I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_FASTWIRE
-       Fastwire::setup(400, true);
     #endif
 
     // initialize serial communication

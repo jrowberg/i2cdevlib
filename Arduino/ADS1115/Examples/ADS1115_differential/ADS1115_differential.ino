@@ -29,13 +29,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ===============================================
 */
-#include <Wire.h>
 #include "ADS1115.h"
 
 ADS1115 adc0(ADS1115_DEFAULT_ADDRESS); 
 
 void setup() {                
-    Wire.begin();  // join I2C bus
+    I2Cdev::begin();  // join I2C bus
     Serial.begin(19200); // initialize serial communication 
     Serial.println("Initializing I2C devices..."); 
     adc0.initialize(); // initialize ADS1115 16 bit A/D chip
@@ -52,8 +51,7 @@ void setup() {
 
 }
 
-void loop() 
-  {
+void loop() {
 
     // Sensor is on P0/N1 (pins 4/5)
     Serial.println("Sensor 1 ************************");
