@@ -79,15 +79,17 @@ bool ADS1115::testConnection() {
     return I2Cdev::readWord(devAddr, ADS1115_RA_CONVERSION, buffer) == 1;
 }
 
-/** Wait until the single-shot conversion is finished
+/** Poll the operational status bit until the conversion is finished
  * Retry at most 'max_retries' times
- * conversion is finished, then return;
- * @see ADS1115_OS_INACTIVE
+ * conversion is finished, then return true;
+ * @see ADS1115_CFG_OS_BIT
+ * @return True if data is available, false otherwise
  */
-void ADS1115::waitBusy(uint16_t max_retries) {  
+bool ADS1115::pollConversion(uint16_t max_retries) {  
   for(uint16_t i = 0; i < max_retries; i++) {
-    if (getOpStatus()==ADS1115_OS_INACTIVE) break;    
+    if (isConversionReady()) return true;
   }
+  return false;
 }
 
 /** Read differential value based on current MUX configuration.

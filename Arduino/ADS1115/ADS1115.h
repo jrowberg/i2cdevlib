@@ -138,7 +138,7 @@ class ADS1115 {
         bool testConnection();
 
         // SINGLE SHOT utilities
-        void waitBusy(uint16_t max_retries);
+        bool pollConversion(uint16_t max_retries);
         void triggerConversion();
 
         // Read the current CONVERSION register
