@@ -95,11 +95,23 @@ THE SOFTWARE.
         // 
         // The class SoftI2CMasterWire exposes the functions found in SoftI2CMaster.h.
         
-        // When using the softi2cmaster these defines are required, change as you please
-        #define SDA_PORT PORTC
-        #define SDA_PIN 4
-        #define SCL_PORT PORTC
-        #define SCL_PIN 5
+        // When using the softi2cmaster these defines are required, change as you please.
+        // There are more #defines you can set for software i2c, see SoftI2CMaster.h.
+        #ifndef SDA_PORT
+            #define SDA_PORT PORTC
+        #endif
+        
+        #ifndef SDA_PIN
+            #define SDA_PIN 4
+        #endif
+        
+        #ifndef SCL_PORT
+            #define SCL_PORT PORTC
+        #endif
+        
+        #ifndef SCL_PIN
+            #define SCL_PIN 5
+        #endif
     
     #endif
 #endif
