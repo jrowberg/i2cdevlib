@@ -3,6 +3,7 @@
 // 2013-06-05 by Jeff Rowberg <jeff@rowberg.net>
 //
 // Changelog:
+//      2016-03-22   eadf : added support for SoftI2CMaster
 //      2015-10-30 - simondlevy : support i2c_t3 for Teensy3.1
 //      2013-05-06 - add Francesco Ferrara's Fastwire v0.24 implementation with small modifications
 //      2013-05-05 - fix issue with writing bit values to words (Sasquatch/Farzanegan)
@@ -52,8 +53,10 @@ THE SOFTWARE.
 // -----------------------------------------------------------------------------
 #ifndef I2CDEV_IMPLEMENTATION
 #define I2CDEV_IMPLEMENTATION       I2CDEV_ARDUINO_WIRE
-//#define I2CDEV_IMPLEMENTATION       I2CDEV_SOFTI2CMASTER_LIBRARY
+//#define I2CDEV_IMPLEMENTATION       I2CDEV_BUILTIN_NBWIRE
 //#define I2CDEV_IMPLEMENTATION       I2CDEV_BUILTIN_FASTWIRE
+//#define I2CDEV_IMPLEMENTATION       I2CDEV_I2CMASTER_LIBRARY
+//#define I2CDEV_IMPLEMENTATION       I2CDEV_SOFTI2CMASTER_LIBRARY
 #endif // I2CDEV_IMPLEMENTATION
 
 // comment this out if you are using a non-optimal IDE/implementation setting

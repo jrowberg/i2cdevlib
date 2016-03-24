@@ -3,6 +3,7 @@
 // 2013-06-05 by Jeff Rowberg <jeff@rowberg.net>
 //
 // Changelog:
+//      2016-03-22   eadf : added support for SoftI2CMaster
 //      2013-05-06 - add Francesco Ferrara's Fastwire v0.24 implementation with small modifications
 //      2013-05-05 - fix issue with writing bit values to words (Sasquatch/Farzanegan)
 //      2012-06-09 - fix major issue with reading > 32 bytes at a time with Arduino Wire
