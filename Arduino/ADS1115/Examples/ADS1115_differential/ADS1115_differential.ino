@@ -48,7 +48,6 @@ void setup() {
     
     // We're going to do continuous sampling
     adc0.setMode(ADS1115_MODE_CONTINUOUS);
-
 }
 
 void loop() {
@@ -56,7 +55,7 @@ void loop() {
     // Sensor is on P0/N1 (pins 4/5)
     Serial.println("Sensor 1 ************************");
     // Set the gain (PGA) +/- 1.024v
-    adc0.setGain(ADS1115_PGA_1P024 );
+    adc0.setGain(ADS1115_PGA_1P024);
 
     // Get the number of counts of the accumulator
     Serial.print("Counts for sensor 1 is:");
@@ -67,7 +66,7 @@ void loop() {
 
     // To turn the counts into a voltage, we can use
     Serial.print("Voltage for sensor 1 is:");
-    Serial.println(sensorOneCounts*adc0.getMvPerCount() );
+    Serial.println(sensorOneCounts*adc0.getMvPerCount());
     
     Serial.println();
      
@@ -88,9 +87,5 @@ void loop() {
     Serial.println();
     
     delay(500);
-  }
-  
-
-  
-
+}
 
