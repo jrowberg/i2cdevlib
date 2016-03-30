@@ -950,11 +950,14 @@ void L3G4200D::getAngularVelocity(int16_t* x, int16_t* y, int16_t* z) {
  * @see L3G4200D_RA_OUT_X_H
  */
 int16_t L3G4200D::getAngularVelocityX() {
-	I2Cdev::readBytes(devAddr, L3G4200D_RA_OUT_X_L, 2, buffer);
+	uint8_t bufferL[6];
+	uint8_t bufferH[6];
+	I2Cdev::readBytes(devAddr, L3G4200D_RA_OUT_X_L, 1, bufferL);
+	I2Cdev::readBytes(devAddr, L3G4200D_RA_OUT_X_H, 1, bufferH);
 	if (getEndianMode() == L3G4200D_BIG_ENDIAN) {
-		return (((int16_t)buffer[1]) << 8) | buffer[0];
+		return (((int16_t) bufferL[0]) << 8) | bufferH[0];
 	} else {
-		return (((int16_t)buffer[0]) << 8) | buffer[1];
+		return (((int16_t) bufferH[0]) << 8) | bufferL[0];
 	}
 }
 	
@@ -964,11 +967,14 @@ int16_t L3G4200D::getAngularVelocityX() {
  * @see L3G4200D_RA_OUT_Y_H
  */
 int16_t L3G4200D::getAngularVelocityY() {
-	I2Cdev::readBytes(devAddr, L3G4200D_RA_OUT_Y_L, 2, buffer);
+	uint8_t bufferL[6];
+	uint8_t bufferH[6];
+	I2Cdev::readBytes(devAddr, L3G4200D_RA_OUT_Y_L, 1, bufferL);
+	I2Cdev::readBytes(devAddr, L3G4200D_RA_OUT_Y_H, 1, bufferH);
 	if (getEndianMode() == L3G4200D_BIG_ENDIAN) {
-		return (((int16_t)buffer[1]) << 8) | buffer[0];
+		return (((int16_t) bufferL[0]) << 8) | bufferH[0];
 	} else {
-		return (((int16_t)buffer[0]) << 8) | buffer[1];
+		return (((int16_t) bufferH[0]) << 8) | bufferL[0];
 	}
 }
 
@@ -978,11 +984,14 @@ int16_t L3G4200D::getAngularVelocityY() {
  * @see L3G4200D_RA_OUT_Z_H
  */
 int16_t L3G4200D::getAngularVelocityZ() {
-	I2Cdev::readBytes(devAddr, L3G4200D_RA_OUT_Z_L, 2, buffer);
+	uint8_t bufferL[6];
+	uint8_t bufferH[6];
+	I2Cdev::readBytes(devAddr, L3G4200D_RA_OUT_Z_L, 1, bufferL);
+	I2Cdev::readBytes(devAddr, L3G4200D_RA_OUT_Z_H, 1, bufferH);
 	if (getEndianMode() == L3G4200D_BIG_ENDIAN) {
-		return (((int16_t)buffer[1]) << 8) | buffer[0];
+		return (((int16_t) bufferL[0]) << 8) | bufferH[0];
 	} else {
-		return (((int16_t)buffer[0]) << 8) | buffer[1];
+		return (((int16_t) bufferH[0]) << 8) | bufferL[0];
 	}
 }
 

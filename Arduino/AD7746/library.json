@@ -1,0 +1,18 @@
+{
+  "name": "I2Cdevlib-AD7746",
+  "keywords": "capacitance, converter, sensor, i2cdevlib, i2c",
+  "description": "The AD7745/AD7746 are 24-Bit Capacitance-to-Digital Converter with Temperature Sensor",
+  "include": "Arduino/AD7746",
+  "repository":
+  {
+    "type": "git",
+    "url": "https://github.com/jrowberg/i2cdevlib.git"
+  },
+  "dependencies":
+  {
+    "name": "I2Cdevlib-Core",
+    "frameworks": "arduino"
+  },
+  "frameworks": "arduino",
+  "platforms": "atmelavr"
+}

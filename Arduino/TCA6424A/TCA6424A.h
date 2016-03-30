@@ -35,8 +35,8 @@ THE SOFTWARE.
 
 #include "I2Cdev.h"
 
-#define TCA6424A_ADDRESS_ADDR_LOW   0x34 // address pin low (GND)
-#define TCA6424A_ADDRESS_ADDR_HIGH  0x35 // address pin high (VCC)
+#define TCA6424A_ADDRESS_ADDR_LOW   0x22 // address pin low (GND)
+#define TCA6424A_ADDRESS_ADDR_HIGH  0x23 // address pin high (VCC)
 #define TCA6424A_DEFAULT_ADDRESS    TCA6424A_ADDRESS_ADDR_LOW
 
 #define TCA6424A_RA_INPUT0          0x00

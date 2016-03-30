@@ -7,6 +7,7 @@
 //
 // Changelog:
 //     2012-04-01 - initial release
+//     2015-11-08 - added TVoc and Status
 
 /* ============================================
 I2Cdev device library code is placed under the MIT license
@@ -48,12 +49,14 @@ class IAQ2000 {
         IAQ2000();
         IAQ2000(uint8_t address);
         void initialize();
-		bool testConnection();
-        uint16_t getIaq();
+	bool testConnection();
+	uint16_t getIaqtvoc();
+        uint16_t getIaqpred();
+	uint8_t getIaqstatus();
 
     private:
         uint8_t devAddr;
-        uint8_t buffer[2];
+        uint8_t buffer[8];
     
         int8_t readAllBytes(uint8_t devAddr, uint8_t length, uint8_t *data, uint16_t timeout=I2Cdev::readTimeout);
 };

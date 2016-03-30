@@ -34,6 +34,7 @@ THE SOFTWARE.
 #define _BMP085_H_
 
 #include "I2Cdev.h"
+#include <math.h>
 
 #define BMP085_ADDRESS              0x77
 #define BMP085_DEFAULT_ADDRESS      BMP085_ADDRESS
@@ -75,10 +76,11 @@ class BMP085 {
     public:
         BMP085();
         BMP085(uint8_t address);
-        
+
         void initialize();
         bool testConnection();
 
+#ifdef BMP085_INCLUDE_INDIVIDUAL_CALIBRATION_ACCESS
         /* calibration register methods */
         int16_t     getAC1();
         int16_t     getAC2();
@@ -91,6 +93,7 @@ class BMP085 {
         int16_t     getMB();
         int16_t     getMC();
         int16_t     getMD();
+#endif
 
         /* CONTROL register methods */
         uint8_t     getControl();
@@ -113,7 +116,7 @@ class BMP085 {
 
    private:
         uint8_t devAddr;
-        uint8_t buffer[2];
+        uint8_t buffer[3];
 
         bool calibrationLoaded;
         int16_t ac1, ac2, ac3, b1, b2, mb, mc, md;
