@@ -1,6 +1,6 @@
 // I2Cdev library collection - MS5803 I2C device class
 // Based on Measurement Specialties MS5803 document, 3/25/2013 (DA5803-01BA_010)
-// 4/12/2014 by Ryan Neve <Ryan@PlanktosInstruments.com>
+// 3/29/2016 by Ryan Neve <Ryan@PlanktosInstruments.com>
 // Updates should (hopefully) always be available at https://github.com/jrowberg/i2cdevlib
 //
 // Changelog:
@@ -33,10 +33,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ===============================================
 */
-//#define MS5803_DEBUG
-#include "MS5803.h"
+#include "MS5803_I2C.h"
 
 const static uint8_t INIT_TRIES = 3;
+const static uint16_t PRESS_ATM_MBAR_DEFAULT = 1015;
 
 	
 const char* CALIBRATION_CONSTANTS[] = {
@@ -68,6 +68,7 @@ MS5803::MS5803(uint8_t address) {
 	_c4_TCO			= 0;
 	_c5_Tref		= 0;
 	_c6_TEMPSENS	= 0;
+	_press_atm_mBar = (float)PRESS_ATM_MBAR_DEFAULT/1000.0; //default, can be changed with setAtmospheric() 
 }
 // Because sometimes you want to set the address later.
 void MS5803::setAddress(uint8_t address) {
@@ -76,11 +77,11 @@ void MS5803::setAddress(uint8_t address) {
 
 /** Power on and prepare for general usage.
 * This will reset the device to make sure that the calibration PROM gets loaded into
-* the internal register. It will then read the PROM
+* the internal register. It will then read the calibration constants from the PROM
 */
 bool MS5803::initialize(uint8_t model) {
-	press_atmospheric = 1.015; //default, can be changed.
 	_initialized = false;
+	// Make sure model is valid.
 	switch (model) {
 		case ( 1): _model = BA01; break;
 		case ( 2): _model = BA02; break;
@@ -92,7 +93,6 @@ bool MS5803::initialize(uint8_t model) {
 			_model = INVALID; 
 			return 0;
 	}
-	//if ( _debug ) Serial.print("MS5803 Model entered "); Serial.print(model); Serial.println("-ATM IS supported.");
 	if (_debug) Serial.println(reset());
 	uint8_t tries = 0;
 	do {
@@ -112,6 +112,7 @@ bool MS5803::initialize(uint8_t model) {
 	return _initialized;
 }
 
+// See if we can communicate
 bool MS5803::testConnection(){
 	uint8_t reg_address = CMD_ADC_CONV + TEMPERATURE + ADC_256;
 	return I2Cdev::writeBytes(_dev_address,reg_address,0,_buffer);
@@ -150,12 +151,13 @@ int32_t MS5803::_getCalConstant(uint8_t constant_no){
 	}
 }
 
-
+/*	This function communicates with the sensor and does all the math to convert 
+	raw values to good data. Data can be accessed with various getters.
+*/
 void MS5803::calcMeasurements(precision _precision){
 	// Get raw temperature and pressure values
 	_d2_temperature = _getADCconversion(TEMPERATURE, _precision);
 	_d1_pressure = _getADCconversion(PRESSURE, _precision);
-	
 	//Now that we have a raw temperature, let's compute our actual.
 	_dT = _d2_temperature - ((int32_t)_c5_Tref << 8);
 	double temp_dT = _dT / (double)pow(2,23);
@@ -168,10 +170,11 @@ void MS5803::calcMeasurements(precision _precision){
 		Serial.print("    _dT = "); Serial.println(_dT);
 		Serial.print("    _TEMP = "); Serial.println(_TEMP);
 	}
-	// Every variant does the calculations differently, so...
+	// Second order variables
 	int64_t T2 = 0;
 	int64_t off2 = 0;
 	int64_t sens2 = 0;
+	// Every variant does the calculations differently, so...
 	switch (_model) {
 		case (BA01):  //MS5803-01-----------------------------------------------------------
 			_OFF  = ((int64_t)_c2_OFFt1  << 16 ) + ((((int64_t)_c4_TCO * (int64_t)_dT)) >> 7 );
@@ -265,24 +268,15 @@ void MS5803::calcMeasurements(precision _precision){
 	_TEMP  -= T2;
 	_SENS  -= sens2;
 	_OFF   -= off2;
-	if ( _debug ) {
-		Serial.println("Second order values:");
-		Serial.print("    T2 = "); serialPrintln64(T2);
-		Serial.print("    sens2 = "); serialPrintln64(sens2);
-		Serial.print("    off2 = "); serialPrintln64(off2);
-		Serial.print("    _TEMP = "); Serial.println(_TEMP);
-		Serial.print("    _SENS = "); serialPrintln64(_SENS);
-		Serial.print("    _OFF = "); serialPrintln64(_OFF);
-	}
 	// Now pressure
 	switch (_model) {
 		case (BA05):  //MS5803-05-----------------------------------------------------------
 			_P = ((((int32_t)_d1_pressure * _SENS) >> 21 ) - _OFF) >> 15;
 			_P /= 10; // NO IDEA WHY THIS NEEDS TO BE DONE. PERHAPS AN ERROR IN THE DATASHEET?
 			break;
-		case (BA01):  //MS5803-01-----------------------------------------------------------
-		case (BA02):  //MS5803-02-----------------------------------------------------------
-		case (BA14):  //MS5803-14-----------------------------------------------------------
+		case (BA01):  //MS5803-01--passthrough----------------------------------------------
+		case (BA02):  //MS5803-02--passthrough----------------------------------------------
+		case (BA14):  //MS5803-14--passthrough----------------------------------------------
 			_P = ((((int32_t)_d1_pressure * _SENS) >> 21 ) - _OFF) >> 15;
 			break;
 		case (BA30):  //MS5803-30-----------------------------------------------------------
@@ -292,16 +286,16 @@ void MS5803::calcMeasurements(precision _precision){
 			_P = 0;
 	}
 	if ( _debug ) {
+		Serial.println("Second order values:");
+		Serial.print("    T2 = "); serialPrintln64(T2);
+		Serial.print("    sens2 = "); serialPrintln64(sens2);
+		Serial.print("    off2 = "); serialPrintln64(off2);
+		Serial.print("    _TEMP = "); Serial.println(_TEMP);
+		Serial.print("    _SENS = "); serialPrintln64(_SENS);
+		Serial.print("    _OFF = "); serialPrintln64(_OFF);
 		Serial.println("Pressure:");
 		Serial.print("    _P = "); Serial.println(_P);
 	}
-	// Conversions to common units
-	temp_C = (float)_TEMP / 100.0;
-	press_mBar = (float)_P / 10.0;
-	press_kPa = press_mBar / 10.0;
-	press_gauge = press_mBar - press_atmospheric;
-	press_psi = press_gauge * 14.50377;
-	depth_fresh = (press_mBar/100) * 1.019716;
 }
 
 int32_t MS5803::_getADCconversion(measurement _measurement, precision _precision){
