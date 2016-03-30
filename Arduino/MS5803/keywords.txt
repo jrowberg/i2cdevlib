@@ -1,0 +1,42 @@
+###########################################
+# Datatypes (KEYWORD1)
+###########################################
+
+MS5803	KEYWORD1
+
+###########################################
+# Methods and Functions (KEYWORD2)
+###########################################
+setAddress	KEYWORD2
+getAddress	KEYWORD2
+initialize	KEYWORD2
+testConnection	KEYWORD2
+setAtmospheric	KEYWORD2
+calcMeasurements	KEYWORD2
+getD1Pressure	KEYWORD2
+getD2Temperature	KEYWORD2
+getTemp_C	KEYWORD2
+getPress_mBar	KEYWORD2
+getPress_kPa	KEYWORD2
+initialized	KEYWORD2
+getDebug	KEYWORD2
+setDebug	KEYWORD2
+
+###########################################
+# Constants (LITERAL1)
+###########################################
+MS5803_ADDRESS				LITERAL1
+MS5803_ADDRESS_AD0_LOW		LITERAL1
+MS5803_ADDRESS_AD0_HIGH		LITERAL1
+MS5803_DEFAULT_ADDRESS		LITERAL1
+MS5803_RESET     			LITERAL1
+MS5803_PROM_BASE 			LITERAL1
+MS5803_PROM_C1   			LITERAL1
+MS5803_PROM_C2   			LITERAL1
+MS5803_PROM_C3   			LITERAL1
+MS5803_PROM_C4   			LITERAL1
+MS5803_PROM_C5   			LITERAL1
+MS5803_PROM_C6   			LITERAL1
+MS5803_PROM_CRC  			LITERAL1
+MS5803_ADC_READ  			LITERAL1
+CMD_ADC_CONV 				LITERAL1
