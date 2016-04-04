@@ -52,6 +52,8 @@ int16_t mx, my, mz;
 #define LED_PIN 13
 bool blinkState = false;
 
+long lasttime;
+
 void setup() {
     // join I2C bus (I2Cdev library doesn't do this automatically)
     Wire.begin();
@@ -64,6 +66,12 @@ void setup() {
     // initialize device
     Serial.println("Initializing I2C devices...");
     accelGyroMag.initialize();
+    accelGyroMag.setupCompas();
+
+//     accelGyroMag.setSleepEnabled(false); // thanks to Jack Elston for pointing this one out!
+//     accelGyroMag.setClockSource(MPU9150_CLOCK_PLL_XGYRO);
+//     accelGyroMag.setFullScaleGyroRange(MPU9150_GYRO_FS_250);
+//     accelGyroMag.setFullScaleAccelRange(MPU9150_ACCEL_FS_2);
 
     // verify connection
     Serial.println("Testing device connections...");
@@ -71,38 +79,45 @@ void setup() {
 
     // configure Arduino LED for
     pinMode(LED_PIN, OUTPUT);
+    lasttime = millis();
 }
 
 void loop() {
+    long time = millis();
     // read raw accel/gyro/mag measurements from device
-    accelGyroMag.getMotion9(&ax, &ay, &az, &gx, &gy, &gz, &mx, &my, &mz);
+    accelGyroMag.getMotion9new(&ax, &ay, &az, &gx, &gy, &gz, &mx, &my, &mz);
 
     // these methods (and a few others) are also available
     //accelGyroMag.getAcceleration(&ax, &ay, &az);
     //accelGyroMag.getRotation(&gx, &gy, &gz);
 
+    Serial.print("time:   ");
+    Serial.print( time - lasttime );
     // display tab-separated accel/gyro/mag x/y/z values
-//  Serial.print("a/g/m:\t");
-//  Serial.print(ax); Serial.print("\t");
-//  Serial.print(ay); Serial.print("\t");
-//  Serial.print(az); Serial.print("\t");
-//  Serial.print(gx); Serial.print("\t");
-//  Serial.print(gy); Serial.print("\t");
-//  Serial.print(gz); Serial.print("\t");
-    Serial.print(int(mx)*int(mx)); Serial.print("\t");
-    Serial.print(int(my)*int(my)); Serial.print("\t");
-    Serial.print(int(mz)*int(mz)); Serial.print("\t | ");
-
-    const float N = 256;
-    float mag = mx*mx/N + my*my/N + mz*mz/N;
-
-    Serial.print(mag); Serial.print("\t");
-    for (int i=0; i<mag; i++)
-        Serial.print("*");
+ Serial.print(": a/g/m:   ");
+ Serial.print(ax); Serial.print("   ");
+ Serial.print(ay); Serial.print("   ");
+ Serial.print(az); Serial.print("   ");
+ Serial.print(gx); Serial.print("   ");
+ Serial.print(gy); Serial.print("   ");
+ Serial.print(gz); Serial.print("   ");
+    Serial.print(mx); Serial.print("   ");
+    Serial.print(my); Serial.print("   ");
+    Serial.print(mz); Serial.print("    | ");
+// 
+// //     const float N = 256;
+// //     float mag = mx*mx/N + my*my/N + mz*mz/N;
+// // 
+// //     Serial.print(mag); Serial.print("   ");
+// //     for (int i=0; i<mag; i++)
+// //         Serial.print("*");
     Serial.print("\n");
 
     // blink LED to indicate activity
     blinkState = !blinkState;
     digitalWrite(LED_PIN, blinkState);
-    delay(50);
+    
+    lasttime = time;
+    while ( (millis() - lasttime) < 5 ){;;} // wait up to 5 ms
+//     delay(5);
 }
