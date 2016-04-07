@@ -183,6 +183,7 @@ void setup() {
     // initialize device
     Serial.println(F("Initializing I2C devices..."));
     mpu.initialize();
+    pinMode(INTERRUPT_PIN, INPUT);
 
     // verify connection
     Serial.println(F("Testing device connections..."));
