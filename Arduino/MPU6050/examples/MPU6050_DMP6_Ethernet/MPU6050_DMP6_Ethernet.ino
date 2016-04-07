@@ -125,6 +125,7 @@ String HTTP_req;            // stores the HTTP request
 // format used for the InvenSense teapot demo
 //#define OUTPUT_TEAPOT
 
+#define INTERRUPT_PIN 2  // use pin 2 on Arduino Uno & most boards
 #define LED_PIN 13 // (Arduino is 13, Teensy is 11, Teensy++ is 6)
 bool blinkState = false;
 
@@ -217,7 +218,7 @@ void setup() {
 
         // enable Arduino interrupt detection
         Serial.println(F("Enabling interrupt detection (Arduino external interrupt 0)..."));
-        attachInterrupt(0, dmpDataReady, RISING);
+        attachInterrupt(digitalPinToInterrupt(INTERRUPT_PIN), dmpDataReady, RISING);
         mpuIntStatus = mpu.getIntStatus();
 
         // set our DMP Ready flag so the main loop() function knows it's okay to use it
