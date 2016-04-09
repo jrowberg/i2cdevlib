@@ -690,6 +690,8 @@ uint8_t MPU6050::dmpGetEuler(float *data, Quaternion *q) {
     data[2] = atan2(2*q -> y*q -> z - 2*q -> w*q -> x, 2*q -> w*q -> w + 2*q -> z*q -> z - 1);   // phi
     return 0;
 }
+
+#ifdef USE_OLD_DMPGETYAWPITCHROLL
 uint8_t MPU6050::dmpGetYawPitchRoll(float *data, Quaternion *q, VectorFloat *gravity) {
     // yaw: (about Z axis)
     data[0] = atan2(2*q -> x*q -> y - 2*q -> w*q -> z, 2*q -> w*q -> w + 2*q -> x*q -> x - 1);
@@ -699,6 +701,24 @@ uint8_t MPU6050::dmpGetYawPitchRoll(float *data, Quaternion *q, VectorFloat *gra
     data[2] = atan(gravity -> y / sqrt(gravity -> x*gravity -> x + gravity -> z*gravity -> z));
     return 0;
 }
+#else 
+uint8_t MPU6050::dmpGetYawPitchRoll(float *data, Quaternion *q, VectorFloat *gravity) {
+    // yaw: (about Z axis)
+    data[0] = atan2(2*q -> x*q -> y - 2*q -> w*q -> z, 2*q -> w*q -> w + 2*q -> x*q -> x - 1);
+    // pitch: (nose up/down, about Y axis)
+    data[1] = atan2(gravity -> x , sqrt(gravity -> y*gravity -> y + gravity -> z*gravity -> z));
+    // roll: (tilt left/right, about X axis)
+    data[2] = atan2(gravity -> y , gravity -> z);
+    if (gravity -> z < 0) {
+        if(data[1] > 0) {
+            data[1] = PI - data[1]; 
+        } else { 
+            data[1] = -PI - data[1];
+        }
+    }
+    return 0;
+}
+#endif
 
 // uint8_t MPU6050::dmpGetAccelFloat(float *data, const uint8_t* packet);
 // uint8_t MPU6050::dmpGetQuaternionFloat(float *data, const uint8_t* packet);
