@@ -17,7 +17,8 @@ uint32_t wake_time = millis();
 
 void setup() {
   Serial.begin(57600);
-  Wire.begin();
+  // join I2C bus (I2Cdev library doesn't do this automatically)
+  I2Cdev::begin();
   // Start up and get Calubration constants.
   presstemp.initialize(MS_MODEL);
   if ( presstemp.testConnection() ) Serial.println("We are communicating with MS5803 via I2C.");
