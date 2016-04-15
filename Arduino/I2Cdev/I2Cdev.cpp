@@ -1586,7 +1586,7 @@ bool I2Cdev::begin() {
 /** Implementation agnostic setClock method. Will call Wire.setClock() if arduino wire library is selected.
  * This is an Arduino convenience method, not part of the 'proper' I2Cdev API.
  */
-static void setClock(uint32_t speed) {
+void I2Cdev::setClock(uint32_t speed) {
     #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
         Wire.setClock(speed);
     #elif I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_FASTWIRE
