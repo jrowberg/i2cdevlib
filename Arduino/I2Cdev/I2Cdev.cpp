@@ -88,6 +88,9 @@ THE SOFTWARE.
 
 #elif I2CDEV_IMPLEMENTATION == I2CDEV_SOFTI2CMASTER_LIBRARY
     #include <SoftI2CMaster.h>
+     #if not (defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__) || defined(__AVR_ATmega328P__) || defined(__AVR_ATmega168__))
+         #error "I2CDEV_SOFTI2CMASTER_LIBRARY can only be used with AVR chips"
+     #endif
 #endif
 
 /** Default constructor.

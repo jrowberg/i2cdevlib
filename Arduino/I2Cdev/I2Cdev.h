@@ -97,22 +97,44 @@ THE SOFTWARE.
         
         // When using the softi2cmaster these defines are required, change as you please.
         // There are more #defines you can set for software i2c, see SoftI2CMaster.h.
-        #ifndef SDA_PORT
-            #define SDA_PORT PORTC
-        #endif
+        #if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
+            // this example sets up the SoftI2CMaster library to use 
+            // pin 20 as SDA and pin 21 as SCL
+            #ifndef SDA_PORT
+                #define SDA_PORT PORTD
+            #endif
+            
+            #ifndef SDA_PIN
+                #define SDA_PIN 1
+            #endif
         
-        #ifndef SDA_PIN
-            #define SDA_PIN 4
-        #endif
+            #ifndef SCL_PORT
+                #define SCL_PORT PORTD
+            #endif
         
-        #ifndef SCL_PORT
-            #define SCL_PORT PORTC
-        #endif
+            #ifndef SCL_PIN
+                #define SCL_PIN 0
+            #endif
+            
+        #elif defined(__AVR_ATmega328P__) || defined(__AVR_ATmega168__)
+            // this example sets up the SoftI2CMaster library to use 
+            // pin A4 as SDA and pin A5 as SCL
+            #ifndef SDA_PORT
+                #define SDA_PORT PORTC
+            #endif
+            
+            #ifndef SDA_PIN
+                #define SDA_PIN 4
+            #endif
         
-        #ifndef SCL_PIN
-            #define SCL_PIN 5
+            #ifndef SCL_PORT
+                #define SCL_PORT PORTC
+            #endif
+        
+            #ifndef SCL_PIN
+                #define SCL_PIN 5
+            #endif
         #endif
-    
     #endif
 #endif
 
