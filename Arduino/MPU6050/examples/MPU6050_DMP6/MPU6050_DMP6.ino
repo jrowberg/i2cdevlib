@@ -156,16 +156,7 @@ void dmpDataReady() {
 void setup() {
     // join I2C bus (I2Cdev library doesn't do this automatically)
     I2Cdev::begin();
-    #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
-<<<<<<< HEAD:Arduino/MPU6050/Examples/MPU6050_DMP6/MPU6050_DMP6.ino
-        TWBR = 24; // 400kHz I2C clock (200kHz if CPU is 8MHz). Comment this line if having compilation difficulties with TWBR.
-=======
-        Wire.begin();
-        Wire.setClock(400000); // 400kHz I2C clock. Comment this line if having compilation difficulties
-    #elif I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_FASTWIRE
-        Fastwire::setup(400, true);
->>>>>>> bcc89af7c244dee62fed1072f6bf965276ec79f3:Arduino/MPU6050/examples/MPU6050_DMP6/MPU6050_DMP6.ino
-    #endif
+    I2Cdev::setClock(400000); // 400kHz I2C clock (200kHz if CPU is 8MHz). Comment this line if having compilation difficulties
 
     // initialize serial communication
     // (115200 chosen because it is required for Teapot Demo output, but it's
