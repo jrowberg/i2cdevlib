@@ -432,7 +432,7 @@ uint8_t MPU6050::dmpInitialize() {
             DEBUG_PRINTLN(F("Success! DMP configuration written and verified."));
 
             DEBUG_PRINTLN(F("Setting DMP and FIFO_OFLOW interrupts enabled..."));
-            setIntEnabled(0x12);
+            setIntEnabled(1<<MPU6050_INTERRUPT_FIFO_OFLOW_BIT|1<<MPU6050_INTERRUPT_DMP_INT_BIT);
 
             DEBUG_PRINTLN(F("Setting sample rate to 200Hz..."));
             setRate(4); // 1khz / (1 + 4) = 200 Hz
