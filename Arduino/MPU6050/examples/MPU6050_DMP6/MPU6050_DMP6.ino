@@ -124,6 +124,7 @@ MPU6050 mpu;
 bool blinkState = false;
 
 // MPU control/status vars
+bool dmpReady = false;  // set true if DMP init was successful
 uint8_t mpuIntStatus;   // holds actual interrupt status byte from MPU
 uint8_t devStatus;      // return status after each device operation (0 = success, !0 = error)
 uint16_t packetSize;    // expected DMP packet size (default is 42 bytes)
@@ -220,6 +221,7 @@ void setup() {
 
         // set our DMP Ready flag so the main loop() function knows it's okay to use it
         Serial.println(F("DMP ready! Waiting for first interrupt..."));
+        dmpReady = true;
 
         // get expected DMP packet size for later comparison
         packetSize = mpu.dmpGetFIFOPacketSize();
@@ -231,8 +233,6 @@ void setup() {
         Serial.print(F("DMP Initialization failed (code "));
         Serial.print(devStatus);
         Serial.println(F(")"));
-        while(true)
-           ;  // DMP Initialization failed, halt here.
     }
 
     // configure LED for output
@@ -246,6 +246,8 @@ void setup() {
 // ================================================================
 
 void loop() {
+    // if programming failed, don't try to do anything
+    if (!dmpReady) return;
 
     // wait for MPU interrupt or extra packet(s) available
     while (!mpuInterrupt && fifoCount < packetSize) {
