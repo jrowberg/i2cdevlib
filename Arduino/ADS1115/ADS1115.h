@@ -69,8 +69,6 @@ THE SOFTWARE.
 #define ADS1115_CFG_COMP_QUE_BIT    1
 #define ADS1115_CFG_COMP_QUE_LENGTH 2
 
-#define ADS1115_OS_INACTIVE         0x00
-#define ADS1115_OS_ACTIVE           0x01
 
 #define ADS1115_MUX_P0_N1           0x00 // default
 #define ADS1115_MUX_P0_N3           0x01
@@ -135,22 +133,23 @@ class ADS1115 {
     public:
         ADS1115();
         ADS1115(uint8_t address);
-        
+
         void initialize();
         bool testConnection();
-        
+
         // SINGLE SHOT utilities
-        void waitBusy(uint16_t max_retries);
+        bool pollConversion(uint16_t max_retries);
+        void triggerConversion();
 
         // Read the current CONVERSION register
-        int16_t getConversion();
-        
+        int16_t getConversion(bool triggerAndPoll=true);
+
         // Differential
         int16_t getConversionP0N1();
         int16_t getConversionP0N3();
         int16_t getConversionP1N3();
         int16_t getConversionP2N3();
-        
+
         // Single-ended
         int16_t getConversionP0GND();
         int16_t getConversionP1GND();
@@ -158,42 +157,42 @@ class ADS1115 {
         int16_t getConversionP3GND();
 
         // Utility
-        float getMilliVolts(); 
+        float getMilliVolts(bool triggerAndPoll=true);
         float getMvPerCount();
 
         // CONFIG register
-        uint8_t getOpStatus();
-        void setOpStatus(uint8_t op);
+        bool isConversionReady();
         uint8_t getMultiplexer();
         void setMultiplexer(uint8_t mux);
         uint8_t getGain();
         void setGain(uint8_t gain);
-        uint8_t getMode();
-        void setMode(uint8_t mode);
+        bool getMode();
+        void setMode(bool mode);
         uint8_t getRate();
         void setRate(uint8_t rate);
-        uint8_t getComparatorMode();
-        void setComparatorMode(uint8_t mode);
-        uint8_t getComparatorPolarity();
-        void setComparatorPolarity(uint8_t polarity);
+        bool getComparatorMode();
+        void setComparatorMode(bool mode);
+        bool getComparatorPolarity();
+        void setComparatorPolarity(bool polarity);
         bool getComparatorLatchEnabled();
         void setComparatorLatchEnabled(bool enabled);
         uint8_t getComparatorQueueMode();
         void setComparatorQueueMode(uint8_t mode);
+        void setConversionReadyPinMode();
 
         // *_THRESH registers
         int16_t getLowThreshold();
         void setLowThreshold(int16_t threshold);
         int16_t getHighThreshold();
         void setHighThreshold(int16_t threshold);
-        
+
         // DEBUG
         void showConfigRegister();
 
     private:
         uint8_t devAddr;
         uint16_t buffer[2];
-        uint8_t devMode;
+        bool    devMode;
         uint8_t muxMode;
         uint8_t pgaMode;
 };

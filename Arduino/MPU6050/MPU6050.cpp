@@ -2560,7 +2560,7 @@ void MPU6050::setClockSource(uint8_t source) {
  * 1            | 2.5 Hz
  * 2            | 5 Hz
  * 3            | 10 Hz
- * <pre>
+ * </pre>
  *
  * For further information regarding the MPU-60X0's power modes, please refer to
  * Register 107.
@@ -2741,7 +2741,11 @@ uint8_t MPU6050::getFIFOByte() {
     return buffer[0];
 }
 void MPU6050::getFIFOBytes(uint8_t *data, uint8_t length) {
-    I2Cdev::readBytes(devAddr, MPU6050_RA_FIFO_R_W, length, data);
+    if(length > 0){
+        I2Cdev::readBytes(devAddr, MPU6050_RA_FIFO_R_W, length, data);
+    } else {
+    	*data = 0;
+    }
 }
 /** Write byte to FIFO buffer.
  * @see getFIFOByte()

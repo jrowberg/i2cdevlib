@@ -79,17 +79,18 @@ bool ADS1115::testConnection() {
     return I2Cdev::readWord(devAddr, ADS1115_RA_CONVERSION, buffer) == 1;
 }
 
-/** Wait until the single-shot conversion is finished
+/** Poll the operational status bit until the conversion is finished
  * Retry at most 'max_retries' times
- * conversion is finished, then return;
- * @see ADS1115_OS_INACTIVE
+ * conversion is finished, then return true;
+ * @see ADS1115_CFG_OS_BIT
+ * @return True if data is available, false otherwise
  */
-void ADS1115::waitBusy(uint16_t max_retries) {  
+bool ADS1115::pollConversion(uint16_t max_retries) {  
   for(uint16_t i = 0; i < max_retries; i++) {
-    if (getOpStatus()==ADS1115_OS_INACTIVE) break;    
+    if (isConversionReady()) return true;
   }
+  return false;
 }
-
 
 /** Read differential value based on current MUX configuration.
  * The default MUX setting sets the device to get the differential between the
@@ -106,6 +107,8 @@ void ADS1115::waitBusy(uint16_t max_retries) {
  * effortless, but it has enormous potential to save power by only running the
  * comparison circuitry when needed.
  *
+ * @param triggerAndPoll If true (and only in singleshot mode) the conversion trigger 
+ *        will be executed and the conversion results will be polled.
  * @return 16-bit signed differential value
  * @see getConversionP0N1();
  * @see getConversionPON3();
@@ -126,12 +129,10 @@ void ADS1115::waitBusy(uint16_t max_retries) {
  * @see ADS1115_MUX_P2_NG
  * @see ADS1115_MUX_P3_NG
  */
-int16_t ADS1115::getConversion() {
-    if (devMode == ADS1115_MODE_SINGLESHOT) 
-    {  
-      setOpStatus(ADS1115_OS_ACTIVE);
-      ADS1115::waitBusy(I2CDEV_DEFAULT_READ_TIMEOUT);
-      
+int16_t ADS1115::getConversion(bool triggerAndPoll) {
+    if (triggerAndPoll && devMode == ADS1115_MODE_SINGLESHOT) {
+      triggerConversion();
+      pollConversion(I2CDEV_DEFAULT_READ_TIMEOUT);
     }
     I2Cdev::readWord(devAddr, ADS1115_RA_CONVERSION, buffer);
     return buffer[0];
@@ -233,29 +234,30 @@ int16_t ADS1115::getConversionP3GND() {
  * Read the current differential and return it multiplied
  * by the constant for the current gain.  mV is returned to
  * increase the precision of the voltage
- *
+ * @param triggerAndPoll If true (and only in singleshot mode) the conversion trigger 
+ *        will be executed and the conversion results will be polled.
  */
-float ADS1115::getMilliVolts() {
+float ADS1115::getMilliVolts(bool triggerAndPoll) {
   switch (pgaMode) { 
     case ADS1115_PGA_6P144:
-      return (getConversion() * ADS1115_MV_6P144);
+      return (getConversion(triggerAndPoll) * ADS1115_MV_6P144);
       break;    
     case ADS1115_PGA_4P096:
-      return (getConversion() * ADS1115_MV_4P096);
+      return (getConversion(triggerAndPoll) * ADS1115_MV_4P096);
       break;             
     case ADS1115_PGA_2P048:    
-      return (getConversion() * ADS1115_MV_2P048);
+      return (getConversion(triggerAndPoll) * ADS1115_MV_2P048);
       break;       
     case ADS1115_PGA_1P024:     
-      return (getConversion() * ADS1115_MV_1P024);
+      return (getConversion(triggerAndPoll) * ADS1115_MV_1P024);
       break;       
     case ADS1115_PGA_0P512:      
-      return (getConversion() * ADS1115_MV_0P512);
+      return (getConversion(triggerAndPoll) * ADS1115_MV_0P512);
       break;       
     case ADS1115_PGA_0P256:           
     case ADS1115_PGA_0P256B:          
     case ADS1115_PGA_0P256C:      
-      return (getConversion() * ADS1115_MV_0P256);
+      return (getConversion(triggerAndPoll) * ADS1115_MV_0P256);
       break;       
   }
 }
@@ -299,24 +301,21 @@ float ADS1115::getMvPerCount() {
 // CONFIG register
 
 /** Get operational status.
- * @return Current operational status (0 for active conversion, 1 for inactive)
- * @see ADS1115_OS_ACTIVE
- * @see ADS1115_OS_INACTIVE
+ * @return Current operational status (false for active conversion, true for inactive)
  * @see ADS1115_RA_CONFIG
  * @see ADS1115_CFG_OS_BIT
  */
-uint8_t ADS1115::getOpStatus() {
+bool ADS1115::isConversionReady() {
     I2Cdev::readBitW(devAddr, ADS1115_RA_CONFIG, ADS1115_CFG_OS_BIT, buffer);
-    return (uint8_t)buffer[0];
+    return buffer[0];
 }
-/** Set operational status.
- * This bit can only be written while in power-down mode (no conversions active).
- * @param status New operational status (0 does nothing, 1 to trigger conversion)
+/** Trigger a new conversion.
+ * Writing to this bit will only have effect while in power-down mode (no conversions active).
  * @see ADS1115_RA_CONFIG
  * @see ADS1115_CFG_OS_BIT
  */
-void ADS1115::setOpStatus(uint8_t status) { 
-    I2Cdev::writeBitW(devAddr, ADS1115_RA_CONFIG, ADS1115_CFG_OS_BIT, status);
+void ADS1115::triggerConversion() {
+    I2Cdev::writeBitW(devAddr, ADS1115_RA_CONFIG, ADS1115_CFG_OS_BIT, 1);
 }
 /** Get multiplexer connection.
  * @return Current multiplexer connection setting
@@ -401,9 +400,9 @@ void ADS1115::setGain(uint8_t gain) {
  * @see ADS1115_RA_CONFIG
  * @see ADS1115_CFG_MODE_BIT
  */
-uint8_t ADS1115::getMode() {
+bool ADS1115::getMode() {
     I2Cdev::readBitW(devAddr, ADS1115_RA_CONFIG, ADS1115_CFG_MODE_BIT, buffer);
-    devMode = (uint8_t)buffer[0];
+    devMode = buffer[0];
     return devMode;
 }
 /** Set device mode.
@@ -413,7 +412,7 @@ uint8_t ADS1115::getMode() {
  * @see ADS1115_RA_CONFIG
  * @see ADS1115_CFG_MODE_BIT
  */
-void ADS1115::setMode(uint8_t mode) {
+void ADS1115::setMode(bool mode) {
     if (I2Cdev::writeBitW(devAddr, ADS1115_RA_CONFIG, ADS1115_CFG_MODE_BIT, mode)) {
         devMode = mode;
     }
@@ -452,9 +451,9 @@ void ADS1115::setRate(uint8_t rate) {
  * @see ADS1115_RA_CONFIG
  * @see ADS1115_CFG_COMP_MODE_BIT
  */
-uint8_t ADS1115::getComparatorMode() {
+bool ADS1115::getComparatorMode() {
     I2Cdev::readBitW(devAddr, ADS1115_RA_CONFIG, ADS1115_CFG_COMP_MODE_BIT, buffer);
-    return (uint8_t)buffer[0];
+    return buffer[0];
 }
 /** Set comparator mode.
  * @param mode New comparator mode
@@ -463,7 +462,7 @@ uint8_t ADS1115::getComparatorMode() {
  * @see ADS1115_RA_CONFIG
  * @see ADS1115_CFG_COMP_MODE_BIT
  */
-void ADS1115::setComparatorMode(uint8_t mode) {
+void ADS1115::setComparatorMode(bool mode) {
     I2Cdev::writeBitW(devAddr, ADS1115_RA_CONFIG, ADS1115_CFG_COMP_MODE_BIT, mode);
 }
 /** Get comparator polarity setting.
@@ -473,9 +472,9 @@ void ADS1115::setComparatorMode(uint8_t mode) {
  * @see ADS1115_RA_CONFIG
  * @see ADS1115_CFG_COMP_POL_BIT
  */
-uint8_t ADS1115::getComparatorPolarity() {
+bool ADS1115::getComparatorPolarity() {
     I2Cdev::readBitW(devAddr, ADS1115_RA_CONFIG, ADS1115_CFG_COMP_POL_BIT, buffer);
-    return (uint8_t)buffer[0];
+    return buffer[0];
 }
 /** Set comparator polarity setting.
  * @param polarity New comparator polarity setting
@@ -484,7 +483,7 @@ uint8_t ADS1115::getComparatorPolarity() {
  * @see ADS1115_RA_CONFIG
  * @see ADS1115_CFG_COMP_POL_BIT
  */
-void ADS1115::setComparatorPolarity(uint8_t polarity) {
+void ADS1115::setComparatorPolarity(bool polarity) {
     I2Cdev::writeBitW(devAddr, ADS1115_RA_CONFIG, ADS1115_CFG_COMP_POL_BIT, polarity);
 }
 /** Get comparator latch enabled value.
@@ -569,23 +568,32 @@ void ADS1115::setHighThreshold(int16_t threshold) {
     I2Cdev::writeWord(devAddr, ADS1115_RA_HI_THRESH, threshold);
 }
 
+/** Configures ALERT/RDY pin as a conversion ready pin.
+ *  It does this by setting the MSB of the high threshold register to '1' and the MSB 
+ *  of the low threshold register to '0'. COMP_POL and COMP_QUE bits will be set to '0'.
+ *  Note: ALERT/RDY pin requires a pull up resistor.
+ */
+void ADS1115::setConversionReadyPinMode() {
+    I2Cdev::writeBitW(devAddr, ADS1115_RA_HI_THRESH, 15, 1);
+    I2Cdev::writeBitW(devAddr, ADS1115_RA_LO_THRESH, 15, 0);
+    setComparatorPolarity(0);
+    setComparatorQueueMode(0);
+}
+
 // Create a mask between two bits
-unsigned createMask(unsigned a, unsigned b)
-{
+unsigned createMask(unsigned a, unsigned b) {
    unsigned mask = 0;
    for (unsigned i=a; i<=b; i++)
        mask |= 1 << i;
    return mask;
 }
 
-uint16_t shiftDown(uint16_t extractFrom, int places)
-{
+uint16_t shiftDown(uint16_t extractFrom, int places) {
   return (extractFrom >> places);
 }
 
 
-uint16_t getValueFromBits(uint16_t extractFrom, int high, int length) 
-{
+uint16_t getValueFromBits(uint16_t extractFrom, int high, int length) {
    int low= high-length +1;
    uint16_t mask = createMask(low ,high);
    return shiftDown(extractFrom & mask, low); 
@@ -593,8 +601,7 @@ uint16_t getValueFromBits(uint16_t extractFrom, int high, int length)
 
 /** Show all the config register settings
  */
-void ADS1115::showConfigRegister()
-{
+void ADS1115::showConfigRegister() {
     I2Cdev::readWord(devAddr, ADS1115_RA_CONFIG, buffer);
     uint16_t configRegister =buffer[0];    
     
@@ -638,6 +645,5 @@ void ADS1115::showConfigRegister()
       Serial.println(getValueFromBits(configRegister, 
         ADS1115_CFG_COMP_QUE_BIT,ADS1115_CFG_COMP_QUE_LENGTH), BIN);
     #endif
-    
 };
 
