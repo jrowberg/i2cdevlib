@@ -1546,44 +1546,31 @@ uint16_t I2Cdev::readTimeout = I2CDEV_DEFAULT_READ_TIMEOUT;
 #endif
 
 
-/** Implementation agnostic begin method. Will call Wire.begin() if arduino wire library is selected.
+/** Implementation independent begin method. Will call Wire.begin() if arduino wire library is selected.
  * This is an Arduino convenience method, not part of the 'proper' I2Cdev API.
  * @return Status of operation (true = success)
  */
 bool I2Cdev::begin() {
+    #ifdef I2CDEV_SERIAL_DEBUG
+        I2Cdev::showImplementationInfo();
+    #endif
     #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
-        #ifdef I2CDEV_SERIAL_DEBUG
-            Serial.println("I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE");
-        #endif
         Wire.begin();
         return true;
     #elif I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_FASTWIRE
-        #ifdef I2CDEV_SERIAL_DEBUG
-            Serial.println("I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_FASTWIRE");
-        #endif
         Fastwire::setup(400, true);
         return true;
     #elif I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_NBWIRE
-        #ifdef I2CDEV_SERIAL_DEBUG
-            Serial.println("I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_NBWIRE");
-        #endif
         twi_init();
         return true;
     #elif I2CDEV_IMPLEMENTATION == I2CDEV_SOFTI2CMASTER_LIBRARY
-        #ifdef I2CDEV_SERIAL_DEBUG
-            Serial.println("I2CDEV_IMPLEMENTATION == I2CDEV_SOFTI2CMASTER_LIBRARY");
-        #endif
         return i2c_init();
     #else
-        #ifdef I2CDEV_SERIAL_DEBUG
-            Serial.print("Unrecognised I2CDEV_IMPLEMENTATION == ");
-            Serial.println(I2CDEV_IMPLEMENTATION);
-        #endif 
         return false;
     #endif
 }
 
-/** Implementation agnostic setClock method. Will call Wire.setClock() if arduino wire library is selected.
+/** Implementation independent setClock method. Will call Wire.setClock() if arduino wire library is selected.
  * This is an Arduino convenience method, not part of the 'proper' I2Cdev API.
  */
 void I2Cdev::setClock(uint32_t speed) {
@@ -1597,8 +1584,29 @@ void I2Cdev::setClock(uint32_t speed) {
         #warning "I2CDEV_SOFTI2CMASTER_LIBRARY can't set the clock speed on the fly. It needs a re-compilation with new #defines set."
     #else
         #ifdef I2CDEV_SERIAL_DEBUG
-            Serial.print("Unrecognised I2CDEV_IMPLEMENTATION == ");
+            Serial.print(F("Unrecognised I2CDEV_IMPLEMENTATION == "));
             Serial.println(I2CDEV_IMPLEMENTATION);
         #endif 
     #endif  
+}
+
+void I2Cdev::showImplementationInfo() {
+    #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE or \
+        I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_FASTWIRE or \
+        I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_NBWIRE or \
+        I2CDEV_IMPLEMENTATION == I2CDEV_SOFTI2CMASTER_LIBRARY
+      Serial.print(F("I2CDEV_IMPLEMENTATION == I2CDEV_"));
+      #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
+          Serial.println(F("ARDUINO_WIRE"));
+      #elif I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_FASTWIRE
+        Serial.println(F("BUILTIN_FASTWIRE"));
+      #elif I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_NBWIRE
+          Serial.println(F("BUILTIN_NBWIRE"));
+      #elif I2CDEV_IMPLEMENTATION == I2CDEV_SOFTI2CMASTER_LIBRARY
+          Serial.println(F("SOFTI2CMASTER_LIBRARY"));
+      #endif
+    #else
+        Serial.print(F("Unrecognised I2CDEV_IMPLEMENTATION == "));
+        Serial.println(I2CDEV_IMPLEMENTATION);
+    #endif
 }

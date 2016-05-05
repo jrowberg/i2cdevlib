@@ -153,6 +153,7 @@ class I2Cdev {
 
         static bool begin();
         static void setClock(uint32_t);
+        static void showImplementationInfo();
 
         static int8_t readBit(uint8_t devAddr, uint8_t regAddr, uint8_t bitNum, uint8_t *data, uint16_t timeout=I2Cdev::readTimeout);
         static int8_t readBitW(uint8_t devAddr, uint8_t regAddr, uint8_t bitNum, uint16_t *data, uint16_t timeout=I2Cdev::readTimeout);
