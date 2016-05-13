@@ -2984,6 +2984,7 @@ bool MPU9150::writeMemoryBlock(const uint8_t *data, uint16_t dataSize, uint8_t b
     uint8_t j;
     if (verify) verifyBuffer = (uint8_t *)malloc(MPU9150_DMP_MEMORY_CHUNK_SIZE);
     if (useProgMem) progBuffer = (uint8_t *)malloc(MPU9150_DMP_MEMORY_CHUNK_SIZE);
+    else progBuffer = NULL;
     for (i = 0; i < dataSize;) {
         // determine correct chunk size according to bank position and data size
         chunkSize = MPU9150_DMP_MEMORY_CHUNK_SIZE;
