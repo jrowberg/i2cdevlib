@@ -3059,6 +3059,8 @@ bool MPU9150::writeDMPConfigurationSet(const uint8_t *data, uint16_t dataSize, b
     uint16_t i, j;
     if (useProgMem) {
         progBuffer = (uint8_t *)malloc(8); // assume 8-byte blocks, realloc later if necessary
+    } else {
+        progBuffer = NULL;
     }
 
     // config set data is a long string of blocks with the following structure:
