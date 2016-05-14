@@ -262,6 +262,10 @@ const unsigned char dmpMemory[MPU6050_DMP_CODE_SIZE] PROGMEM = {
     0xDC, 0xB9, 0xA7, 0xF1, 0x26, 0x26, 0x26, 0xD8, 0xD8, 0xFF
 };
 
+#ifndef MPU6050_DMP_FIFO_RATE_DIVISOR 
+#define MPU6050_DMP_FIFO_RATE_DIVISOR 0x03
+#endif
+
 const unsigned char dmpConfig[MPU6050_DMP_CONFIG_SIZE] PROGMEM = {
 //  BANK    OFFSET  LENGTH  [DATA]
     0x02,   0xEC,   0x04,   0x00, 0x47, 0x7D, 0x1A,   // ?
@@ -302,9 +306,9 @@ const unsigned char dmpConfig[MPU6050_DMP_CONFIG_SIZE] PROGMEM = {
     0x07,   0x67,   0x01,   0x9A,                     // ?
     0x07,   0x68,   0x04,   0xF1, 0x28, 0x30, 0x38,   // CFG_12 inv_send_accel -> inv_construct3_fifo
     0x07,   0x8D,   0x04,   0xF1, 0x28, 0x30, 0x38,   // ??? CFG_12 inv_send_mag -> inv_construct3_fifo
-    0x02,   0x16,   0x02,   0x00, 0x03                // D_0_22 inv_set_fifo_rate
+    0x02,   0x16,   0x02,   0x00, MPU6050_DMP_FIFO_RATE_DIVISOR // D_0_22 inv_set_fifo_rate
 
-    // This very last 0x01 WAS a 0x09, which drops the FIFO rate down to 20 Hz. 0x07 is 25 Hz,
+    // This very last 0x03 WAS a 0x09, which drops the FIFO rate down to 20 Hz. 0x07 is 25 Hz,
     // 0x01 is 100Hz. Going faster than 100Hz (0x00=200Hz) tends to result in very noisy data.
     // DMP output frequency is calculated easily using this equation: (200Hz / (1 + value))
 
