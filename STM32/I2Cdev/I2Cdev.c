@@ -319,18 +319,9 @@ uint16_t I2Cdev_writeWord(uint8_t devAddr, uint8_t regAddr, uint16_t data)
  * @param data Buffer to copy new data from
  * @return Status of operation (true = success)
  */
-uint16_t I2Cdev_writeBytes(uint8_t devAddr, uint8_t regAddr, uint8_t Size, uint8_t* pData)
+uint16_t I2Cdev_writeBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8_t* pData)
 {
-    // Creating dynamic array to store regAddr + data in one buffer
-    uint8_t * dynBuffer;
-    dynBuffer = (uint8_t *) malloc(sizeof(uint8_t) * (Size+1));
-    dynBuffer[0] = regAddr;
-
-    // copy array
-    memcpy(dynBuffer+1, pData, sizeof(uint8_t) * Size);
-
-    HAL_StatusTypeDef status = HAL_I2C_Master_Transmit(I2Cdev_hi2c, devAddr << 1, dynBuffer, Size+1, 1000);
-    free(dynBuffer);
+    HAL_StatusTypeDef status = HAL_I2C_Mem_Write(I2Cdev_hi2c, devAddr << 1, regAddr, I2C_MEMADD_SIZE_8BIT, pData, length, 1000);
     return status == HAL_OK;
 }
 
@@ -341,16 +332,8 @@ uint16_t I2Cdev_writeBytes(uint8_t devAddr, uint8_t regAddr, uint8_t Size, uint8
  * @param data Buffer to copy new data from
  * @return Status of operation (true = success)
  */
-uint16_t I2Cdev_writeWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint16_t* data)
+uint16_t I2Cdev_writeWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint16_t* pData)
 {
-    // Creating dynamic array to store regAddr + data in one buffer
-    uint8_t * dynBuffer;
-    dynBuffer = (uint8_t *) malloc(sizeof(uint8_t) + sizeof(uint16_t) * length);
-    dynBuffer[0] = regAddr;
-
-    // copy array
-    memcpy(dynBuffer+1, data, sizeof(uint16_t) * length);
-    HAL_StatusTypeDef status = HAL_I2C_Master_Transmit(I2Cdev_hi2c, devAddr << 1, dynBuffer, sizeof(uint8_t) + sizeof(uint16_t) * length, 1000);
-    free(dynBuffer);
+    HAL_StatusTypeDef status = HAL_I2C_Mem_Write(I2Cdev_hi2c, devAddr << 1, regAddr, I2C_MEMADD_SIZE_8BIT, (uint8_t *)pData, sizeof(uint16_t) * length, 1000);
     return status == HAL_OK;
 }
