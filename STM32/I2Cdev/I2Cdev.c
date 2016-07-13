@@ -32,10 +32,20 @@ THE SOFTWARE.
 
 #include "I2Cdev.h"
 
+// Hold pointer to inited HAL I2C device
+static I2C_HandleTypeDef * I2Cdev_hi2c;
+
 /** Default timeout value for read operations.
  * Set this to 0 to disable timeout detection.
  */
 uint16_t I2Cdev_readTimeout = I2CDEV_DEFAULT_READ_TIMEOUT;
+
+/** Sets device handle to use for communications
+ * You can call this function and set any other device at any moment
+ */
+void I2Cdev_init(I2C_HandleTypeDef * hi2c){
+	I2Cdev_hi2c = hi2c;
+}
 
 /** Read a single bit from an 8-bit device register.
  * @param devAddr I2C slave device address
