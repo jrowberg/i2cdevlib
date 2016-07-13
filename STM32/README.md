@@ -60,7 +60,7 @@ int main(void)
 
     HAL_I2C_Init(&hi2c3);
 
-    I2Cdev_hi2c = &hi2c3; // init of i2cdevlib.  
+    I2Cdev_init(&hi2c3); // init of i2cdevlib.  
     // You can select other i2c device anytime and 
     // call the same driver functions on other sensors
 
