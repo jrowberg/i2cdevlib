@@ -91,12 +91,20 @@ THE SOFTWARE.
 // after moving string constants to flash memory storage using the F()
 // compiler macro (Arduino IDE 1.0+ required).
 
-//#define DEBUG
+#define DEBUG//TODO:remove
 #ifdef DEBUG
+	#ifdef __AVR__
     #define DEBUG_PRINT(x) Serial.print(x)
     #define DEBUG_PRINTF(x, y) Serial.print(x, y)
     #define DEBUG_PRINTLN(x) Serial.println(x)
     #define DEBUG_PRINTLNF(x, y) Serial.println(x, y)
+	#else
+    #define DEBUG_PRINT(x) cout << (x)
+    #define DEBUG_PRINTF(x, y) printf(x, y)
+    #define DEBUG_PRINTLN(x) cout << (x) << endl
+    #define DEBUG_PRINTLNF(x, y) printf(x, y); printf("\n")
+	#define DEBUG_PRINTLNHEX(x) cout << HEX(x) << endl
+	#endif
 #else
     #define DEBUG_PRINT(x)
     #define DEBUG_PRINTF(x, y)
@@ -345,10 +353,10 @@ uint8_t MPU9150::dmpInitialize() {
     setSleepEnabled(false);
 
     // get MPU product ID
-    DEBUG_PRINTLN(F("Getting product ID..."));
+    //DEBUG_PRINTLN(F("Getting product ID..."));
     //uint8_t productID = 0; //getProductID();
-    DEBUG_PRINT(F("Product ID = "));
-    DEBUG_PRINT(productID);
+    //DEBUG_PRINT(F("Product ID = "));
+    //DEBUG_PRINT(productID);
 
     // get MPU hardware revision
     DEBUG_PRINTLN(F("Selecting user bank 16..."));
@@ -358,7 +366,7 @@ uint8_t MPU9150::dmpInitialize() {
     DEBUG_PRINTLN(F("Checking hardware revision..."));
     uint8_t hwRevision = readMemoryByte();
     DEBUG_PRINT(F("Revision @ user[16][6] = "));
-    DEBUG_PRINTLNF(hwRevision, HEX);
+    DEBUG_PRINTLNHEX(hwRevision);
     DEBUG_PRINTLN(F("Resetting memory bank selection to 0..."));
     setMemoryBank(0, false, false);
 
@@ -577,7 +585,7 @@ uint8_t MPU9150::dmpInitialize() {
             #ifdef DEBUG
                 DEBUG_PRINT(F("Read bytes: "));
                 for (j = 0; j < 4; j++) {
-                    DEBUG_PRINTF(dmpUpdate[3 + j], HEX);
+                	DEBUG_PRINTLNHEX(dmpUpdate[3 + j]);
                     DEBUG_PRINT(" ");
                 }
                 DEBUG_PRINTLN("");
@@ -813,7 +821,6 @@ uint8_t MPU9150::dmpGetYawPitchRoll(float *data, Quaternion *q, VectorFloat *gra
 uint8_t MPU9150::dmpProcessFIFOPacket(const unsigned char *dmpData) {
     /*for (uint8_t k = 0; k < dmpPacketSize; k++) {
         if (dmpData[k] < 0x10) Serial.print("0");
-        Serial.print(dmpData[k], HEX);
         Serial.print(" ");
     }
     Serial.print("\n");*/

@@ -39,20 +39,26 @@ using namespace std;
 #include <math.h>
 #include <signal.h>
 #include <iostream>
+#include <iomanip>
 
 #include "I2Cdev.h"
 
-//Magnetometer Registers
+#define HEX( x ) setw(2) << setfill('0') << hex << (int)( x )
+
+// Magnetometer Registers
+// Pass-Through mode is also used to access the AK8963 magnetometer directly from the host.
+// In this configuration the slave address for the AK8963 is 0x0C or 12 decimal.
 #define AK8963_ADDRESS   0x0C
 #define WHO_AM_I_AK8963  0x00 // should return 0x48
+#define WHO_AM_I_AK8963_RESPONSE  0x48
 #define INFO             0x01
 #define AK8963_ST1       0x02  // data ready status bit 0
-#define AK8963_XOUT_L     0x03  // data
-#define AK8963_XOUT_H     0x04
-#define AK8963_YOUT_L     0x05
-#define AK8963_YOUT_H     0x06
-#define AK8963_ZOUT_L     0x07
-#define AK8963_ZOUT_H     0x08
+#define AK8963_XOUT_L    0x03  // data
+#define AK8963_XOUT_H    0x04
+#define AK8963_YOUT_L    0x05
+#define AK8963_YOUT_H    0x06
+#define AK8963_ZOUT_L    0x07
+#define AK8963_ZOUT_H    0x08
 #define AK8963_ST2       0x09  // Data overflow bit 3 and data read error status bit 2
 #define AK8963_CNTL      0x0A  // Power down (0000), single-measurement (0001), self-test (1000) and Fuse ROM (1111) modes on bits 3:0
 #define AK8963_ASTC      0x0C  // Self test control
@@ -80,6 +86,8 @@ using namespace std;
 #define SELF_TEST_Z_ACCEL 0x0F
 
 #define SELF_TEST_A      0x10
+
+#define MPU9250_DEBUG_REFRESH_RATE 100
 
 #define XG_OFFSET_H      0x13  // User-defined trim values for gyroscope
 #define XG_OFFSET_L      0x14
@@ -119,9 +127,9 @@ using namespace std;
 #define I2C_SLV4_CTRL    0x34
 #define I2C_SLV4_DI      0x35
 #define I2C_MST_STATUS   0x36
-#define INT_PIN_CFG      0x37
-#define INT_ENABLE       0x38
-#define DMP_INT_STATUS   0x39  // Check DMP interrupt
+#define INT_PIN_CFG      0x37 // 55
+#define INT_ENABLE       0x38 // 56
+#define DMP_INT_STATUS   0x39 // 57 Check DMP interrupt
 #define INT_STATUS       0x3A
 #define ACCEL_XOUT_H     0x3B
 #define ACCEL_XOUT_L     0x3C
@@ -181,6 +189,7 @@ using namespace std;
 #define FIFO_COUNTL      0x73
 #define FIFO_R_W         0x74
 #define WHO_AM_I_MPU9250 0x75 // Should return 0x71
+#define WHO_AM_I_MPU9250_RESPONSE 0x71
 #define XA_OFFSET_H      0x77
 #define XA_OFFSET_L      0x78
 #define YA_OFFSET_H      0x7A
@@ -246,7 +255,7 @@ class MPU9250 {
         float gyroBias[3] = {0, 0, 0}, accelBias[3] = {0, 0, 0};      // Bias corrections for gyro and accelerometer
         int16_t tempCount;      // temperature raw count output
         float   temperature;    // Stores the real internal chip temperature in degrees Celsius
-        float   SelfTest[6];    // holds results of gyro and accelerometer self test
+        float   self_test[6];    // holds results of gyro and accelerometer self test
 
         // global constants for 9 DoF fusion and AHRS (Attitude and Heading Reference System)
         float GyroMeasError = PI * (40.0f / 180.0f);   // gyroscope measurement error in rads/s (start at 40 deg/s)
@@ -285,9 +294,17 @@ class MPU9250 {
 
         void initAK8963(float * destination);
 
-        void MPU9250SelfTest(float * destination);
+        uint8_t whoAmI_MPU9250();
 
-//        bool testConnection();
+        uint8_t whoAmI_AK8963();
+
+        void selfTest(float * destination);
+
+        //bool testConnection();
+
+        bool testConnectionMPU9250();
+
+        bool testConnectionAK8963();
         
         void update();
 
