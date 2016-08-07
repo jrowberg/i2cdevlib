@@ -69,14 +69,14 @@ int16_t ax, ay, az;
 //Json::FastWriter fw;
 //Json::Value root;
 
-void timmer_handler(ADXL345 accel);
+void timmer_handler();
 
-void timer_handler(ADXL345 accel){
-    gettimeofday(&end_t, NULL);
-  accel.initialize();
-  accel.getAcceleration(&ax, &ay, &az);
+void timer_handler(){
+gettimeofday(&end_t, NULL);	
+ADXL345 a;
+  a.getAcceleration(&ax, &ay, &az);
 //   fflush(stdout);
-  printf("readings: %d, %d, %d\n", ax, ay, az);
+//  printf("readings: %d, %d, %d\n", ax, ay, az);
 
   diff = (end_t.tv_sec - start_t.tv_sec) * (uint64_t)1000000 +
            (end_t.tv_usec - start_t.tv_usec);
@@ -89,7 +89,7 @@ void timer_handler(ADXL345 accel){
 //     root["msg_index"] = msg_index;
    // cout << fw.write(root);
 //     printf("%d,%lld,%d,%d,%d\n", msg_index, diff, ax, ay, az);
-//     bufferp += sprintf (bufferp, "%d,%lld,%d,%d,%d\n",msg_index, diff, ax, ay, az);
+     bufferp += sprintf (bufferp, "%d,%lld,%d,%d,%d\n",msg_index, diff, ax, ay, az);
 //     outputFile << msg_index << "," << diff << "," << ax << "," << ay << "," << az
 //              << endl;
 //    string json = fw.write(root);
@@ -98,7 +98,7 @@ void timer_handler(ADXL345 accel){
    // comm->send_message(j);
     // pthread_mutex_lock(&qlock);
     msg_index++;
-  printf("diff: %lld\n", diff);
+ // printf("diff: %lld\n", diff);
 }
 
 
@@ -138,7 +138,7 @@ int main(int argc, char **argv) {
     gettimeofday(&start_t, NULL);
     struct itimerval value;
     value.it_value.tv_sec=0;                
-    value.it_value.tv_usec=500;
+    value.it_value.tv_usec=300;
     value.it_interval= value.it_value;
     signal(SIGALRM, (void (*)(int))timer_handler);
     setitimer(ITIMER_REAL, &value, NULL);  
