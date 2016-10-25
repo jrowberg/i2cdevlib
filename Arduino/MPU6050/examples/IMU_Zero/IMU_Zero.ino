@@ -6,6 +6,9 @@
 // Updates should (hopefully) always be available at https://github.com/jrowberg/i2cdevlib
 //
 // Changelog:
+//      2016-10-25 - requires inequality (Low < Target, High > Target) during expansion
+//                   dynamic speed change when closing in
+//      2016-10-22 - cosmetic changes
 //      2016-10-19 - initial release
 //      2013-05-08 - added multiple output formats
 //                 - added seamless Fastwire support
@@ -33,12 +36,25 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
-Put the MPU6050 in a flat and horizontal surface.
-  - Leave it operating for 5-10 minutes so temperature gets stabilized.
-  - Run this program.  A "----- done -----" line will indicate that it has done its best.
-  - For each of the 6 offsets, you'll see 2 adjacent values to choose between, together
-       with their respective IMU outputs.  One of the choices may be a little better than
-       the other.
+  If an MPU6050 is an ideal member of its tribe, is properly warmed up, is at
+rest in a neutral position, and has been loaded with the best possible offsets, it
+will report 0 for all accelerations and displacements, except for Z acceleration, 
+for which it will report 16384 (that is, 2^14).  Your device probably won't do 
+quite this well, but good offsets will all get the baseline outputs close to 
+these target values.
+
+  Put the MPU6050 in a flat and horizontal surface, and leave it operating for 
+5-10 minutes so its temperature gets stabilized.
+
+  Run this program.  A "----- done -----" line will indicate that it has done its best.
+
+  The line just above that will look something like
+    [567,567] --> [-1,2]  [-2223,-2223] --> [0,1] [1131,1132] --> [16374,16404] [155,156] --> [-1,1]  [-25,-24] --> [0,3] [5,6] --> [0,4]
+As will have been shown in interspersed header lines, the six groups making up this
+line describe the optimum offsets for the X acceleration, Y acceleration, Z acceleration,
+X gyro, Y gyro, and Z gyro, respectively.  In the sample shown just above, the trial showed
+that +567 was the best offset for the X acceleration, -2223 was best for Y acceleration, 
+and so on.
 ===============================================
 */
 
@@ -72,7 +88,8 @@ const int iGx = 3;
 const int iGy = 4;
 const int iGz = 5;
 
-const int N = 1000;                // the bigger, the smoother (and slower)
+const int NFast =  1000;    // the bigger, the better (but slower)
+const int NSlow = 10000;    // ..
 const int LinesBetweenHeaders = 5;
       int LowValue[6];
       int HighValue[6];
@@ -81,6 +98,7 @@ const int LinesBetweenHeaders = 5;
       int HighOffset[6];
       int Target[6];
       int LinesOut;
+      int N;
       
 void ForceHeader()
   { LinesOut = 99; }
@@ -93,8 +111,8 @@ void GetSmoothed()
 
     for (int i = 1; i <= N; i++)
       { // get sums
-        accelgyro.getMotion6(&RawValue[0], &RawValue[1], &RawValue[2], 
-                             &RawValue[3], &RawValue[4], &RawValue[5]);
+        accelgyro.getMotion6(&RawValue[iAx], &RawValue[iAy], &RawValue[iAz], 
+                             &RawValue[iGx], &RawValue[iGy], &RawValue[iGz]);
         for (int j = iAx; j <= iGz; j++)
           Sums[j] = Sums[j] + RawValue[j];
       } // get sums
@@ -151,7 +169,7 @@ void ShowProgress()
         else
           { Serial.print("]\t"); }
       }
-    ForceHeader();
+    LinesOut++;
   } // ShowProgress
 
 void PullBracketsOut()
@@ -172,7 +190,7 @@ void PullBracketsOut()
         for (int i = iAx; i <= iGz; i++)
           { // got low values
             LowValue[i] = Smoothed[i];
-            if (LowValue[i] > Target[i])
+            if (LowValue[i] >= Target[i])
               { Done = false;
                 NextLowOffset[i] = LowOffset[i] - 1000;
               }
@@ -193,7 +211,7 @@ void PullBracketsOut()
         for (int i = iAx; i <= iGz; i++)
           { // got high values
             HighValue[i] = Smoothed[i];
-            if (HighValue[i] < Target[i])
+            if (HighValue[i] <= Target[i])
               { Done = false;
                 NextHighOffset[i] = HighOffset[i] + 1000;
               }
@@ -207,9 +225,17 @@ void PullBracketsOut()
      } // keep going
   } // PullBracketOut
 
+void SetAveraging(int NewN)
+  { N = NewN;
+    Serial.print("averaging ");
+    Serial.print(N);
+    Serial.println(" readings each time");
+   } // SetAveraging
+
 void setup()
   { boolean StillWorking;
     int NewOffset[6];
+    boolean AllBracketsNarrow;
 
     Initialize();
     for (int i = iAx; i <= iGz; i++)
@@ -219,23 +245,31 @@ void setup()
         LowOffset[i] = 0;
       } // set targets and initial guesses
     Target[iAz] = 16384;
+    SetAveraging(NFast);
     
     Serial.println("expanding:");
     ForceHeader();
     PullBracketsOut();
     
     Serial.println("\nclosing in:");
+    AllBracketsNarrow = false;
     ForceHeader();
     StillWorking = true;
     while (StillWorking) 
       { StillWorking = false;
+        if (AllBracketsNarrow && (N == NFast))
+          { SetAveraging(NSlow); }
+        else
+          { AllBracketsNarrow = true; }// tentative
         for (int i = iAx; i <= iGz; i++)
           { if (HighOffset[i] <= (LowOffset[i]+1))
               { NewOffset[i] = LowOffset[i]; }
             else
               { // binary search
                 StillWorking = true;
-                NewOffset[i] = (LowOffset[i] + HighOffset[i]) /2;
+                NewOffset[i] = (LowOffset[i] + HighOffset[i]) / 2;
+                if (HighOffset[i] > (LowOffset[i] + 10))
+                  { AllBracketsNarrow = false; }
               } // binary search
           }
         SetOffsets(NewOffset);
