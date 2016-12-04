@@ -412,7 +412,7 @@ uint8_t MPU6050::dmpInitialize() {
             DEBUG_PRINTLN(F("Setting DMP programm start address"));
             //write start address MSB into register
             setDMPConfig1(0x03);
-            //write start adress LSB into register
+            //write start address LSB into register
             setDMPConfig2(0x00);
 
             DEBUG_PRINTLN(F("Clearing OTP Bank flag..."));
