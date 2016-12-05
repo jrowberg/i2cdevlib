@@ -6,13 +6,15 @@
 // Updates should (hopefully) always be available at https://github.com/jrowberg/i2cdevlib
 //
 // Changelog:
+//      2016-11-25 - added delays to reduce sampling rate to ~200 Hz
+//                   added temporizing printing during long computations
 //      2016-10-25 - requires inequality (Low < Target, High > Target) during expansion
 //                   dynamic speed change when closing in
 //      2016-10-22 - cosmetic changes
-//      2016-10-19 - initial release
+//      2016-10-19 - initial release of IMU_Zero
 //      2013-05-08 - added multiple output formats
 //                 - added seamless Fastwire support
-//      2011-10-07 - initial release
+//      2011-10-07 - initial release of MPU6050_RAW
 
 /* ============================================
 I2Cdev device library code is placed under the MIT license
@@ -36,25 +38,38 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
-  If an MPU6050 is an ideal member of its tribe, is properly warmed up, is at
-rest in a neutral position, and has been loaded with the best possible offsets, it
-will report 0 for all accelerations and displacements, except for Z acceleration, 
-for which it will report 16384 (that is, 2^14).  Your device probably won't do 
-quite this well, but good offsets will all get the baseline outputs close to 
-these target values.
+  If an MPU6050 
+      * is an ideal member of its tribe, 
+      * is properly warmed up, 
+      * is at rest in a neutral position, 
+      * is in a location where the pull of gravity is exactly 1g, and 
+      * has been loaded with the best possible offsets, 
+then it will report 0 for all accelerations and displacements, except for 
+Z acceleration, for which it will report 16384 (that is, 2^14).  Your device 
+probably won't do quite this well, but good offsets will all get the baseline 
+outputs close to these target values.
 
   Put the MPU6050 in a flat and horizontal surface, and leave it operating for 
 5-10 minutes so its temperature gets stabilized.
 
   Run this program.  A "----- done -----" line will indicate that it has done its best.
+With the current accuracy-related constants (NFast = 1000, NSlow = 10000), it will take 
+a few minutes to get there.
 
-  The line just above that will look something like
+  Along the way, it will generate a dozen or so lines of output, showing that for each 
+of the 6 desired offsets, it is 
+      * first, trying to find two estimates, one too low and one too high, and
+      * then, closing in until the bracket can't be made smaller.
+
+  The line just above the "done" line will look something like
     [567,567] --> [-1,2]  [-2223,-2223] --> [0,1] [1131,1132] --> [16374,16404] [155,156] --> [-1,1]  [-25,-24] --> [0,3] [5,6] --> [0,4]
 As will have been shown in interspersed header lines, the six groups making up this
 line describe the optimum offsets for the X acceleration, Y acceleration, Z acceleration,
 X gyro, Y gyro, and Z gyro, respectively.  In the sample shown just above, the trial showed
 that +567 was the best offset for the X acceleration, -2223 was best for Y acceleration, 
 and so on.
+
+  The need for the delay between readings (usDelay) was brought to my attention by Nikolaus Doppelhammer.
 ===============================================
 */
 
@@ -80,6 +95,8 @@ MPU6050 accelgyro;
 const char LBRACKET = '[';
 const char RBRACKET = ']';
 const char COMMA    = ',';
+const char BLANK    = ' ';
+const char PERIOD   = '.';
 
 const int iAx = 0;
 const int iAy = 1;
@@ -88,6 +105,7 @@ const int iGx = 3;
 const int iGy = 4;
 const int iGz = 5;
 
+const int usDelay = 3150;   // empirical, to hold sampling to 200 Hz
 const int NFast =  1000;    // the bigger, the better (but slower)
 const int NSlow = 10000;    // ..
 const int LinesBetweenHeaders = 5;
@@ -105,18 +123,27 @@ void ForceHeader()
     
 void GetSmoothed()
   { int RawValue[6];
+    int i;
     long Sums[6];
-    for (int i = iAx; i <= iGz; i++)
+    for (i = iAx; i <= iGz; i++)
       { Sums[i] = 0; }
+//    unsigned long Start = micros();
 
-    for (int i = 1; i <= N; i++)
+    for (i = 1; i <= N; i++)
       { // get sums
         accelgyro.getMotion6(&RawValue[iAx], &RawValue[iAy], &RawValue[iAz], 
                              &RawValue[iGx], &RawValue[iGy], &RawValue[iGz]);
+        if ((i % 500) == 0)
+          Serial.print(PERIOD);
+        delayMicroseconds(usDelay);
         for (int j = iAx; j <= iGz; j++)
           Sums[j] = Sums[j] + RawValue[j];
       } // get sums
-    for (int i = iAx; i <= iGz; i++)
+//    unsigned long usForN = micros() - Start;
+//    Serial.print(" reading at ");
+//    Serial.print(1000000/((usForN+N/2)/N));
+//    Serial.println(" Hz");
+    for (i = iAx; i <= iGz; i++)
       { Smoothed[i] = (Sums[i] + N/2) / N ; }
   } // GetSmoothed
 
@@ -155,6 +182,7 @@ void ShowProgress()
         Serial.println("\tXAccel\t\t\tYAccel\t\t\t\tZAccel\t\t\tXGyro\t\t\tYGyro\t\t\tZGyro");
         LinesOut = 0;
       } // show header
+    Serial.print(BLANK);
     for (int i = iAx; i <= iGz; i++)
       { Serial.print(LBRACKET);
         Serial.print(LowOffset[i]),
@@ -172,85 +200,11 @@ void ShowProgress()
     LinesOut++;
   } // ShowProgress
 
-void PullBracketsOut()
-  { boolean Done = false;
-    int NextLowOffset[6];
-    int NextHighOffset[6];
-
-    SetOffsets(HighOffset);
-    GetSmoothed();
-    for (int i = iAx; i <= iGz; i++)
-      { HighValue[i] = Smoothed[i]; // needed for ShowProgress
-      } 
-    
-    while (!Done)
-      { Done = true;
-        SetOffsets(LowOffset);
-        GetSmoothed();
-        for (int i = iAx; i <= iGz; i++)
-          { // got low values
-            LowValue[i] = Smoothed[i];
-            if (LowValue[i] >= Target[i])
-              { Done = false;
-                NextLowOffset[i] = LowOffset[i] - 1000;
-              }
-            else
-              { NextLowOffset[i] = LowOffset[i]; }
-          } // got low values
-        ShowProgress();
-        for (int i = iAx; i <= iGz; i++)
-          { LowOffset[i] = NextLowOffset[i]; // had to wait until ShowProgress done
-          } 
-      } // keep going
-      
-    Done = false;
-    while (!Done)
-      { Done = true;
-        SetOffsets(HighOffset);
-        GetSmoothed();
-        for (int i = iAx; i <= iGz; i++)
-          { // got high values
-            HighValue[i] = Smoothed[i];
-            if (HighValue[i] <= Target[i])
-              { Done = false;
-                NextHighOffset[i] = HighOffset[i] + 1000;
-              }
-            else
-              { NextHighOffset[i] = HighOffset[i]; }
-          } // got high values
-        ShowProgress();
-        for (int i = iAx; i <= iGz; i++)
-          { HighOffset[i] = NextHighOffset[i]; // had to wait until ShowProgress done
-          }
-     } // keep going
-  } // PullBracketOut
-
-void SetAveraging(int NewN)
-  { N = NewN;
-    Serial.print("averaging ");
-    Serial.print(N);
-    Serial.println(" readings each time");
-   } // SetAveraging
-
-void setup()
-  { boolean StillWorking;
+void PullBracketsIn()
+  { boolean AllBracketsNarrow;
+    boolean StillWorking;
     int NewOffset[6];
-    boolean AllBracketsNarrow;
-
-    Initialize();
-    for (int i = iAx; i <= iGz; i++)
-      { // set targets and initial guesses
-        Target[i] = 0; // must fix for ZAccel 
-        HighOffset[i] = 0;
-        LowOffset[i] = 0;
-      } // set targets and initial guesses
-    Target[iAz] = 16384;
-    SetAveraging(NFast);
-    
-    Serial.println("expanding:");
-    ForceHeader();
-    PullBracketsOut();
-    
+  
     Serial.println("\nclosing in:");
     AllBracketsNarrow = false;
     ForceHeader();
@@ -289,6 +243,73 @@ void setup()
           } // closing in
         ShowProgress();
       } // still working
+   
+  } // PullBracketsIn
+
+void PullBracketsOut()
+  { boolean Done = false;
+    int NextLowOffset[6];
+    int NextHighOffset[6];
+
+    Serial.println("expanding:");
+    ForceHeader();
+ 
+    while (!Done)
+      { Done = true;
+        SetOffsets(LowOffset);
+        GetSmoothed();
+        for (int i = iAx; i <= iGz; i++)
+          { // got low values
+            LowValue[i] = Smoothed[i];
+            if (LowValue[i] >= Target[i])
+              { Done = false;
+                NextLowOffset[i] = LowOffset[i] - 1000;
+              }
+            else
+              { NextLowOffset[i] = LowOffset[i]; }
+          } // got low values
+      
+        SetOffsets(HighOffset);
+        GetSmoothed();
+        for (int i = iAx; i <= iGz; i++)
+          { // got high values
+            HighValue[i] = Smoothed[i];
+            if (HighValue[i] <= Target[i])
+              { Done = false;
+                NextHighOffset[i] = HighOffset[i] + 1000;
+              }
+            else
+              { NextHighOffset[i] = HighOffset[i]; }
+          } // got high values
+        ShowProgress();
+        for (int i = iAx; i <= iGz; i++)
+          { LowOffset[i] = NextLowOffset[i];   // had to wait until ShowProgress done
+            HighOffset[i] = NextHighOffset[i]; // ..
+          }
+     } // keep going
+  } // PullBracketsOut
+
+void SetAveraging(int NewN)
+  { N = NewN;
+    Serial.print("averaging ");
+    Serial.print(N);
+    Serial.println(" readings each time");
+   } // SetAveraging
+
+void setup()
+  { Initialize();
+    for (int i = iAx; i <= iGz; i++)
+      { // set targets and initial guesses
+        Target[i] = 0; // must fix for ZAccel 
+        HighOffset[i] = 0;
+        LowOffset[i] = 0;
+      } // set targets and initial guesses
+    Target[iAz] = 16384;
+    SetAveraging(NFast);
+    
+    PullBracketsOut();
+    PullBracketsIn();
+    
     Serial.println("-------------- done --------------");
   } // setup
  
