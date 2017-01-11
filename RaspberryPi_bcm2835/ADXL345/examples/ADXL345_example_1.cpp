@@ -64,8 +64,8 @@ int main(int argc, char **argv) {
     printf("  x_raw:  0x%04X       y_raw:  0x%04X      z_raw:  0x%04X\r", ax, ay, az);
     fflush(stdout);
     gettimeofday(&end, NULL);
-  	diff = (end.tv_sec - start.tv_sec)*1000 + (end.tv_usec - start.tv_usec) /1000;
-  	printf("The time difference is %f", diff);
+  	diff = (end.tv_sec - start.tv_sec)*1000000 + (end.tv_usec - start.tv_usec) ;
+  	printf("The time difference is %f ns", diff);
   }
   return 1; 
 }
