@@ -43,9 +43,9 @@ To compile on a Raspberry Pi (1 or 2)
 #include "ADXL345.h"
 #include <sys/time.h>
 #include <iostream>
-using namepace std;
+
 struct timeval start, end;
-long diff;
+float diff;
 int main(int argc, char **argv) {
   printf("ADXL345 3-axis acceleromter example program\n");
   I2Cdev::initialize();
@@ -65,8 +65,7 @@ int main(int argc, char **argv) {
     fflush(stdout);
     gettimeofday(&end, NULL);
   	diff = (end.tv_sec - start.tv_sec)*1000 + (end.tv_usec - start.tv_usec) /1000;
-  	cout << "the difference is " << diff << "ms" << endl;
-
+  	printf("The time difference is %f", diff);
   }
   return 1; 
 }
