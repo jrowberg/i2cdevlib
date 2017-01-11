@@ -43,7 +43,7 @@ To compile on a Raspberry Pi (1 or 2)
 #include "ADXL345.h"
 #include <sys/time.h>
 
-struct timeval start end;
+struct timeval start, end;
 
 int main(int argc, char **argv) {
   printf("ADXL345 3-axis acceleromter example program\n");
