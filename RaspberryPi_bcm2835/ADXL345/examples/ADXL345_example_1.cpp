@@ -42,9 +42,10 @@ To compile on a Raspberry Pi (1 or 2)
 #include "I2Cdev.h"
 #include "ADXL345.h"
 #include <sys/time.h>
-
+#include <iostream>
+using namepace std;
 struct timeval start, end;
-
+long diff;
 int main(int argc, char **argv) {
   printf("ADXL345 3-axis acceleromter example program\n");
   I2Cdev::initialize();
