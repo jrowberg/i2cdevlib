@@ -65,7 +65,7 @@ int main(int argc, char **argv) {
     fflush(stdout);
     gettimeofday(&end, NULL);
   	diff = (end.tv_sec - start.tv_sec)*1000000 + (end.tv_usec - start.tv_usec) ;
-  	printf("The time difference is %f ns", diff);
+  	printf("The time difference is %f ns\r", diff);
   }
   return 1; 
 }
