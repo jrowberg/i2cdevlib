@@ -1,0 +1,5 @@
+{
+  "broker_address" : "131.204.27.59",
+  "broker_port" : "1883",
+  "rPi_id" : "1"
+}

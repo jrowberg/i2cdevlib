@@ -43,14 +43,22 @@ ${PATH_I2CDEVLIB}/Arduino/ADXL345/ADXL345.cpp -l bcm2835 -l m
 */
 
 #include "ADXL345.h"
+#include "Communicator.h"
+#include "FileUtil.h"
 #include "I2Cdev.h"
 #include <bcm2835.h>
 #include <iostream>
+#include <json/json.h>
 #include <stdio.h>
 #include <sys/time.h>
 
 struct timeval start, end;
-float diff;
+int diff;
+int msg_index = 1;
+int rpi_id = '1';
+Json::FastWriter fw;
+Json::Value root;
+
 int main(int argc, char **argv) {
   printf("ADXL345 3-axis acceleromter example program\n");
   I2Cdev::initialize();
@@ -63,6 +71,7 @@ int main(int argc, char **argv) {
   }
   accel.initialize();
   int16_t ax, ay, az;
+  comm = new Communicator(rpi_id, host, port);
   while (true) {
     gettimeofday(&start, NULL);
     accel.getAcceleration(&ax, &ay, &az);
@@ -71,7 +80,26 @@ int main(int argc, char **argv) {
     gettimeofday(&end, NULL);
     diff =
         (end.tv_sec - start.tv_sec) * 1000000 + (end.tv_usec - start.tv_usec);
-    printf("The time difference is %f ns\n", diff);
+    printf("The time difference is %d ns\n", diff);
+    worker();
   }
   return 1;
+}
+
+void json() {
+  root["rPi_id"] = rpi_id;
+  root["x_axis"] = ax;
+  root["y_axis"] = ay;
+  root["z_aixs"] = az;
+  root["elapse_time"] = diff;
+  root["msg_index"] = msg_count;
+  cout << fw.write(root);
+  string json = fw.write(root);
+  const char *j = json.c_str();
+  //	publish to broker
+  comm->send_message(j);
+  // pthread_mutex_lock(&qlock);
+  msg_count++;
+  // pthread_mutex_unlock(&qlock);
+  return NULL;
 }
