@@ -19,7 +19,7 @@ using namespace std;
 #define FILEUTIL_H
 class FileUtil {
 public:
-  void load_configuration();
+  FileUtil();
   int getPort();
   string getHost();
   string getRpiID();
