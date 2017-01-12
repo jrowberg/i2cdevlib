@@ -86,9 +86,9 @@ int main(int argc, char **argv) {
            (end_t.tv_usec - start_t.tv_usec);
     printf("The time difference is %d ns\n", diff);
     root["rPi_id"] = rpi_id;
-    root["x_axis"] = ax;
-    root["y_axis"] = ay;
-    root["z_aixs"] = az;
+    root["x-axis"] = ax;
+    root["y-axis"] = ay;
+    root["z-aixs"] = az;
     root["elapsed_time"] = diff;
     root["msg_index"] = msg_index;
     cout << fw.write(root);
