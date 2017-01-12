@@ -3,7 +3,7 @@
 //
 #include "FileUtil.h"
 
-void FileUtil::load_configuration() {
+FileUtil::FileUtil() {
   Json::Value root;
   Json::Reader reader;
   ifstream jsonFile;
