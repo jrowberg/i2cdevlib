@@ -89,7 +89,7 @@ int main(int argc, char **argv) {
     root["x_axis"] = ax;
     root["y_axis"] = ay;
     root["z_aixs"] = az;
-    root["elapse_time"] = diff;
+    root["elapsed_time"] = diff;
     root["msg_index"] = msg_index;
     cout << fw.write(root);
     string json = fw.write(root);
