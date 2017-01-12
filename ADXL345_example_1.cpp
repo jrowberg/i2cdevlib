@@ -97,7 +97,7 @@ int main(int argc, char **argv) {
     //	publish to broker
     comm->send_message(j);
     // pthread_mutex_lock(&qlock);
-    msg_count++;
+    msg_index++;
   }
   return 1;
 }
