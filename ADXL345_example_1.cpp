@@ -55,7 +55,7 @@ ${PATH_I2CDEVLIB}/Arduino/ADXL345/ADXL345.cpp -l bcm2835 -l m
 struct timeval start, end;
 int diff;
 int msg_index = 1;
-int rpi_id = '1';
+class Communicator *comm = NULL;
 Json::FastWriter fw;
 Json::Value root;
 
@@ -71,6 +71,8 @@ int main(int argc, char **argv) {
   }
   accel.initialize();
   int16_t ax, ay, az;
+  const char *rpi_id = fileUtil.getRpiID().c_str();
+  const char *host = fileUtil.getHost().c_str();
   comm = new Communicator(rpi_id, host, port);
   while (true) {
     gettimeofday(&start, NULL);
