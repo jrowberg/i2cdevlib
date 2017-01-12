@@ -52,10 +52,12 @@ ${PATH_I2CDEVLIB}/Arduino/ADXL345/ADXL345.cpp -l bcm2835 -l m
 #include <stdio.h>
 #include <sys/time.h>
 
-struct timeval start, end;
+struct timeval start_t, end_t;
 int diff;
 int msg_index = 1;
+int port;
 class Communicator *comm = NULL;
+FileUtil fileUtil;
 Json::FastWriter fw;
 Json::Value root;
 
@@ -75,33 +77,27 @@ int main(int argc, char **argv) {
   const char *host = fileUtil.getHost().c_str();
   comm = new Communicator(rpi_id, host, port);
   while (true) {
-    gettimeofday(&start, NULL);
+    gettimeofday(&start_t, NULL);
     accel.getAcceleration(&ax, &ay, &az);
     printf("  x_raw:  %d       y_raw:  %d      z_raw:  %d\n", ax, ay, az);
     fflush(stdout);
-    gettimeofday(&end, NULL);
-    diff =
-        (end.tv_sec - start.tv_sec) * 1000000 + (end.tv_usec - start.tv_usec);
+    gettimeofday(&end_t, NULL);
+    diff = (end_t.tv_sec - start_t.tv_sec) * 1000000 +
+           (end_t.tv_usec - start_t.tv_usec);
     printf("The time difference is %d ns\n", diff);
-    worker();
+    root["rPi_id"] = rpi_id;
+    root["x_axis"] = ax;
+    root["y_axis"] = ay;
+    root["z_aixs"] = az;
+    root["elapse_time"] = diff;
+    root["msg_index"] = msg_index;
+    cout << fw.write(root);
+    string json = fw.write(root);
+    const char *j = json.c_str();
+    //	publish to broker
+    comm->send_message(j);
+    // pthread_mutex_lock(&qlock);
+    msg_count++;
   }
   return 1;
-}
-
-void json() {
-  root["rPi_id"] = rpi_id;
-  root["x_axis"] = ax;
-  root["y_axis"] = ay;
-  root["z_aixs"] = az;
-  root["elapse_time"] = diff;
-  root["msg_index"] = msg_count;
-  cout << fw.write(root);
-  string json = fw.write(root);
-  const char *j = json.c_str();
-  //	publish to broker
-  comm->send_message(j);
-  // pthread_mutex_lock(&qlock);
-  msg_count++;
-  // pthread_mutex_unlock(&qlock);
-  return NULL;
 }
