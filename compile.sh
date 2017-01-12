@@ -1,2 +1,2 @@
-g++ -o ADXL345_example_1 /home/pi/i2cdevlib/ADXL345_example_1.cpp \-I/home/pi/i2cdevlib/RaspberryPi_bcm2835/I2Cdev /home/pi/i2cdevlib/RaspberryPi_bcm2835/I2Cdev/I2Cdev.cpp \-I/home/pi/i2cdevlib/Arduino/ADXL345/ /home/pi/i2cdevlib/Arduino/ADXL345/ADXL345.cpp -l bcm2835 -l m
+g++ -o ADXL345_example_1 ADXL345_example_1.cpp Communicator.cpp FileUtil.cpp \-I/home/pi/i2cdevlib/RaspberryPi_bcm2835/I2Cdev /home/pi/i2cdevlib/RaspberryPi_bcm2835/I2Cdev/I2Cdev.cpp \-I/home/pi/i2cdevlib/Arduino/ADXL345/ /home/pi/i2cdevlib/Arduino/ADXL345/ADXL345.cpp  -I/home/pi/c_test/src/jsoncpp/dist/ -I/home/pi/c_test/src/mosquitto-1.4.5/lib  -I/home/pi/c_test/src/mosquitto-1.4.5/lib/cpp -std=c++11-l bcm2835 -l m -lmosquittopp -ljson
 
