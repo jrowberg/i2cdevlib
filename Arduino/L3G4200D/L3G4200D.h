@@ -114,8 +114,8 @@ THE SOFTWARE.
 #define L3G4200D_I2_ORUN_BIT       1
 #define L3G4200D_I2_EMPTY_BIT      0
 
-#define L3G4200D_PUSH_PULL         1
-#define L3G4200D_OPEN_DRAIN        0
+#define L3G4200D_PUSH_PULL         0
+#define L3G4200D_OPEN_DRAIN        1
 
 #define L3G4200D_BDU_BIT           7
 #define L3G4200D_BLE_BIT           6
@@ -136,8 +136,8 @@ THE SOFTWARE.
 #define L3G4200D_SELF_TEST_0       0b01
 #define L3G4200D_SELF_TEST_1       0b11
 
-#define L3G4200D_SPI_4_WIRE        1
-#define L3G4200D_SPI_3_WIRE        0
+#define L3G4200D_SPI_4_WIRE        0
+#define L3G4200D_SPI_3_WIRE        1
 
 #define L3G4200D_BOOT_BIT          7
 #define L3G4200D_FIFO_EN_BIT       6
