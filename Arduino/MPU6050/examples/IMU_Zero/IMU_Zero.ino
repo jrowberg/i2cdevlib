@@ -122,7 +122,7 @@ void ForceHeader()
   { LinesOut = 99; }
     
 void GetSmoothed()
-  { int RawValue[6];
+  { int16_t RawValue[6];
     int i;
     long Sums[6];
     for (i = iAx; i <= iGz; i++)
