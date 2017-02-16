@@ -37,7 +37,11 @@ THE SOFTWARE.
 #ifndef _MPU9150_H_
 #define _MPU9150_H_
 
+using namespace std;
+
 #include "I2Cdev.h"
+
+#define HEX( x ) setw(2) << setfill('0') << hex << (int)( x )
 
 // Tom Carpenter's conditional PROGMEM code
 // http://forum.arduino.cc/index.php?topic=129407.0

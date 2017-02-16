@@ -1,0 +1,5 @@
+Note, I could never quite get this to work.
+
+This code runs and displays values, but they appear to be complete garbage. Also, it's not using the onboard DMP.
+
+As-is, this code is unusable, and is only presented here as a reference for what NOT to do.
