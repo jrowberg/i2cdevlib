@@ -54,67 +54,68 @@ int8_t I2Cdev_readBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8_
     //int8_t count = 0;
     IFS0bits.MI2CIF = 0;
     IdleI2C();
-    /*S*/
+    /*master Start*/
     StartI2C();
     /* Clear interrupt flag */
 
     /* Wait till Start sequence is completed */
     while(I2CCONbits.SEN);
 
-    /*AD+W*/
+    /*master send AD+W*/
     /* Write Slave Address (Write)*/
     MasterWriteI2C(devAddr << 1 | 0x00);
 
     /* Wait until address is transmitted */
     while(I2CSTATbits.TBF);  // 8 clock cycles
 
-    /*Ack*/
+    /*Slave send Ack*/
     while(!IFS0bits.MI2CIF); // Wait for 9th clock cycle
     IFS0bits.MI2CIF = 0;     // Clear interrupt flag
     while(I2CSTATbits.ACKSTAT);
 
-    /*RA*/
+    /*Master send RA*/
     /* Write Register Address */
     MasterWriteI2C(regAddr);
 
     /* Wait until address is transmitted */
     while(I2CSTATbits.TBF);  // 8 clock cycles
 
-    /*ACK*/
+    /*Slave send ACK*/
     while(!IFS0bits.MI2CIF); // Wait for 9th clock cycle
     IFS0bits.MI2CIF = 0;     // Clear interrupt flag
     while(I2CSTATbits.ACKSTAT);
 
-    /*S*/
+    /*Master Start*/
     RestartI2C();
     /* Wait till Start sequence is completed */
     while(I2CCONbits.SEN);
 
-    /*AD+R*/
+    /*Master send AD+R*/
     /* Write Slave Address (Read)*/
     MasterWriteI2C(devAddr << 1 | 0x01);
     /* Wait until address is transmitted */
     while(I2CSTATbits.TBF);  // 8 clock cycles
 
-    /*Ack*/
+    /*Slave send Ack*/
     while(!IFS0bits.MI2CIF); // Wait for 9th clock cycle
     IFS0bits.MI2CIF = 0;     // Clear interrupt flag
     while(I2CSTATbits.ACKSTAT);
 
-    /*DATA*/
+    /*Slave send DATA*/
     uint16_t flag = MastergetsI2C(length,data,I2C_DATA_WAIT);
 
-    /*NACK*/
+    /*Slave send NACK*/
     NotAckI2C();
 
-    /*P*/
+    /*Master Pause*/
     StopI2C();
     /* Wait till stop sequence is completed */
     while(I2CCONbits.PEN);
     CloseI2C();
 
     if (flag)
-        return length;
+        return length-flag;/*flag mean number of bytes read from I2C bus if its not able to*/
+                           /*read the data within the specified i2c_data_wait time out value*/
     else
         return -1;
 }
@@ -138,31 +139,60 @@ int8_t I2Cdev_readByte(uint8_t devAddr, uint8_t regAddr, uint8_t *data) {
  */
 int8_t I2Cdev_readWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint16_t *data) {
     int8_t count = 0;
-
-    // S
+    IFS0bits.MI2CIF = 0;
     IdleI2C();
+    /*master Start*/
     StartI2C();
+    /* Clear interrupt flag */
 
-    // Device write address
-    IdleI2C();
-    WriteI2C(devAddr << 1 | 0x00);
+    /* Wait till Start sequence is completed */
+    while(I2CCONbits.SEN);
 
-    // Register address
-    IdleI2C();
-    WriteI2C(regAddr);
+    /*AD+W*/
+    /* Write Slave Address (Write)*/
+    MasterWriteI2C(devAddr << 1 | 0x00);
 
-    // R
-    IdleI2C();
+    /* Wait until address is transmitted */
+    while(I2CSTATbits.TBF);  // 8 clock cycles
+
+    /*Slave Ack*/
+    while(!IFS0bits.MI2CIF); // Wait for 9th clock cycle
+    IFS0bits.MI2CIF = 0;     // Clear interrupt flag
+    while(I2CSTATbits.ACKSTAT);
+
+    /*master send RA*/
+    /* Write Register Address */
+    MasterWriteI2C(regAddr);
+
+    /* Wait until address is transmitted */
+    while(I2CSTATbits.TBF);  // 8 clock cycles
+
+    /*Slave ACK*/
+    while(!IFS0bits.MI2CIF); // Wait for 9th clock cycle
+    IFS0bits.MI2CIF = 0;     // Clear interrupt flag
+    while(I2CSTATbits.ACKSTAT);
+
+    /*master Start*/
     RestartI2C();
+    /* Wait till Start sequence is completed */
+    while(I2CCONbits.SEN);
 
-    // Device read address
-    IdleI2C();
-    WriteI2C(devAddr << 1 | 0x01);
+    /*master send AD+R*/
+    /* Write Slave Address (Read)*/
+    MasterWriteI2C(devAddr << 1 | 0x01);
+    /* Wait until address is transmitted */
+    while(I2CSTATbits.TBF);  // 8 clock cycles
 
-    for (count = 0; count < length; count++) {
+    /*Slave Ack*/
+    while(!IFS0bits.MI2CIF); // Wait for 9th clock cycle
+    IFS0bits.MI2CIF = 0;     // Clear interrupt flag
+    while(I2CSTATbits.ACKSTAT);
+
+    /*Read Word Sequence*/
+    for ( count = 0 ; count < length ; count++ ) {
         // First byte is bits 15-8 (MSb=15)
         IdleI2C();
-        data[count] = ReadI2C() << 8;
+        uint8_t high_byte = MasterReadI2C();
 
         // NACK
         IdleI2C();
@@ -170,8 +200,8 @@ int8_t I2Cdev_readWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint16
 
         // Second byte is bits 7-0 (LSb=0)
         IdleI2C();
-        data[count] |= ReadI2C();
-
+        uint8_t lower_byte = MasterReadI2C();
+        data[count] = (high_byte << 8) | lower_byte;
         if (count == length - 1) {
             // NACK
             IdleI2C();
@@ -183,9 +213,14 @@ int8_t I2Cdev_readWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint16
         }
     }
 
-    // P
-    IdleI2C();
+    /*Slave send NACK*/
+    NotAckI2C();
+
+    /*master enter P*/
     StopI2C();
+    /* Wait till stop sequence is completed */
+    while(I2CCONbits.PEN);
+    CloseI2C();
 
     return count;
 }
@@ -287,39 +322,44 @@ int8_t I2Cdev_readBitsW(uint8_t devAddr, uint8_t regAddr, uint8_t bitStart, uint
 bool I2Cdev_writeBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8_t* data) {
     OpenI2C(config1,config2);
     IdleI2C();
+    /*Master Start*/
     StartI2C();
     /* Wait util Start sequence is completed */
     while(I2CCONbits.SEN);
-    
     /* Clear interrupt flag */
     IFS0bits.MI2CIF = 0;
-    
+
+    /*Master send AD+W*/
     /* Write Slave address (Write)*/
     MasterWriteI2C(devAddr << 1 | 0x00);
-    
     /* Wait till address is transmitted */
     while(I2CSTATbits.TBF);  // 8 clock cycles
+
+    /*Slave send ACK*/
     while(!IFS0bits.MI2CIF); // Wait for 9th clock cycle
     IFS0bits.MI2CIF = 0;     // Clear interrupt flag
     while(I2CSTATbits.ACKSTAT);
-    
+
+    /*Master send RA*/
     /* Write Slave address (Write)*/
     MasterWriteI2C(regAddr);
-    
     /* Wait till address is transmitted */
     while(I2CSTATbits.TBF);  // 8 clock cycles
+
+    /*Slave send ACK*/
     while(!IFS0bits.MI2CIF); // Wait for 9th clock cycle
     IFS0bits.MI2CIF = 0;     // Clear interrupt flag
     while(I2CSTATbits.ACKSTAT);
-    
+
+    /*Master send data*/
     /* Transmit string of data */
     MasterputsI2C(data);
-    
+
     StopI2C();
     /* Wait till stop sequence is completed */
     while(I2CCONbits.PEN);
     CloseI2C();
-    
+
     return true;
 }
 
@@ -341,31 +381,54 @@ bool I2Cdev_writeByte(uint8_t devAddr, uint8_t regAddr, uint8_t data) {
  * @return Status of operation (true = success)
  */
 bool I2Cdev_writeWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint16_t* data) {
-    // S
+    OpenI2C(config1,config2);
     IdleI2C();
+    /*Master Start*/
     StartI2C();
+    /* Wait util Start sequence is completed */
+    while(I2CCONbits.SEN);
+    /* Clear interrupt flag */
+    IFS0bits.MI2CIF = 0;
 
-    // Device write address
-    IdleI2C();
-    WriteI2C(devAddr << 1 | 0x00);
+    /*Master send AD+W*/
+    /* Write Slave address (Write)*/
+    MasterWriteI2C(devAddr << 1 | 0x00);
+    /* Wait till address is transmitted */
+    while(I2CSTATbits.TBF);  // 8 clock cycles
 
-    // Register address
-    IdleI2C();
-    WriteI2C(regAddr);
+    /*Slave send ACK*/
+    while(!IFS0bits.MI2CIF); // Wait for 9th clock cycle
+    IFS0bits.MI2CIF = 0;     // Clear interrupt flag
+    while(I2CSTATbits.ACKSTAT);
 
-    for (uint8_t i = 0; i < length; i++) {
+    /*Master send RA*/
+    /* Write Slave address (Write)*/
+    uint8_t i;
+    for (i = 0; i < length; i++) {
         // Send MSB
         IdleI2C();
-        WriteI2C(data[i] >> 8);
+        MasterWriteI2C(data[i] >> 8);
 
         // Send LSB
         IdleI2C();
-        WriteI2C(data[i] & 0xFF);
+        MasterWriteI2C(data[i] & 0xFF);
     }
+    /* Wait till address is transmitted */
+    while(I2CSTATbits.TBF);  // 8 clock cycles
 
-    // P
-    IdleI2C();
+    /*Slave send ACK*/
+    while(!IFS0bits.MI2CIF); // Wait for 9th clock cycle
+    IFS0bits.MI2CIF = 0;     // Clear interrupt flag
+    while(I2CSTATbits.ACKSTAT);
+
+    /*Master send data*/
+    /* Transmit string of data */
+    MasterputsI2C(data);
+
     StopI2C();
+    /* Wait till stop sequence is completed */
+    while(I2CCONbits.PEN);
+    CloseI2C();
 
     return true;
 }
