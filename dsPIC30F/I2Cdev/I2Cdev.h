@@ -44,6 +44,9 @@ THE SOFTWARE.
 #include <stdbool.h>
 #include <i2c.h>
 
+#define I2C_DATA_WAIT 152 //(20*I2C_DATA_WAIT*20 - 1) cycle
+
+
 int8_t I2Cdev_readBit(uint8_t devAddr, uint8_t regAddr, uint8_t bitNum, uint8_t *data);
 int8_t I2Cdev_readBitW(uint8_t devAddr, uint8_t regAddr, uint8_t bitNum, uint16_t *data);
 int8_t I2Cdev_readBits(uint8_t devAddr, uint8_t regAddr, uint8_t bitStart, uint8_t length, uint8_t *data);

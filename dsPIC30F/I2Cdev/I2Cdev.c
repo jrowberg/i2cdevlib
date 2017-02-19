@@ -10,7 +10,8 @@
 I2Cdev device library code is placed under the MIT license
 Copyright (c) 2013 Jeff Rowberg
 Copyright (c) 2014 Marton Sebok
-
+Copyright (c) 2017 Daichou
+ *
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
@@ -33,6 +34,15 @@ THE SOFTWARE.
 
 #include "I2Cdev.h"
 
+uint16_t config2;
+uint16_t config1 = (I2C_ON & I2C_IDLE_CON & I2C_CLK_HLD &
+             I2C_IPMI_DIS & I2C_7BIT_ADD &
+             I2C_SLW_DIS & I2C_SM_DIS &
+             I2C_GCALL_DIS & I2C_STR_DIS &
+             I2C_NACK & I2C_ACK_DIS & I2C_RCV_DIS &
+             I2C_STOP_DIS & I2C_RESTART_DIS &
+             I2C_START_DIS);
+
 /** Read multiple bytes from an 8-bit device register.
  * @param devAddr I2C slave device address
  * @param regAddr First register regAddr to read from
@@ -41,49 +51,72 @@ THE SOFTWARE.
  * @return Number of bytes read (-1 indicates failure)
  */
 int8_t I2Cdev_readBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8_t *data) {
-    int8_t count = 0;
-
-    // S
+    //int8_t count = 0;
+    IFS0bits.MI2CIF = 0;
     IdleI2C();
+    /*S*/
     StartI2C();
+    /* Clear interrupt flag */
 
-    // Device write address
-    IdleI2C();
-    WriteI2C(devAddr << 1 | 0x00);
+    /* Wait till Start sequence is completed */
+    while(I2CCONbits.SEN);
 
-    // Register address
-    IdleI2C();
-    WriteI2C(regAddr);
+    /*AD+W*/
+    /* Write Slave Address (Write)*/
+    MasterWriteI2C(devAddr << 1 | 0x00);
 
-    // R
-    IdleI2C();
+    /* Wait until address is transmitted */
+    while(I2CSTATbits.TBF);  // 8 clock cycles
+
+    /*Ack*/
+    while(!IFS0bits.MI2CIF); // Wait for 9th clock cycle
+    IFS0bits.MI2CIF = 0;     // Clear interrupt flag
+    while(I2CSTATbits.ACKSTAT);
+
+    /*RA*/
+    /* Write Register Address */
+    MasterWriteI2C(regAddr);
+
+    /* Wait until address is transmitted */
+    while(I2CSTATbits.TBF);  // 8 clock cycles
+
+    /*ACK*/
+    while(!IFS0bits.MI2CIF); // Wait for 9th clock cycle
+    IFS0bits.MI2CIF = 0;     // Clear interrupt flag
+    while(I2CSTATbits.ACKSTAT);
+
+    /*S*/
     RestartI2C();
+    /* Wait till Start sequence is completed */
+    while(I2CCONbits.SEN);
 
-    // Device read address
-    IdleI2C();
-    WriteI2C(devAddr << 1 | 0x01);
+    /*AD+R*/
+    /* Write Slave Address (Read)*/
+    MasterWriteI2C(devAddr << 1 | 0x01);
+    /* Wait until address is transmitted */
+    while(I2CSTATbits.TBF);  // 8 clock cycles
 
-    for (count = 0; count < length; count++) {
-        // Data byte
-        IdleI2C();
-        data[count] = ReadI2C();
+    /*Ack*/
+    while(!IFS0bits.MI2CIF); // Wait for 9th clock cycle
+    IFS0bits.MI2CIF = 0;     // Clear interrupt flag
+    while(I2CSTATbits.ACKSTAT);
 
-        if (count == length - 1) {
-            // NACK
-            IdleI2C();
-            NotAckI2C();
-        } else {
-            // ACK
-            IdleI2C();
-            AckI2C();
-        }
-    }
+    /*DATA*/
+    uint16_t flag = MastergetsI2C(length,data,I2C_DATA_WAIT);
 
-    // P
-    IdleI2C();
+    /*NACK*/
+    NotAckI2C();
+
+    /*P*/
     StopI2C();
+    /* Wait till stop sequence is completed */
+    while(I2CCONbits.PEN);
+    CloseI2C();
 
-    return count;
+    if (flag)
+        return length;
+    else
+        return -1;
 }
 
 /** Read single byte from an 8-bit device register.
@@ -252,28 +285,41 @@ int8_t I2Cdev_readBitsW(uint8_t devAddr, uint8_t regAddr, uint8_t bitStart, uint
  * @return Status of operation (true = success)
  */
 bool I2Cdev_writeBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8_t* data) {
-    // S
+    OpenI2C(config1,config2);
     IdleI2C();
     StartI2C();
-
-    // Device write address
-    IdleI2C();
-    WriteI2C(devAddr << 1 | 0x00);
-
-    // Register address
-    IdleI2C();
-    WriteI2C(regAddr);
-
-    for (uint8_t i = 0; i < length; i++) {
-        // Data byte
-        IdleI2C();
-        WriteI2C(data[i]);
-    }
+    /* Wait util Start sequence is completed */
+    while(I2CCONbits.SEN);
     
-    // P
-    IdleI2C();
+    /* Clear interrupt flag */
+    IFS0bits.MI2CIF = 0;
+    
+    /* Write Slave address (Write)*/
+    MasterWriteI2C(devAddr << 1 | 0x00);
+    
+    /* Wait till address is transmitted */
+    while(I2CSTATbits.TBF);  // 8 clock cycles
+    while(!IFS0bits.MI2CIF); // Wait for 9th clock cycle
+    IFS0bits.MI2CIF = 0;     // Clear interrupt flag
+    while(I2CSTATbits.ACKSTAT);
+    
+    /* Write Slave address (Write)*/
+    MasterWriteI2C(regAddr);
+    
+    /* Wait till address is transmitted */
+    while(I2CSTATbits.TBF);  // 8 clock cycles
+    while(!IFS0bits.MI2CIF); // Wait for 9th clock cycle
+    IFS0bits.MI2CIF = 0;     // Clear interrupt flag
+    while(I2CSTATbits.ACKSTAT);
+    
+    /* Transmit string of data */
+    MasterputsI2C(data);
+    
     StopI2C();
-
+    /* Wait till stop sequence is completed */
+    while(I2CCONbits.PEN);
+    CloseI2C();
+    
     return true;
 }
 
