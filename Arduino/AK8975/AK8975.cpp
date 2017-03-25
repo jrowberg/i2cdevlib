@@ -148,35 +148,51 @@ void AK8975::disableI2C() {
 
 // ASA* registers
 void AK8975::getAdjustment(int8_t *x, int8_t *y, int8_t *z) {
+    I2Cdev::writeByte(devAddr, AK8975_RA_CNTL, 0x0F); // Enter Fuse ROM access mode
+    delay(10);
     I2Cdev::readBytes(devAddr, AK8975_RA_ASAX, 3, buffer);
     *x = buffer[0];
     *y = buffer[1];
     *z = buffer[2];
 }
 void AK8975::setAdjustment(int8_t x, int8_t y, int8_t z) {
+    I2Cdev::writeByte(devAddr, AK8975_RA_CNTL, 0x0F); // Enter Fuse ROM access mode
+    delay(10);
     buffer[0] = x;
     buffer[1] = y;
     buffer[2] = z;
     I2Cdev::writeBytes(devAddr, AK8975_RA_ASAX, 3, buffer);
 }
 uint8_t AK8975::getAdjustmentX() {
+    I2Cdev::writeByte(devAddr, AK8975_RA_CNTL, 0x0F); // Enter Fuse ROM access mode
+    delay(10);
     I2Cdev::readByte(devAddr, AK8975_RA_ASAX, buffer);
     return buffer[0];
 }
 void AK8975::setAdjustmentX(uint8_t x) {
+    I2Cdev::writeByte(devAddr, AK8975_RA_CNTL, 0x0F); // Enter Fuse ROM access mode
+    delay(10);
     I2Cdev::writeByte(devAddr, AK8975_RA_ASAX, x);
 }
 uint8_t AK8975::getAdjustmentY() {
+    I2Cdev::writeByte(devAddr, AK8975_RA_CNTL, 0x0F); // Enter Fuse ROM access mode
+    delay(10);
     I2Cdev::readByte(devAddr, AK8975_RA_ASAY, buffer);
     return buffer[0];
 }
 void AK8975::setAdjustmentY(uint8_t y) {
+    I2Cdev::writeByte(devAddr, AK8975_RA_CNTL, 0x0F); // Enter Fuse ROM access mode
+    delay(10);
     I2Cdev::writeByte(devAddr, AK8975_RA_ASAY, y);
 }
 uint8_t AK8975::getAdjustmentZ() {
+    I2Cdev::writeByte(devAddr, AK8975_RA_CNTL, 0x0F); // Enter Fuse ROM access mode
+    delay(10);
     I2Cdev::readByte(devAddr, AK8975_RA_ASAZ, buffer);
     return buffer[0];
 }
 void AK8975::setAdjustmentZ(uint8_t z) {
+    I2Cdev::writeByte(devAddr, AK8975_RA_CNTL, 0x0F); // Enter Fuse ROM access mode
+    delay(10);
     I2Cdev::writeByte(devAddr, AK8975_RA_ASAZ, z);
 }
