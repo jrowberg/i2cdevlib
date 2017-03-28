@@ -4,7 +4,7 @@
 // 03/28/2017 by Kamnev Yuriy <kamnev.u1969@gmail.com>
 //
 // Changelog:
-//     2017-03-28 - ported to STM32 peripheral library from Arduino code
+//     2017-03-28 - ported to STM32 using Keil MDK Pack
 
 /* ============================================
 I2Cdev device library code is placed under the MIT license
