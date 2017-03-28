@@ -56,7 +56,13 @@ extern ARM_DRIVER_I2C I2CDev_Driver;
 #define i2c_receive_nack(dev_addr, data, len)	_i2c_receive(dev_addr, data, len, false)
 
 
-
+/** Read several byte from an 8-bit device register.
+ * @param dev_addr 	I2C slave device address
+ * @param reg_addr 	Register regAddr to read from
+ * @param len 		How many bytes to read
+ * @param data 		Buffer to save data into
+ * @return Status of read operation (0 = success, <0 = error)
+ */
 int8_t I2Cdev_readBytes(uint8_t dev_addr, uint8_t reg_addr, uint8_t len, uint8_t *data) {
 	int8_t err = 0;
 	uint8_t reg_data[1] = {reg_addr};
@@ -73,17 +79,26 @@ int8_t I2Cdev_readBytes(uint8_t dev_addr, uint8_t reg_addr, uint8_t len, uint8_t
 }
 
 
+/** Read a single byte from a 8-bit device register.
+ * @param dev_addr 	I2C slave device address
+ * @param reg_addr 	Register reg_addr to read from
+ * @param data 		Buffer to save data into
+ * @return Status of read operation (0 = success, <0 = error)
+ */
 int8_t 	I2Cdev_readByte(uint8_t dev_addr, uint8_t reg_addr, uint8_t *data) {
-	int8_t err;
-
-	err = I2Cdev_readBytes(dev_addr, reg_addr, 1, data);
-	return err;
+	return I2Cdev_readBytes(dev_addr, reg_addr, 1, data);
 }
 
 
+/** Read a several 16-bit words from a 16-bit device register.
+ * @param dev_addr 	I2C slave device address
+ * @param reg_addr 	Register reg_addr to read from
+ * @param len		Number of words to read
+ * @param data 		Buffer to save data into
+ * @return Status of read operation (true = success)
+ */
 int8_t 	I2Cdev_readWords(uint8_t dev_addr, uint8_t reg_addr, uint8_t len, uint16_t *data) {
 	int8_t err;
-
 	uint16_t bytes_num = len*2;
 
 	uint8_t reg_info[1] = {reg_addr};
@@ -109,17 +124,25 @@ int8_t 	I2Cdev_readWords(uint8_t dev_addr, uint8_t reg_addr, uint8_t len, uint16
 }
 
 
+/** Read a single word from a 16-bit device register.
+ * @param dev_addr 	I2C slave device address
+ * @param reg_addr 	Register regAddr to read from
+ * @param data 		Container for single word
+ * @return Status of read operation (0 = success, <0 = error)
+ */
 int8_t 	I2Cdev_readWord(uint8_t dev_addr, uint8_t reg_addr, uint16_t *data) {
-	int8_t err;
-
-	err = I2Cdev_readWords(dev_addr, reg_addr, 1, data);
-	return err;
+	return I2Cdev_readWords(dev_addr, reg_addr, 1, data);
 }
 
 
-int8_t
-I2Cdev_readBit(uint8_t dev_addr, uint8_t reg_addr, uint8_t bitn, uint8_t *data)
-{
+/** Read a single bit from a 8-bit device register.
+ * @param dev_addr 	I2C slave device address
+ * @param reg_addr 	Register regAddr to read from
+ * @param bitn 		Bit position to read (0-15)
+ * @param data 		Container for single bit value
+ * @return Status of read operation (0 = success, <0 = error)
+ */
+int8_t I2Cdev_readBit(uint8_t dev_addr, uint8_t reg_addr, uint8_t bitn, uint8_t *data) {
 	int8_t err;
 
 	err = I2Cdev_readByte(dev_addr, reg_addr, data);
@@ -129,9 +152,16 @@ I2Cdev_readBit(uint8_t dev_addr, uint8_t reg_addr, uint8_t bitn, uint8_t *data)
 }
 
 
-int8_t
-I2Cdev_readBits(uint8_t dev_addr, uint8_t reg_addr, uint8_t start_bit,
-		uint8_t len, uint8_t *data)
+/** Read several bits from a 8-bit device register.
+ * @param dev_addr 	I2C slave device address
+ * @param reg_addr 	Register regAddr to read from
+ * @param start_bit First bit position to read (0-7)
+ * @param len		Number of bits to read (<= 8)
+ * @param data 		Container for right-aligned value
+ * @return Status of read operation (0 = success, <0 = error)
+ */
+int8_t I2Cdev_readBits(uint8_t dev_addr, uint8_t reg_addr, uint8_t start_bit, 
+		uint8_t len, uint8_t *data) 
 {
 	int8_t err;
 
@@ -147,6 +177,13 @@ I2Cdev_readBits(uint8_t dev_addr, uint8_t reg_addr, uint8_t start_bit,
 }
 
 
+/** Read a single bit from a 16-bit device register.
+ * @param dev_addr 	I2C slave device address
+ * @param reg_addr 	Register regAddr to read from
+ * @param bit_n 	Bit position to read (0-15)
+ * @param data 		Container for single bit value
+ * @return Status of read operation (true = success)
+ */
 int8_t 	I2Cdev_readBitW(uint8_t dev_addr, uint8_t reg_addr, uint8_t bit_n, uint16_t *data) {
 	int8_t err;
 
@@ -157,8 +194,15 @@ int8_t 	I2Cdev_readBitW(uint8_t dev_addr, uint8_t reg_addr, uint8_t bit_n, uint1
 }
 
 
-int8_t
-I2Cdev_readBitsW(uint8_t dev_addr, uint8_t reg_addr, uint8_t start_bit,
+/** Read several bits from a 16-bit device register.
+ * @param dev_addr 	I2C slave device address
+ * @param reg_addr 	Register regAddr to read from
+ * @param start_bit First bit position to read (0-15)
+ * @param len		Number of bits to read (<= 16)
+ * @param data 		Container for right-aligned value
+ * @return Status of read operation (0 = success, <0 = error)
+ */
+int8_t I2Cdev_readBitsW(uint8_t dev_addr, uint8_t reg_addr, uint8_t start_bit,
 		uint8_t len, uint16_t *data)
 {
     int8_t err;
@@ -175,6 +219,13 @@ I2Cdev_readBitsW(uint8_t dev_addr, uint8_t reg_addr, uint8_t start_bit,
 }
 
 
+/** Write multiple bytes to an 8-bit device register.
+ * @param dev_addr 	I2C slave device address
+ * @param reg_addr 	First register address to write to
+ * @param len 		Number of bytes to write
+ * @param data 		Buffer to copy new data from
+ * @return Status of operation (0 = success, <0 = error)
+ */
 int8_t 	I2Cdev_writeBytes(uint8_t dev_addr, uint8_t reg_addr, uint8_t len, uint8_t *data) {
 	int8_t err;
 	uint8_t ts_data[len+1];
@@ -183,11 +234,16 @@ int8_t 	I2Cdev_writeBytes(uint8_t dev_addr, uint8_t reg_addr, uint8_t len, uint8
 	memcpy(ts_data+1, data, len);
 
 	err = i2c_transmit_nack(dev_addr, ts_data, len+1);
-
 	return err;
 }
 
 
+/** Write single byte to an 8-bit device register.
+ * @param dev_addr 	I2C slave device address
+ * @param reg_addr 	Register address to write to
+ * @param data 		New byte value to write
+ * @return Status of operation (0 = success, <0 = error)
+ */
 int8_t 	I2Cdev_writeByte(uint8_t dev_addr, uint8_t reg_addr, uint8_t data) {
 	int8_t err;
 
@@ -198,6 +254,12 @@ int8_t 	I2Cdev_writeByte(uint8_t dev_addr, uint8_t reg_addr, uint8_t data) {
 }
 
 
+/** Write single 16-bit word to an 16-bit device register.
+ * @param dev_addr 	I2C slave device address
+ * @param reg_addr 	Register address to write to
+ * @param data 		New byte value to write
+ * @return Status of operation (0 = success, <0 = error)
+ */
 int8_t 	I2Cdev_writeWord(uint8_t dev_addr, uint8_t reg_addr, uint16_t data) {
 	int8_t err;
 	uint8_t ts_data[3] = {reg_addr, (data >> 8) & 0xFF, data & 0xFF};
@@ -207,6 +269,13 @@ int8_t 	I2Cdev_writeWord(uint8_t dev_addr, uint8_t reg_addr, uint16_t data) {
 }
 
 
+/** Write multiple words to a 16-bit device register.
+ * @param dev_addr 	I2C slave device address
+ * @param reg_addr 	First register address to write to
+ * @param len 		Number of words to write
+ * @param data 		Buffer to copy new data from
+ * @return Status of operation (0 = success, <0 = error)
+ */
 int8_t 	I2Cdev_writeWords(uint8_t dev_addr, uint8_t reg_addr, uint8_t len, uint16_t *data) {
 	uint16_t bytes_num = len*2+1;
 	uint8_t bytes[bytes_num];
@@ -225,6 +294,13 @@ int8_t 	I2Cdev_writeWords(uint8_t dev_addr, uint8_t reg_addr, uint8_t len, uint1
 }
 
 
+/** write a single bit in an 8-bit device register.
+ * @param dev_addr 	I2C slave device address
+ * @param reg_addr 	Register regAddr to write to
+ * @param bit_n 	Bit position to write (0-7)
+ * @param data 		New bit value to write
+ * @return Status of operation (0 = success, <0 = error)
+ */
 int8_t 	I2Cdev_writeBit(uint8_t dev_addr, uint8_t reg_addr, uint8_t bit_n, uint8_t data) {
 	uint8_t b;
 	int8_t err;
@@ -240,6 +316,13 @@ int8_t 	I2Cdev_writeBit(uint8_t dev_addr, uint8_t reg_addr, uint8_t bit_n, uint8
 }
 
 
+/** write a single bit in a 16-bit device register.
+ * @param dev_addr 	I2C slave device address
+ * @param reg_addr 	Register regAddr to write to
+ * @param bit_n 	Bit position to write (0-15)
+ * @param data 		New bit value to write
+ * @return Status of operation (0 = success, <0 = error)
+ */
 int8_t 	I2Cdev_writeBitW(uint8_t dev_addr, uint8_t reg_addr, uint8_t bit_n, uint16_t data) {
 	uint16_t w;
 	I2Cdev_readWord(dev_addr, reg_addr, &w);
@@ -250,8 +333,15 @@ int8_t 	I2Cdev_writeBitW(uint8_t dev_addr, uint8_t reg_addr, uint8_t bit_n, uint
 }
 
 
-int8_t
-I2Cdev_writeBits(uint8_t dev_addr, uint8_t reg_addr, uint8_t start_bit,
+/** Write multiple bits in an 8-bit device register.
+ * @param dev_addr 	I2C slave device address
+ * @param reg_addr 	Register regAddr to write to
+ * @param start_bit First bit position to write (0-7)
+ * @param len 		Number of bits to write (not more than 8)
+ * @param data 		Right-aligned value to write
+ * @return Status of operation (0 = success, <0 = error)
+ */
+int8_t I2Cdev_writeBits(uint8_t dev_addr, uint8_t reg_addr, uint8_t start_bit,
 		uint8_t len, uint8_t data)
 {
     uint8_t b;
@@ -272,8 +362,15 @@ I2Cdev_writeBits(uint8_t dev_addr, uint8_t reg_addr, uint8_t start_bit,
 }
 
 
-int8_t
-I2Cdev_writeBitsW(uint8_t dev_addr, uint8_t reg_addr, uint8_t start_bit,
+/** Write multiple bits in a 16-bit device register.
+ * @param dev_addr 	I2C slave device address
+ * @param reg_addr 	Register regAddr to write to
+ * @param start_bit First bit position to write (0-15)
+ * @param len 		Number of bits to write (not more than 16)
+ * @param data 		Right-aligned value to write
+ * @return Status of operation (0 = success, <0 = error)
+ */
+int8_t I2Cdev_writeBitsW(uint8_t dev_addr, uint8_t reg_addr, uint8_t start_bit,
 		uint8_t len, uint16_t data)
 {
     uint16_t w;
