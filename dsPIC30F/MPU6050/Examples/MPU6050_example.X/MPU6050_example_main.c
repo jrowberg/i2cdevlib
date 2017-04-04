@@ -11,7 +11,7 @@
 // 'C' source line config statements
 
 // FOSC
-#pragma config FOSFPR = XT_PLL8         // Oscillator (XT w/PLL 8x)
+#pragma config FOSFPR = XT_PLL8        // Oscillator (XT w/PLL 8x)
 #pragma config FCKSMEN = CSW_FSCM_OFF   // Clock Switching and Monitor (Sw Disabled, Mon Disabled)
 
 // FWDT
@@ -62,7 +62,16 @@ void __attribute__((__interrupt__)) _U2TXInterrupt(void)
 
 int main(void)
 {
+    TRISCbits.TRISC14 = 0;
+    LATCbits.LATC14 = 1;
+            
+    while(1){
     /* Data to be transmitted using UART communication module */
+        //TRISFbits.TRISF3 = 0;
+        //PORTFbits.RF3 = 0;
+        //delay_ms(10);
+        //PORTFbits.RF3 = 1;
+        TRISFbits.TRISF3 = 1;
     char Buffer[80];
     //char 
     /* Holds the value of baud register   */
@@ -72,7 +81,7 @@ int main(void)
     /* Holds the information regarding uart
     TX & RX interrupt modes */   
     unsigned int U2STAvalue;
-    
+    CloseI2C();
     /* Turn off UART1module */
     CloseUART2();
     /* Configure uart1 transmit interrupt */
@@ -89,12 +98,12 @@ int main(void)
                   UART_ADR_DETECT_DIS &
                   UART_RX_OVERRUN_CLEAR;
     unsigned int I2C_config1,I2C_config2;
-    I2C_config1 = (I2C_ON & I2C_IDLE_CON & I2C_CLK_HLD &
+    I2C_config1 = (I2C_ON & I2C_IDLE_CON & I2C_CLK_REL &
              I2C_IPMI_DIS & I2C_7BIT_ADD &
-             I2C_SLW_DIS & I2C_SM_DIS &
+             I2C_SLW_EN & I2C_SM_DIS &
              I2C_GCALL_DIS & I2C_STR_DIS &
              I2C_ACK & I2C_ACK_EN & I2C_RCV_EN &
-             I2C_STOP_DIS & I2C_RESTART_DIS &
+             I2C_STOP_DIS & I2C_RESTART_EN &
              I2C_START_DIS);
     I2C_config2 = 181;
     ConfigIntI2C(MI2C_INT_OFF & SI2C_INT_OFF);
@@ -115,17 +124,17 @@ int main(void)
     /* Wait for  transmission to complete */
     while(BusyUART2());
     
-    //sprintf(Buf,MPU6050_testConnection() ? "MPU6050 connection successful\r\n" :
-    //    "MPU6050 connection failed\r\n");
-    //putsUART2 ((unsigned int *)Buf);
+    sprintf(Buf,MPU6050_testConnection() ? "MPU6050 connection successful\r\n" :
+        "MPU6050 connection failed\r\n");
+    putsUART2 ((unsigned int *)Buf);
     /* Wait for  transmission to complete */
-    //while(BusyUART2());
+    while(BusyUART2());
     
     
     
     
     //CloseUART2();
     
-    
+    }
     return 0;
 }
