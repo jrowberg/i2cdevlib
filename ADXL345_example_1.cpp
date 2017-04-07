@@ -48,6 +48,7 @@ ${PATH_I2CDEVLIB}/Arduino/ADXL345/ADXL345.cpp -l bcm2835 -l m
 #include "I2Cdev.h"
 #include <bcm2835.h>
 #include <iostream>
+#include <fstream>
 #include <json/json.h>
 #include <stdio.h>
 #include <sys/time.h>
@@ -73,38 +74,50 @@ int main(int argc, char **argv) {
   }
   accel.initialize();
   cout << "data rate " << int(accel.getRate())<< endl;
-//  accel.setRate(15); 
-  // cout << "data rate after change " <<int(accel.getRate()) << endl;
+  accel.setRate(15); 
+  cout << "data rate after change " <<int(accel.getRate()) << endl;
   int16_t ax, ay, az;
   const char *rpi_id = fileUtil.getRpiID().c_str();
   const char *host = fileUtil.getHost().c_str();
   comm = new Communicator(rpi_id, host, port);
   gettimeofday(&start_t, NULL);
-  cout << "elapsed time  x y z" << endl;
-  while (msg_index < 10000) {
-  if (!accel.testConnection())
-    exit(1);  
-  accel.getAcceleration(&ax, &ay, &az);
+  ofstream outputFile;
+  outputFile.open("result.txt");
+  outputFile << "msg_index"
+             << ","
+             << "elapsed_time"
+             << ","
+             << "x"
+             << ","
+             << "y"
+             << ","
+             << "z" << endl;
+
+  while (accel.testConnection()){
+    accel.getAcceleration(&ax, &ay, &az);
     fflush(stdout);
     gettimeofday(&end_t, NULL);
     diff = (end_t.tv_sec - start_t.tv_sec) * 1000000 +
            (end_t.tv_usec - start_t.tv_usec);
    // printf("The time difference is %d us\n", diff);
-    root["rPi_id"] = rpi_id;
-    root["x_axis"] = ax;
-    root["y_axis"] = ay;
-    root["z_aixs"] = az;
-    root["elapsed_time"] = diff;
-    root["msg_index"] = msg_index;
+//     root["rPi_id"] = rpi_id;
+//     root["x_axis"] = ax;
+//     root["y_axis"] = ay;
+//     root["z_aixs"] = az;
+//     root["elapsed_time"] = diff;
+//     root["msg_index"] = msg_index;
    // cout << fw.write(root);
-    printf("%d   %d    %d    %d   %d\n", diff, msg_index, ax, ay, az);
-    string json = fw.write(root);
-    const char *j = json.c_str();
+    printf("%d   %d    %d    %d   %d\n", msg_index, diff, ax, ay, az);
+    outputFile << msg_index << "," << diff << "," << ax << "," << ay << "," << az
+             << endl;
+//    string json = fw.write(root);
+  //  const char *j = json.c_str();
     //	publish to broker
-    comm->send_message(j);
+   // comm->send_message(j);
     // pthread_mutex_lock(&qlock);
     msg_index++;
   }
+  outputFile.close();
 
   return 1;
 }
