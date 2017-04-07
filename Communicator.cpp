@@ -40,6 +40,7 @@ void Communicator::on_publish(int mid) {
 
 bool Communicator::send_message(const char *_message) {
   int ret = publish(NULL, "vibe", strlen(_message), _message, 1, false);
-  cout << "sent" << endl;
   return (ret == MOSQ_ERR_SUCCESS);
+
+
 }

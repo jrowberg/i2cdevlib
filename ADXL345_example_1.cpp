@@ -72,26 +72,32 @@ int main(int argc, char **argv) {
     return 1;
   }
   accel.initialize();
+  cout << "data rate " << int(accel.getRate())<< endl;
+//  accel.setRate(15); 
+  // cout << "data rate after change " <<int(accel.getRate()) << endl;
   int16_t ax, ay, az;
   const char *rpi_id = fileUtil.getRpiID().c_str();
   const char *host = fileUtil.getHost().c_str();
   comm = new Communicator(rpi_id, host, port);
-  while (true) {
-    gettimeofday(&start_t, NULL);
-    accel.getAcceleration(&ax, &ay, &az);
-    printf("  x_raw:  %d       y_raw:  %d      z_raw:  %d\n", ax, ay, az);
+  gettimeofday(&start_t, NULL);
+  cout << "elapsed time  x y z" << endl;
+  while (msg_index < 10000) {
+  if (!accel.testConnection())
+    exit(1);  
+  accel.getAcceleration(&ax, &ay, &az);
     fflush(stdout);
     gettimeofday(&end_t, NULL);
     diff = (end_t.tv_sec - start_t.tv_sec) * 1000000 +
            (end_t.tv_usec - start_t.tv_usec);
-    printf("The time difference is %d ns\n", diff);
+   // printf("The time difference is %d us\n", diff);
     root["rPi_id"] = rpi_id;
-    root["x-axis"] = ax;
-    root["y-axis"] = ay;
-    root["z-aixs"] = az;
+    root["x_axis"] = ax;
+    root["y_axis"] = ay;
+    root["z_aixs"] = az;
     root["elapsed_time"] = diff;
     root["msg_index"] = msg_index;
-    cout << fw.write(root);
+   // cout << fw.write(root);
+    printf("%d   %d    %d    %d   %d\n", diff, msg_index, ax, ay, az);
     string json = fw.write(root);
     const char *j = json.c_str();
     //	publish to broker
@@ -99,5 +105,6 @@ int main(int argc, char **argv) {
     // pthread_mutex_lock(&qlock);
     msg_index++;
   }
+
   return 1;
 }
