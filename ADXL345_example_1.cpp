@@ -85,17 +85,17 @@ int main(int argc, char **argv) {
   //const char *host = fileUtil.getHost().c_str();
   //comm = new Communicator(rpi_id, host, port);
   gettimeofday(&start_t, NULL);
-  ofstream outputFile;
-  outputFile.open("result.txt");
-  outputFile << "msg_index"
-             << ","
-             << "elapsed_time"
-             << ","
-             << "x"
-             << ","
-             << "y"
-             << ","
-             << "z" << endl;
+//   ofstream outputFile;
+//   outputFile.open("result.txt");
+//   outputFile << "msg_index"
+//              << ","
+//              << "elapsed_time"
+//              << ","
+//              << "x"
+//              << ","
+//              << "y"
+//              << ","
+//              << "z" << endl;
 
   while (accel.testConnection()){
     accel.getAcceleration(&ax, &ay, &az);
@@ -112,7 +112,7 @@ int main(int argc, char **argv) {
 //     root["msg_index"] = msg_index;
    // cout << fw.write(root);
     printf("%d   %d    %d    %d   %d\n", msg_index, diff, ax, ay, az);
-    outputFile << msg_index << "," << diff << "," << ax << "," << ay << "," << az
+//     outputFile << msg_index << "," << diff << "," << ax << "," << ay << "," << az
              << endl;
 //    string json = fw.write(root);
   //  const char *j = json.c_str();
@@ -121,7 +121,7 @@ int main(int argc, char **argv) {
     // pthread_mutex_lock(&qlock);
     msg_index++;
   }
-  outputFile.close();
+//   outputFile.close();
 
   return 1;
 }
