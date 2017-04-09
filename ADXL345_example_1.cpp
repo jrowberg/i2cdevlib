@@ -113,7 +113,7 @@ int main(int argc, char **argv) {
    // cout << fw.write(root);
     printf("%d   %d    %d    %d   %d\n", msg_index, diff, ax, ay, az);
 //     outputFile << msg_index << "," << diff << "," << ax << "," << ay << "," << az
-             << endl;
+//              << endl;
 //    string json = fw.write(root);
   //  const char *j = json.c_str();
     //	publish to broker
