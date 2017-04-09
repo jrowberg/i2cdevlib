@@ -52,6 +52,7 @@ ${PATH_I2CDEVLIB}/Arduino/ADXL345/ADXL345.cpp -l bcm2835 -l m
 //#include <json/json.h>
 #include <stdio.h>
 #include <sys/time.h>
+using namespace std;
 
 struct timeval start_t, end_t;
 int diff;
