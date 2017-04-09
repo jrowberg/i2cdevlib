@@ -43,24 +43,24 @@ ${PATH_I2CDEVLIB}/Arduino/ADXL345/ADXL345.cpp -l bcm2835 -l m
 */
 
 #include "ADXL345.h"
-#include "Communicator.h"
-#include "FileUtil.h"
+//#include "Communicator.h"
+//#include "FileUtil.h"
 #include "I2Cdev.h"
 #include <bcm2835.h>
 #include <iostream>
 #include <fstream>
-#include <json/json.h>
+//#include <json/json.h>
 #include <stdio.h>
 #include <sys/time.h>
 
 struct timeval start_t, end_t;
 int diff;
 int msg_index = 1;
-int port;
-class Communicator *comm = NULL;
-FileUtil fileUtil;
-Json::FastWriter fw;
-Json::Value root;
+//int port;
+//class Communicator *comm = NULL;
+//FileUtil fileUtil;
+//Json::FastWriter fw;
+//Json::Value root;
 
 int main(int argc, char **argv) {
   printf("ADXL345 3-axis acceleromter example program\n");
@@ -80,9 +80,9 @@ int main(int argc, char **argv) {
   accel.setRange(0);
   cout << "data range after change" << int(accel.getRate()) << endl;
   int16_t ax, ay, az;
-  const char *rpi_id = fileUtil.getRpiID().c_str();
-  const char *host = fileUtil.getHost().c_str();
-  comm = new Communicator(rpi_id, host, port);
+  //const char *rpi_id = fileUtil.getRpiID().c_str();
+  //const char *host = fileUtil.getHost().c_str();
+  //comm = new Communicator(rpi_id, host, port);
   gettimeofday(&start_t, NULL);
   ofstream outputFile;
   outputFile.open("result.txt");
