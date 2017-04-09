@@ -77,7 +77,7 @@ int main(int argc, char **argv) {
   accel.setRate(15); 
   cout << "data rate after change " <<int(accel.getRate()) << endl;
   cout << "data range" << int(accel.getRange()) << endl;
-  accel.getRange(0);
+  accel.setRange(0);
   cout << "data range after change" << int(accel.getRate()) << endl;
   int16_t ax, ay, az;
   const char *rpi_id = fileUtil.getRpiID().c_str();
