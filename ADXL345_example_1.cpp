@@ -96,7 +96,7 @@ int main(int argc, char **argv) {
 //              << "y"
 //              << ","
 //              << "z" << endl;
-  cout << "start time" << start_t.tv_sec*1000000 + start_t.tv_usec<< endl;
+  cout << "start time " << start_t.tv_sec * (uint64_t)1000000+ start_t.tv_usec << endl;
   while (accel.testConnection()){
     accel.getAcceleration(&ax, &ay, &az);
     fflush(stdout);
