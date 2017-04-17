@@ -100,7 +100,7 @@ int main(int argc, char **argv) {
   while (true){
     if(!accel.testConnection()){
       fprintf(stderr, "ADXL345 connection test failed! exiting ...\n");
-      
+      accel.initialize();
     }
     accel.getAcceleration(&ax, &ay, &az);
     fflush(stdout);
