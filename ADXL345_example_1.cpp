@@ -98,10 +98,6 @@ int main(int argc, char **argv) {
 //              << "z" << endl;
   cout << "start time " << start_t.tv_sec * (uint64_t)1000000+ start_t.tv_usec << endl;
   while (true){
-    if(!accel.testConnection()){
-      fprintf(stderr, "ADXL345 connection test failed! exiting ...\n");
-      accel.initialize();
-    }
     accel.getAcceleration(&ax, &ay, &az);
     fflush(stdout);
     gettimeofday(&end_t, NULL);
