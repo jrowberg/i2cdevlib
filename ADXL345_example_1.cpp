@@ -111,7 +111,7 @@ int main(int argc, char **argv) {
 //     root["elapsed_time"] = diff;
 //     root["msg_index"] = msg_index;
    // cout << fw.write(root);
-    printf("%d,%d,%d,%d,%d\n", msg_index, diff, ax, ay, az);
+    printf("%d,%lld,%d,%d,%d\n", msg_index, diff, ax, ay, az);
 //     outputFile << msg_index << "," << diff << "," << ax << "," << ay << "," << az
 //              << endl;
 //    string json = fw.write(root);
