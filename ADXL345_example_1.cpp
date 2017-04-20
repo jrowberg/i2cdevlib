@@ -55,7 +55,7 @@ ${PATH_I2CDEVLIB}/Arduino/ADXL345/ADXL345.cpp -l bcm2835 -l m
 using namespace std;
 
 struct timeval start_t, end_t;
-int diff;
+long long diff;
 int msg_index = 1;
 //int port;
 //class Communicator *comm = NULL;
@@ -101,7 +101,7 @@ int main(int argc, char **argv) {
     accel.getAcceleration(&ax, &ay, &az);
     fflush(stdout);
     gettimeofday(&end_t, NULL);
-    diff = (end_t.tv_sec - start_t.tv_sec) * 1000000 +
+    diff = (end_t.tv_sec - start_t.tv_sec) * (unit64_t)1000000 +
            (end_t.tv_usec - start_t.tv_usec);
    // printf("The time difference is %d us\n", diff);
 //     root["rPi_id"] = rpi_id;
