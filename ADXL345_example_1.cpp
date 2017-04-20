@@ -101,7 +101,7 @@ int main(int argc, char **argv) {
     accel.getAcceleration(&ax, &ay, &az);
     fflush(stdout);
     gettimeofday(&end_t, NULL);
-    diff = (end_t.tv_sec - start_t.tv_sec) * (unit64_t)1000000 +
+    diff = (end_t.tv_sec - start_t.tv_sec) * (uint64_t)1000000 +
            (end_t.tv_usec - start_t.tv_usec);
    // printf("The time difference is %d us\n", diff);
 //     root["rPi_id"] = rpi_id;
