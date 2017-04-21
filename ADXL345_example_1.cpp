@@ -112,7 +112,7 @@ int main(int argc, char **argv) {
 //     root["msg_index"] = msg_index;
    // cout << fw.write(root);
 //     printf("%d,%lld,%d,%d,%d\n", msg_index, diff, ax, ay, az);
-    n = sprintf (buffer, "%d,%lld,%d,%d,%d\n", msg_index, diff, ax, ay, az);
+    sprintf (buffer, "%d,%lld,%d,%d,%d\n", msg_index, diff, ax, ay, az);
 //     outputFile << msg_index << "," << diff << "," << ax << "," << ay << "," << az
 //              << endl;
 //    string json = fw.write(root);
@@ -126,7 +126,7 @@ int main(int argc, char **argv) {
   outputFile.open("result.txt");
   outputFile << buffer << endl;
   outputFile.close();
-  cout << "length is " << n << endl;
+//   cou"length is " << n << endl;
 
   return 1;
 }
