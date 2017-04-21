@@ -97,7 +97,7 @@ int main(int argc, char **argv) {
 //              << ","
 //              << "z" << endl;
   cout << "start time " << start_t.tv_sec * (uint64_t)1000000+ start_t.tv_usec << endl;
-  while (msg_index < 54000000){
+  while (msg_index < 100000){
     accel.getAcceleration(&ax, &ay, &az);
     fflush(stdout);
     gettimeofday(&end_t, NULL);
