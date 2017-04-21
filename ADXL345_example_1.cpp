@@ -123,7 +123,8 @@ int main(int argc, char **argv) {
     msg_index++;
   }
   gettimeofday(&stop_t, NULL);
-  cout << "total running time(minutes): " << stop_t.tv_sec / 60.0 << endl;
+  cout << "total running time(minutes): " << (stop_t.tv_sec- start_t.tv_sec) / 60.0 << endl;
+  cout << "average time elapse" << diff/ msg_index++ << endl;
   ofstream outputFile;
   outputFile.open("result.txt");
   outputFile << buffer << endl;
