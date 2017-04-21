@@ -53,7 +53,7 @@ ${PATH_I2CDEVLIB}/Arduino/ADXL345/ADXL345.cpp -l bcm2835 -l m
 #include <stdio.h>
 #include <sys/time.h>
 using namespace std;
-
+char buffer[300000000];
 struct timeval start_t, end_t;
 long long diff;
 int msg_index = 1;
@@ -97,7 +97,7 @@ int main(int argc, char **argv) {
 //              << ","
 //              << "z" << endl;
   cout << "start time " << start_t.tv_sec * (uint64_t)1000000+ start_t.tv_usec << endl;
-  while (true){
+  while (msg_index < 100000){
     accel.getAcceleration(&ax, &ay, &az);
     fflush(stdout);
     gettimeofday(&end_t, NULL);
@@ -111,7 +111,8 @@ int main(int argc, char **argv) {
 //     root["elapsed_time"] = diff;
 //     root["msg_index"] = msg_index;
    // cout << fw.write(root);
-    printf("%d,%lld,%d,%d,%d\n", msg_index, diff, ax, ay, az);
+//     printf("%d,%lld,%d,%d,%d\n", msg_index, diff, ax, ay, az);
+    n = sprintf (buffer, "%d,%lld,%d,%d,%d\n", msg_index, diff, ax, ay, az);
 //     outputFile << msg_index << "," << diff << "," << ax << "," << ay << "," << az
 //              << endl;
 //    string json = fw.write(root);
@@ -121,7 +122,11 @@ int main(int argc, char **argv) {
     // pthread_mutex_lock(&qlock);
     msg_index++;
   }
-//   outputFile.close();
+  ofstream outputFile;
+  outputFile.open("result.txt");
+  outputFile << buffer << endl;
+  outputFile.close();
+  cout << "length is " << n << endl;
 
   return 1;
 }
