@@ -53,7 +53,7 @@ ${PATH_I2CDEVLIB}/Arduino/ADXL345/ADXL345.cpp -l bcm2835 -l m
 #include <stdio.h>
 #include <sys/time.h>
 using namespace std;
-char buffer[2000000000];
+char buffer[2000000];
 struct timeval start_t, end_t, stop_t;
 long long diff;
 int msg_index = 1;
