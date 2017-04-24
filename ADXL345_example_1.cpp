@@ -129,7 +129,7 @@ int main(int argc, char **argv) {
   outputFile << buffer << '\n';
   outputFile.close();
   gettimeofday(&copy_t, NULL);
-  printf("output time: %d\n", copy_t.tv_sec - stop_t.tv_sec);
+  printf("output time: %d\n", (copy_t.tv_sec - stop_t.tv_sec));
 //   cou"length is " << n << endl;
 
   return 1;
