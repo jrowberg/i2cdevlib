@@ -64,7 +64,6 @@ int msg_index = 1;
 //Json::Value root;
 
 int main(int argc, char **argv) {
-  printf("ADXL345 3-axis acceleromter example program\n");
   I2Cdev::initialize();
   ADXL345 accel;
   if (accel.testConnection())
@@ -124,7 +123,7 @@ int main(int argc, char **argv) {
   }
   gettimeofday(&stop_t, NULL);
   printf( "total running time(minutes): %s/n" ,(stop_t.tv_sec- start_t.tv_sec) / 60.0 );
-  printf( "average time elapse: %d\n",  diff/ msg_index++);
+  printf( "average time elapse: %d\n",  diff/ msg_index);
   ofstream outputFile;
   outputFile.open("result.txt");
   outputFile << buffer << '\n';
