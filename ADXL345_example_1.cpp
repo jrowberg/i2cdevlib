@@ -122,7 +122,7 @@ int main(int argc, char **argv) {
     msg_index++;
   }
   gettimeofday(&stop_t, NULL);
-  printf( "total running time(minutes): %s/n" ,(stop_t.tv_sec- start_t.tv_sec) / 60.0 );
+  printf( "total running time(minutes): %d/n" ,(stop_t.tv_sec- start_t.tv_sec) / 60.0 );
   printf( "average time elapse: %d\n",  diff/ msg_index);
   ofstream outputFile;
   outputFile.open("result.txt");
