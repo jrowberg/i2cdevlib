@@ -96,7 +96,7 @@ int main(int argc, char **argv) {
 //              << "y"
 //              << ","
 //              << "z" << endl;
-  cout << "start time " << start_t.tv_sec * (uint64_t)1000000+ start_t.tv_usec << endl;
+  printf("start time : %lld", start_t.tv_sec * (uint64_t)1000000+ start_t.tv_usec);
   while (msg_index < 100000){
     accel.getAcceleration(&ax, &ay, &az);
     fflush(stdout);
@@ -123,8 +123,8 @@ int main(int argc, char **argv) {
     msg_index++;
   }
   gettimeofday(&stop_t, NULL);
-  cout << "total running time(minutes): " << (stop_t.tv_sec- start_t.tv_sec) / 60.0 << endl;
-  cout << "average time elapse" << diff/ msg_index++ << endl;
+  printf( "total running time(minutes): %s/n" ,(stop_t.tv_sec- start_t.tv_sec) / 60.0 );
+  printf( "average time elapse: %d",  diff/ msg_index++ \n);
   ofstream outputFile;
   outputFile.open("result.txt");
   outputFile << buffer << endl;
