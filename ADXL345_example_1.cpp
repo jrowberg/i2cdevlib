@@ -55,7 +55,7 @@ ${PATH_I2CDEVLIB}/Arduino/ADXL345/ADXL345.cpp -l bcm2835 -l m
 using namespace std;
 char buffer[5000000];
 struct timeval start_t, end_t, stop_t, copy_t;
-long long diff;
+long long diff, diff2, diff3;
 int msg_index = 1;
 //int port;
 //class Communicator *comm = NULL;
@@ -123,14 +123,17 @@ int main(int argc, char **argv) {
   }
   gettimeofday(&stop_t, NULL);
   printf( "total running time(seconds): %d\n" ,(stop_t.tv_sec- start_t.tv_sec) );
-  printf( "average time elapse: %d\n",  (stop_t.tv_sec - start_t.tv_sec) * (uint64_t)1000000 +
-           (stop_t.tv_usec - start_t.tv_usec));
+  diff2 = (stop_t.tv_sec - start_t.tv_sec) * (uint64_t)1000000 +
+           (stop_t.tv_usec - start_t.tv_usec);
+  printf( "average time elapse: %d\n", diff2/msg_index );
   ofstream outputFile;
   outputFile.open("result.txt");
   outputFile << buffer << '\n';
   outputFile.close();
   gettimeofday(&copy_t, NULL);
-  printf("output time: %d\n", (copy_t.tv_sec - stop_t.tv_sec));
+  diff3 = (copy_t.tv_sec - stop_t.tv_sec) * (uint64_t)1000000 +
+           (copy_t.tv_usec - stop_t.tv_usec);
+  printf("output time: %lld\n", diff3);
 //   cou"length is " << n << endl;
 
   return 1;
