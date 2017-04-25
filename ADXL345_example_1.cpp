@@ -157,6 +157,7 @@ void read_data(int sig){
    // comm->send_message(j);
     // pthread_mutex_lock(&qlock);
 //     msg_index++;
-  printf("diff: lld%", diff)
+  printf("diff: lld%", diff);
+  signal(SIGPROF, read_data);
   
 }
