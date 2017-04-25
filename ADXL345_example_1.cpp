@@ -53,7 +53,6 @@ ${PATH_I2CDEVLIB}/Arduino/ADXL345/ADXL345.cpp -l bcm2835 -l m
 #include <stdio.h>
 #include <sys/time.h>
 #include  <sys/select.h>
-#include  <sys/itimer.h>
 #include <unistd.h>
 #include <signal.h>
 
