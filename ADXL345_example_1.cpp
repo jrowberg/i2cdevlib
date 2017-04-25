@@ -54,6 +54,7 @@ ${PATH_I2CDEVLIB}/Arduino/ADXL345/ADXL345.cpp -l bcm2835 -l m
 #include <sys/time.h>
 using namespace std;
 char buffer[5000000];
+char *bufferp = buffer
 struct timeval start_t, end_t, stop_t, copy_t;
 long long diff, diff2, diff3;
 int msg_index = 1;
@@ -111,7 +112,7 @@ int main(int argc, char **argv) {
 //     root["msg_index"] = msg_index;
    // cout << fw.write(root);
 //     printf("%d,%lld,%d,%d,%d\n", msg_index, diff, ax, ay, az);
-    buffer += sprintf (buffer, "%d,%lld,%d,%d,%d\n",msg_index, diff, ax, ay, az);
+    bufferp += sprintf (bufferp, "%d,%lld,%d,%d,%d\n",msg_index, diff, ax, ay, az);
 //     outputFile << msg_index << "," << diff << "," << ax << "," << ay << "," << az
 //              << endl;
 //    string json = fw.write(root);
