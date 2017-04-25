@@ -69,11 +69,14 @@ int16_t ax, ay, az;
 //Json::FastWriter fw;
 //Json::Value root;
 
-void timmer_handler(ADXL345 accel);
+void timmer_handler(void);
 
-void timer_handler(ADXL345 accel){
-  accel.getAcceleration(&ax, &ay, &az);
+void timer_handler(void){
+//   accel.getAcceleration(&ax, &ay, &az);
 //   fflush(stdout);
+  ax = 1;
+  ay = 2;
+    az = 3;
   gettimeofday(&end_t, NULL);
   diff = (end_t.tv_sec - start_t.tv_sec) * (uint64_t)1000000 +
            (end_t.tv_usec - start_t.tv_usec);
@@ -138,7 +141,7 @@ int main(int argc, char **argv) {
     value.it_value.tv_usec=500;
     value.it_interval= value.it_value;
     signal(SIGALRM, (void (*)(int))timer_handler);
-    setitimer(ITIMER_VIRTUAL, &value, NULL);  
+    setitimer(ITIMER_REAL, &value, NULL);  
 //     while (1);
   while (msg_index < 100000);
   gettimeofday(&stop_t, NULL);
