@@ -138,7 +138,7 @@ int main(int argc, char **argv) {
     value.it_value.tv_usec=500;
     value.it_interval= value.it_value;
     signal(SIGALRM, (void (*)(int))timer_handler);
-    setitimer(ITIMER_REAL, &value, NULL);  
+    setitimer(ITIMER_VIRTUAL, &value, NULL);  
 //     while (1);
   while (msg_index < 100000);
   gettimeofday(&stop_t, NULL);
