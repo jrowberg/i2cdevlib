@@ -68,8 +68,9 @@ int msg_index = 1;
 //Json::FastWriter fw;
 //Json::Value root;
 
+void timmer_handler(void);
 
-void timer_handler(int sig){
+void timer_handler(void){
 //   accel.getAcceleration(&ax, &ay, &az);
 //   fflush(stdout);
   gettimeofday(&end_t, NULL);
@@ -131,15 +132,11 @@ int main(int argc, char **argv) {
 //              << "z" << endl;
 //   printf("start time : %lld\n", start_t.tv_sec * (uint64_t)1000000+ start_t.tv_usec);
     gettimeofday(&start_t, NULL);
-    struct sigaction sa;
     struct itimerval value;
-    memset(&sa, 0, sizeof(sa));
-    sa.sa_handler = &timer_handler;
-    sigaction(SIGVTALRM, &sa, NULL);
-    value.it_value.tv_sec=1;                
-    value.it_value.tv_usec=0;
-    value.it_interval.tv_sec=1;             
-    value.it_interval.tv_usec=0;
+    value.it_value.tv_sec=0;                
+    value.it_value.tv_usec=500;
+    value.it_interval= value.it_value;
+    signal(SIGALRM, (void (*)(int))timer_handler);
     setitimer(ITIMER_REAL, &value, NULL);  
     while (1);
 //   while (msg_index < 100000){
