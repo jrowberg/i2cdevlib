@@ -104,8 +104,8 @@ int main(int argc, char **argv) {
     struct sigaction sa;
     struct itimerval value;
     memset(&sa, 0, sizeof(sa));
-    sa.sa_handler = &timer_hander;
-    sigaction(SIGVTALRM, &sa, NULL)
+    sa.sa_handler = &timer_handler;
+    sigaction(SIGVTALRM, &sa, NULL;
     value.it_value.tv_sec=0;                
     value.it_value.tv_usec=300;
     value.it_interval.tv_sec=0;             
