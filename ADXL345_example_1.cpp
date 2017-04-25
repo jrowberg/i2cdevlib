@@ -71,12 +71,10 @@ int16_t ax, ay, az;
 
 void timmer_handler(void);
 
-void timer_handler(void){
-//   accel.getAcceleration(&ax, &ay, &az);
+void timer_handler(ADXL345 accel){
+  accel.getAcceleration(&ax, &ay, &az);
 //   fflush(stdout);
-  ax = 1;
-  ay = 2;
-    az = 3;
+  printf("readings: %d, %d, %d", ax, ay, az);
   gettimeofday(&end_t, NULL);
   diff = (end_t.tv_sec - start_t.tv_sec) * (uint64_t)1000000 +
            (end_t.tv_usec - start_t.tv_usec);
@@ -89,7 +87,7 @@ void timer_handler(void){
 //     root["msg_index"] = msg_index;
    // cout << fw.write(root);
 //     printf("%d,%lld,%d,%d,%d\n", msg_index, diff, ax, ay, az);
-    bufferp += sprintf (bufferp, "%d,%lld,%d,%d,%d\n",msg_index, diff, ax, ay, az);
+//     bufferp += sprintf (bufferp, "%d,%lld,%d,%d,%d\n",msg_index, diff, ax, ay, az);
 //     outputFile << msg_index << "," << diff << "," << ax << "," << ay << "," << az
 //              << endl;
 //    string json = fw.write(root);
