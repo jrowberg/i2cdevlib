@@ -52,7 +52,6 @@ ${PATH_I2CDEVLIB}/Arduino/ADXL345/ADXL345.cpp -l bcm2835 -l m
 //#include <json/json.h>
 #include <stdio.h>
 #include <sys/time.h>
-#include  <sys/select.h>
 #include <unistd.h>
 #include <signal.h>
 
@@ -102,13 +101,16 @@ int main(int argc, char **argv) {
 //              << ","
 //              << "z" << endl;
   printf("start time : %lld\n", start_t.tv_sec * (uint64_t)1000000+ start_t.tv_usec);
+    struct sigaction sa;
     struct itimerval value;
+    memset(&sa, 0, sizeof(sa));
+    sa.sa_handler = &timer_hander;
+    sigaction(SIGVTALRM, &sa, NULL)
     value.it_value.tv_sec=0;                
     value.it_value.tv_usec=300;
     value.it_interval.tv_sec=0;             
     value.it_interval.tv_usec=300;
-    signal(SIGPROF, read_data);          
-    setitimer(ITIMER_PROF, &value, NULL);   
+    setitimer(ITIMER_VIRTUAL, &value, NULL);   
     while (1);
 //   while (msg_index < 100000){
     
@@ -157,6 +159,4 @@ void read_data(int sig){
     // pthread_mutex_lock(&qlock);
 //     msg_index++;
   printf("diff: lld%", diff);
-  signal(SIGPROF, read_data);
-  
 }
