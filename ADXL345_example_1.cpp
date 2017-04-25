@@ -57,7 +57,7 @@ ${PATH_I2CDEVLIB}/Arduino/ADXL345/ADXL345.cpp -l bcm2835 -l m
 
 
 using namespace std;
-char buffer[5000000];
+char buffer[50000000];
 char *bufferp = buffer;
 struct timeval start_t, end_t, stop_t, copy_t;
 long long diff, diff2, diff3;
@@ -143,7 +143,7 @@ int main(int argc, char **argv) {
     signal(SIGALRM, (void (*)(int))timer_handler);
     setitimer(ITIMER_REAL, &value, NULL);  
 //     while (1);
-  while (msg_index < 100000);
+  while (msg_index < 1000000);
   gettimeofday(&stop_t, NULL);
   printf( "total running time(seconds): %d\n" ,(stop_t.tv_sec- start_t.tv_sec) );
   diff2 = (stop_t.tv_sec - start_t.tv_sec) * (uint64_t)1000000 +
