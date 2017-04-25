@@ -111,7 +111,7 @@ int main(int argc, char **argv) {
 //     root["msg_index"] = msg_index;
    // cout << fw.write(root);
 //     printf("%d,%lld,%d,%d,%d\n", msg_index, diff, ax, ay, az);
-    buffer += sprintf (buffer, "%s%d,%lld,%d,%d,%d\n", buffer, msg_index, diff, ax, ay, az);
+    buffer += sprintf (buffer, "%d,%lld,%d,%d,%d\n",msg_index, diff, ax, ay, az);
 //     outputFile << msg_index << "," << diff << "," << ax << "," << ay << "," << az
 //              << endl;
 //    string json = fw.write(root);
