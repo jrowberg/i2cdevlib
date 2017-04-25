@@ -52,6 +52,12 @@ ${PATH_I2CDEVLIB}/Arduino/ADXL345/ADXL345.cpp -l bcm2835 -l m
 //#include <json/json.h>
 #include <stdio.h>
 #include <sys/time.h>
+#include  <sys/select.h>
+#include  <sys/itimer.h>
+#include <unistd.h>
+#include <signal.h>
+
+
 using namespace std;
 char buffer[5000000];
 char *bufferp = buffer;
@@ -97,31 +103,17 @@ int main(int argc, char **argv) {
 //              << ","
 //              << "z" << endl;
   printf("start time : %lld\n", start_t.tv_sec * (uint64_t)1000000+ start_t.tv_usec);
-  while (msg_index < 100000){
-    accel.getAcceleration(&ax, &ay, &az);
-    fflush(stdout);
-    gettimeofday(&end_t, NULL);
-    diff = (end_t.tv_sec - start_t.tv_sec) * (uint64_t)1000000 +
-           (end_t.tv_usec - start_t.tv_usec);
-   // printf("The time difference is %d us\n", diff);
-//     root["rPi_id"] = rpi_id;
-//     root["x_axis"] = ax;
-//     root["y_axis"] = ay;
-//     root["z_aixs"] = az;
-//     root["elapsed_time"] = diff;
-//     root["msg_index"] = msg_index;
-   // cout << fw.write(root);
-//     printf("%d,%lld,%d,%d,%d\n", msg_index, diff, ax, ay, az);
-    bufferp += sprintf (bufferp, "%d,%lld,%d,%d,%d\n",msg_index, diff, ax, ay, az);
-//     outputFile << msg_index << "," << diff << "," << ax << "," << ay << "," << az
-//              << endl;
-//    string json = fw.write(root);
-  //  const char *j = json.c_str();
-    //	publish to broker
-   // comm->send_message(j);
-    // pthread_mutex_lock(&qlock);
-    msg_index++;
-  }
+    struct itimerval value;
+    value.it_value.tv_sec=0;                
+    value.it_value.tv_usec=300;
+    value.it_interval.tv_sec=0;             
+    value.it_interval.tv_usec=300;
+    signal(SIGPROF, read_data);          
+    setitimer(ITIMER_PROF, &value, NULL);   
+    while (1);
+//   while (msg_index < 100000){
+    
+//   }
   gettimeofday(&stop_t, NULL);
   printf( "total running time(seconds): %d\n" ,(stop_t.tv_sec- start_t.tv_sec) );
   diff2 = (stop_t.tv_sec - start_t.tv_sec) * (uint64_t)1000000 +
@@ -138,4 +130,33 @@ int main(int argc, char **argv) {
 //   cou"length is " << n << endl;
 
   return 1;
+}
+
+
+void read_data(int sig){
+//   accel.getAcceleration(&ax, &ay, &az);
+//   fflush(stdout);
+  gettimeofday(&end_t, NULL);
+  diff = (end_t.tv_sec - start_t.tv_sec) * (uint64_t)1000000 +
+           (end_t.tv_usec - start_t.tv_usec);
+   // printf("The time difference is %d us\n", diff);
+//     root["rPi_id"] = rpi_id;
+//     root["x_axis"] = ax;
+//     root["y_axis"] = ay;
+//     root["z_aixs"] = az;
+//     root["elapsed_time"] = diff;
+//     root["msg_index"] = msg_index;
+   // cout << fw.write(root);
+//     printf("%d,%lld,%d,%d,%d\n", msg_index, diff, ax, ay, az);
+//     bufferp += sprintf (bufferp, "%d,%lld,%d,%d,%d\n",msg_index, diff, ax, ay, az);
+//     outputFile << msg_index << "," << diff << "," << ax << "," << ay << "," << az
+//              << endl;
+//    string json = fw.write(root);
+  //  const char *j = json.c_str();
+    //	publish to broker
+   // comm->send_message(j);
+    // pthread_mutex_lock(&qlock);
+//     msg_index++;
+  printf("diff: lld%", diff)
+  
 }
