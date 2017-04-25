@@ -62,15 +62,16 @@ char *bufferp = buffer;
 struct timeval start_t, end_t, stop_t, copy_t;
 long long diff, diff2, diff3;
 int msg_index = 1;
+int16_t ax, ay, az;
 //int port;
 //class Communicator *comm = NULL;
 //FileUtil fileUtil;
 //Json::FastWriter fw;
 //Json::Value root;
 
-void timmer_handler(void);
+void timmer_handler(ADXL345 &accel);
 
-void timer_handler(void){
+void timer_handler(ADXL345 &accel){
   accel.getAcceleration(&ax, &ay, &az);
 //   fflush(stdout);
   gettimeofday(&end_t, NULL);
@@ -85,7 +86,7 @@ void timer_handler(void){
 //     root["msg_index"] = msg_index;
    // cout << fw.write(root);
 //     printf("%d,%lld,%d,%d,%d\n", msg_index, diff, ax, ay, az);
-//     bufferp += sprintf (bufferp, "%d,%lld,%d,%d,%d\n",msg_index, diff, ax, ay, az);
+    bufferp += sprintf (bufferp, "%d,%lld,%d,%d,%d\n",msg_index, diff, ax, ay, az);
 //     outputFile << msg_index << "," << diff << "," << ax << "," << ay << "," << az
 //              << endl;
 //    string json = fw.write(root);
@@ -114,7 +115,7 @@ int main(int argc, char **argv) {
   cout << "current data range" << int(accel.getRange()) << endl;
   accel.setRange(0);
   cout << "data range after change" << int(accel.getRate()) << endl;
-  int16_t ax, ay, az;
+
   //const char *rpi_id = fileUtil.getRpiID().c_str();
   //const char *host = fileUtil.getHost().c_str();
   //comm = new Communicator(rpi_id, host, port);
