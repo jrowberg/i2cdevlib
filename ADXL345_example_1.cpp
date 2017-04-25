@@ -93,7 +93,7 @@ void timer_handler(int sig){
    // comm->send_message(j);
     // pthread_mutex_lock(&qlock);
 //     msg_index++;
-  printf("diff: lld%", diff);
+  printf("diff: %lld\n", diff);
 }
 
 
