@@ -130,6 +130,7 @@ int main(int argc, char **argv) {
 //              << ","
 //              << "z" << endl;
 //   printf("start time : %lld\n", start_t.tv_sec * (uint64_t)1000000+ start_t.tv_usec);
+    gettimeofday(&start_t, NULL);
     struct sigaction sa;
     struct itimerval value;
     memset(&sa, 0, sizeof(sa));
@@ -139,7 +140,7 @@ int main(int argc, char **argv) {
     value.it_value.tv_usec=300;
     value.it_interval.tv_sec=0;             
     value.it_interval.tv_usec=300;
-    gettimeofday(&start_t, NULL);
+
     setitimer(ITIMER_REAL, &value, NULL);  
 
     while (1);
