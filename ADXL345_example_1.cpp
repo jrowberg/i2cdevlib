@@ -69,7 +69,7 @@ int16_t ax, ay, az;
 //Json::FastWriter fw;
 //Json::Value root;
 
-void timmer_handler(void);
+void timmer_handler(ADXL accel);
 
 void timer_handler(ADXL345 accel){
     gettimeofday(&end_t, NULL);
