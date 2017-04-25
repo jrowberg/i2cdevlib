@@ -71,7 +71,7 @@ int msg_index = 1;
 void timmer_handler(void);
 
 void timer_handler(void){
-//   accel.getAcceleration(&ax, &ay, &az);
+  accel.getAcceleration(&ax, &ay, &az);
 //   fflush(stdout);
   gettimeofday(&end_t, NULL);
   diff = (end_t.tv_sec - start_t.tv_sec) * (uint64_t)1000000 +
@@ -93,7 +93,7 @@ void timer_handler(void){
     //	publish to broker
    // comm->send_message(j);
     // pthread_mutex_lock(&qlock);
-//     msg_index++;
+    msg_index++;
   printf("diff: %lld\n", diff);
 }
 
@@ -138,10 +138,8 @@ int main(int argc, char **argv) {
     value.it_interval= value.it_value;
     signal(SIGALRM, (void (*)(int))timer_handler);
     setitimer(ITIMER_REAL, &value, NULL);  
-    while (1);
-//   while (msg_index < 100000){
-    
-//   }
+//     while (1);
+  while (msg_index < 100000);
   gettimeofday(&stop_t, NULL);
   printf( "total running time(seconds): %d\n" ,(stop_t.tv_sec- start_t.tv_sec) );
   diff2 = (stop_t.tv_sec - start_t.tv_sec) * (uint64_t)1000000 +
