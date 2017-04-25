@@ -72,10 +72,11 @@ int16_t ax, ay, az;
 void timmer_handler(void);
 
 void timer_handler(ADXL345 accel){
+    gettimeofday(&end_t, NULL);
   accel.getAcceleration(&ax, &ay, &az);
 //   fflush(stdout);
-  printf("readings: %d, %d, %d", ax, ay, az);
-  gettimeofday(&end_t, NULL);
+  printf("readings: %d, %d, %d\n", ax, ay, az);
+
   diff = (end_t.tv_sec - start_t.tv_sec) * (uint64_t)1000000 +
            (end_t.tv_usec - start_t.tv_usec);
    // printf("The time difference is %d us\n", diff);
