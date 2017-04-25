@@ -73,6 +73,7 @@ void timmer_handler(void);
 
 void timer_handler(ADXL345 accel){
     gettimeofday(&end_t, NULL);
+  accel.initialize();
   accel.getAcceleration(&ax, &ay, &az);
 //   fflush(stdout);
   printf("readings: %d, %d, %d\n", ax, ay, az);
