@@ -68,6 +68,35 @@ int msg_index = 1;
 //Json::FastWriter fw;
 //Json::Value root;
 
+
+void timer_handler(int sig){
+//   accel.getAcceleration(&ax, &ay, &az);
+//   fflush(stdout);
+  gettimeofday(&end_t, NULL);
+  diff = (end_t.tv_sec - start_t.tv_sec) * (uint64_t)1000000 +
+           (end_t.tv_usec - start_t.tv_usec);
+   // printf("The time difference is %d us\n", diff);
+//     root["rPi_id"] = rpi_id;
+//     root["x_axis"] = ax;
+//     root["y_axis"] = ay;
+//     root["z_aixs"] = az;
+//     root["elapsed_time"] = diff;
+//     root["msg_index"] = msg_index;
+   // cout << fw.write(root);
+//     printf("%d,%lld,%d,%d,%d\n", msg_index, diff, ax, ay, az);
+//     bufferp += sprintf (bufferp, "%d,%lld,%d,%d,%d\n",msg_index, diff, ax, ay, az);
+//     outputFile << msg_index << "," << diff << "," << ax << "," << ay << "," << az
+//              << endl;
+//    string json = fw.write(root);
+  //  const char *j = json.c_str();
+    //	publish to broker
+   // comm->send_message(j);
+    // pthread_mutex_lock(&qlock);
+//     msg_index++;
+  printf("diff: lld%", diff);
+}
+
+
 int main(int argc, char **argv) {
   I2Cdev::initialize();
   ADXL345 accel;
@@ -134,29 +163,3 @@ int main(int argc, char **argv) {
 }
 
 
-void read_data(int sig){
-//   accel.getAcceleration(&ax, &ay, &az);
-//   fflush(stdout);
-  gettimeofday(&end_t, NULL);
-  diff = (end_t.tv_sec - start_t.tv_sec) * (uint64_t)1000000 +
-           (end_t.tv_usec - start_t.tv_usec);
-   // printf("The time difference is %d us\n", diff);
-//     root["rPi_id"] = rpi_id;
-//     root["x_axis"] = ax;
-//     root["y_axis"] = ay;
-//     root["z_aixs"] = az;
-//     root["elapsed_time"] = diff;
-//     root["msg_index"] = msg_index;
-   // cout << fw.write(root);
-//     printf("%d,%lld,%d,%d,%d\n", msg_index, diff, ax, ay, az);
-//     bufferp += sprintf (bufferp, "%d,%lld,%d,%d,%d\n",msg_index, diff, ax, ay, az);
-//     outputFile << msg_index << "," << diff << "," << ax << "," << ay << "," << az
-//              << endl;
-//    string json = fw.write(root);
-  //  const char *j = json.c_str();
-    //	publish to broker
-   // comm->send_message(j);
-    // pthread_mutex_lock(&qlock);
-//     msg_index++;
-  printf("diff: lld%", diff);
-}
