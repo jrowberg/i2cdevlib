@@ -140,7 +140,7 @@ int main(int argc, char **argv) {
     value.it_value.tv_usec=300;
     value.it_interval.tv_sec=0;             
     value.it_interval.tv_usec=300;
-    setitimer(ITIMER_VIRTUAL, &value, NULL);  
+    setitimer(ITIMER_REAL, &value, NULL);  
     while (1);
 //   while (msg_index < 100000){
     
