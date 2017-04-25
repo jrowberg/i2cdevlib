@@ -136,10 +136,10 @@ int main(int argc, char **argv) {
     memset(&sa, 0, sizeof(sa));
     sa.sa_handler = &timer_handler;
     sigaction(SIGVTALRM, &sa, NULL);
-    value.it_value.tv_sec=0;                
-    value.it_value.tv_usec=300;
-    value.it_interval.tv_sec=0;             
-    value.it_interval.tv_usec=300;
+    value.it_value.tv_sec=1;                
+    value.it_value.tv_usec=0;
+    value.it_interval.tv_sec=1;             
+    value.it_interval.tv_usec=0;
     setitimer(ITIMER_REAL, &value, NULL);  
     while (1);
 //   while (msg_index < 100000){
