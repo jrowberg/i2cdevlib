@@ -117,7 +117,7 @@ int main(int argc, char **argv) {
   //const char *rpi_id = fileUtil.getRpiID().c_str();
   //const char *host = fileUtil.getHost().c_str();
   //comm = new Communicator(rpi_id, host, port);
-  gettimeofday(&start_t, NULL);
+
 //   ofstream outputFile;
 //   outputFile.open("result.txt");
 //   outputFile << "msg_index"
@@ -129,7 +129,7 @@ int main(int argc, char **argv) {
 //              << "y"
 //              << ","
 //              << "z" << endl;
-  printf("start time : %lld\n", start_t.tv_sec * (uint64_t)1000000+ start_t.tv_usec);
+//   printf("start time : %lld\n", start_t.tv_sec * (uint64_t)1000000+ start_t.tv_usec);
     struct sigaction sa;
     struct itimerval value;
     memset(&sa, 0, sizeof(sa));
@@ -139,7 +139,8 @@ int main(int argc, char **argv) {
     value.it_value.tv_usec=300;
     value.it_interval.tv_sec=0;             
     value.it_interval.tv_usec=300;
-    setitimer(ITIMER_VIRTUAL, &value, NULL);   
+    setitimer(ITIMER_REAL, &value, NULL);  
+    gettimeofday(&start_t, NULL);
     while (1);
 //   while (msg_index < 100000){
     
