@@ -12,7 +12,7 @@
 // 'C' source line config statements
 
 // FOSC
-#pragma config FOSFPR = ECIO_PLL8       // Oscillator (ECIO w/PLL 8x)
+#pragma config FOSFPR = ECIO       // Oscillator (ECIO w/PLL 8x)
 #pragma config FCKSMEN = CSW_FSCM_OFF   // Clock Switching and Monitor (Sw Disabled, Mon Disabled)
 
 // FWDT
@@ -67,7 +67,8 @@ void __attribute__((__interrupt__)) _U2TXInterrupt(void)
 
 int main(void)
 {
-    delay_ms(1000);
+    //delay_ms(1000);
+    
     TRISCbits.TRISC14 = 0;
     LATCbits.LATC14 = 1;
             
@@ -95,7 +96,7 @@ int main(void)
         /* Configure uart1 transmit interrupt */
         ConfigIntUART2(  UART_TX_INT_DIS & UART_TX_INT_PR2);
         /* Configure UART1 module to transmit 8 bit data with one stopbit. Also Enable loopback mode  */
-        baudvalue = 129;  //9600
+        baudvalue = 15;//129;  //9600
         U2MODEvalue = UART_EN & UART_IDLE_CON & 
                       UART_DIS_WAKE & UART_DIS_LOOPBACK  &
                       UART_EN_ABAUD & UART_NO_PAR_8BIT  &
@@ -106,7 +107,7 @@ int main(void)
                       UART_ADR_DETECT_DIS &
                       UART_RX_OVERRUN_CLEAR;
         unsigned int I2C_config1,I2C_config2;
-        I2C_config1 = (I2C_ON & I2C_IDLE_CON & I2C_CLK_REL &
+        I2C_config1 = (I2C_ON & I2C_IDLE_CON & I2C_CLK_HLD &
                  I2C_IPMI_DIS & I2C_7BIT_ADD &
                  I2C_SLW_DIS & I2C_SM_DIS &
                  I2C_GCALL_DIS & I2C_STR_EN &
@@ -131,7 +132,7 @@ int main(void)
         //MPU6050_resetTemperaturePath();
         //delay_ms(100);
         MPU6050_initialize();
-        MPU6050_setSleepEnabled(false);
+        
         unsigned char MPU6050_ID = MPU6050_getDeviceID();
         
         sprintf(Buf,"Testing device connections...\n\0");
@@ -191,7 +192,55 @@ int main(void)
         /* Wait for  transmission to complete */
         while(BusyUART2());
         
+        //delay_ms(100);
         
+        MPU6050_setXGyroOffset(220);
+        
+        //delay_ms(100);
+        
+        MPU6050_setYGyroOffset(76);
+        
+        //delay_ms(100);
+        
+        MPU6050_setZGyroOffset(-85);
+        
+        sprintf(Buf,"Reading Updated offset\n");
+        putsUART2 ((unsigned int *)Buf);
+        /* Wait for  transmission to complete */
+        while(BusyUART2());
+
+        sprintf(Buf,"Xaccel= %d\n",MPU6050_getXAccelOffset());
+        putsUART2 ((unsigned int *)Buf);
+        /* Wait for  transmission to complete */
+        while(BusyUART2());
+
+        sprintf(Buf,"Yaccel= %d\n",MPU6050_getYAccelOffset());
+        putsUART2 ((unsigned int *)Buf);
+        /* Wait for  transmission to complete */
+        while(BusyUART2());
+        
+        sprintf(Buf,"Zaccel= %d\n",MPU6050_getZAccelOffset());
+        putsUART2 ((unsigned int *)Buf);
+        /* Wait for  transmission to complete */
+        while(BusyUART2());
+        
+        sprintf(Buf,"Xgyro= %d\n",MPU6050_getXGyroOffset());
+        putsUART2 ((unsigned int *)Buf);
+        /* Wait for  transmission to complete */
+        while(BusyUART2());
+        
+        sprintf(Buf,"Ygyro= %d\n",MPU6050_getYGyroOffset());
+        putsUART2 ((unsigned int *)Buf);
+        /* Wait for  transmission to complete */
+        while(BusyUART2());
+        
+        sprintf(Buf,"Zgyro= %d\n",MPU6050_getZGyroOffset());
+        putsUART2 ((unsigned int *)Buf);
+        /* Wait for  transmission to complete */
+        while(BusyUART2());
+        
+        
+        MPU6050_setSleepEnabled(false);
         while (true) {
            // Read raw accel/gyro measurements from device
             MPU6050_getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
