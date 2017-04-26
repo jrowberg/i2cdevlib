@@ -36,21 +36,13 @@ THE SOFTWARE.
 
 #include "MPU6050.h"
 
-/** Default constructor, uses default I2C address.
- * @see MPU6050_DEFAULT_ADDRESS
- */
-MPU6050::MPU6050() {
-    devAddr = MPU6050_DEFAULT_ADDRESS;
-}
-
 /** Specific address constructor.
- * @param address I2C address
+ * @param address I2C address, uses default I2C address if none is specified
  * @see MPU6050_DEFAULT_ADDRESS
  * @see MPU6050_ADDRESS_AD0_LOW
  * @see MPU6050_ADDRESS_AD0_HIGH
  */
-MPU6050::MPU6050(uint8_t address) {
-    devAddr = address;
+MPU6050::MPU6050(uint8_t address):devAddr(address) {
 }
 
 /** Power on and prepare for general usage.
