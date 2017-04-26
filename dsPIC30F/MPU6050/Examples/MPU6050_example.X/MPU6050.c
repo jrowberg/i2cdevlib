@@ -40,34 +40,6 @@ THE SOFTWARE.
 
 #include "MPU6050.h"
 
-/*******************************************************************************/
-//  delay us using for-loop
-/*******************************************************************************/
-void delay_us( unsigned int usec )
-{
-	unsigned int i;
-	//¦   ¦   ¦   ¦   ¦   ¦   ¦   ¦   ¦   ¦              //40 MIPS ,
-	for ( i = 0 ; i < usec * 2;
-	        i++ ) {                //for-loop 8Tcy -> 1us -> add two NOP()
-		asm("NOP");
-		asm("NOP");
-	}
-}
-/*******************************************************************************/
-// delay ms using Timer 1 interrupt
-/*******************************************************************************/
-void delay_ms( unsigned int msec )
-{
-	/*TIMER1_DELAY_VALUE = msec;
-	TMR1 = 0;
-	IEC0bits.T1IE = 1;
-	while(TIMER1_DELAY_VALUE);
-	*/
-	int i = 0;
-	for (i = 0; i < msec; i++)
-		delay_us(1000);
-}
-
 MPU6050_t mpu6050;
 
 /** Specific address constructor.
@@ -90,9 +62,9 @@ void MPU6050(uint8_t address)
  */
 void MPU6050_initialize()
 {
-    MPU6050_setClockSource(MPU6050_CLOCK_PLL_XGYRO);                                                                    
-    MPU6050_setFullScaleGyroRange(MPU6050_GYRO_FS_250);                                                                 
-    MPU6050_setFullScaleAccelRange(MPU6050_ACCEL_FS_2);                                                                 
+    MPU6050_setClockSource(MPU6050_CLOCK_PLL_XGYRO);
+    MPU6050_setFullScaleGyroRange(MPU6050_GYRO_FS_250);
+    MPU6050_setFullScaleAccelRange(MPU6050_ACCEL_FS_2);
     MPU6050_setSleepEnabled(false);
 }
 

@@ -53,42 +53,46 @@ int16_t ax, ay, az, gx, gy, gz;
 void __attribute__((__interrupt__)) _U2TXInterrupt(void)
 {  
    IFS1bits.U2TXIF = 0;
-} 
-/* This is UART1 receive ISR */
-//void __attribute__((__interrupt__)) _U1RXInterrupt(void)
-//{
-//    IFS0bits.U1RXIF = 0;
-/* Read the receive buffer till atleast one or more character can be read */ 
-//    while( DataRdyUART1())
-//    {
-//        ( *(Receivedddata)++) = ReadUART1();
-//    } 
-//} 
+}
 
+/*******************************************************************************/
+//  delay us using for-loop
+/*******************************************************************************/
+void delay_us( unsigned int usec )
+{
+	unsigned int i;
+	//?   ?   ?   ?   ?   ?   ?   ?   ?   ?              //40 MIPS ,
+	for ( i = 0 ; i < usec * 2;
+	        i++ ) {                //for-loop 8Tcy -> 1us -> add two NOP()
+		asm("NOP");
+		asm("NOP");
+	}
+}
+
+/*******************************************************************************/
+// delay ms using Timer 1 interrupt
+/*******************************************************************************/
+void delay_ms( unsigned int msec )
+{
+	int i = 0;
+	for (i = 0; i < msec; i++)
+		delay_us(1000);
+}
 int main(void)
 {
-    //delay_ms(1000);
-    
     TRISCbits.TRISC14 = 0;
     LATCbits.LATC14 = 1;
-            
     while(1){
-    HEAD:
         /* Data to be transmitted using UART communication module */
-            //TRISFbits.TRISF3 = 0;
-            //PORTFbits.RF3 = 0;
-            //delay_ms(10);
-            //PORTFbits.RF3 = 1;
         TRISFbits.TRISF3 = 0;
         TRISFbits.TRISF2 = 0;
         char Buffer[80];
-        //char 
         /* Holds the value of baud register   */
-        unsigned int baudvalue;   
+        unsigned int baudvalue;
         /* Holds the value of uart config reg */
         unsigned int U2MODEvalue;
         /* Holds the information regarding uart
-        TX & RX interrupt modes */   
+        TX & RX interrupt modes */
         unsigned int U2STAvalue;
         CloseI2C();
         /* Turn off UART1module */
@@ -97,11 +101,11 @@ int main(void)
         ConfigIntUART2(  UART_TX_INT_DIS & UART_TX_INT_PR2);
         /* Configure UART1 module to transmit 8 bit data with one stopbit. Also Enable loopback mode  */
         baudvalue = 15;//129;  //9600
-        U2MODEvalue = UART_EN & UART_IDLE_CON & 
+        U2MODEvalue = UART_EN & UART_IDLE_CON &
                       UART_DIS_WAKE & UART_DIS_LOOPBACK  &
                       UART_EN_ABAUD & UART_NO_PAR_8BIT  &
                       UART_1STOPBIT;
-        U2STAvalue  = UART_INT_TX_BUF_EMPTY  &  
+        U2STAvalue  = UART_INT_TX_BUF_EMPTY  &
                       UART_TX_PIN_NORMAL &
                       UART_TX_ENABLE & UART_INT_RX_3_4_FUL &
                       UART_ADR_DETECT_DIS &
@@ -125,22 +129,14 @@ int main(void)
         putsUART2 ((unsigned int *)Buf);
         /* Wait for  transmission to complete */
         while(BusyUART2());
-        //MPU6050_reset();
-        //delay_ms(100);
-        //MPU6050_resetGyroscopePath();
-        //MPU6050_resetAccelerometerPath();
-        //MPU6050_resetTemperaturePath();
-        //delay_ms(100);
         MPU6050_initialize();
-        
+
         unsigned char MPU6050_ID = MPU6050_getDeviceID();
-        
+
         sprintf(Buf,"Testing device connections...\n\0");
         putsUART2 ((unsigned int *)Buf);
         /* Wait for  transmission to complete */
         while(BusyUART2());
-
-        
 
         sprintf(Buf,"MPU6050_ID = 0x%X\n",MPU6050_ID);
         putsUART2 ((unsigned int *)Buf);
@@ -153,10 +149,10 @@ int main(void)
         putsUART2 ((unsigned int *)Buf);
         /* Wait for  transmission to complete */
         while(BusyUART2());
-        
+
         if (!MPU6050_testConnection())
-            goto HEAD;
-        
+            continue;
+
         sprintf(Buf,"Reading offset\n");
         putsUART2 ((unsigned int *)Buf);
         /* Wait for  transmission to complete */
@@ -171,39 +167,31 @@ int main(void)
         putsUART2 ((unsigned int *)Buf);
         /* Wait for  transmission to complete */
         while(BusyUART2());
-        
+
         sprintf(Buf,"Zaccel= %d\n",MPU6050_getZAccelOffset());
         putsUART2 ((unsigned int *)Buf);
         /* Wait for  transmission to complete */
         while(BusyUART2());
-        
+
         sprintf(Buf,"Xgyro= %d\n",MPU6050_getXGyroOffset());
         putsUART2 ((unsigned int *)Buf);
         /* Wait for  transmission to complete */
         while(BusyUART2());
-        
+
         sprintf(Buf,"Ygyro= %d\n",MPU6050_getYGyroOffset());
         putsUART2 ((unsigned int *)Buf);
         /* Wait for  transmission to complete */
         while(BusyUART2());
-        
+
         sprintf(Buf,"Zgyro= %d\n",MPU6050_getZGyroOffset());
         putsUART2 ((unsigned int *)Buf);
         /* Wait for  transmission to complete */
         while(BusyUART2());
-        
-        //delay_ms(100);
-        
+
         MPU6050_setXGyroOffset(220);
-        
-        //delay_ms(100);
-        
         MPU6050_setYGyroOffset(76);
-        
-        //delay_ms(100);
-        
         MPU6050_setZGyroOffset(-85);
-        
+
         sprintf(Buf,"Reading Updated offset\n");
         putsUART2 ((unsigned int *)Buf);
         /* Wait for  transmission to complete */
@@ -218,28 +206,27 @@ int main(void)
         putsUART2 ((unsigned int *)Buf);
         /* Wait for  transmission to complete */
         while(BusyUART2());
-        
+
         sprintf(Buf,"Zaccel= %d\n",MPU6050_getZAccelOffset());
         putsUART2 ((unsigned int *)Buf);
         /* Wait for  transmission to complete */
         while(BusyUART2());
-        
+
         sprintf(Buf,"Xgyro= %d\n",MPU6050_getXGyroOffset());
         putsUART2 ((unsigned int *)Buf);
         /* Wait for  transmission to complete */
         while(BusyUART2());
-        
+
         sprintf(Buf,"Ygyro= %d\n",MPU6050_getYGyroOffset());
         putsUART2 ((unsigned int *)Buf);
         /* Wait for  transmission to complete */
         while(BusyUART2());
-        
+
         sprintf(Buf,"Zgyro= %d\n",MPU6050_getZGyroOffset());
         putsUART2 ((unsigned int *)Buf);
         /* Wait for  transmission to complete */
         while(BusyUART2());
-        
-        
+
         MPU6050_setSleepEnabled(false);
         while (true) {
            // Read raw accel/gyro measurements from device
@@ -250,14 +237,12 @@ int main(void)
             putsUART2 ((unsigned int *)Buf);
             /* Wait for  transmission to complete */
             while(BusyUART2());
-        
             // Blink LED to indicate activity
             LATCbits.LATC14 ^= 1;
 
             delay_ms(25);
             delay_ms(25);
         }
-        
         //CloseUART2();
 
     }

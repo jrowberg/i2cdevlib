@@ -34,33 +34,6 @@ THE SOFTWARE.
 
 #include "I2Cdev.h"
 
-/*******************************************************************************/
-//  delay us using for-loop
-/*******************************************************************************/
-void delay_us_I2C( unsigned int usec )
-{
-	unsigned int i;
-	//¦   ¦   ¦   ¦   ¦   ¦   ¦   ¦   ¦   ¦              //40 MIPS ,
-	for ( i = 0 ; i < usec * 2;
-	        i++ ) {                //for-loop 8Tcy -> 1us -> add two NOP()
-		asm("NOP");
-		asm("NOP");
-	}
-}
-/*******************************************************************************/
-// delay ms using Timer 1 interrupt
-/*******************************************************************************/
-void delay_ms_I2C( unsigned int msec )
-{
-	/*TIMER1_DELAY_VALUE = msec;
-	TMR1 = 0;
-	IEC0bits.T1IE = 1;
-	while(TIMER1_DELAY_VALUE);
-	*/
-	int i = 0;
-	for (i = 0; i < msec; i++)
-		delay_us_I2C(1000);
-}
 
 /*uint16_t config2;
 uint16_t config1 = (I2C_ON & I2C_IDLE_CON & I2C_CLK_HLD &
@@ -117,18 +90,15 @@ int8_t I2Cdev_readBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8_
     StopI2C();
     /* Wait till stop sequence is completed */
     while(I2CCONbits.PEN);
-    
+
     /*Master Start*/
     StartI2C();
     /* Wait till Start sequence is completed */
     while(I2CCONbits.SEN);
 
-    
-    
     /*Master send AD+R*/
     /* Write Slave Address (Read)*/
     MasterWriteI2C(devAddr << 1 | 0x01);
-    
     /* Wait until address is transmitted */
     while(I2CSTATbits.TBF);  // 8 clock cycles
 
@@ -333,7 +303,6 @@ bool I2Cdev_writeBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8_t
     }
     //while(!IFS0bits.MI2CIF); // Wait for 9th clock cycle
     //IFS0bits.MI2CIF = 0;     // Clear interrupt flag
-    
     StopI2C();
     /* Wait till stop sequence is completed */
     while(I2CCONbits.PEN);
