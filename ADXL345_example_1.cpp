@@ -43,13 +43,13 @@ ${PATH_I2CDEVLIB}/Arduino/ADXL345/ADXL345.cpp -l bcm2835 -l m
 */
 
 #include "ADXL345.h"
-//#include "Communicator.h"
-//#include "FileUtil.h"
+#include "Communicator.h"
+#include "FileUtil.h"
 #include "I2Cdev.h"
 #include <bcm2835.h>
 #include <iostream>
 #include <fstream>
-//#include <json/json.h>
+#include <json/json.h>
 #include <stdio.h>
 #include <sys/time.h>
 #include <unistd.h>
@@ -81,22 +81,22 @@ ADXL345 a;
   diff = (end_t.tv_sec - start_t.tv_sec) * (uint64_t)1000000 +
            (end_t.tv_usec - start_t.tv_usec);
    // printf("The time difference is %d us\n", diff);
-//     root["rPi_id"] = rpi_id;
-//     root["x_axis"] = ax;
-//     root["y_axis"] = ay;
-//     root["z_aixs"] = az;
-//     root["elapsed_time"] = diff;
-//     root["msg_index"] = msg_index;
-   // cout << fw.write(root);
+    root["rPi_id"] = rpi_id;
+    root["x_axis"] = ax;
+    root["y_axis"] = ay;
+    root["z_aixs"] = az;
+    root["elapsed_time"] = diff;
+    root["msg_index"] = msg_index;
+//    cout << fw.write(root);
 //     printf("%d,%lld,%d,%d,%d\n", msg_index, diff, ax, ay, az);
-     bufferp += sprintf (bufferp, "%d,%lld,%d,%d,%d\n",msg_index, diff, ax, ay, az);
+//      bufferp += sprintf (bufferp, "%d,%lld,%d,%d,%d\n",msg_index, diff, ax, ay, az);
 //     outputFile << msg_index << "," << diff << "," << ax << "," << ay << "," << az
 //              << endl;
 //    string json = fw.write(root);
-  //  const char *j = json.c_str();
+   const char *j = json.c_str();
     //	publish to broker
-   // comm->send_message(j);
-    // pthread_mutex_lock(&qlock);
+   comm->send_message(j);
+//     pthread_mutex_lock(&qlock);
     msg_index++;
  // printf("diff: %lld\n", diff);
 }
@@ -119,9 +119,9 @@ int main(int argc, char **argv) {
   accel.setRange(0);
   cout << "data range after change" << int(accel.getRate()) << endl;
 
-  //const char *rpi_id = fileUtil.getRpiID().c_str();
-  //const char *host = fileUtil.getHost().c_str();
-  //comm = new Communicator(rpi_id, host, port);
+  const char *rpi_id = fileUtil.getRpiID().c_str();
+  const char *host = fileUtil.getHost().c_str();
+  comm = new Communicator(rpi_id, host, port);
 
 //   ofstream outputFile;
 //   outputFile.open("result.txt");
