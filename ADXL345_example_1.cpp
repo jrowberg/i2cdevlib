@@ -63,11 +63,11 @@ struct timeval start_t, end_t, stop_t, copy_t;
 long long diff, diff2, diff3;
 int msg_index = 1;
 int16_t ax, ay, az;
-//int port;
-//class Communicator *comm = NULL;
-//FileUtil fileUtil;
-//Json::FastWriter fw;
-//Json::Value root;
+int port;
+class Communicator *comm = NULL;
+FileUtil fileUtil;
+Json::FastWriter fw;
+Json::Value root;
 
 void timmer_handler();
 
