@@ -81,7 +81,7 @@ ADXL345 a;
   diff = (end_t.tv_sec - start_t.tv_sec) * (uint64_t)1000000 +
            (end_t.tv_usec - start_t.tv_usec);
    // printf("The time difference is %d us\n", diff);
-    root["rPi_id"] = rpi_id;
+    root["rPi_id"] = 1;
     root["x_axis"] = ax;
     root["y_axis"] = ay;
     root["z_aixs"] = az;
@@ -92,7 +92,7 @@ ADXL345 a;
 //      bufferp += sprintf (bufferp, "%d,%lld,%d,%d,%d\n",msg_index, diff, ax, ay, az);
 //     outputFile << msg_index << "," << diff << "," << ax << "," << ay << "," << az
 //              << endl;
-//    string json = fw.write(root);
+   string json = fw.write(root);
    const char *j = json.c_str();
     //	publish to broker
    comm->send_message(j);
