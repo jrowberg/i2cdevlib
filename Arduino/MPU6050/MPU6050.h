@@ -437,7 +437,7 @@ class MPU6050 {
     public:
         MPU6050();
         MPU6050(uint8_t address);
-
+	    uint8_t getMotionStatus();
         void initialize();
         bool testConnection();
 
@@ -1022,6 +1022,7 @@ class MPU6050 {
             uint32_t dmpGetAccelSumOfSquare();
             void dmpOverrideQuaternion(long *q);
             uint16_t dmpGetFIFOPacketSize();
+	    
         #endif
 
     private:
