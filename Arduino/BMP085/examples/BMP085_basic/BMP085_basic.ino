@@ -46,7 +46,7 @@ BMP085 barometer;
 
 float temperature;
 float pressure;
-float altitude;
+int32_t altitude;
 
 #define LED_PIN 13 // (Arduino is 13, Teensy is 11, Teensy++ is 6)
 bool blinkState = false;

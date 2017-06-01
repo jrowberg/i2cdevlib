@@ -228,7 +228,7 @@ uint32_t BMP085::getRawPressure() {
     return 0; // wrong measurement mode for pressure request
 }
 
-float BMP085::getPressure() {
+int32_t BMP085::getPressure() {
     /*
     Datasheet forumla
         UP = raw pressure
