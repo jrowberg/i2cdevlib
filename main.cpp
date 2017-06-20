@@ -68,7 +68,6 @@ class Communicator *comm = NULL;
 FileUtil fileUtil;
 Json::FastWriter fw;
 Json::Value root_1, root_2;
-Json::Value root_1, root_2;
 
 int main(int argc, char **argv) {
   I2Cdev::initialize();
@@ -140,5 +139,5 @@ int main(int argc, char **argv) {
      //printf("2, %lld\n", diff_2 );
 
   }
-return 1
+return 1;
 }
