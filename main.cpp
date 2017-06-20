@@ -72,7 +72,8 @@ int data_rate = 15;
 int data_range = 0;
 
 
-void *worker(void *arguments);
+void *sensor_1(void *arg);
+void *sensor_2(void *arg)
 
 pthread_mutex_t qlock = PTHREAD_MUTEX_INITIALIZER;	
 
@@ -103,40 +104,31 @@ int main(int argc, char **argv) {
   comm = new Communicator("1", "192.168.1.115", 1883);
   gettimeofday(&start_t, NULL);
   printf("start time : %lld\n", start_t.tv_sec * (uint64_t)1000000+ start_t.tv_usec);
-  pthread_t tid[numberOfSensor];
-  while(true) {
-	for (int i=0; i<numberOfSensor; i++) {	
-		int int_i = i;
-		pthread_create(&tid[i], NULL, worker, &int_i);
-		}
-	for(int i=0; i<numberOfSensor; i++){
-		pthread_join(tid[i], NULL);			
+  
+  while(1) {
+	  pthread_t thread1 thread2;
+        pthread_create(&tid[i], NULL, sensor_1, NULL);
+                pthread_create(&tid[i], NULL, sensor_2, NULL);
+		pthread_join(thread2, NULL);			
 		}
 
 	}
 }
 
-void *worker(void *arg)
+void *sensor_1(void *arg)
 {
-//   I2Cdev::initialize();
-// ADXL345 a;
+  I2Cdev::initialize();
+ADXL345 a;
 // ADXL345 b(ADXL345_ADDRESS_ALT_HIGH);
-// 		a.initialize();
-// 	b.initialize();
+		a.initialize();
   gettimeofday(&end_t, NULL);
   diff = (end_t.tv_sec - start_t.tv_sec) * (uint64_t)1000000 +
            (end_t.tv_usec - start_t.tv_usec);
   root["rpi_id"] = 1;
-  root["sensor_id"] = (int)arg;
-//   if((int)arg == 0){
-	  root["x"] = 1;
- 	  root["y"] = 2;
-   	  root["z"] = 3;
-//   }else{
-// 	  root["x"] = b.getAccelerationX();
-//  	  root["y"] = b.getAccelerationY();
-//    	  root["z"] = b.getAccelerationZ();
-//   }
+  root["sensor_id"] = 1;
+	  root["x"] = a.getAccelerationX();
+ 	  root["y"] = a.getAccelerationY();
+   	  root["z"] = a.getAccelerationZ();
   root["elapsed_time"] = diff;
   root["msg_index"] = msg_index;
 	cout << fw.write(root);
@@ -144,9 +136,34 @@ void *worker(void *arg)
 	const char *j = json.c_str();
 //	publish to broker
 	comm->send_message(j);
-	//pthread_mutex_lock(&qlock);
+	pthread_mutex_lock(&qlock);
 	msg_index++;
-	//pthread_mutex_unlock(&qlock);
+	pthread_mutex_unlock(&qlock);
+	return NULL;
+  }
+void *sensor_2(void *arg)
+{
+  I2Cdev::initialize();
+ ADXL345 b(ADXL345_ADDRESS_ALT_HIGH);
+		b.initialize();
+  gettimeofday(&end_t, NULL);
+  diff = (end_t.tv_sec - start_t.tv_sec) * (uint64_t)1000000 +
+           (end_t.tv_usec - start_t.tv_usec);
+  root["rpi_id"] = 1;
+  root["sensor_id"] = 2;
+	  root["x"] = b.getAccelerationX();
+ 	  root["y"] = b.getAccelerationY();
+   	  root["z"] = b.getAccelerationZ();
+  root["elapsed_time"] = diff;
+  root["msg_index"] = msg_index;
+	cout << fw.write(root);
+	string json = fw.write(root);
+	const char *j = json.c_str();
+//	publish to broker
+	comm->send_message(j);
+	pthread_mutex_lock(&qlock);
+	msg_index++;
+	pthread_mutex_unlock(&qlock);
 	return NULL;
   }
 
