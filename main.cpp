@@ -130,13 +130,13 @@ int main(int argc, char **argv) {
   diff = (end_t.tv_sec - start_t.tv_sec) * (uint64_t)1000000 +
            (end_t.tv_usec - start_t.tv_usec);
   root["rpi_id"] = 1;
-  root["sensor_id"] = arg;
+  root["sensor_id"] = (int)arg;
   root["x_axis"] = x;
   root["y_axis"] = y;
   root["z_aixs"] = z;
   root["elapsed_time"] = diff;
   root["msg_index"] = msg_index;
-//	cout << fw.write(root);
+	cout << fw.write(root);
 	string json = fw.write(root);
 	const char *j = json.c_str();
 //	publish to broker
