@@ -126,7 +126,7 @@ int main(int argc, char **argv) {
   else
   {ADXL345 x(ADXL345_ADDRESS_ALT_HIGH);}
 	  x.initialize();
-	  s.getAcceleration(&x, &y, &z);
+	  x.getAcceleration(&x, &y, &z);
   fflush(stdout);
   gettimeofday(&end_t, NULL);
   diff = (end_t.tv_sec - start_t.tv_sec) * (uint64_t)1000000 +
