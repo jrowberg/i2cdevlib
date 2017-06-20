@@ -47,7 +47,6 @@ ${PATH_I2CDEVLIB}/Arduino/ADXL345/ADXL345.cpp -l bcm2835 -l m
 
 #include "ADXL345.h"
 #include "Communicator.h"
-#include "FileUtil.h"
 #include "I2Cdev.h"
 #include <bcm2835.h>
 #include <iostream>
@@ -67,7 +66,6 @@ int msg_index = 1;
 int16_t x, y, z;
 int port, sensor_id;
 class Communicator *comm = NULL;
-FileUtil fileUtil;
 Json::FastWriter fw;
 Json::Value root;
 //Sensor a(0);
