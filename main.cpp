@@ -72,11 +72,10 @@ FileUtil fileUtil;
 Json::FastWriter fw;
 Json::Value root;
 
-  ADXL345 a;
-  ADXL345 b(ADXL345_ADDRESS_ALT_HIGH);
 int main(int argc, char **argv) {
   I2Cdev::initialize();
-
+  ADXL345 a;
+  ADXL345 b(ADXL345_ADDRESS_ALT_HIGH);
   if (a.testConnection()&& b.testConnection())
     printf("Both sensors' connection test successful\n");
   else {
@@ -123,9 +122,11 @@ int main(int argc, char **argv) {
   void *worker(void *arg)
 {
   if(arg ==0)
-  {a.getAcceleration(&x, &y, &z);}
+  {ADXL345 x;}
   else
-  {b.getAcceleration(&x, &y, &z);}
+  {ADXL345 x(ADXL345_ADDRESS_ALT_HIGH);}
+	  x.initialize();
+	  s.getAcceleration(&x, &y, &z);
   fflush(stdout);
   gettimeofday(&end_t, NULL);
   diff = (end_t.tv_sec - start_t.tv_sec) * (uint64_t)1000000 +
