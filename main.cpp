@@ -106,7 +106,7 @@ int main(int argc, char **argv) {
  	pthread_t tid[2];
 
 
-	while(1) {
+	while(true) {
 		for (int i=0; i<2; i++) {	
 			int int_i = i;
 			pthread_create(&tid[i], NULL, worker, (void*)int_i);
