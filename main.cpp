@@ -61,6 +61,7 @@ using namespace std;
 void *sensor_1(void *arg);
 void *sensor_2(void *arg);
 
+ADXL345 a;
 pthread_mutex_t qlock = PTHREAD_MUTEX_INITIALIZER;	
 struct timeval start_t, end_t;
 
@@ -117,17 +118,17 @@ void *sensor_1(void *arg)
 	Json::FastWriter fw;
 Json::Value root;
  long long diff;
-//   I2Cdev::initialize();
-// ADXL345 a;
-// 		a.initialize();
+  I2Cdev::initialize();
+
+a.initialize();
   gettimeofday(&end_t, NULL);
   diff = (end_t.tv_sec - start_t.tv_sec) * (uint64_t)1000000 +
            (end_t.tv_usec - start_t.tv_usec);
   root["rpi_id"] = 1;
   root["sensor_id"] = 1;
-	  root["x"] = 1;
- 	  root["y"] = 1;
-   	  root["z"] = 1;
+	  root["x"] = a.getAccelerationX();
+ 	  root["y"] = a.getAccelerationY();
+   	  root["z"] = a.getAccelerationZ();
   root["elapsed_time"] = diff;
   root["msg_index"] = msg_index;
 	cout << fw.write(root);
