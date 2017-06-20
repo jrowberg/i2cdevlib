@@ -56,6 +56,7 @@ ${PATH_I2CDEVLIB}/Arduino/ADXL345/ADXL345.cpp -l bcm2835 -l m
 #include <sys/time.h>
 #include <unistd.h>
 #include <pthread.h>
+#include
 
 using namespace std;
 void *sensor_1(void *arg);
@@ -63,11 +64,10 @@ void *sensor_2(void *arg);
 
 pthread_mutex_t qlock = PTHREAD_MUTEX_INITIALIZER;	
 struct timeval start_t, end_t;
-long long diff;
+
 int msg_index = 1;
 class Communicator *comm = NULL;
-Json::FastWriter fw;
-Json::Value root;
+
 int numberOfSensor = 2;
 int data_rate = 15;
 int data_range = 0;
@@ -115,19 +115,22 @@ int main(int argc, char **argv) {
 
 void *sensor_1(void *arg)
 {
+	Json::FastWriter fw;
+Json::Value root;
+ long long diff;
 //   I2Cdev::initialize();
 // ADXL345 a;
 // 		a.initialize();
   gettimeofday(&end_t, NULL);
   diff = (end_t.tv_sec - start_t.tv_sec) * (uint64_t)1000000 +
            (end_t.tv_usec - start_t.tv_usec);
-  root["rpi_id"] = 1;
-  root["sensor_id"] = 1;
-	  root["x"] = 1;
- 	  root["y"] = 1;
-   	  root["z"] = 1;
-  root["elapsed_time"] = diff;
-  root["msg_index"] = msg_index;
+  root1["rpi_id"] = 1;
+  root1["sensor_id"] = 1;
+	  root1["x"] = 1;
+ 	  root1["y"] = 1;
+   	  root1["z"] = 1;
+  root1["elapsed_time"] = diff;
+  root1["msg_index"] = msg_index;
 	cout << fw.write(root);
 	string json = fw.write(root);
 	const char *j = json.c_str();
@@ -139,7 +142,9 @@ void *sensor_1(void *arg)
 	return NULL;
   }
 void *sensor_2(void *arg)
-{
+{Json::FastWriter fw;
+Json::Value root;
+ long long diff;
 //   I2Cdev::initialize();
 //  ADXL345 b(ADXL345_ADDRESS_ALT_HIGH);
 // 		b.initialize();
