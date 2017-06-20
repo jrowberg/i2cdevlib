@@ -29,7 +29,6 @@ class Sensor
 {
 public:
     Sensor(int i);   //initialize the sensor with a index
-    void set(int i);
     int get_x();
     int get_y();
     int get_z();
