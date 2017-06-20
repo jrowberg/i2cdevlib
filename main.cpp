@@ -77,7 +77,7 @@ void *worker(void *arguments);
 pthread_mutex_t qlock = PTHREAD_MUTEX_INITIALIZER;	
 
 int main(int argc, char **argv) {
-  
+  I2Cdev::initialize();
 
   if (a.testConnection()&& b.testConnection())
     printf("Both sensors' connection test successful\n");
