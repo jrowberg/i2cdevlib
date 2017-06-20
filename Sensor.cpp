@@ -6,10 +6,11 @@
 
 Sensor::Sensor(int i):index(i)
 {
-    if(index==0)
-    {ADXL345 sensor;}
-    else
-    {ADXL345 sensor(ADXL345_ADDRESS_ALT_HIGH);}
+//     if(index==0)
+//     {ADXL345 sensor;}
+//     else
+//     {ADXL345 sensor(ADXL345_ADDRESS_ALT_HIGH);}
+    ADXL345 sensor;
     sensor.getAcceleration(&x, &y, &z);
 
 }
