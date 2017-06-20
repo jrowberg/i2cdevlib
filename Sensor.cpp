@@ -4,17 +4,20 @@
 
 
 
-Sensor::Sensor(int i):
-    int16_t x, y, z;
+Sensor::Sensor(int i):index(i)
+
+{set(index);
+    }
+
+void Sensor::set(int i)
+{
     if(i==0)
     {ADXL345 sensor;}
     else
     {ADXL345 sensor(ADXL345_ADDRESS_ALT_HIGH);}
     sensor.getAcceleration(&x, &y, &z);
-    }
 
-
-
+}
 
 
 
