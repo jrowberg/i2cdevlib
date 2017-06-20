@@ -106,7 +106,7 @@ int main(int argc, char **argv) {
   comm = new Communicator("1", "192.168.1.115", 1883);
 	gettimeofday(&start_t, NULL);
   printf("start time : %lld\n", start_t.tv_sec * (uint64_t)1000000+ start_t.tv_usec);
-int numberOfSensor = 2
+int numberOfSensor = 2;
 pthread_t tid[numberOfSensor];
 
 
