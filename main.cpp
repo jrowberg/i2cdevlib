@@ -58,9 +58,10 @@ ${PATH_I2CDEVLIB}/Arduino/ADXL345/ADXL345.cpp -l bcm2835 -l m
 #include <pthread.h>
 
 using namespace std;
-void *worker(void* arg);
+void *sensor_1(void *arg);
+void *sensor_2(void *arg);
 
-//pthread_mutex_t qlock = PTHREAD_MUTEX_INITIALIZER;	
+pthread_mutex_t qlock = PTHREAD_MUTEX_INITIALIZER;	
 struct timeval start_t, end_t;
 long long diff;
 int msg_index = 1;
@@ -72,10 +73,8 @@ int data_rate = 15;
 int data_range = 0;
 
 
-void *sensor_1(void *arg);
-void *sensor_2(void *arg)
 
-pthread_mutex_t qlock = PTHREAD_MUTEX_INITIALIZER;	
+
 
 int main(int argc, char **argv) {
 
