@@ -56,14 +56,19 @@ ${PATH_I2CDEVLIB}/Arduino/ADXL345/ADXL345.cpp -l bcm2835 -l m
 #include <stdio.h>
 #include <sys/time.h>
 #include <unistd.h>
+#include <pthread.h>
 
+void *worker(void *arguments);
+
+pthread_mutex_t qlock = PTHREAD_MUTEX_INITIALIZER;	
 
 using namespace std;
+
 struct timeval start_t, end_t_1, end_t_2, stop_t;
-long long diff_1, diff_2, diff_3;
+long long diff;
 int msg_index = 1;
-int16_t ax, ay, az, bx, by, bz;
-int port;
+int16_t x, y, z;
+int port, sensor_id;
 class Communicator *comm = NULL;
 FileUtil fileUtil;
 Json::FastWriter fw;
@@ -101,43 +106,52 @@ int main(int argc, char **argv) {
   const char *host = fileUtil.getHost().c_str();
   comm = new Communicator(rpi_id, host, port);
 
-  while(1){
-    a.getAcceleration(&ax, &ay, &az);
-    fflush(stdout);
-    gettimeofday(&end_t_1, NULL);
-    b.getAcceleration(&bx, &by, &bz);
-    fflush(stdout);
-    gettimeofday(&end_t_2, NULL);
-    diff_1 = (end_t_1.tv_sec - start_t.tv_sec) * (uint64_t)1000000 +
-           (end_t_1.tv_usec - start_t.tv_usec);
-    diff_2 = (end_t_2.tv_sec - start_t.tv_sec) * (uint64_t)1000000 +
-            (end_t_2.tv_usec - start_t.tv_usec);
-     root_1["rPi_id"] = rpi_id;
-     root_1["sensor_id"] = 1;
-     root_1["x_axis"] = ax;
-     root_1["y_axis"] = ay;
-     root_1["z_aixs"] = az;
-     root_1["elapsed_time"] = diff_1;
-     root_1["msg_index"] = msg_index;
-//     cout << fw.write(root_1);
-     root_2["rPi_id"] = rpi_id;
-     root_2["sensor_id"] = 2;
-     root_2["x_axis"] = bx;
-     root_2["y_axis"] = by;
-     root_2["z_aixs"] = bz;
-    //     cout << fw.write(root_2);
-     string json_1 = fw.write(root_1);
-     string json_2 = fw.write(root_2);
-     const char *j_1 = json_1.c_str();
-     const char *j_2 = json_2.c_str();
-//     //       publish to broker
-     comm->send_message(j_1);
-     comm->send_message(j_2);
-//     // pthread_mutex_lock(&qlock);
-     msg_index++;
-     //printf("1, %lld\n", diff_1 );
-     //printf("2, %lld\n", diff_2 );
+ 	pthread_t tid[numberOfSensor];
 
+
+	while(1) {
+		for (int i=0; i<2; i++) {	
+			int int_i = i;
+			pthread_create(&tid[i], NULL, worker, (void*)int_i);
+			}
+		for(int i=0; i<2; i++){
+			pthread_join(tid[i], NULL);			
+			}
   }
-return 1;
+    return 0;
 }
+  
+  
+  void *worker(void *arg)
+{
+  if(arg ==0)
+  {ADXL345 mySensor;
+   sensor_id = 1;}
+  else
+  {ADXL345 mySensor(ADXL345_ADDRESS_ALT_HIGH);
+   sensor_id = 2;}
+  mySensor.getAcceleration(&x, &y, &z);
+  fflush(stdout);
+  gettimeofday(&end_t, NULL);
+  diff = (end_t.tv_sec - start_t.tv_sec) * (uint64_t)1000000 +
+           (end_t.tv_usec - start_t.tv_usec);
+	root["rPi_id"] = rpi_id;
+	root["sensor_id"] = mySensor.getSensorID();
+  root["x_axis"] = x;
+  root["y_axis"] = y;
+  root["z_aixs"] = z;
+  root["elapsed_time"] = diff;
+  root["msg_index"] = msg_index;
+//	cout << fw.write(root);
+	string json = fw.write(root);
+	const char *j = json.c_str();
+//	publish to broker
+	comm->send_message(j);
+	pthread_mutex_lock(&qlock);
+	msg_count++;
+	pthread_mutex_unlock(&qlock);
+	return NULL;
+}
+  
+
+
