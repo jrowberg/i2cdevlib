@@ -69,8 +69,8 @@ class Communicator *comm = NULL;
 Json::FastWriter fw;
 Json::Value root;
 int numberOfSensor = 2;
-//Sensor a(0);
-//Sensor b(ADXL345_ADDRESS_ALT_HIGH);
+ADXL345 a;
+ADXL345 b(ADXL345_ADDRESS_ALT_HIGH);
 
 void *worker(void *arguments);
 
@@ -120,18 +120,20 @@ int main(int argc, char **argv) {
 
 void *worker(void *arg)
 {
-  if((int)arg == 0){
-	  ADXL345 a;}
-  else{
-	  ADXL345 a(ADXL345_ADDRESS_ALT_HIGH);}
   gettimeofday(&end_t, NULL);
   diff = (end_t.tv_sec - start_t.tv_sec) * (uint64_t)1000000 +
            (end_t.tv_usec - start_t.tv_usec);
   root["rpi_id"] = 1;
   root["sensor_id"] = (int)arg;
-  root["x"] = a.getAccerlerationX();
-  root["y"] = a.getAccerlerationY();
-  root["z"] = a.getAccerlerationZ();
+  if((int)arg == 0){
+	  root["x"] = a.getAccerlerationX();
+ 	  root["y"] = a.getAccerlerationY();
+   	  root["z"] = a.getAccerlerationZ();
+  }else{
+	  root["x"] = b.getAccerlerationX();
+ 	  root["y"] = b.getAccerlerationY();
+   	  root["z"] = b.getAccerlerationZ();
+  }
   root["elapsed_time"] = diff;
   root["msg_index"] = msg_index;
 	cout << fw.write(root);
