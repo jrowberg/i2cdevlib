@@ -98,9 +98,10 @@ int main(int argc, char **argv) {
    cout << "data range of sensor_1 after change" << int(a.getRange()) << endl;
    cout << "data range of sensor_2 after change" << int(b.getRange()) << endl;
 
-  gettimeofday(&start_t, NULL);
+
+  comm = new Communicator("1", "192.168.1.115", 1883);
+	gettimeofday(&start_t, NULL);
   printf("start time : %lld\n", start_t.tv_sec * (uint64_t)1000000+ start_t.tv_usec);
-  comm = new Communicator("1", 192.168.1.115, 1883);
 
  	pthread_t tid[2];
 
@@ -121,17 +122,17 @@ int main(int argc, char **argv) {
   void *worker(void *arg)
 {
   if(arg ==0)
-  {ADXL345 mySensor;
+  {ADXL345 x;
    sensor_id = 1;}
   else
-  {ADXL345 mySensor(ADXL345_ADDRESS_ALT_HIGH);
+  {ADXL345 x(ADXL345_ADDRESS_ALT_HIGH);
    sensor_id = 2;}
-  mySensor.getAcceleration(&x, &y, &z);
+  x.getAcceleration(&x, &y, &z);
   fflush(stdout);
   gettimeofday(&end_t, NULL);
   diff = (end_t.tv_sec - start_t.tv_sec) * (uint64_t)1000000 +
            (end_t.tv_usec - start_t.tv_usec);
-  root["rpi_id"] = rpi_id;
+  root["rpi_id"] = 1;
   root["sensor_id"] = sensor_id;
   root["x_axis"] = x;
   root["y_axis"] = y;
@@ -144,7 +145,7 @@ int main(int argc, char **argv) {
 //	publish to broker
 	comm->send_message(j);
 	pthread_mutex_lock(&qlock);
-	msg_count++;
+	msg_index++;
 	pthread_mutex_unlock(&qlock);
 	return NULL;
 }
