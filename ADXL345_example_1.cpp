@@ -33,6 +33,9 @@ https://learn.adafruit.com/adafruits-raspberry-pi-lesson-4-gpio-setup/configurin
   4. then from bash
       $ PATH_I2CDEVLIB=~/i2cdevlib/
       $ gcc -o ADXL345_example_1
+"ADXL345_example_1.cpp" 163L, 5859C 2,1           Top
+      $ PATH_I2CDEVLIB=~/i2cdevlib/
+      $ gcc -o ADXL345_example_1
 ${PATH_I2CDEVLIB}RaspberryPi_bcm2835/ADXL345/examples/ADXL345_example_1.cpp \
          -I ${PATH_I2CDEVLIB}RaspberryPi_bcm2835/I2Cdev
 ${PATH_I2CDEVLIB}RaspberryPi_bcm2835/I2Cdev/I2Cdev.cpp \
@@ -53,113 +56,89 @@ ${PATH_I2CDEVLIB}/Arduino/ADXL345/ADXL345.cpp -l bcm2835 -l m
 #include <stdio.h>
 #include <sys/time.h>
 #include <unistd.h>
-#include <signal.h>
 
 
 using namespace std;
-char buffer[50000000];
-char *bufferp = buffer;
-struct timeval start_t, end_t, stop_t, copy_t;
-long long diff, diff2, diff3;
+struct timeval start_t, end_t_1, end_t_2, stop_t;
+long long diff_1, diff_2, diff_3;
 int msg_index = 1;
-int16_t ax, ay, az;
+int16_t ax, ay, az, bx, by, bz;
 int port;
 class Communicator *comm = NULL;
 FileUtil fileUtil;
 Json::FastWriter fw;
-Json::Value root;
-
-void timmer_handler();
-
-void timer_handler(){
-gettimeofday(&end_t, NULL);	
-ADXL345 a;
-  a.getAcceleration(&ax, &ay, &az);
-//   fflush(stdout);
-//  printf("readings: %d, %d, %d\n", ax, ay, az);
-
-  diff = (end_t.tv_sec - start_t.tv_sec) * (uint64_t)1000000 +
-           (end_t.tv_usec - start_t.tv_usec);
-   // printf("The time difference is %d us\n", diff);
-    root["rPi_id"] = 1;
-    root["x_axis"] = ax;
-    root["y_axis"] = ay;
-    root["z_aixs"] = az;
-    root["elapsed_time"] = diff;
-    root["msg_index"] = msg_index;
-//    cout << fw.write(root);
-//     printf("%d,%lld,%d,%d,%d\n", msg_index, diff, ax, ay, az);
-//      bufferp += sprintf (bufferp, "%d,%lld,%d,%d,%d\n",msg_index, diff, ax, ay, az);
-//     outputFile << msg_index << "," << diff << "," << ax << "," << ay << "," << az
-//              << endl;
-   string json = fw.write(root);
-   const char *j = json.c_str();
-    //	publish to broker
-   comm->send_message(j);
-//     pthread_mutex_lock(&qlock);
-    msg_index++;
- // printf("diff: %lld\n", diff);
-}
-
+Json::Value root_1, root_2;
+Json::Value root_1, root_2;
 
 int main(int argc, char **argv) {
   I2Cdev::initialize();
-  ADXL345 accel;
-  if (accel.testConnection())
-    printf("ADXL345 connection test successful\n");
+  ADXL345 a;
+  ADXL345 b(ADXL345_ADDRESS_ALT_HIGH);
+  if (a.testConnection()&& b.testConnection())
+    printf("Both sensors' connection test successful\n");
   else {
     fprintf(stderr, "ADXL345 connection test failed! exiting ...\n");
     return 1;
   }
-  accel.initialize();
-  cout << "current data rate is " << int(accel.getRate())<< endl;
-  accel.setRate(15); 
-  cout << "data rate after change " <<int(accel.getRate()) << endl;
-  cout << "current data range" << int(accel.getRange()) << endl;
-  accel.setRange(0);
-  cout << "data range after change" << int(accel.getRate()) << endl;
+  a.initialize();
+  b.initialize();
+   cout << "current data rate of sensor_1 is " << int(a.getRate())<< endl;
+   cout << "current data rate of sensor_2 is " << int(b.getRate()) << endl;
+   a.setRate(15);
+   b.setRate(10);
+   cout << "data rate of sensor_1 after change " <<int(a.getRate()) << endl;
+   cout << "data rate of sensor_2 after change " << int(b.getRate()) << endl;
 
+   cout << "current data range of sensor_1 is " << int(a.getRange()) << endl;
+   cout << "current data range of sensor_2 is " << int(b.getRange()) << endl;
+   a.setRange(0);
+   b.setRange(1);
+   cout << "data range of sensor_1 after change" << int(a.getRange()) << endl;
+   cout << "data range of sensor_2 after change" << int(b.getRange()) << endl;
+
+  gettimeofday(&start_t, NULL);
+  printf("start time : %lld\n", start_t.tv_sec * (uint64_t)1000000+ start_t.tv_usec);
   const char *rpi_id = fileUtil.getRpiID().c_str();
   const char *host = fileUtil.getHost().c_str();
   comm = new Communicator(rpi_id, host, port);
 
-//   ofstream outputFile;
-//   outputFile.open("result.txt");
-//   outputFile << "msg_index"
-//              << ","
-//              << "elapsed_time"
-//              << ","
-//              << "x"
-//              << ","
-//              << "y"
-//              << ","
-//              << "z" << endl;
-//   printf("start time : %lld\n", start_t.tv_sec * (uint64_t)1000000+ start_t.tv_usec);
-    gettimeofday(&start_t, NULL);
-    struct itimerval value;
-    value.it_value.tv_sec=0;                
-    value.it_value.tv_usec=300;
-    value.it_interval= value.it_value;
-    signal(SIGALRM, (void (*)(int))timer_handler);
-    setitimer(ITIMER_REAL, &value, NULL);  
-//     while (1);
-  while (msg_index < 1000000);
-  gettimeofday(&stop_t, NULL);
-  printf( "total running time(seconds): %d\n" ,(stop_t.tv_sec- start_t.tv_sec) );
-  diff2 = (stop_t.tv_sec - start_t.tv_sec) * (uint64_t)1000000 +
-           (stop_t.tv_usec - start_t.tv_usec);
-  printf( "average time elapse: %d\n", diff2/100000 );
-  ofstream outputFile;
-  outputFile.open("result.txt");
-  outputFile << buffer << '\n';
-  outputFile.close();
-  gettimeofday(&copy_t, NULL);
-  diff3 = (copy_t.tv_sec - stop_t.tv_sec) * (uint64_t)1000000 +
-           (copy_t.tv_usec - stop_t.tv_usec);
-  printf("output time: %lld\n", diff3);
-//   cou"length is " << n << endl;
+  while(1){
+    a.getAcceleration(&ax, &ay, &az);
+    fflush(stdout);
+    gettimeofday(&end_t_1, NULL);
+    b.getAcceleration(&bx, &by, &bz);
+    fflush(stdout);
+    gettimeofday(&end_t_2, NULL);
+    diff_1 = (end_t_1.tv_sec - start_t.tv_sec) * (uint64_t)1000000 +
+           (end_t_1.tv_usec - start_t.tv_usec);
+    diff_2 = (end_t_2.tv_sec - start_t.tv_sec) * (uint64_t)1000000 +
+            (end_t_2.tv_usec - start_t.tv_usec);
+     root_1["rPi_id"] = rpi_id;
+     root_1["sensor_id"] = 1;
+     root_1["x_axis"] = ax;
+     root_1["y_axis"] = ay;
+     root_1["z_aixs"] = az;
+     root_1["elapsed_time"] = diff_1;
+     root_1["msg_index"] = msg_index;
+//     cout << fw.write(root_1);
+     root_2["rPi_id"] = rpi_id;
+     root_2["sensor_id"] = 2;
+     root_2["x_axis"] = bx;
+     root_2["y_axis"] = by;
+     root_2["z_aixs"] = bz;
+    //     cout << fw.write(root_2);
+     string json_1 = fw.write(root_1);
+     string json_2 = fw.write(root_2);
+     const char *j_1 = json_1.c_str();
+     const char *j_2 = json_2.c_str();
+//     //       publish to broker
+     comm->send_message(j_1);
+     comm->send_message(j_2);
+//     // pthread_mutex_lock(&qlock);
+     msg_index++;
+     //printf("1, %lld\n", diff_1 );
+     //printf("2, %lld\n", diff_2 );
 
-  return 1;
+  }
+return 1
 }
-
-
