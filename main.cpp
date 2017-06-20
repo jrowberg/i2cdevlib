@@ -70,8 +70,8 @@ class Communicator *comm = NULL;
 FileUtil fileUtil;
 Json::FastWriter fw;
 Json::Value root;
-Sensor a;
-Sensor b(ADXL345_ADDRESS_ALT_HIGH);
+//Sensor a(0);
+//Sensor b(ADXL345_ADDRESS_ALT_HIGH);
 
 void *worker(void *arguments);
 
@@ -86,21 +86,21 @@ int main(int argc, char **argv) {
 //     fprintf(stderr, "ADXL345 connection test failed! exiting ...\n");
 //     return 1;
 //   }
-	a.initialize();
-	b.initialize();
-   cout << "current data rate of sensor_1 is " << int(a.getRate())<< endl;
-   cout << "current data rate of sensor_2 is " << int(b.getRate()) << endl;
-   a.setRate(15);
-   b.setRate(10);
-   cout << "data rate of sensor_1 after change " <<int(a.getRate()) << endl;
-   cout << "data rate of sensor_2 after change " << int(b.getRate()) << endl;
+// 	a.initialize();
+// 	b.initialize();
+//    cout << "current data rate of sensor_1 is " << int(a.getRate())<< endl;
+//    cout << "current data rate of sensor_2 is " << int(b.getRate()) << endl;
+//    a.setRate(15);
+//    b.setRate(10);
+//    cout << "data rate of sensor_1 after change " <<int(a.getRate()) << endl;
+//    cout << "data rate of sensor_2 after change " << int(b.getRate()) << endl;
 
-   cout << "current data range of sensor_1 is " << int(a.getRange()) << endl;
-   cout << "current data range of sensor_2 is " << int(b.getRange()) << endl;
-   a.setRange(0);
-   b.setRange(1);
-   cout << "data range of sensor_1 after change" << int(a.getRange()) << endl;
-   cout << "data range of sensor_2 after change" << int(b.getRange()) << endl;
+//    cout << "current data range of sensor_1 is " << int(a.getRange()) << endl;
+//    cout << "current data range of sensor_2 is " << int(b.getRange()) << endl;
+//    a.setRange(0);
+//    b.setRange(1);
+//    cout << "data range of sensor_1 after change" << int(a.getRange()) << endl;
+//    cout << "data range of sensor_2 after change" << int(b.getRange()) << endl;
 
 
   comm = new Communicator("1", "192.168.1.115", 1883);
