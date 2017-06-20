@@ -58,13 +58,11 @@ ${PATH_I2CDEVLIB}/Arduino/ADXL345/ADXL345.cpp -l bcm2835 -l m
 #include <unistd.h>
 #include <pthread.h>
 
+using namespace std;
 void *worker(void *arguments);
 
 pthread_mutex_t qlock = PTHREAD_MUTEX_INITIALIZER;	
-
-using namespace std;
-
-struct timeval start_t, end_t_1, end_t_2, stop_t;
+struct timeval start_t, end_t;
 long long diff;
 int msg_index = 1;
 int16_t x, y, z;
@@ -72,7 +70,7 @@ int port, sensor_id;
 class Communicator *comm = NULL;
 FileUtil fileUtil;
 Json::FastWriter fw;
-Json::Value root_1, root_2;
+Json::Value root;
 
 int main(int argc, char **argv) {
   I2Cdev::initialize();
@@ -102,11 +100,9 @@ int main(int argc, char **argv) {
 
   gettimeofday(&start_t, NULL);
   printf("start time : %lld\n", start_t.tv_sec * (uint64_t)1000000+ start_t.tv_usec);
-  const char *rpi_id = fileUtil.getRpiID().c_str();
-  const char *host = fileUtil.getHost().c_str();
-  comm = new Communicator(rpi_id, host, port);
+  comm = new Communicator("1", 192.168.1.115, 1883);
 
- 	pthread_t tid[numberOfSensor];
+ 	pthread_t tid[2];
 
 
 	while(1) {
@@ -135,8 +131,8 @@ int main(int argc, char **argv) {
   gettimeofday(&end_t, NULL);
   diff = (end_t.tv_sec - start_t.tv_sec) * (uint64_t)1000000 +
            (end_t.tv_usec - start_t.tv_usec);
-	root["rPi_id"] = rpi_id;
-	root["sensor_id"] = mySensor.getSensorID();
+  root["rpi_id"] = rpi_id;
+  root["sensor_id"] = sensor_id;
   root["x_axis"] = x;
   root["y_axis"] = y;
   root["z_aixs"] = z;
