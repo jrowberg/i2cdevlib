@@ -121,15 +121,15 @@ int main(int argc, char **argv) {
 
 void *worker(void *arg)
 {
-Sensor mySensor((int)arg);
+//Sensor mySensor((int)arg);
   gettimeofday(&end_t, NULL);
   diff = (end_t.tv_sec - start_t.tv_sec) * (uint64_t)1000000 +
            (end_t.tv_usec - start_t.tv_usec);
   root["rpi_id"] = 1;
   root["sensor_id"] = (int)arg;
-  root["x"] = mySensor.get_x();
-  root["y"] = mySensor.get_y();
-  root["z"] = mySensor.get_z();
+  root["x"] = 1;
+  root["y"] = 2;
+  root["z"] = 3;
   root["elapsed_time"] = diff;
   root["msg_index"] = msg_index;
 	cout << fw.write(root);
