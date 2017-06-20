@@ -56,7 +56,6 @@ ${PATH_I2CDEVLIB}/Arduino/ADXL345/ADXL345.cpp -l bcm2835 -l m
 #include <sys/time.h>
 #include <unistd.h>
 #include <pthread.h>
-#include
 
 using namespace std;
 void *sensor_1(void *arg);
@@ -124,13 +123,13 @@ Json::Value root;
   gettimeofday(&end_t, NULL);
   diff = (end_t.tv_sec - start_t.tv_sec) * (uint64_t)1000000 +
            (end_t.tv_usec - start_t.tv_usec);
-  root1["rpi_id"] = 1;
-  root1["sensor_id"] = 1;
-	  root1["x"] = 1;
- 	  root1["y"] = 1;
-   	  root1["z"] = 1;
-  root1["elapsed_time"] = diff;
-  root1["msg_index"] = msg_index;
+  root["rpi_id"] = 1;
+  root["sensor_id"] = 1;
+	  root["x"] = 1;
+ 	  root["y"] = 1;
+   	  root["z"] = 1;
+  root["elapsed_time"] = diff;
+  root["msg_index"] = msg_index;
 	cout << fw.write(root);
 	string json = fw.write(root);
 	const char *j = json.c_str();
