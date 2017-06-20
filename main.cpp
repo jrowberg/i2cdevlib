@@ -69,6 +69,8 @@ class Communicator *comm = NULL;
 Json::FastWriter fw;
 Json::Value root;
 int numberOfSensor = 2;
+int data_rate = 15;
+int data_range = 0;
 
 
 void *worker(void *arguments);
@@ -76,30 +78,27 @@ void *worker(void *arguments);
 pthread_mutex_t qlock = PTHREAD_MUTEX_INITIALIZER;	
 
 int main(int argc, char **argv) {
-  I2Cdev::initialize();
-ADXL345 a;
-ADXL345 b(ADXL345_ADDRESS_ALT_HIGH);
-  if (a.testConnection()&& b.testConnection())
-    printf("Both sensors' connection test successful\n");
-  else {
-    fprintf(stderr, "ADXL345 connection test failed! exiting ...\n");
-    return 1;
-  }
-	a.initialize();
-	b.initialize();
-   cout << "current data rate of sensor_1 is " << int(a.getRate())<< endl;
-   cout << "current data rate of sensor_2 is " << int(b.getRate()) << endl;
-   a.setRate(15);
-   b.setRate(10);
-   cout << "data rate of sensor_1 after change " <<int(a.getRate()) << endl;
-   cout << "data rate of sensor_2 after change " << int(b.getRate()) << endl;
 
-   cout << "current data range of sensor_1 is " << int(a.getRange()) << endl;
-   cout << "current data range of sensor_2 is " << int(b.getRange()) << endl;
-   a.setRange(0);
-   b.setRange(1);
-   cout << "data range of sensor_1 after change" << int(a.getRange()) << endl;
-   cout << "data range of sensor_2 after change" << int(b.getRange()) << endl;
+//   if (a.testConnection()&& b.testConnection())
+//     printf("Both sensors' connection test successful\n");
+//   else {
+//     fprintf(stderr, "ADXL345 connection test failed! exiting ...\n");
+//     return 1;
+//   }
+
+//    cout << "current data rate of sensor_1 is " << int(a.getRate())<< endl;
+//    cout << "current data rate of sensor_2 is " << int(b.getRate()) << endl;
+//    a.setRate(15);
+//    b.setRate(10);
+//    cout << "data rate of sensor_1 after change " <<int(a.getRate()) << endl;
+//    cout << "data rate of sensor_2 after change " << int(b.getRate()) << endl;
+
+//    cout << "current data range of sensor_1 is " << int(a.getRange()) << endl;
+//    cout << "current data range of sensor_2 is " << int(b.getRange()) << endl;
+//    a.setRange(0);
+//    b.setRange(1);
+//    cout << "data range of sensor_1 after change" << int(a.getRange()) << endl;
+//    cout << "data range of sensor_2 after change" << int(b.getRange()) << endl;
 
 
   comm = new Communicator("1", "192.168.1.115", 1883);
@@ -120,21 +119,24 @@ ADXL345 b(ADXL345_ADDRESS_ALT_HIGH);
 
 void *worker(void *arg)
 {
-	ADXL345 x;
-ADXL345 y(ADXL345_ADDRESS_ALT_HIGH);
+  I2Cdev::initialize();
+ADXL345 a;
+ADXL345 b(ADXL345_ADDRESS_ALT_HIGH);
+		a.initialize();
+	b.initialize();
   gettimeofday(&end_t, NULL);
   diff = (end_t.tv_sec - start_t.tv_sec) * (uint64_t)1000000 +
            (end_t.tv_usec - start_t.tv_usec);
   root["rpi_id"] = 1;
   root["sensor_id"] = (int)arg;
   if((int)arg == 0){
-	  root["x"] = x.getAccelerationX();
- 	  root["y"] = x.getAccelerationY();
-   	  root["z"] = x.getAccelerationZ();
+	  root["x"] = a.getAccelerationX();
+ 	  root["y"] = a.getAccelerationY();
+   	  root["z"] = a.getAccelerationZ();
   }else{
-	  root["x"] = y.getAccelerationX();
- 	  root["y"] = y.getAccelerationY();
-   	  root["z"] = y.getAccelerationZ();
+	  root["x"] = b.getAccelerationX();
+ 	  root["y"] = b.getAccelerationY();
+   	  root["z"] = b.getAccelerationZ();
   }
   root["elapsed_time"] = diff;
   root["msg_index"] = msg_index;
