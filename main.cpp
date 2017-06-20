@@ -126,13 +126,13 @@ void *worker(void *arg)
   root["rpi_id"] = 1;
   root["sensor_id"] = (int)arg;
   if((int)arg == 0){
-	  root["x"] = a.getAccerlerationX();
- 	  root["y"] = a.getAccerlerationY();
-   	  root["z"] = a.getAccerlerationZ();
+	  root["x"] = a.getAccelerationX();
+ 	  root["y"] = a.getAccelerationY();
+   	  root["z"] = a.getAccelerationZ();
   }else{
-	  root["x"] = b.getAccerlerationX();
- 	  root["y"] = b.getAccerlerationY();
-   	  root["z"] = b.getAccerlerationZ();
+	  root["x"] = b.getAccelerationX();
+ 	  root["y"] = b.getAccelerationY();
+   	  root["z"] = b.getAccelerationZ();
   }
   root["elapsed_time"] = diff;
   root["msg_index"] = msg_index;
