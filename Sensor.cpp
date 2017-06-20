@@ -4,8 +4,7 @@
 
 
 
-Sensor::Sensor(int i):index(i)
-{
+Sensor::Sensor(int i):
     Json::Reader reader;
     Json::Value root;
     int16_t x, y, z;
