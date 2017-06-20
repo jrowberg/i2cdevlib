@@ -121,23 +121,23 @@ void *worker(void *arg)
 {
   I2Cdev::initialize();
 ADXL345 a;
-ADXL345 b(ADXL345_ADDRESS_ALT_HIGH);
+// ADXL345 b(ADXL345_ADDRESS_ALT_HIGH);
 		a.initialize();
-	b.initialize();
+// 	b.initialize();
   gettimeofday(&end_t, NULL);
   diff = (end_t.tv_sec - start_t.tv_sec) * (uint64_t)1000000 +
            (end_t.tv_usec - start_t.tv_usec);
   root["rpi_id"] = 1;
   root["sensor_id"] = (int)arg;
-  if((int)arg == 0){
+//   if((int)arg == 0){
 	  root["x"] = a.getAccelerationX();
  	  root["y"] = a.getAccelerationY();
    	  root["z"] = a.getAccelerationZ();
-  }else{
-	  root["x"] = b.getAccelerationX();
- 	  root["y"] = b.getAccelerationY();
-   	  root["z"] = b.getAccelerationZ();
-  }
+//   }else{
+// 	  root["x"] = b.getAccelerationX();
+//  	  root["y"] = b.getAccelerationY();
+//    	  root["z"] = b.getAccelerationZ();
+//   }
   root["elapsed_time"] = diff;
   root["msg_index"] = msg_index;
 	cout << fw.write(root);
