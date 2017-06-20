@@ -71,11 +71,11 @@ class Communicator *comm = NULL;
 FileUtil fileUtil;
 Json::FastWriter fw;
 Json::Value root;
-
-int main(int argc, char **argv) {
-  I2Cdev::initialize();
   ADXL345 a;
   ADXL345 b(ADXL345_ADDRESS_ALT_HIGH);
+int main(int argc, char **argv) {
+  I2Cdev::initialize();
+
   if (a.testConnection()&& b.testConnection())
     printf("Both sensors' connection test successful\n");
   else {
@@ -120,13 +120,13 @@ int main(int argc, char **argv) {
   
   
   void *worker(void *arg)
-{
+{I2Cdev::initialize();
   if(arg ==0)
-  {ADXL345 x;}
+  {	  a.initialize();
+	  a.getAcceleration(&x, &y, &z);}
   else
-  {ADXL345 x(ADXL345_ADDRESS_ALT_HIGH);}
-	  x.initialize();
-	  x.getAcceleration(&x, &y, &z);
+  {b.initialize();
+	  b.getAcceleration(&x, &y, &z);}
   fflush(stdout);
   gettimeofday(&end_t, NULL);
   diff = (end_t.tv_sec - start_t.tv_sec) * (uint64_t)1000000 +
