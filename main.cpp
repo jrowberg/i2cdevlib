@@ -76,12 +76,12 @@ Json::Value root;
 int main(int argc, char **argv) {
   I2Cdev::initialize();
 
-  if (a.testConnection()&& b.testConnection())
-    printf("Both sensors' connection test successful\n");
-  else {
-    fprintf(stderr, "ADXL345 connection test failed! exiting ...\n");
-    return 1;
-  }
+//   if (a.testConnection()&& b.testConnection())
+//     printf("Both sensors' connection test successful\n");
+//   else {
+//     fprintf(stderr, "ADXL345 connection test failed! exiting ...\n");
+//     return 1;
+//   }
   a.initialize();
   b.initialize();
    cout << "current data rate of sensor_1 is " << int(a.getRate())<< endl;
