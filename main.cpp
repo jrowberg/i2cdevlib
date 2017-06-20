@@ -71,10 +71,11 @@ class Communicator *comm = NULL;
 FileUtil fileUtil;
 Json::FastWriter fw;
 Json::Value root;
+  I2Cdev::initialize();
   ADXL345 a;
   ADXL345 b(ADXL345_ADDRESS_ALT_HIGH);
 int main(int argc, char **argv) {
-  I2Cdev::initialize();
+
 
   if (a.testConnection()&& b.testConnection())
     printf("Both sensors' connection test successful\n");
@@ -136,7 +137,7 @@ int main(int argc, char **argv) {
   root["z_aixs"] = z;
   root["elapsed_time"] = diff;
   root["msg_index"] = msg_index;
-	cout << fw.write(root);
+//	cout << fw.write(root);
 	string json = fw.write(root);
 	const char *j = json.c_str();
 //	publish to broker
