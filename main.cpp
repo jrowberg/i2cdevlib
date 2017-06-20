@@ -58,7 +58,7 @@ ${PATH_I2CDEVLIB}/Arduino/ADXL345/ADXL345.cpp -l bcm2835 -l m
 #include <pthread.h>
 
 using namespace std;
-void *worker(void *);
+void *worker(void* arg);
 
 //pthread_mutex_t qlock = PTHREAD_MUTEX_INITIALIZER;	
 struct timeval start_t, end_t;
@@ -79,27 +79,27 @@ pthread_mutex_t qlock = PTHREAD_MUTEX_INITIALIZER;
 int main(int argc, char **argv) {
   
 
-//   if (a.testConnection()&& b.testConnection())
-//     printf("Both sensors' connection test successful\n");
-//   else {
-//     fprintf(stderr, "ADXL345 connection test failed! exiting ...\n");
-//     return 1;
-//   }
-// 	a.initialize();
-// 	b.initialize();
-//    cout << "current data rate of sensor_1 is " << int(a.getRate())<< endl;
-//    cout << "current data rate of sensor_2 is " << int(b.getRate()) << endl;
-//    a.setRate(15);
-//    b.setRate(10);
-//    cout << "data rate of sensor_1 after change " <<int(a.getRate()) << endl;
-//    cout << "data rate of sensor_2 after change " << int(b.getRate()) << endl;
+  if (a.testConnection()&& b.testConnection())
+    printf("Both sensors' connection test successful\n");
+  else {
+    fprintf(stderr, "ADXL345 connection test failed! exiting ...\n");
+    return 1;
+  }
+	a.initialize();
+	b.initialize();
+   cout << "current data rate of sensor_1 is " << int(a.getRate())<< endl;
+   cout << "current data rate of sensor_2 is " << int(b.getRate()) << endl;
+   a.setRate(15);
+   b.setRate(10);
+   cout << "data rate of sensor_1 after change " <<int(a.getRate()) << endl;
+   cout << "data rate of sensor_2 after change " << int(b.getRate()) << endl;
 
-//    cout << "current data range of sensor_1 is " << int(a.getRange()) << endl;
-//    cout << "current data range of sensor_2 is " << int(b.getRange()) << endl;
-//    a.setRange(0);
-//    b.setRange(1);
-//    cout << "data range of sensor_1 after change" << int(a.getRange()) << endl;
-//    cout << "data range of sensor_2 after change" << int(b.getRange()) << endl;
+   cout << "current data range of sensor_1 is " << int(a.getRange()) << endl;
+   cout << "current data range of sensor_2 is " << int(b.getRange()) << endl;
+   a.setRange(0);
+   b.setRange(1);
+   cout << "data range of sensor_1 after change" << int(a.getRange()) << endl;
+   cout << "data range of sensor_2 after change" << int(b.getRange()) << endl;
 
 
   comm = new Communicator("1", "192.168.1.115", 1883);
