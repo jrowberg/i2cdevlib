@@ -71,11 +71,11 @@ class Communicator *comm = NULL;
 FileUtil fileUtil;
 Json::FastWriter fw;
 Json::Value root;
-  I2Cdev::initialize();
+
   ADXL345 a;
   ADXL345 b(ADXL345_ADDRESS_ALT_HIGH);
 int main(int argc, char **argv) {
-
+  I2Cdev::initialize();
 
   if (a.testConnection()&& b.testConnection())
     printf("Both sensors' connection test successful\n");
