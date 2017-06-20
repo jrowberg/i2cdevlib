@@ -10,6 +10,7 @@ Sensor::Sensor(int i):index(i)
 //     {ADXL345 sensor;}
 //     else
 //     {ADXL345 sensor(ADXL345_ADDRESS_ALT_HIGH);}
+    I2Cdev::initialize();
     ADXL345 sensor;
     sensor.getAcceleration(&x, &y, &z);
 
