@@ -59,15 +59,17 @@ ${PATH_I2CDEVLIB}/Arduino/ADXL345/ADXL345.cpp -l bcm2835 -l m
 #include "Sensor.h"
 
 using namespace std;
+void *worker(void *);
 
+//pthread_mutex_t qlock = PTHREAD_MUTEX_INITIALIZER;	
 struct timeval start_t, end_t;
 long long diff;
 int msg_index = 1;
 int16_t x, y, z;
-int port, sensor_id;
 class Communicator *comm = NULL;
 Json::FastWriter fw;
 Json::Value root;
+int numberOfSensor = 2;
 //Sensor a(0);
 //Sensor b(ADXL345_ADDRESS_ALT_HIGH);
 
@@ -102,27 +104,21 @@ int main(int argc, char **argv) {
 
 
   comm = new Communicator("1", "192.168.1.115", 1883);
-	gettimeofday(&start_t, NULL);
+  gettimeofday(&start_t, NULL);
   printf("start time : %lld\n", start_t.tv_sec * (uint64_t)1000000+ start_t.tv_usec);
-int numberOfSensor = 2;
-pthread_t tid[numberOfSensor];
+  pthread_t tid[numberOfSensor];
+  while(true) {
+	for (int i=0; i<numberOfSensor; i++) {	
+		int int_i = i;
+		pthread_create(&tid[i], NULL, worker, &int_i);
+		}
+	for(int i=0; i<numberOfSensor; i++){
+		pthread_join(tid[i], NULL);			
+		}
 
-
-	while(true) {
-		for (int i=0; i<numberOfSensor; i++) {	
-			int int_i = i;
-			pthread_create(&tid[i], NULL, worker, &int_i);
-			}
-		for(int i=0; i<numberOfSensor; i++){
-			pthread_join(tid[i], NULL);			
-			}
-//	sleep(1);
 	}
-//	gettimeofday(&end, NULL);
-//	diff = (end.tv_sec - start.tv_sec)*1000 + (end.tv_usec - start.tv_usec) /1000;
-//	cout << "the difference is " << diff << "ms" << endl;
-	return 0;
 }
+
 void *worker(void *arg)
 {
 Sensor mySensor((int)arg);
@@ -136,14 +132,14 @@ Sensor mySensor((int)arg);
   root["z"] = mySensor.get_z();
   root["elapsed_time"] = diff;
   root["msg_index"] = msg_index;
-//	cout << fw.write(root);
+	cout << fw.write(root);
 	string json = fw.write(root);
 	const char *j = json.c_str();
 //	publish to broker
 	comm->send_message(j);
-	pthread_mutex_lock(&qlock);
+	//pthread_mutex_lock(&qlock);
 	msg_index++;
-	pthread_mutex_unlock(&qlock);
+	//pthread_mutex_unlock(&qlock);
 	return NULL;
   }
 
