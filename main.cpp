@@ -144,7 +144,7 @@ Sensor mySensor((int)arg);
 //	publish to broker
 	comm->send_message(j);
 	pthread_mutex_lock(&qlock);
-	msg_indext++;
+	msg_index++;
 	pthread_mutex_unlock(&qlock);
 	return NULL;
   }
