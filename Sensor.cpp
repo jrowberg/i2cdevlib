@@ -5,13 +5,11 @@
 
 
 Sensor::Sensor(int i):
-    Json::Reader reader;
-    Json::Value root;
     int16_t x, y, z;
     if(i==0)
-    ADXL345 sensor;
+    {ADXL345 sensor;}
     else
-    ADXL345 sensor(ADXL345_ADDRESS_ALT_HIGH);
+    {ADXL345 sensor(ADXL345_ADDRESS_ALT_HIGH);}
     sensor.getAcceleration(&x, &y, &z);
     }
 
