@@ -37,6 +37,7 @@ public:
   
 private:
    int16_t x, y, z;
+    int index;
    
 
 };
