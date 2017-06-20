@@ -82,8 +82,6 @@ int main(int argc, char **argv) {
 //     fprintf(stderr, "ADXL345 connection test failed! exiting ...\n");
 //     return 1;
 //   }
-  a.initialize();
-  b.initialize();
    cout << "current data rate of sensor_1 is " << int(a.getRate())<< endl;
    cout << "current data rate of sensor_2 is " << int(b.getRate()) << endl;
    a.setRate(15);
@@ -122,8 +120,7 @@ int main(int argc, char **argv) {
   void *worker(void *arg)
 {I2Cdev::initialize();
   if(arg ==0)
-  {	  a.initialize();
-	  a.getAcceleration(&x, &y, &z);}
+  {a.getAcceleration(&x, &y, &z);}
   else
   {b.initialize();
 	  b.getAcceleration(&x, &y, &z);}
