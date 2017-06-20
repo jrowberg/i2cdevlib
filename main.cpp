@@ -111,7 +111,7 @@ pthread_t tid[numberOfSensor];
 	while(true) {
 		for (int i=0; i<numberOfSensor; i++) {	
 			int int_i = i;
-			pthread_create(&tid[i], NULL, worker, (void*)int_i);
+			pthread_create(&tid[i], NULL, worker, &int_i);
 			}
 		for(int i=0; i<numberOfSensor; i++){
 			pthread_join(tid[i], NULL);			
