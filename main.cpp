@@ -122,18 +122,15 @@ int main(int argc, char **argv) {
   void *worker(void *arg)
 {
   if(arg ==0)
-  {ADXL345 x;
-   sensor_id = 1;}
+  {a.getAcceleration(&x, &y, &z);}
   else
-  {ADXL345 x(ADXL345_ADDRESS_ALT_HIGH);
-   sensor_id = 2;}
-  x.getAcceleration(&x, &y, &z);
+  {b.getAcceleration(&x, &y, &z);}
   fflush(stdout);
   gettimeofday(&end_t, NULL);
   diff = (end_t.tv_sec - start_t.tv_sec) * (uint64_t)1000000 +
            (end_t.tv_usec - start_t.tv_usec);
   root["rpi_id"] = 1;
-  root["sensor_id"] = sensor_id;
+  root["sensor_id"] = arg;
   root["x_axis"] = x;
   root["y_axis"] = y;
   root["z_aixs"] = z;
