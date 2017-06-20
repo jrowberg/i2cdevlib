@@ -64,7 +64,6 @@ void *worker(void* arg);
 struct timeval start_t, end_t;
 long long diff;
 int msg_index = 1;
-int16_t x, y, z;
 class Communicator *comm = NULL;
 Json::FastWriter fw;
 Json::Value root;
@@ -119,10 +118,10 @@ int main(int argc, char **argv) {
 
 void *worker(void *arg)
 {
-  I2Cdev::initialize();
-ADXL345 a;
+//   I2Cdev::initialize();
+// ADXL345 a;
 // ADXL345 b(ADXL345_ADDRESS_ALT_HIGH);
-		a.initialize();
+// 		a.initialize();
 // 	b.initialize();
   gettimeofday(&end_t, NULL);
   diff = (end_t.tv_sec - start_t.tv_sec) * (uint64_t)1000000 +
@@ -130,9 +129,9 @@ ADXL345 a;
   root["rpi_id"] = 1;
   root["sensor_id"] = (int)arg;
 //   if((int)arg == 0){
-	  root["x"] = a.getAccelerationX();
- 	  root["y"] = a.getAccelerationY();
-   	  root["z"] = a.getAccelerationZ();
+	  root["x"] = 1;
+ 	  root["y"] = 2;
+   	  root["z"] = 3;
 //   }else{
 // 	  root["x"] = b.getAccelerationX();
 //  	  root["y"] = b.getAccelerationY();
