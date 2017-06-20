@@ -56,7 +56,6 @@ ${PATH_I2CDEVLIB}/Arduino/ADXL345/ADXL345.cpp -l bcm2835 -l m
 #include <sys/time.h>
 #include <unistd.h>
 #include <pthread.h>
-#include "Sensor.h"
 
 using namespace std;
 void *worker(void *);
@@ -121,15 +120,18 @@ int main(int argc, char **argv) {
 
 void *worker(void *arg)
 {
-//Sensor mySensor((int)arg);
+  if((int)arg == 0){
+	  ADXL345 a;}
+  else{
+	  ADXL345 a(ADXL345_ADDRESS_ALT_HIGH);}
   gettimeofday(&end_t, NULL);
   diff = (end_t.tv_sec - start_t.tv_sec) * (uint64_t)1000000 +
            (end_t.tv_usec - start_t.tv_usec);
   root["rpi_id"] = 1;
   root["sensor_id"] = (int)arg;
-  root["x"] = 1;
-  root["y"] = 2;
-  root["z"] = 3;
+  root["x"] = a.getAccerlerationX();
+  root["y"] = a.getAccerlerationY();
+  root["z"] = a.getAccerlerationZ();
   root["elapsed_time"] = diff;
   root["msg_index"] = msg_index;
 	cout << fw.write(root);
