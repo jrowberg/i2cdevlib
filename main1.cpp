@@ -59,9 +59,7 @@ ${PATH_I2CDEVLIB}/Arduino/ADXL345/ADXL345.cpp -l bcm2835 -l m
 #include <pthread.h>
 
 using namespace std;
-void *worker(void *arguments);
 
-pthread_mutex_t qlock = PTHREAD_MUTEX_INITIALIZER;	
 struct timeval start_t, end_t;
 long long diff;
 int msg_index = 1;
@@ -101,35 +99,15 @@ int main(int argc, char **argv) {
 	gettimeofday(&start_t, NULL);
   printf("start time : %lld\n", start_t.tv_sec * (uint64_t)1000000+ start_t.tv_usec);
 
- 	pthread_t tid[2];
 
 
 	while(true) {
-		for (int i=0; i<2; i++) {	
-			int int_i = i;
-			pthread_create(&tid[i], NULL, worker, (void*)int_i);
-			}
-		for(int i=0; i<2; i++){
-			pthread_join(tid[i], NULL);			
-			}
-  }
-    return 0;
-}
-  
-  
-  void *worker(void *arg)
-{I2Cdev::initialize();
-  if(arg ==0)
-  {a.getAcceleration(&x, &y, &z);}
-  else
-  {b.initialize();
-	  b.getAcceleration(&x, &y, &z);}
-  fflush(stdout);
+		a.getAcceleration(&x, &y, &z);
   gettimeofday(&end_t, NULL);
   diff = (end_t.tv_sec - start_t.tv_sec) * (uint64_t)1000000 +
            (end_t.tv_usec - start_t.tv_usec);
   root["rpi_id"] = 1;
-  root["sensor_id"] = (int)arg;
+  root["sensor_id"] = 1;
   root["x_axis"] = x;
   root["y_axis"] = y;
   root["z_aixs"] = z;
@@ -140,11 +118,10 @@ int main(int argc, char **argv) {
 	const char *j = json.c_str();
 //	publish to broker
 	comm->send_message(j);
-	pthread_mutex_lock(&qlock);
-	msg_index++;
-	pthread_mutex_unlock(&qlock);
-	return NULL;
+  }
+    return 0;
 }
   
+
 
 
