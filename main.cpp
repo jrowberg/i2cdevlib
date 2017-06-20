@@ -120,19 +120,21 @@ ADXL345 b(ADXL345_ADDRESS_ALT_HIGH);
 
 void *worker(void *arg)
 {
+	ADXL345 x;
+ADXL345 y(ADXL345_ADDRESS_ALT_HIGH);
   gettimeofday(&end_t, NULL);
   diff = (end_t.tv_sec - start_t.tv_sec) * (uint64_t)1000000 +
            (end_t.tv_usec - start_t.tv_usec);
   root["rpi_id"] = 1;
   root["sensor_id"] = (int)arg;
   if((int)arg == 0){
-	  root["x"] = a.getAccelerationX();
- 	  root["y"] = a.getAccelerationY();
-   	  root["z"] = a.getAccelerationZ();
+	  root["x"] = x.getAccelerationX();
+ 	  root["y"] = x.getAccelerationY();
+   	  root["z"] = x.getAccelerationZ();
   }else{
-	  root["x"] = b.getAccelerationX();
- 	  root["y"] = b.getAccelerationY();
-   	  root["z"] = b.getAccelerationZ();
+	  root["x"] = y.getAccelerationX();
+ 	  root["y"] = y.getAccelerationY();
+   	  root["z"] = y.getAccelerationZ();
   }
   root["elapsed_time"] = diff;
   root["msg_index"] = msg_index;
