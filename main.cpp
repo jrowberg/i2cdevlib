@@ -55,126 +55,80 @@ ${PATH_I2CDEVLIB}/Arduino/ADXL345/ADXL345.cpp -l bcm2835 -l m
 #include <stdio.h>
 #include <sys/time.h>
 #include <unistd.h>
-#include <pthread.h>
 
 using namespace std;
-void *sensor_1(void *arg);
-void *sensor_2(void *arg);
 
-pthread_mutex_t qlock = PTHREAD_MUTEX_INITIALIZER;	
+
 struct timeval start_t, end_t;
 
 int msg_index = 1;
 class Communicator *comm = NULL;
-
-int numberOfSensor = 2;
+Json::FastWriter fw;
+Json::Value root;
+int16_t x, y, z;
+long long diff;
 int data_rate = 15;
 int data_range = 0;
 ADXL345 a;
- ADXL345 b(ADXL345_ADDRESS_ALT_HIGH);
+ADXL345 b(ADXL345_ADDRESS_ALT_HIGH);
 
 
 int main(int argc, char **argv) {
 
-//   if (a.testConnection()&& b.testConnection())
-//     printf("Both sensors' connection test successful\n");
-//   else {
-//     fprintf(stderr, "ADXL345 connection test failed! exiting ...\n");
-//     return 1;
-//   }
+  if (a.testConnection()&& b.testConnection())
+    printf("Both sensors' connection test successful\n");
+  else {
+    fprintf(stderr, "ADXL345 connection test failed! exiting ...\n");
+    return 1;
+  }
 
-//    cout << "current data rate of sensor_1 is " << int(a.getRate())<< endl;
-//    cout << "current data rate of sensor_2 is " << int(b.getRate()) << endl;
-//    a.setRate(15);
-//    b.setRate(10);
-//    cout << "data rate of sensor_1 after change " <<int(a.getRate()) << endl;
-//    cout << "data rate of sensor_2 after change " << int(b.getRate()) << endl;
+   cout << "current data rate of sensor_1 is " << int(a.getRate())<< endl;
+   cout << "current data rate of sensor_2 is " << int(b.getRate()) << endl;
+   a.setRate(data_rate);
+   b.setRate(data_rate);
+   cout << "data rate of sensor_1 after change " <<int(a.getRate()) << endl;
+   cout << "data rate of sensor_2 after change " << int(b.getRate()) << endl;
 
-//    cout << "current data range of sensor_1 is " << int(a.getRange()) << endl;
-//    cout << "current data range of sensor_2 is " << int(b.getRange()) << endl;
-//    a.setRange(0);
-//    b.setRange(1);
-//    cout << "data range of sensor_1 after change" << int(a.getRange()) << endl;
-//    cout << "data range of sensor_2 after change" << int(b.getRange()) << endl;
+   cout << "current data range of sensor_1 is " << int(a.getRange()) << endl;
+   cout << "current data range of sensor_2 is " << int(b.getRange()) << endl;
+   a.setRange(data_range);
+   b.setRange(data_range);
+   cout << "data range of sensor_1 after change" << int(a.getRange()) << endl;
+   cout << "data range of sensor_2 after change" << int(b.getRange()) << endl;
 
   I2Cdev::initialize();
-	a.initialize();
-	b.initialize();
+  a.initialize();
+  b.initialize();
   comm = new Communicator("1", "192.168.1.115", 1883);
   gettimeofday(&start_t, NULL);
   printf("start time : %lld\n", start_t.tv_sec * (uint64_t)1000000+ start_t.tv_usec);
   
   while(1) {
-	  pthread_t thread1, thread2;
-        pthread_create(&thread1, NULL, sensor_1, NULL);
-                pthread_create(&thread2, NULL, sensor_2, NULL);
+	  for(int i=1; i<3; i++){
+		  if(i==1){
+	a.getAcceleration(&x, &y, &z);
+		  }else{
+	b.getAcceleration(&x, &y, &z);}
+  gettimeofday(&end_t, NULL);
+  diff = (end_t.tv_sec - start_t.tv_sec) * (uint64_t)1000000 +
+           (end_t.tv_usec - start_t.tv_usec);
+  root["rpi_id"] = 1;
+  root["sensor_id"] = i;
+  root["x"] = x;
+  root["y"] = y;
+  root["z"] = z;
+  root["elapsed_time"] = diff;
+  root["msg_index"] = msg_index;
+// 	cout << fw.write(root);
+	string json = fw.write(root);
+	const char *j = json.c_str();
+//	publish to broker
+	comm->send_message(j);}
 
-		pthread_join(thread2, NULL);			
+	msg_index++;
+
+		
 	}
 
 }
-
-void *sensor_1(void *arg)
-{
-	Json::FastWriter fw;
-Json::Value root;
-int16_t x, y, z;
-	long long diff;
-a.getAcceleration(&x, &y, &z);
-  gettimeofday(&end_t, NULL);
-  diff = (end_t.tv_sec - start_t.tv_sec) * (uint64_t)1000000 +
-           (end_t.tv_usec - start_t.tv_usec);
-  root["rpi_id"] = 1;
-  root["sensor_id"] = 1;
-	  root["x"] = x;
- 	  root["y"] = y;
-   	  root["z"] = z;
-// 	  root["x"] = 1;
-//  	  root["y"] = 2;
-//    	  root["z"] = 3;	
-  root["elapsed_time"] = diff;
-  root["msg_index"] = msg_index;
-// 	cout << fw.write(root);
-	string json = fw.write(root);
-	const char *j = json.c_str();
-//	publish to broker
-	comm->send_message(j);
-	pthread_mutex_lock(&qlock);
-	msg_index++;
-	pthread_mutex_unlock(&qlock);
-	return NULL;
-  }
-void *sensor_2(void *arg)
-{Json::FastWriter fw;
-Json::Value root;
- long long diff;
-int16_t x, y, z;
-a.getAcceleration(&x, &y, &z);
-  gettimeofday(&end_t, NULL);
-  diff = (end_t.tv_sec - start_t.tv_sec) * (uint64_t)1000000 +
-           (end_t.tv_usec - start_t.tv_usec);
-  root["rpi_id"] = 1;
-  root["sensor_id"] = 2;
-	  root["x"] = x;
- 	  root["y"] = y;
-   	  root["z"] = z;
-//  	  root["x"] = 1;
-//  	  root["y"] = 2;
-//    	  root["z"] = 3;
-  root["elapsed_time"] = diff;
-  root["msg_index"] = msg_index;
-// 	cout << fw.write(root);
-	string json = fw.write(root);
-	const char *j = json.c_str();
-//	publish to broker
-	comm->send_message(j);
-	pthread_mutex_lock(&qlock);
-	msg_index++;
-	pthread_mutex_unlock(&qlock);
-	return NULL;
-  }
-
-  
-
-
 
