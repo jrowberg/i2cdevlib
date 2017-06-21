@@ -117,20 +117,20 @@ void *sensor_1(void *arg)
 {
 	Json::FastWriter fw;
 Json::Value root;
-
+int16_t x, y, z;
 	long long diff;
-// a.initialize();
+a.getAcceleration(&x, &y, &z);
   gettimeofday(&end_t, NULL);
   diff = (end_t.tv_sec - start_t.tv_sec) * (uint64_t)1000000 +
            (end_t.tv_usec - start_t.tv_usec);
   root["rpi_id"] = 1;
   root["sensor_id"] = 1;
-// 	  root["x"] = a.getAccelerationX();
-//  	  root["y"] = a.getAccelerationY();
-//    	  root["z"] = a.getAccelerationZ();
-	  root["x"] = 1;
- 	  root["y"] = 2;
-   	  root["z"] = 3;	
+	  root["x"] = x;
+ 	  root["y"] = y;
+   	  root["z"] = z;
+// 	  root["x"] = 1;
+//  	  root["y"] = 2;
+//    	  root["z"] = 3;	
   root["elapsed_time"] = diff;
   root["msg_index"] = msg_index;
 	cout << fw.write(root);
