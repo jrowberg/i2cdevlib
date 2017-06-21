@@ -117,8 +117,9 @@ void *sensor_1(void *arg)
 {
 	Json::FastWriter fw;
 Json::Value root;
- long long diff;
-a.initialize();
+	 ADXL345 a;
+	long long diff;
+// a.initialize();
   gettimeofday(&end_t, NULL);
   diff = (end_t.tv_sec - start_t.tv_sec) * (uint64_t)1000000 +
            (end_t.tv_usec - start_t.tv_usec);
