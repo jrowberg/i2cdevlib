@@ -72,8 +72,8 @@ int numberOfSensor = 2;
 int data_rate = 15;
 int data_range = 0;
 
-
-
+	 ADXL345 a;
+ ADXL345 b(ADXL345_ADDRESS_ALT_HIGH);
 
 
 int main(int argc, char **argv) {
@@ -117,7 +117,7 @@ void *sensor_1(void *arg)
 {
 	Json::FastWriter fw;
 Json::Value root;
-	 ADXL345 a;
+
 	long long diff;
 a.initialize();
   gettimeofday(&end_t, NULL);
@@ -148,7 +148,7 @@ void *sensor_2(void *arg)
 Json::Value root;
  long long diff;
 //   I2Cdev::initialize();
- ADXL345 b(ADXL345_ADDRESS_ALT_HIGH);
+
 		b.initialize();
   gettimeofday(&end_t, NULL);
   diff = (end_t.tv_sec - start_t.tv_sec) * (uint64_t)1000000 +
