@@ -133,7 +133,7 @@ a.getAcceleration(&x, &y, &z);
 //    	  root["z"] = 3;	
   root["elapsed_time"] = diff;
   root["msg_index"] = msg_index;
-	cout << fw.write(root);
+// 	cout << fw.write(root);
 	string json = fw.write(root);
 	const char *j = json.c_str();
 //	publish to broker
@@ -162,7 +162,7 @@ a.getAcceleration(&x, &y, &z);
 //    	  root["z"] = 3;
   root["elapsed_time"] = diff;
   root["msg_index"] = msg_index;
-	cout << fw.write(root);
+// 	cout << fw.write(root);
 	string json = fw.write(root);
 	const char *j = json.c_str();
 //	publish to broker
