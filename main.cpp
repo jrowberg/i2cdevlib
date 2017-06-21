@@ -61,7 +61,6 @@ using namespace std;
 void *sensor_1(void *arg);
 void *sensor_2(void *arg);
 
-ADXL345 a;
 pthread_mutex_t qlock = PTHREAD_MUTEX_INITIALIZER;	
 struct timeval start_t, end_t;
 
@@ -71,8 +70,7 @@ class Communicator *comm = NULL;
 int numberOfSensor = 2;
 int data_rate = 15;
 int data_range = 0;
-
-	 ADXL345 a;
+ADXL345 a;
  ADXL345 b(ADXL345_ADDRESS_ALT_HIGH);
 
 
