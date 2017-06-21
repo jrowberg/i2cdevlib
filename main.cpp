@@ -99,7 +99,7 @@ int main(int argc, char **argv) {
 //    cout << "data range of sensor_1 after change" << int(a.getRange()) << endl;
 //    cout << "data range of sensor_2 after change" << int(b.getRange()) << endl;
 
-
+  I2Cdev::initialize();
   comm = new Communicator("1", "192.168.1.115", 1883);
   gettimeofday(&start_t, NULL);
   printf("start time : %lld\n", start_t.tv_sec * (uint64_t)1000000+ start_t.tv_usec);
@@ -118,8 +118,6 @@ void *sensor_1(void *arg)
 	Json::FastWriter fw;
 Json::Value root;
  long long diff;
-  I2Cdev::initialize();
-
 a.initialize();
   gettimeofday(&end_t, NULL);
   diff = (end_t.tv_sec - start_t.tv_sec) * (uint64_t)1000000 +
@@ -146,16 +144,16 @@ void *sensor_2(void *arg)
 Json::Value root;
  long long diff;
 //   I2Cdev::initialize();
-//  ADXL345 b(ADXL345_ADDRESS_ALT_HIGH);
-// 		b.initialize();
+ ADXL345 b(ADXL345_ADDRESS_ALT_HIGH);
+		b.initialize();
   gettimeofday(&end_t, NULL);
   diff = (end_t.tv_sec - start_t.tv_sec) * (uint64_t)1000000 +
            (end_t.tv_usec - start_t.tv_usec);
   root["rpi_id"] = 1;
   root["sensor_id"] = 2;
-  root["x"] = 1;
- 	  root["y"] = 1;
-   	  root["z"] = 1;
+ root["x"] = b.getAccelerationX();
+ 	  root["y"] = b.getAccelerationY();
+   	  root["z"] = b.getAccelerationZ();
   root["elapsed_time"] = diff;
   root["msg_index"] = msg_index;
 	cout << fw.write(root);
