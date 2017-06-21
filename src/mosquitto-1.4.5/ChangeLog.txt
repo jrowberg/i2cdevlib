@@ -1,0 +1,1346 @@
+1.4.5 - 20151108
+================
+
+Broker:
+- Fix possible memory leak if bridge using SSL attempts to connect to a
+  host that is not up.
+- Free unused topic tree elements (fix in 1.4.3 was incomplete). Closes
+  #468987.
+
+Clients:
+- "mosquitto_pub -l" now no longer limited to 1024 byte lines. Closes #478917.
+
+
+1.4.4 - 20150916
+================
+
+Broker:
+- Don't leak sockets when outgoing bridge with multiple addresses cannot
+  connect. Closes #477571.
+- Fix cross compiling of websockets. Closes #475807.
+- Fix memory free related crashes on openwrt. Closes #475707.
+- Fix excessive calls to message retry check.
+
+
+1.4.3 - 20150818
+================
+
+Broker:
+- Fix incorrect bridge notification on initial connection. Closes #467096.
+- Build fixes for OpenBSD.
+- Fix incorrect behaviour for autosave_interval, most noticable for
+  autosave_interval=1. Closes #465438.
+- Fix handling of outgoing QoS>0 messages for bridges that could not be sent
+  because the bridge connection was down.
+- Free unused topic tree elements. Closes #468987.
+- Fix some potential memory leaks. Closes #470253.
+- Fix potential crash on libwebsockets error.
+
+Client library:
+- Add missing error strings to mosquitto_strerror.
+- Handle fragmented TLS packets without a delay. Closes #470660.
+- Fix incorrect loop timeout being chosen when using threaded interface and
+  keepalive = 0. Closes #471334.
+- Increment inflight messages count correctly. Closes #474935.
+
+Clients:
+- Report error string on connection failure rather than error code.
+
+
+1.4.2 - 20150507
+================
+
+Broker:
+- Fix bridge prefixes only working for the first outgoing message. Closes
+  #464437.
+- Fix incorrect bridge connection notifications on local broker.
+- Fix persistent db writing on Windows. Closes #464779.
+- ACLs are now checked before sending a will message.
+- Fix possible crash when using bridges on Windows. Closes #465384.
+- Fix parsing of auth_opt_ arguments with extra spaces/tabs.
+- Broker will return CONNACK rc=5 when a username/password is not authorised.
+  This was being incorrectly set as rc=4.
+- Fix handling of payload lengths>4096 with websockets.
+
+Client library:
+- Inflight message count wasn't being decreased for outgoing messages using
+  QoS 2, meaning that only up to 20 QoS 2 messages could be sent. This has
+  been fixed. Closes #464436.
+- Fix CMake dependencies for C++ wrapper building. Closes #463884.
+- Fix possibility of select() being called with a socket that is >FD_SETSIZE.
+  This is a fix for #464632 that will be followed up by removing the select()
+  call in a future version.
+- Fix calls to mosquitto_connect*_async() not completing.
+
+
+1.4.1 - 20150403
+================
+
+Broker:
+- Fix possible crash under heavy network load. Closes #463241.
+- Fix possible crash when using pattern ACLs.
+- Fix problems parsing config strings with multiple leading spaces. Closes
+  #462154.
+- Websockets clients are now periodically disconnected if they have not
+  maintained their keepalive timer. Closes #461619.
+- Fix possible minor memory leak on acl parsing.
+
+Client library:
+- Inflight limits should only apply to outgoing messages. Closes #461620.
+- Fix reconnect bug on Windows. Closes #463000.
+- Return -1 on error from mosquitto_socket(). Closes #461705.
+- Fix crash on multiple calls to mosquitto_lib_init/mosquitto_lib_cleanup.
+  Closes #462780.
+- Allow longer paths on Windows. Closes #462781.
+- Make _mosquitto_mid_generate() thread safe. Closes #463479.
+
+
+1.4 - 20150218
+==============
+
+Important changes:
+- Websockets support in the broker.
+- Bridge behaviour on the local broker has changed due to the introduction of
+  the local_* options. This may affect you if you are using authentication
+  and/or ACLs with bridges.
+- The default TLS behaviour has changed to accept all of TLS v1.2, v1.1 and
+  v1.0, rather than only only one version of the protocol. It is still
+  possible to restrict a listener to a single version of TLS.
+- The Python client has been removed now that the Eclipse Paho Python client
+  has had a release.
+- When a durable client reconnects, its queued messages are now checked
+  against ACLs in case of a change in username/ACL state since it last
+  connected.
+- New use_username_as_clientid option on the broker, for preventing hijacking
+  of a client id.
+- The client library and clients now have experimental SOCKS5 support.
+- Wildcard TLS certificates are now supported for bridges and clients.
+- The clients have support for config files with default options.
+- Client and client libraries have support for MQTT v3.1.1.
+- Bridge support for MQTT v3.1.1.
+
+
+Broker:
+- Websockets support in the broker.
+- Add local_clientid, local_username, local_password for bridge connections to
+  authenticate to the local broker.
+- Default TLS mode now accepts TLS v1.2, v1.1 and v1.0.
+- Support for ECDHE-ECDSA family ciphers.
+- Fix bug #1324411, which could have had unexpected consequences for delayed
+  messages in rare circumstances.
+- Add support for "session present" in CONNACK messages for MQTT v3.1.1.
+- Remove strict protocol #ifdefs.
+- Change $SYS/broker/clients/active -> $SYS/broker/clients/connected
+- Change $SYS/broker/clients/inactive -> $SYS/broker/clients/disconnected
+- When a durable client reconnects, its queued messages are now checked
+  against ACLs in case of a change in username/ACL state since it last
+  connected.
+- libuuid is used to generate client ids, where it is available, when an MQTT
+  v3.1.1 client connects with a zero length client id.
+- Anonymous clients are no longer accidently disconnected from the broker
+  after a SIGHUP.
+- mosquitto_passwd now supports -b (batch mode) to allow the password to be
+  provided at the command line.
+- Removed $SYS/broker/changeset. This was intended for use with debugging, but
+  in practice is of no use.
+- Add support for use_username_as_clientid which can be used with
+  authentication to restrict ownership of client ids and hence prevent one
+  client disconnecting another by using the same client id.
+- When "require_certificate" was false, the broker was incorrectly asking for
+  a certificate (but not checking it). This caused problems with some clients
+  and has been fixed so the broker no longer asks.
+- When using syslog logging on non-Windows OSs, it is now possible to specify
+  the logging facility to one of local0-7 instead of the default "daemon".
+- The bridge_attempt_unsubscribe option has been added, to allow the sending
+  of UNSUBSCRIBE requests to be disabled for topics with "out" direction.
+  Closes bug #456899.
+- Wildcard TLS certificates are now supported for bridges.
+- Support for "hour" client expiration lengths for the
+  persistent_client_expiration option. Closes bug #425835.
+- Bridge support for MQTT v3.1.1.
+- Root privileges are now dropped after starting listeners and loading
+  certificates/private keys, to allow private keys to have their permissions
+  restricted to the root user only. Closes bug #452914.
+- Usernames and topics given in ACL files can now include a space. Closes bug
+  #431780.
+- Fix hang if pattern acl contains a %u but an anonymous client connect.
+  Closes bug #455402.
+- Fix man page installation with cmake. Closes bug #458843.
+- When using "log_dest file" the output file is now flushed periodically.
+
+Clients:
+- Both clients can now load default configuration options from a file.
+- Add -C option to mosquitto_sub to allow the client to quit after receiving a
+  certain count of messages. Closes bug #453850.
+- Add --proxy SOCKS5 support for both clients.
+- Pub client supports setting its keepalive. Closes bug #454852.
+- Add support for config files with default options.
+- Add support for MQTT v3.1.1.
+
+Client library:
+- Add experimental SOCKS5 support.
+- mosquitto_loop_forever now quits after a fatal error, rather than blindly
+  retrying.
+- SRV support is now not compiled in by default.
+- Wildcard TLS certificates are now supported.
+- mosquittopp now has a virtual destructor. Closes bug #452915.
+- Add support for MQTT v3.1.1.
+- Don't quit mosquitto_loop_forever() if broker not available on first
+  connect. Closes bug #453293, but requires more work.
+
+
+1.3.5 - 20141008
+================
+
+Broker:
+- Fix possible memory leak when using a topic that has a leading slash. Fixes
+  bug #1360985.
+- Fix saving persistent database on Windows.
+- Temporarily disable ACL checks on subscriptions when using MQTT v3.1.1. This
+  is due to the complexity of checking wildcard ACLs against wildcard
+  subscriptions. This does not have a negative impact on security because
+  checks are still made before a message is sent to a client.
+  Fixes bug #1374291.
+- When using -v and the broker receives a SIGHUP, verbose logging was being
+  disabled. This has been fixed.
+
+Client library:
+- Fix mutex being incorrectly passed by value. Fixes bug #1373785.
+
+1.3.4 - 20140806
+================
+
+Broker:
+- Don't ask client for certificate when require_certificate is false.
+- Backout incomplete functionality that was incorrectly included in 1.3.2.
+
+1.3.3 - 20140801
+================
+
+Broker:
+- Fix incorrect handling of anonymous bridges on the local broker.
+
+1.3.2 - 20140713
+================
+
+Broker:
+- Don't allow access to clients when authenticating if a security plugin
+  returns an application error. Fixes bug #1340782.
+- Ensure that bridges verify certificates by default when using TLS.
+- Fix possible crash when using pattern ACLs that do not include a %u and
+  clients that connect without a username.
+- Fix subscriptions being deleted when clients subscribed to a topic beginning
+  with a $ but that is not $SYS.
+- When a durable client reconnects, its queued messages are now checked
+  against ACLs in case of a change in username/ACL state since it last
+  connected.
+- Fix bug #1324411, which could have had unexpected consequences for delayed
+  messages in rare circumstances.
+- Anonymous clients are no longer accidently disconnected from the broker
+  after a SIGHUP.
+
+Client library:
+- Fix topic matching edge case.
+- Fix callback deadlocks after calling mosquitto_disconnect(), when using the
+  threaded interfaces. Closes bug #1313725.
+- Fix SRV support when building with CMake.
+- Remove strict protocol #ifdefs.
+
+General:
+- Use $(STRIP) for stripping binaries when installing, to allow easier cross
+  compilation.
+
+1.3.1 - 20140324
+================
+
+Broker:
+- Prevent possible crash on client reconnect. Closes bug #1294108.
+- Don't accept zero length unsubscription strings (MQTT v3.1.1 fix)
+- Don't accept QoS 3 (MQTT v3.1.1 fix)
+- Don't disconnect clients immediately on HUP to give chance for all data to
+  be read.
+- Reject invalid un/subscriptions e.g. foo/+bar #/bar.
+- Take more care not to disconnect clients that are sending large messages.
+
+Client library:
+- Fix socketpair code on the Mac.
+- Fix compilation for WITH_THREADING=no.
+- Break out of select() when calling mosquitto_loop_stop().
+- Reject invalid un/subscriptions e.g. foo/+bar #/bar.
+- Add mosquitto_threaded_set().
+
+Clients:
+- Fix keepalive value on mosquitto_pub.
+- Fix possibility of mosquitto_pub not exiting after sending messages when
+  using -l.
+
+1.3 - 20140316
+==============
+
+Broker:
+- The broker no longer ignores the auth_plugin_init() return value.
+- Accept SSLv2/SSLv3 HELLOs when using TLSv1, whilst keeping SSLv2 and SSLv3
+  disabled. This increases client compatibility without sacrificing security.
+- The $SYS tree can now be disabled at runtime as well as at compile time.
+- When remapping bridged topics, only check for matches when the message
+  direction is correct. This allows two identical topics to be remapped
+  differently for both in and out.
+- Change "$SYS/broker/heap/current size" to "$SYS/broker/heap/current" for
+  easier parsing.
+- Change "$SYS/broker/heap/maximum size" to "$SYS/broker/heap/maximum" for
+  easier parsing.
+- Topics are no longer normalised from e.g a///topic to a/topic. This matches
+  the behaviour as clarified by the Oasis MQTT spec. This will lead to
+  unexpected behaviour if you were using topics of this form.
+- Log when outgoing messages for a client begin to drop off the end of the
+  queue.
+- Bridge clients are recognised as bridges even after reloading from
+  persistence.
+- Basic support for MQTT v3.1.1. This does not include being able to bridge to
+  an MQTT v3.1.1 broker.
+- Username is displayed in log if present when a client connects.
+- Support for 0 length client ids (v3.1.1 only) that result in automatically
+  generated client ids on the broker (see option allow_zero_length_clientid).
+- Ability to set the prefix of automatically generated client ids (see option
+  auto_id_prefix).
+- Add support for TLS session resumption.
+- When using TLS, the server now chooses the cipher to use when negotiating
+  with the client.
+- Weak TLS ciphers are now disabled by default.
+
+Client library:
+- Fix support for Python 2.6, 3.0, 3.1.
+- Add support for un/subscribing to multiple topics at once in un/subscribe().
+- Clients now close their socket after sending DISCONNECT.
+- Python client now contains its version number.
+- C library mosquitto_want_write() now supports TLS clients.
+- Fix possible memory leak in C/C++ library when communicating with
+  a broker that doesn't follow the spec.
+- Return strerror() through mosquitto_strerror() to make error printing
+  easier.
+- Topics are no longer normalised from e.g a///topic to a/topic. This matches
+  the behaviour as clarified by the Oasis MQTT spec. This will lead to
+  unexpected behaviour if you were using topics of this form.
+- Add support for SRV lookups.
+- Break out of select() on publish(), subscribe() etc. when using the threaded
+  interface. Fixes bug #1270062.
+- Handle incoming and outgoing messages separately. Fixes bug #1263172.
+- Don't terminate threads on mosquitto_destroy() when a client is not using
+  the threaded interface but does use their own thread. Fixes bug #1291473.
+
+Clients:
+- Add --ciphers to allow specifying which TLS ciphers to support.
+- Add support for SRV lookups.
+- Add -N to sub client to suppress printing of EOL after the payload.
+- Add -T to sub client to suppress printing of a topic hierarchy.
+
+1.2.3 - 20131202
+================
+
+Broker:
+- Don't always attempt to call read() for SSL clients, irrespective of whether
+  they were ready to read or not. Reduces syscalls significantly.
+- Possible memory leak fixes. 
+- Further fix for bug #1226040: multiple retained messages being delivered for
+  subscriptions ending in #.
+- Fix bridge reconnections when using multiple bridge addresses.
+
+Client library:
+- Fix possible memory leak in C/C++ library when communicating with
+  a broker that doesn't follow the spec.
+- Block in Python loop_stop() until all messages are sent, as the
+  documentation states should happen.
+- Fix for asynchronous connections on Windows. Closes bug #1249202.
+- Module version is now available in mosquitto.py.
+
+Clients:
+- mosquitto_sub now uses fwrite() instead of printf() to output messages, so
+  messages with NULL characters aren't truncated.
+
+1.2.2 - 20131021
+================
+
+Broker:
+- Fix compliance with max_inflight_messages when a non-clean session client
+  reconnects. Closes one of the issues on bug #1237389.
+
+Client library:
+- Fix incorrect inflight message accounting, which caused messages to go
+  unsent. Partial fix for bug #1237351.
+- Fix potential memory corruption when sending QoS>0 messages at a high rate
+  using the threaded interface. Further fix for #1237351.
+- Fix incorrect delay scaling when exponential_backoff=true in
+  mosquitto_reconnect_delay_set().
+- Some pep8 fixes for Python.
+
+1.2.1 - 20130918
+================
+
+Broker:
+- The broker no longer ignores the auth_plugin_init() return value. Closes
+  bug #1215084.
+- Use RTLD_GLOBAL when opening authentication plugins on posix systems. Fixes
+  resolving of symbols in libraries used by authentication plugins.
+- Add/fix some config documentation.
+- Fix ACLs for topics with $SYS.
+- Clients loaded from the persistence file on startup were not being added to
+  the client hash, causing subtle problems when the client reconnected,
+  including ACLs failing. This has been fixed.
+- Add note to mosquitto-tls man page stating that certificates need to be
+  unique. Closes bug #1221285.
+- Fix incorrect retained message delivery when using wildcard subs in some
+  circumstances. Fixes bug #1226040.
+
+Client library:
+- Fix support for Python 2.6, 3.0, 3.1.
+- Fix TLS subjectAltName verification and segfaults.
+- Handle EAGAIN in Python on Windows. Closes bug #1220004.
+- Fix compilation when using WITH_TLS=no.
+- Don't fail reconnecting in Python when broker is temporarily unavailable.
+
+1.2 - 20130708
+==============
+
+Broker:
+- Replace O(n) username lookup on CONNECT with a roughly O(1) hashtable version.
+- It is now possible to disable $SYS at compile time.
+- Add dropped publish messages to load tree in $SYS. Closes bug #1183318.
+- Add support for logging SUBSCRIBE/UNSUBSCRIBE events.
+- Add "log_dest file" logging support.
+- Auth plugin ACL check function now passes the client id as well as username
+  and password.
+- The queue_qos0_messages option wasn't working correctly, this has now been
+  fixed. Closes bug #1125200.
+- Don't drop all messages for disconnected durable clients when
+  max_queued_messages=0.
+- Add support for "log_type all".
+- Add support for "-v" option on the command line to provide the equivalent of
+  "log_type all" without needing a config file.
+- Add the "upgrade_outgoing_qos" option, a non-standard feature.
+- Persistence data is now written to a temporary file which is atomically
+  renamed on completion, so a crash during writing will not produce a corrupt
+  file.
+- mosquitto.conf is now installed as mosquitto.conf.example
+- Configuration file errors are now reported with filename and line number.
+- The broker now uses a monotonic clock if available, to avoid changes in time
+  causing client disconnections or message retries.
+- Clean session and keepalive status are now display the log when a client
+  connects.
+- Add support for TLSv1.2 and TLSv1.1.
+- Clients that connect with zero length will topics are now rejected.
+- Add the ability to set a maximum allowed PUBLISH payload size.
+- Fix an ACL with topic "#" incorrectly granting access to $SYS.
+- Fix retained messages incorrectly being set on wildcard topics, leading to
+  duplicate retained messages being sent on subscription. Closes bug #1116233.
+- Don't discard listener values when no "port" option given. Closes bug
+  #1131406.
+- Client password check was always failing when security was being reapplied
+  after a config reload. This meant that all clients were being disconnected.
+  This has been fixed.
+- Fix build when WITH_TLS=no. Closes bug #1174971.
+- Fix single outgoing packets not being sent in a timely fashion if they were
+  not sent in one call to write(). Closes bug #1176796.
+- Fix remapping of messages for clients connected to a listener with
+  mount_point set. Closes bug #1180765.
+- Fix duplicate retained messages being sent for some wildcard patterns.
+- If a client connects with a will topic to which they do not have write
+  access, they are now disconnected with CONNACK "not authorised".
+- Fix retained messages on topic foo being incorrectly delivered to
+  subscriptions of /#
+- Fix handling of SSL errors on SSL_accept().
+- Fix handling of QoS 2 messages on client reconnect.
+- Drop privileges now sets supplementary groups correctly.
+- Fix load reporting interval (is now 60s).
+- Be strict with malformed PUBLISH packets - clients are now disconnected
+  rather than the packet discarded. This goes inline with future OASIS spec
+  changes and makes other changes more straightforward.
+- Process incoming messages denied by ACL properly so that clients don't keep
+  resending them.
+
+- Add support for round_robin bridge option.
+- Add bridge support for verifying remote server certificate subject against
+  the remote hostname.
+- Fix problem with out of order calls to free() when restarting a lazy bridge.
+- The broker now attempts to resolve bind_address and bridge addresses
+  immediately when parsing the config file in order to detect invalid hosts.
+- Bridges now set their notification state before attempting to connect, so if
+  they fail to connect the state can still be seen.
+- Fix bridge notification payload length - no need to send a null byte.
+
+- mosquitto_passwd utility now reports errors more clearly.
+- Fix "mosquitto_passwd -U".
+
+Client library:
+- Add support for TLSv1.2 and TLSv1.1, except for on the Python module.
+- Add support for verifying remote server certificate subject against the
+  remote hostname.
+- Add mosquitto_reconnect_async() support and make asynchronous connections
+  truely asynchronous rather than simply deferred. DNS lookups are still
+  blocking, so asynchronous connections require an IP address instead of
+  hostname.
+- Allow control of reconnection timeouts in mosquitto_loop_forever() and after
+  mosquitto_loop_start() by using mosquitto_reconnect_delay_set().
+- Fix building on Android NDK.
+- Re-raise unhandled errors in Python so as not to provide confusing error
+  messages later on.
+- Python module supports IPv6 connections.
+- mosquitto_sub_topic_tokenise() was behaving incorrectly if the last topic
+  hierarchy had only a single character. This has been fixed. Closes bug
+  #1163348.
+- Fix possible crash after disconnects when using the threaded interface with
+  TLS.
+- Allow build/install without Python. Closes bug #1174972.
+- Add support for binding connection to a local interface.
+- Implement maximum inflight messages handling.
+- Fix Python client not handling will_payload==None.
+- Fix potential memory leak when setting username/password.
+- Fix handling of QoS 2 messages on reconnect.
+- Improve handling of mosquitto_disconnect() with threaded mode.
+
+
+Clients:
+- Add support for TLSv1.2 and TLSv1.1.
+- Sub client can now suppress printing of messages with the retain bit set.
+- Add support for binding connection to a local interface.
+- Implement maximum inflight messages handling for the pub client.
+
+1.1.3 - 20130211
+================
+
+Broker:
+- mosquitto_passwd utility now uses tmpfile() to generate its temporary data
+  storage file. It also creates a backup file that can be used to recover data
+  if an errors occur.
+
+Other:
+- Build script fixes to help packaging on Debian.
+
+1.1.2 - 20130130
+================
+
+Client library:
+- Fix tls_cert_reqs not being set to SSL_VERIFY_PEER by default. This meant
+  that clients were not verifying the server certificate when connecting over
+  TLS. This affects the C, C++ and Python libraries.
+
+1.1.1 - 20130116
+================
+
+Broker:
+- Fix crash on reload if using acl patterns.
+
+Client library:
+- Fix static C++ functions not being exported on Windows. Fixes bug #1098256.
+
+1.1 - 20121219
+==============
+
+Broker:
+- Add $SYS/broker/messages/dropped
+- Add $SYS/broker/clients/expired
+- Replace $SYS/broker/+/per second/+ with moving average versions published at
+  $SYS/broker/load/#
+- Add $SYS/broker/load/sockets/+ and $SYS/broker/load/connections/+
+- Documentation on password file format has been fixed.
+- Disable SSL compression. This reduces memory usage significantly and removes
+  the possibility of CRIME type attacks.
+- Enable SSL_MODE_RELEASE_BUFFERS mode to reduce SSL memory usage further.
+- Add allow_duplicate_messages option.
+- ACL files can now have comment lines with # as the first character.
+- Display message on startup about which config is being loaded.
+- Fix max_inflight_messages and max_queued_messages not being applied.
+- Fix documentation error in mosquitto.conf.
+- Ensure that QoS 2 queued messages are sent out in a timely manner.
+- Local bridges now act on clean_session correctly.
+- Local bridges with clean_session==false now remove unused subscriptions on
+  broker restart.
+- The $SYS/broker/heap/# messages now no longer include "bytes" as part of the
+  string for ease of use.
+
+Client library:
+- Free memory used by OpenSSL in mosquitto_lib_cleanup() where possible.
+- Change WebSocket subprotocol name to mqttv3.1 to make future changes easier
+  and for compatibility with other implementations.
+- mosquitto_loop_read() and mosquitto_loop_write() now handle errors
+  themselves rather than having mosquitto_loop() handle their errors. This
+  makes using them in a separate event loop more straightforward.
+- Add mosquitto_loop_forever() / loop_forever() function call to make simple
+  clients easier.
+- Disable SSL compression. This reduces memory usage significantly and removes
+  the possibility of CRIME type attacks.
+- Enable SSL_MODE_RELEASE_BUFFERS mode to reduce SSL memory usage further.
+- mosquitto_tls_set() will now return an error or raise an exception
+  immediately if the CA certificate or client certificate/key cannot be
+  accessed.
+- Fix potential memory leaks on connection failures.
+- Don't produce return error from mosquitto_loop() if a system call is
+  interrupted. This prevents disconnects/reconnects in threaded mode and
+  simplifies non-threaded client handling.
+- Ignore SIGPIPE to prevent unnecessary client quits in threaded mode.
+- Fix document error for mosquitto_message_retry_set().
+- Fix mosquitto_topic_matches_sub() for subscriptions with + as the final
+  character. Fixes bug #1085797.
+- Rename all "obj" parameters to "userdata" for consistency with other
+  libraries.
+- Reset errno before network read/write to ensure EAGAIN isn't mistakenly
+  returned.
+- The message queue length is now tracked and used to determine the maximum
+  number of packets to process at once. This removes the need for the
+  max_packets parameter which is now unused.
+- Fix incorrect error value in Python error_string() function. Fixes bug
+  #1086777.
+- Reset last message in/out timer in Python module when we send a PINGREQ.
+  Fixes too-early disconnects.
+
+Clients:
+- Clients now display their own version number and library version number in
+  their help messages.
+- Fix "mosquitto_pub -l -q 2" disconnecting before all messages were
+  transmitted.
+- Fix potential out-of-bounds array access with client ids. Fixes bug
+  #1083182.
+
+Other:
+- mosquitto_passwd can now convert password files with plain text files to
+  hashed versions.
+
+1.0.5 - 20121103
+================
+
+Broker:
+- Fix crash when the broker has use_identity_as_username set to true but a
+  client connects without a certificate.
+- mosquitto_passwd should only be installed if WITH_TLS=yes.
+
+Library:
+- Use symbolic errno values rather than numbers in Python module to avoid
+  cross platform issues (incorrect errno on Mac OS).
+
+Other:
+- Build script fixes for FreeBSD.
+
+1.0.4 - 20121017
+================
+
+Broker:
+- Deal with poll() POLLIN/POLLOUT before POLL[RD]HUP to correctly handle the
+  case where a client sends data and immediately closes its socket.
+
+Library:
+- Fix memory leak with messages of QoS=2. Fixes bug #1064981.
+- Fix potential thread synchronisation problem with outgoing packets in the
+  Python module. Fixes bug #1064977.
+
+Clients:
+- Fix "mosquitto_sub -l" incorrectly only sending one message per second.
+
+1.0.3 - 20120927
+================
+
+Broker:
+- Fix loading of psk files.
+- Don't return an error when reloading config if an ACL file isn't defined.
+  This was preventing psk files being reloaded.
+- Clarify meaning of $SYS/broker/clients/total in mosquitto(8) man page.
+- Clarify meaning of $SYS/broker/messages/stored in mosquitto(8) man page.
+- Fix non-retained message delivery when subscribing to #.
+- Fix retained message delivery for subs to foo/# with retained messages at
+  foo.
+- Include the filename in password/acl file loading errors.
+
+Library:
+- Fix possible AttributeError when self._sock == None in Python module.
+- Fix reconnecting after a timeout in Python module.
+- Fix reconnecting when there were outgoing packets in the queue in the Python
+  module.
+- Fix problem with mutex initialisation causing crashes on some Windows
+  installations.
+
+1.0.2 - 20120919
+================
+
+Broker:
+- If the broker was configured for persistence, a durable client had a
+  subscription to topics in $SYS/# and had messages in its queue when the
+  broker restarted, then the persistent database would have messages missing
+  and so the broker would not restart properly. This has been fixed.
+
+Library:
+- Fix threading problem on some systems.
+
+Tests:
+- Close socket after 08-ssl-connect-no-auth-wrong-ca.py test to prevent
+  subsequent tests having problems.
+
+Build scripts:
+- Install pskfile.example in CMake. Fixes bug #1037504.
+
+Other:
+- Fix db_dump parameter printing message store and sub chunks.
+
+1.0.1 - 20120815
+================
+
+Broker:
+- Fix default log_dest when running as a Windows service.
+
+Client library:
+- Fix incorrect parameters in Python on_log() callback call. Fixes bug
+  #1036818.
+
+Clients:
+- Clients now don't display TLS/TLS-PSK usage help if they don't support it.
+
+Build scripts:
+- Fix TLS-PSK support in the CMake build files.
+- Fix man page installation in the CMake build files.
+- Fix SYSCONFDIR in cmake on *nix when installing to /usr. Fixes bug #1036908.
+
+Documentation:
+- Fix mqtt/MQTT capitalisation in man pages.
+- Update compiling.txt.
+- Fix incorrect callback docs in mosquitto.py. Fixes bug #1036607.
+- Fix various doc typos and remove obsolete script. Fixes bug #1037088.
+
+1.0 - 20120814
+==============
+
+Broker:
+
+- Add SSL/TLS support.
+- Add TLS-PSK support, providing a simpler encryption method for constrained
+  devices.
+- Passwords are now salted+hashed if compiled with WITH_TLS (recommended).
+- Add mosquitto_passwd for handling password files.
+- Add $SYS/broker/publish/messages/{sent|received} to show the number of
+  PUBLISH messages sent/received.
+- Add $SYS/broker/publish/bytes/{sent|received} to show the number of
+  PUBLISH bytes sent/received.
+- Add reload parameter for security init/cleanup functions.
+- Add option for expiring disconnected persistent clients.
+- Add option for queueing of QoS 0 messages when persistent clients are
+  disconnected.
+- Enforce client id limits in the broker (only when WITH_STRICT_PROTOCOL is
+  defined).
+- Fix reloading of log configuration.
+- Add support for try_private config option for bridge connections.
+- Add support for autosave_on_changes config option.
+- Add support for include_dir config option.
+- Add support for topic remapping.
+- Usernames were being lost when a non clean-session client reconnected,
+  potentially causing problems with ACLs. This has been fixed.
+- Significant improvement to memory handling on Windows.
+- Bridges with outgoing topics will now set the retain flag correctly so that
+  messages will be retained on the remote broker.
+- Incoming bridge connections are now detected by checking if bit 8 of the
+  protocol version number is set. This requires support from the remote broker.
+- Add support for notification_topic option.
+- Add $SYS/broker/subscriptions/count and $SYS/broker/retained messages/count.
+- Add restart_timeout to control the amount of time an automatic bridge will
+  wait before reconnecting.
+- Overlapping subscriptions are now handled properly. Fixes bug #928538.
+- Fix reloading of persistence_file and persistence_location.
+- Fix broker crash on incorrect protocol number.
+- Fix missing COMPAT_ECONNRESET define on Windows.
+- Clients that had disconnected were not always being detected immediately on
+  Linux. This has been fixed.
+- Don't save $SYS messages to the on-disk persistent db. All $SYS messages
+  should be reconstructed on a restart. This means bridge connection
+  notifications will now be correct on a restart.
+- Fix reloading of bridge clients from the persistent db. This means that
+  outgoing bridged topics should always work.
+- Local bridges are now no longer restricted by local ACLs.
+- Discard publish messages with zero length topics.
+- Drop to "mosquitto" user even if no config file specified.
+- Don't incorrectly allow topic access if ACL patterns but no normal ACL rules
+  are defined.
+
+Client library:
+
+- Add SSL/TLS support.
+- Add TLS-PSK support, providing a simpler encryption method for constrained
+  devices.
+- Add javascript/websockets client library.
+- Add "struct mosquitto *mosq" parameter for all callbacks in the client
+  library. This is a binary incompatible change so the soversion of the
+  libraries has been incremented. The new parameter should make it easier to
+  use callbacks in practice.
+- Add mosquitto_want_write() for use when using own select() loop with
+  mosquitto_socket().
+- Add mosquitto_connect_async() to provide a non-blocking connect client call.
+- Add mosquitto_user_data_set() to allow user data pointer to be updated.
+- Add "int rc" parameter to disconnect callback to indicate whether disconnect
+  was unexpected or the result of calling mosquitto_disconnect().
+- Add mosquitto_strerror() for obtaining a string description of error numbers.
+- Add mosquitto_connack_string() for obtaining a string description of MQTT
+  connection results.
+- Add mosquitto_will_clear() and change mosquitto_will_set() to only set the
+  will.
+- Add mosquitto_sub_topic_tokenise() and mosquitto_sub_topic_tokens_free()
+  utility functions to tokenise a subscription/topic string into a string
+  array.
+- Add mosquitto_topic_matches_sub() to check whether a topic matches a
+  subscription.
+- Replaced mosquitto_log_init() with mosquitto_log_callback_set() to allow
+  clients to decide what to do with log messages.
+- Client will now disconnect itself from the broker if it doesn't receive a
+  PINGRESP in the keepalive period after sending a PINGREQ.
+- Client will now send a PINGREQ if it has not received a message from the
+  broker in keepalive seconds.
+- mosquitto_new() will now generate a random client id if the id parameter is
+  NULL.
+- Added max_packets to mosquitto_loop(), mosquitto_loop_read() and
+  mosquitto_loop_write() to control the maximum number of packets that are
+  handled per call.
+- Payload parameters are now void * instead of uint8_t *.
+- The clean_session parameter has been moved from mosquitto_connect() to
+  mosquitto_new() because it is a client parameter rather than a connection
+  parameter.
+- Functions now use int instead of uint*_t where possible.
+- mosquitto_new() now sets errno to indicate failure type.
+- Return MOSQ_ERR_INVAL on zero length topic.
+- Fix automatic client id generation on Windows.
+- mosquitto_loop_misq() can now return MOSQ_ERR_NO_CONN.
+- Compile static library as well as dynamic library with default makefiles.
+- Rename C++ namespace from mosquittopp to mosqpp to remove ambiguity.
+- C++ lib_init(), lib_version() and lib_cleanup() are now in the mosqpp
+  namespace directly, not mosquittopp class members.
+- The Python library is now written in pure Python and so no longer depends on
+  libmosquitto. 
+- The Python library includes SSL/TLS support.
+- The Python library should now be compatible with Python 3.
+
+Other:
+
+- Fix db_dump reading of retained messages.
+- Add example of logging all messages to mysql.
+- Add C++ client example.
+- Fix potential buffer overflow in pub/sub clients.
+- Add "make binary" target that doesn't make documents.
+- Add "--help" arguments to pub/sub clients.
+- Fix building on Solaris.
+
+0.15 - 20120205
+===============
+
+- Add support for $SYS/broker/clients/maximum and $SYS/broker/clients/active
+  topics.
+- Add support for $SYS messages/byte per second received/sent topics.
+- Updated mosquitto man page - $SYS hierarchy and signal support were out of
+  date.
+- Auto generated pub/sub client ids now include the hostname.
+- Tool for dumping persistent DB contents is available in src/db_dump. It isn't
+  installed by default.
+- Enforce topic length checks in client library.
+- Implement "once" and "lazy" bridge start types.
+- Add new return type MOSQ_ERR_ERRNO to indicate that the errno variable should
+  be checked for the real error code.
+- Add support for connection_messages config option.
+- mosquitto_sub will now refuse to run if the -c option (disable clean session)
+  is given and no client id is provided.
+- mosquitto_pub now gives more useful error messages on invalid input or other
+  error conditions.
+- Fix Python will_set() true/True typo.
+- Fix messages to topic "a/b" incorrectly matching on a subscription "a" if
+  another subscription "a/#" exists.
+
+0.14.4 - 20120106
+=================
+
+- Fix local bridge notification messages.
+- Fix return values for more internal library calls.
+- Fix incorrect out of memory checks in library and broker.
+- Never time out local bridge connections.
+
+0.14.3 - 20111210
+=================
+
+- Fix potential crash when client connects with an invalid CONNECT packet.
+- Fix incorrect invalid socket comparison on Windows.
+- Server shouldn't crash when a message is published to foo/ when a
+  subscription to foo/# exists (bug #901697).
+- SO_REUSEADDR doesn't work the same on Windows, so don't use it.
+- Cygwin builds now support Windows service features.
+- Fix $SYS/broker/bytes/sent reporting.
+
+0.14.2 - 20111123
+=================
+
+- Add uninstall target for libs.
+- Don't try to write packet whilst in a callback.
+
+0.14.1 - 20111117
+=================
+
+- Fix Python sytax errors (bug #891673).
+
+0.14 - 20111116
+===============
+
+- Add support for matching ACLs based on client id and username.
+- Add a Windows installer file (NSIS based).
+- Add native support for running the broker as a Windows service. This is the
+  default when installed using the new installer.
+- Fix client count for listeners. When clients disconnect, decrement the
+  count. Allow max_connections to work again.
+- Attempt to send all packets immediately upon being queued. This will result
+  in more immediate network communication in many cases.
+- Log IP address when reporting CONNACK packets if the client id isn't yet
+  known.
+- Fix payload length calculation in python will_set function.
+- Fix Python publish and will_set functions for payload=None.
+- Fix keepalive value being lost when reconnecting a client (bug #880863).
+- Persistence file writing now uses portable file functions, so the Cygwin
+  broker build should no longer be necessary.
+- Duplicate code between the client and broker side has been reduced.
+- Queued messages for clients reconnecting with clean_session=false set were
+  not being sent until the next message for that client was received. This has
+  been fixed (bug #890724).
+- Fix subscriptions to # incorrectly matching against topics beginning with /
+
+0.13 - 20110920
+===============
+
+- Implement bridge state notification messages.
+- Save client last used mid in persistent database (DB version number bumped).
+- Expose message id in Python MosquittoMessage.
+- It is now possible to set the topic QoS level for bridges.
+- Python MosquittoMessage payload parameter is now a Python string, not a
+  ctypes object which makes it much easier to use.
+- Fix queueing of messages for disconnected clients. The max_queued_messages
+  option is now obeyed.
+- C++ library is now in its own namespace, mosquittopp.
+- Add support for adding log message timestamps in the broker.
+- Fix missing mosquitto_username_pw_set() python binding.
+- Fix keepalive timeout for reconnecting non clean-session clients. Prevents
+  immediate disconnection on reconnection.
+- Fix subscription wildcard matching - a subscription of +/+ will now match
+  against /foo
+- Fix subscription wildcard matching - a subscription of foo/# will now match
+  against foo
+- When restoring persistent database, clients should be set to non
+  clean-session or their subscriptions will be immediately removed.
+- Fix SUBACK payload for multiple topic subscriptions.
+- Don't send retained messages when a client subscribes to a topic it is
+  already subscribed to.
+
+0.12 - 20110725
+===============
+
+- Reload (most) configuration on SIGHUP.
+- Memory tracking is no longer compiled in the client library.
+- Add --help option to mosquitto to display usage.
+- Add --id-prefix option to clients to allow easier use with brokers that are
+  using the clientid_prefix option.
+- Fix compilation on QNX.
+- Add -P as a synonym argument for --pw in the clients.
+- Fix python MosquittoMessage payload parameter. This is now returned as a
+  pointer to an array of c_uint8 values so binary data is handled correctly.
+  If a string is needed, use msg.payload_str
+- Fix memory leaks on client authentication.
+- If password_file is not defined then clients can now connect even if they
+  use a username/password.
+- Add mosquitto_reconnect() to the client library.
+- Add option for compiling with liberal protocol compliance support (enabled
+  by default). 
+- Fix problems with clients reconnecting and old messages remaining in the
+  message store.
+- Display both ip and client id in the log message when a client connects.
+  Change the socket connection message to make it more obvious that it is just
+  a socket connection being made (bug #801135).
+- Fix retained message delivery where a subscription contains a +.
+- Be more lenient when reloading persistent database to reduce errors with
+  empty retained messages.
+
+0.11.3 - 20110707
+=================
+
+- Don't complain and quit if persistence_file option is given (bug #802423).
+- Initialise listeners correctly when clients with duplicate client ids
+  connect. Bug #801678.
+- Memory tracking is now disabled for Symbian builds due to lack of malloc.h.
+- Fix memory tracking compilation for kFreeBSD.
+- Python callbacks can now be used with class member functions.
+- Fix persistent database writing of client message chunks which caused
+  errors when restoring (bug #798164).
+
+0.11.2 - 20110626
+=================
+
+- Don't free contexts in mqtt3_context_disconnect() (bug #799688 / #801678).
+- Only free will if present when freeing a client context.
+
+0.11.1 - 20110620
+=================
+
+- Fix buffer overrun when checking for + and # in topics (bug #799688).
+- Pub client now quits if publish fails.
+
+0.11 - 20110619
+===============
+
+- Removed all old sqlite code.
+- Remove client id limit in clients.
+- Implemented $SYS/broker/heap/maximum size
+- Implemented $SYS/broker/clients/inactive to show the number of disconnected
+  non-clean session clients.
+- $SYS/broker/heap/current size and maximum size messages now include "bytes"
+  to match rsmb message format.
+- Implemented the retained_persistence config file option - a synonym of the
+  "persistence" option.
+- Added security_external.c to broker source to make it easier for third
+  parties to add support for their existing username/password and ACL database
+  for security checks. See external_security_checks.txt.
+- $SYS messages are now only republished when their value changes.
+- Windows native broker now responds to command line arguments.
+- Simplify client disconnecting so wills gets sent in all cases (bug #792468).
+- Clients now have a --quiet option.
+- The on_disconnect() callback will always be called now, even if the client
+  has disconnected unexpectedly.
+- Always close persistent DB file after restoring.
+- Return error code when exiting the clients.
+- mosquitto_publish() now returns MOSQ_ERR_INVAL if the topic contains + or #
+- mosquitto now silently rejects published messages with + or # in the topic.
+- max_connections is now a per-listener setting instead of global.
+- Connection count is now reduced when clients disconnect (bug #797983).
+
+0.10.2 - 20110106
+=================
+
+- Don't abort when connecting if the first connection fails. This is important
+  on e.g. Windows 7, where IPV6 is offered as the first choice but may not be
+  available.
+- Deal with long logging messages properly (bug #785882).
+- Fix library compilation on Symbian - no pselect() available.
+- Don't stop processing subscriptions on received messages after a
+  subscription with # matches. (bug #791206).
+
+0.10.1 - 20110512
+=================
+
+- Fix Windows compilation.
+- Fix mosquitto.py on Windows - call lib init/cleanup.
+- Don't abort when connecting if given an unknown address type (assuming an
+  IPv4 or IPv6 address is given).
+
+0.10 - 20110429
+===============
+
+- Implement support for the password_file option and accompanying
+  authentication requirements in the broker.
+- Implement topic Access Control Lists. 
+- mosquitto_will_set() and mosquitto_publish() now return
+  MOSQ_ERR_PAYLOAD_SIZE if the payload is too large (>268,435,455 bytes).
+- Bridge support can now be disabled at compile time.
+- Group together network writes for outgoing packets - don't send single byte
+  writes!
+- Add support for clientid_prefixes variable.
+- Add support for the clientid config variable for controlling bridge client
+  ids.
+- Remove 32-bit database ID support because htobe64() no longer used.
+- Multiple client subscriptions to the same topic result in only a single
+  subscription. Bug #744077.
+
+0.9.3 - 20110310
+================
+
+- Set retained message status for QoS 2 messages (bug #726535).
+- Only abort with an error when opening listening sockets if no address family
+  is available, rather than aborting when any address family is not available.
+- Don't clean queued messages when a non clean session client reconnects.
+- Make mosquitto.py compatible with Python <2.6.
+- Fix mosquitto.h header includes for Windows.
+
+0.9.2 - 20110208
+================
+
+- Only send a single DISCONNECT command when using -l in the pub client.
+- Set QoS=1 on PUBREL commands to meet protocol spec.
+- Don't leak sockets on connection failure in the library.
+- Install man pages when building under cmake.
+- Fix crash bug on malformed CONNECT message.
+- Clients are now rejected if their socket peer name cannot be obtained on
+  connection.
+- Fix a number of potential problems caused when a client with a duplicate id
+  connects.
+- Install mosquitto.conf under cmake.
+
+0.9.1 - 20101203
+================
+
+- Add missing code for parsing the "bind_address" configuration option.
+- Fix missing include when compiling with tcp-wrappers support.
+- Add linker version script for C library to control exported functions.
+
+0.9 - 20101114
+==============
+
+- Client and message data is now stored in memory with custom routines rather
+  than a sqlite database. This removes the dependencies on sqlite, pcre and
+  sqlite3-pcre. It also means that the persistent database format has had to
+  be reimplemented in a custom format. Optional support for importing old
+  sqlite databases is provided.
+- Added IPv6 support for mosquitto and the clients.
+- Provide username and password support for the clients and client libraries.
+  This is part of the new MQTT v3.1 spec.
+- The broker supports the username and password connection flags, but will not
+  do anything with the username and password.
+- Python callback functions now optionally take an extra argument which will
+  return the user object passed to the Mosquitto() constructor, or the calling
+  python object itself if nothing was given to Mosquitto().
+- Remove the mosquitto command line option "-i interface".
+- Remove the mosquitto.conf "interface" variable.
+- Add support for the listener config variable (replaces the interface
+  variable)
+- Add support for the bind_address config variable.
+- Change the port config variable behaviour to match that of rsmb (applies to
+  the default listener only, can be given just once).
+- Fix QoS 2 protocol compliance - stop sending duplicate messages and handle
+  timeouts correctly. Fixes bug #598290.
+- Set retain flag correctly for outgoing messages. It should only be set for
+  messages sent in response to a subscribe command (ie. stale data).
+- Fix bug in returning correct CONNACK result to on_connect client callback.
+- Don't send client will if it is disconnected for exceeding its keepalive
+  timer.
+- Fix client library unsubscribe function incorrectly sending a SUBSCRIBE
+  command when it should be UNSUBSCRIBE. 
+- Fix max_inflight_messages and max_queued_messages operation. These
+  parameters now apply only to QoS 1 and 2 messages and are used regardless of
+  the client connection state.
+- mosquitto.conf now installed to /etc/mosquitto/mosquitto.conf instead of
+  /etc/mosquitto.conf. The /etc/mosquitto/ directory will be used for password
+  and access control files in the future.
+- Give the compile time option of using 32-bit integers for the database IDs
+  instead of 64-bit integers. This is useful where htobe64()/be64toh() are not
+  available or for embedded systems for example.
+- The DUP bit is now set correctly when resending PUBREL messages.
+- A port to Windows native has been partially completed. This currently drops a
+  number of features, including the ability to change configuration parameters
+  and persistent storage.
+
+0.8.3 - 20101004
+================
+
+- Fix QoS 2 protocol compliance - stop sending duplicate messages and handle
+  timeouts correctly. Fixes bug #598290. (backported from future 0.9 code)
+
+0.8.2 - 20100815
+================
+
+- Fix default loop() timeout value in mosquitto.py. Previous value was 0,
+  causing high cpu load.
+- Fix message handling problem in client library when more than one message was
+  in the client queue.
+- Fix the logic used to determine whether a QoS>0 message needs to be retried.
+- Fix the Python sub.py example so that it quits on error.
+
+0.8.1 - 20100812
+================
+
+- Improve python interface
+- Fix incorrect return value from message delete function
+- Use logging function to print error messages in clients.
+- Fix python installation script DESTDIR.
+- Fix library destination path for 64-bit machines.
+
+0.8 - 20100807
+==============
+
+- Topics starting with a / are treated as distinct to those not starting with
+  a /. For example, /topic/path is different to topic/path. This matches the
+  behaviour of rsmb.
+- Correctly calculate the will QoS on a new client connection (bug #597451).
+- Add "addresses" configuration file variable as an alias of "address", for
+  better rsmb compatibility.
+- Bridge clean_session setting is now false, to give more sensible behaviour
+  and be more compatible with rsmb.
+- Add cleansession variable for configuring bridges.
+- Add keepalive_interval variable for bridges.
+- Remove default topic subscription for mosquitto_sub because the old
+  behaviour was too confusing.
+- Added a C client library, which the pub and sub clients now use.
+- Added a C++ client library (bound to the C library).
+- Added a Python client library (bound to the C library).
+- Added CMake build scripts to allow the library and clients (not the broker)
+  to be compiled natively on Windows.
+
+0.7 - 20100615
+==============
+
+- mosquitto_pub can now send null (zero length) messages.
+- Don't store QoS=0 messages for disconnected clients with subscriptions of
+  QoS>0.
+- accept() all available sockets when new clients are connecting, rather than
+  just one.
+- Add option to print debug messages in pub and sub clients.
+- hg revision is now exported via $SYS/broker/changeset
+- Send Will when client exceeds keepalive timer and is disconnected.
+- Check to see if a client has a will before sending it.
+- Correctly deal with clients connecting with the same id multiple times.
+- Add compile time option to disable heap memory tracking.
+- Use poll() instead of select() to allow >1024 clients.
+- Implement max_connections.
+- Run VACUUM on in-memory database on receiving SIGUSR2.
+- Fix bridge keepalive timeouts and reconnects.
+- Don't attempt to drop root privileges when running on Windows as this isn't
+  well supported (bug #586231).
+
+0.6.1 - 20100506
+================
+
+- Fix DB auto upgrade for messages table.
+
+0.6 - 20100505
+==============
+
+- Basic support for connecting multiple MQTT brokers together (bridging).
+- mosquitto_sub can now subscribe to multiple topics (limited to a global QoS).
+- mosquitto_pub can now send a file as a message.
+- mosquitto_pub can now read all of stdin and send it as a message.
+- mosquitto_pub can now read stdin and send each line as a message.
+- mosquitto will now correctly run VACUUM on the persistent database on exit.
+- Implement a more efficient database design, so that only one copy of each
+  message is held in the database, rather than one per subscribed client.
+- Add the store_cleanup_interval config option for dealing with the internal
+  message store.
+- Add support for disabling "clean session" for the sub client.
+- Add support for automatic upgrading of the mosquitto DB from v1 to v2.
+- Add persistence_file config option to allow changing the filename of the
+  persistence database. This allows multiple mosquitto DBs to be stored in the
+  same location whilst keeping persistence_location compatible with rsmb.
+- Don't store QoS=0 messages for disconnected clients. Fixes bug #572608. This
+  wasn't correctly fixed in version 0.5.
+- Don't disconnect clients if they send a PUBLISH with zero length payload
+  (bug #573610).
+- If a retained message is received with a zero length payload, the retained
+  message for that topic is deleted.
+- Send through zero length messages.
+- Produce a warning on unsupported rsmb options instead of quitting.
+- Describe clean session flag in the mqtt man page.
+- Implement the max_inflight_messages and max_queued_messages features in the
+  broker.
+
+0.5.4 - 20100311
+================
+
+- Fix memory allocation in mqtt3_fix_sub_topic() (bug #531861).
+- Remove accidental limit of 100 client connections.
+- Fix mosquitto_pub handling of messages with QoS>0 (bug #537061).
+
+0.5.3 - 20100303
+================
+
+- Will messages are now only sent when a client disconnects unexpectedly.
+- Fix all incoming topics/subscriptions that start with a / or contain
+  multiple / in a row (//).
+- Do actually disconnect client when it sends an empty subscription/topic string.
+- Add missing $SYS/broker/clients/total to man page.
+
+0.5.2 - 20100302
+================
+
+- Always update last backup time, so that the backup doesn't run every time
+  through the main loop once autosave_interval has been reached.
+- Report $SYS/broker/uptime in the same format as rsmb.
+- Make mandatory options obvious in usage output and man page of mosquitto_pub.
+  Fixes bug #529990.
+- Treat subscriptions with a trailing slash correctly. This should fix bugs
+  #530369 and #530099.
+  
+0.5.1 - 20100227
+================
+
+- Must daemonise before pid file is written.
+
+0.5 - 20100227
+==============
+
+- No longer store QoS=0 messages for disconnected clients that do not have
+  clean start set.
+- Rename msg_timeout option to retry_interval for better rsmb compatibility.
+- Change persistence behaviour. The database is now stored in memory even if
+  persistence is enabled. It is written to disk when mosquitto exits and also at
+  periodic intervals as defined by the new autosave_interval option.
+- The writing of the persistence database may be forced by sending mosquitto
+  the SIGUSR1 signal.
+- Clients that do not send CONNECT as their first command are now
+  disconnected.
+- Boolean configuration values may now be specified with true/false as well as
+  1/0.
+- Log message on CONNECT with invalid protocol or protocol version.
+- Default sqlite3-pcre path on Linux is now /usr/lib/sqlite3/pcre.so to match
+  future sqlite3-pcre packages.
+- Add mosquitto_sub and mosquitto_pub, simple clients for subscribe/publish.
+- Add man pages for clients.
+- Add general man page on mqtt.
+- Root privileges are now dropped only after attempting to write a pid file
+  (if configured). This means that the pid file can be written to /var/run/
+  directly and should fix bug #523183.
+
+0.4.2 - 20100203
+================
+
+- Fix segfault on client connect with invalid protocol name/version.
+
+0.4.1 - 20100112
+===============
+
+- Fix regex used for finding retained messages to send on new subscription.
+
+0.4 - 20100105
+==============
+
+- Added support for wildcard subscriptions using + and #.
+- All network operations are now non-blocking and can cope with partial
+  packets, meaning that networking should be a lot more reliable.
+- Total messsages/bytes sent/received are now available in $SYS.
+- Improved logging information - use client ip address and id instead of
+  socket number.
+- Broker build timestamp is available in $SYS.
+- Keepalive==0 is now correctly treated as "never disconnect".
+- Fixed manpage installation.
+- Fixed incorrect $SYS hierarchy locations in documentation and code.
+- Debug type log messages are no longer sent to "topics".
+- Default logging destination no longer includes "topics" to prevent possible
+  error logging to the db before it is initialised.
+- Periodic $SYS messages can now be disabled.
+- stdout and stderr are flushed when logging to them to give more timely
+  updates.
+- dup is now set correctly when resending messages.
+- Database format bumped due to topic column naming fix.
+
+0.3 - 20091217
+==============
+
+- The port option in the configuration file and --port command line argument
+  may now be given any number of times to make mosquitto listen on multiple
+  sockets.
+- Add new config file and command line option "interface" to specify an
+  interface to listen on, rather than all interfaces.
+- Added host access control through tcp-wrappers support.
+- Set SO_REUSEADDR on the listening socket so restart is much quicker.
+- Added support for tracking current heap memory usage - this is published on
+  the topic "$SYS/broker/heap/current size"
+- Added code for logging to stderr, stdout, syslog and topics. 
+- Added logging to numerous places - still plenty of scope for more.
+
+0.2 - 20091204
+==============
+
+- Replaced the command line option --foreground with --daemon, swapping the
+  default behaviour.
+- Added the command line option --config-file, to specify a config file to
+  load.  If this is not given, no config file is load and the default options
+  are used.
+- Added the command line option --port for specifying the port to listen on.
+  This overrides values in the config file.
+- Don't use persistence by default.
+- Default behaviour is now more sane when run by a normal user with no command
+  line options (combination of above changes).
+- Added option user to config file, defaulting to a value of mosquitto. If
+  this value isn't blank and mosquitto is started by root, then it will drop
+  privileges by changing to the user and its primary group. This replaces the
+  current behaviour of refusing to start if run by root.
+- Fix non-persistent mode, which would never work in the previous release.
+- Added information on default values of msg_timeout and sys_interval to the
+  mosquitto.conf man page. (closes bug #492045).

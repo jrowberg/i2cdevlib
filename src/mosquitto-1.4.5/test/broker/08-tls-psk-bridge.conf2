@@ -1,0 +1,13 @@
+port 1890
+
+connection bridge-psk
+address localhost:1889
+topic psk/test out
+bridge_identity psk-test
+bridge_psk deadbeef
+
+log_type debug
+log_type error
+log_type warning
+log_type information
+log_type notice

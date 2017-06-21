@@ -1,0 +1,1 @@
+/usr/bin/c++      CMakeFiles/main.dir/main.cpp.o CMakeFiles/main.dir/Communicator.cpp.o CMakeFiles/main.dir/RaspberryPi_bcm2835/I2Cdev/I2Cdev.cpp.o CMakeFiles/main.dir/src/jsoncpp/dist/jsoncpp.cpp.o  -o main  -L/usr/local/lib -rdynamic -lmosquittopp -ljsoncpp -lbcm2835 -lpthread -Wl,-rpath,/usr/local/lib 

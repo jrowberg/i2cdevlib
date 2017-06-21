@@ -1,0 +1,555 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<?xml-stylesheet type="text/xsl" href="manpage.xsl"?>
+
+<refentry xml:id="mosquitto_sub" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<refmeta>
+		<refentrytitle>mosquitto_sub</refentrytitle>
+		<manvolnum>1</manvolnum>
+		<refmiscinfo class="source">Mosquitto Project</refmiscinfo>
+		<refmiscinfo class="manual">Commands</refmiscinfo>
+	</refmeta>
+
+	<refnamediv>
+		<refname>mosquitto_sub</refname>
+		<refpurpose>an MQTT version 3.1 client for subscribing to topics</refpurpose>
+	</refnamediv>
+
+	<refsynopsisdiv>
+		<cmdsynopsis>
+			<command>mosquitto_sub</command>
+			<arg><option>-A</option> <replaceable>bind_address</replaceable></arg>
+			<arg><option>-c</option></arg>
+			<arg><option>-C</option> <replaceable>msg count</replaceable></arg>
+			<arg><option>-d</option></arg>
+			<arg><option>-h</option> <replaceable>hostname</replaceable></arg>
+			<arg><option>-i</option> <replaceable>client_id</replaceable></arg>
+			<arg><option>-I</option> <replaceable>client id prefix</replaceable></arg>
+			<arg><option>-k</option> <replaceable>keepalive time</replaceable></arg>
+			<arg><option>-p</option> <replaceable>port number</replaceable></arg>
+			<arg><option>-q</option> <replaceable>message QoS</replaceable></arg>
+			<arg><option>-R</option></arg>
+			<arg><option>-S</option></arg>
+			<arg><option>-N</option></arg>
+			<arg><option>--quiet</option></arg>
+			<arg><option>-v</option></arg>
+			<arg>
+				<arg><option>-u</option> <replaceable>username</replaceable></arg>
+				<arg><option>-P</option> <replaceable>password</replaceable></arg>
+			</arg>
+			<arg>
+				<option>--will-topic</option> <replaceable>topic</replaceable>
+				<arg><option>--will-payload</option> <replaceable>payload</replaceable></arg>
+				<arg><option>--will-qos</option> <replaceable>qos</replaceable></arg>
+				<arg><option>--will-retain</option></arg>
+			</arg>
+			<group>
+				<arg>
+					<group choice='req'>
+						<arg choice='plain'><option>--cafile</option> <replaceable>file</replaceable></arg>
+						<arg choice='plain'><option>--capath</option> <replaceable>dir</replaceable></arg>
+					</group>
+					<arg><option>--cert</option> <replaceable>file</replaceable></arg>
+					<arg><option>--key</option> <replaceable>file</replaceable></arg>
+					<arg><option>--tls-version</option> <replaceable>version</replaceable></arg>
+					<arg><option>--insecure</option></arg>
+				</arg>
+				<arg>
+					<arg choice='plain'><option>--psk</option> <replaceable>hex-key</replaceable></arg>
+					<arg choice='plain'><option>--psk-identity</option> <replaceable>identity</replaceable></arg>
+					<arg><option>--tls-version</option> <replaceable>version</replaceable></arg>
+				</arg>
+			</group>
+			<arg><option>--proxy</option> <replaceable>socks-url</replaceable></arg>
+			<arg><option>-V</option> <replaceable>protocol-version</replaceable></arg>
+			<arg choice='opt' rep='repeat'><option>-T</option> <replaceable>filter-out</replaceable></arg>
+			<arg choice='plain' rep='repeat'><option>-t</option> <replaceable>message-topic</replaceable></arg>
+		</cmdsynopsis>
+		<cmdsynopsis>
+			<command>mosquitto_sub</command>
+			<group choice='plain'>
+				<arg><option>--help</option></arg>
+			</group>
+		</cmdsynopsis>
+	</refsynopsisdiv>
+
+	<refsect1>
+		<title>Description</title>
+		<para><command>mosquitto_sub</command> is a simple MQTT version 3.1
+		client that will subscribe to a topic and print the messages that it
+		receives.</para>
+	</refsect1>
+
+	<refsect1>
+		<title>Options</title>
+		<para>The options below may be given on the command line, but may also
+			be placed in a config file located at
+			<option>$XDG_CONFIG_HOME/mosquitto_sub</option> or
+			<option>$HOME/.config/mosquitto_sub</option> with one pair of
+			<option>-option <replaceable>value</replaceable></option>
+			per line. The values in the config file will be used as defaults
+			and can be overridden by using the command line. The exceptions to
+			this are <option>-t</option> and <option>-T</option>, which if
+			given in the config file will not be overridden. Note also that
+			currently some options cannot be negated, e.g.
+			<option>-S</option>. Config file lines that have a
+			<option>#</option> as the first character are treated as comments
+			and not processed any further.</para>
+		<variablelist>
+			<varlistentry>
+				<term><option>-A</option></term>
+				<listitem>
+					<para>Bind the outgoing connection to a local ip
+						address/hostname. Use this argument if you need to
+						restrict network communication to a particular
+						interface.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>-c</option></term>
+				<term><option>--disable-clean-session</option></term>
+				<listitem>
+					<para>Disable the 'clean session' flag. This means that all
+					of the subscriptions for the client will be maintained
+					after it disconnects, along with subsequent QoS 1 and QoS 2
+					messages that arrive. When the client reconnects, it will
+					receive all of the queued messages.</para>
+					<para>If using this option, it is recommended that the
+					client id is set manually with <option>--id</option></para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>--cafile</option></term>
+				<listitem>
+					<para>Define the path to a file containing PEM encoded CA
+						certificates that are trusted. Used to enable SSL
+						communication.</para>
+					<para>See also <option>--capath</option></para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>--capath</option></term>
+				<listitem>
+					<para>Define the path to a directory containing PEM encoded CA
+						certificates that are trusted. Used to enable SSL
+						communication.</para>
+					<para>For <option>--capath</option> to work correctly, the
+						certificate files must have ".crt" as the file ending
+						and you must run "c_rehash &lt;path to capath&gt;" each
+						time you add/remove a certificate.</para>
+					<para>See also <option>--cafile</option></para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>--cert</option></term>
+				<listitem>
+					<para>Define the path to a file containing a PEM encoded
+						certificate for this client, if required by the
+						server.</para>
+					<para>See also <option>--key</option>.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>--ciphers</option></term>
+				<listitem>
+					<para>An openssl compatible list of TLS ciphers to support
+						in the client. See
+						<citerefentry><refentrytitle>ciphers</refentrytitle><manvolnum>1</manvolnum></citerefentry>
+						for more information.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>-C</option></term>
+				<listitem>
+					<para>Disconnect and exit the program immediately after
+						the given count of messages have been received. This
+						may be useful in shell scripts where on a single status
+						value is required, for example.</para>
+					<para>Combine with <option>-R</option> to print only the
+						first set of fresh messages (i.e. that does not have
+						the retained flag set), or with <option>-T</option> to
+						filter which topics are processed.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>-d</option></term>
+				<term><option>--debug</option></term>
+				<listitem>
+					<para>Enable debug messages.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>--help</option></term>
+				<listitem>
+					<para>Display usage information.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>-h</option></term>
+				<term><option>--host</option></term>
+				<listitem>
+					<para>Specify the host to connect to. Defaults to localhost.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>-i</option></term>
+				<term><option>--id</option></term>
+				<listitem>
+					<para>The id to use for this client. If not given, defaults
+					to mosquitto_sub_ appended with the process id of the
+					client. Cannot be used at the same time as the
+					<option>--id-prefix</option> argument.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>-I</option></term>
+				<term><option>--id-prefix</option></term>
+				<listitem>
+					<para>Provide a prefix that the client id will be built
+					from by appending the process id of the client. This is
+					useful where the broker is using the clientid_prefixes
+					option. Cannot be used at the same time as the
+					<option>--id</option> argument.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>--insecure</option></term>
+				<listitem>
+					<para>When using certificate based encryption, this option
+						disables verification of the server hostname in the
+						server certificate. This can be useful when testing
+						initial server configurations but makes it possible for
+						a malicious third party to impersonate your server
+						through DNS spoofing, for example. Use this option in
+						testing <emphasis>only</emphasis>. If you need to
+						resort to using this option in a production
+						environment, your setup is at fault and there is no
+						point using encryption.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>-k</option></term>
+				<term><option>--keepalive</option></term>
+				<listitem>
+					<para>The number of seconds between sending PING commands
+					to the broker for the purposes of informing it we are still
+					connected and functioning. Defaults to 60 seconds.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>--key</option></term>
+				<listitem>
+					<para>Define the path to a file containing a PEM encoded
+						private key for this client, if required by the
+						server.</para>
+					<para>See also <option>--cert</option>.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>-N</option></term>
+				<listitem>
+					<para>Do not append an end of line character to the payload
+						when printing. This allows streaming of payload data
+						from multiple messages directly to another application
+						unmodified. Only really makes sense when not using
+						<option>-v</option>.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>-p</option></term>
+				<term><option>--port</option></term>
+				<listitem>
+					<para>Connect to the port specified instead of the default 1883.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>-P</option></term>
+				<term><option>--pw</option></term>
+				<listitem>
+					<para>Provide a password to be used for authenticating with
+					the broker. Using this argument without also specifying a
+					username is invalid. This requires a broker that supports
+					MQTT v3.1.  See also the <option>--username</option> option.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>--proxy</option></term>
+				<listitem>
+					<para>Specify a SOCKS5 proxy to connect through. "None" and
+						"username" authentication types are supported. The
+						<option>socks-url</option> must be of the form
+						<option>socks5h://[username[:password]@]host[:port]</option>.
+						The protocol prefix <option>socks5h</option> means that
+						hostnames are resolved by the proxy. The symbols %25,
+						%3A and %40 are URL decoded into %, : and @
+						respectively, if present in the username or
+						password.</para>
+					<para>If username is not given, then no authentication is
+						attempted. If the port is not given, then the default
+						of 1080 is used.</para>
+					<para>More SOCKS versions may be available in the future,
+						depending on demand, and will use different protocol
+						prefixes as described in <citerefentry>
+							<refentrytitle>curl</refentrytitle>
+							<manvolnum>1</manvolnum> </citerefentry>.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>--psk</option></term>
+				<listitem>
+					<para>Provide the hexadecimal (no leading 0x)
+						pre-shared-key matching the one used on the broker to
+						use TLS-PSK encryption support.
+						<option>--psk-identity</option> must also be provided
+						to enable TLS-PSK.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>--psk-identity</option></term>
+				<listitem>
+					<para>The client identity to use with TLS-PSK support. This
+						may be used instead of a username if the broker is
+						configured to do so.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>-q</option></term>
+				<term><option>--qos</option></term>
+				<listitem>
+					<para>Specify the quality of service desired for the
+					incoming messages, from 0, 1 and 2. Defaults to 0. See
+					<citerefentry><refentrytitle>mqtt</refentrytitle><manvolnum>7</manvolnum></citerefentry>
+					for more information on QoS.</para>
+					<para>The QoS is identical for all topics subscribed to in
+					a single instance of mosquitto_sub.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>--quiet</option></term>
+				<listitem>
+					<para>If this argument is given, no runtime errors will be
+					printed. This excludes any error messages given in case of
+					invalid user input (e.g. using <option>--port</option> without a
+					port).</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>-R</option></term>
+				<listitem>
+					<para>If this argument is given, messages that are received
+						that have the retain bit set will not be printed.
+						Messages with retain set are "stale", in that it is not
+						known when they were originally published. When
+						subscribing to a wildcard topic there may be a large
+						number of retained messages. This argument suppresses
+						their display.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>-S</option></term>
+				<listitem>
+					<para>Use SRV lookups to determine which host to connect
+						to. Performs lookups to
+						<option>_mqtt._tcp.&lt;host&gt;</option> when used in
+						conjunction with <option>-h</option>, otherwise uses
+						<option>_mqtt._tcp.&lt;local dns
+							domain&gt;</option>.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>-t</option></term>
+				<term><option>--topic</option></term>
+				<listitem>
+					<para>The MQTT topic to subscribe to. See
+					<citerefentry><refentrytitle>mqtt</refentrytitle><manvolnum>7</manvolnum></citerefentry>
+					for more information on MQTT topics.</para>
+					<para>This option may be repeated to subscribe to multiple topics.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>-T</option></term>
+				<term><option>--filter-out</option></term>
+				<listitem>
+					<para>Suppress printing of topics that match the filter.
+						This allows subscribing to a wildcard topic and only
+						printing a partial set of the wildcard
+						hierarchy.</para>
+					<para>For example, subscribe to the BBC tree, but suppress output from Radio 3:</para>
+					<itemizedlist mark="circle">
+						<listitem><para>mosquitto_sub <literal>-t</literal>
+								bbc/# <literal>-T</literal>
+								bbc/radio3</para></listitem>
+					</itemizedlist>
+					<para>This option may be repeated to filter out multiple
+						topics or topic trees.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>--tls-version</option></term>
+				<listitem>
+					<para>Choose which TLS protocol version to use when
+						communicating with the broker. Valid options are
+						<option>tlsv1.2</option>, <option>tlsv1.1</option> and
+						<option>tlsv1</option>. The default value is
+						<option>tlsv1.2</option>. If the installed version of
+						openssl is too old, only <option>tlsv1</option> will be
+						available. Must match the protocol version used by the
+						broker.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>-u</option></term>
+				<term><option>--username</option></term>
+				<listitem>
+					<para>Provide a username to be used for authenticating with
+					the broker. This requires a broker that supports MQTT v3.1.
+					See also the <option>--pw</option> argument.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>-v</option></term>
+				<term><option>--verbose</option></term>
+				<listitem>
+					<para>Print received messages verbosely. With this
+					argument, messages will be printed as "topic payload". When
+					this argument is not given, the messages are printed as
+					"payload".</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>-V</option></term>
+				<term><option>--protocol-version</option></term>
+				<listitem>
+					<para>Specify which version of the MQTT protocol should be
+						used when connecting to the rmeote broker. Can be
+						<option>mqttv31</option> or <option>mqttv311</option>.
+						Defaults to <option>mqttv31</option>.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>--will-payload</option></term>
+				<listitem>
+					<para>Specify a message that will be stored by the broker
+					and sent out if this client disconnects unexpectedly. This
+					must be used in conjunction with <option>--will-topic</option>.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>--will-qos</option></term>
+				<listitem>
+					<para>The QoS to use for the Will. Defaults to 0. This must
+					be used in conjunction with <option>--will-topic</option>.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>--will-retain</option></term>
+				<listitem>
+					<para>If given, if the client disconnects unexpectedly the
+					message sent out will be treated as a retained message.
+					This must be used in conjunction with <option>--will-topic</option>.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>--will-topic</option></term>
+				<listitem>
+					<para>The topic on which to send a Will, in the event that
+					the client disconnects unexpectedly.</para>
+				</listitem>
+			</varlistentry>
+		</variablelist>
+	</refsect1>
+
+	<refsect1>
+		<title>Wills</title>
+		<para>mosquitto_sub can register a message with the broker that will be
+		sent out if it disconnects unexpectedly. See
+		<citerefentry><refentrytitle>mqtt</refentrytitle><manvolnum>7</manvolnum></citerefentry>
+		for more information.</para>
+		<para>The minimum requirement for this is to use <option>--will-topic</option> to
+		specify which topic the will should be sent out on. This will result in
+		a non-retained, zero length message with QoS 0.</para>
+		<para>Use the <option>--will-retain</option>, <option>--will-payload</option> and <option>--will-qos</option> arguments to
+		modify the other will parameters.</para>
+	</refsect1>
+
+	<refsect1>
+		<title>Examples</title>
+		<para>Note that these really are examples - the subscriptions will work
+		if you run them as shown, but there must be something publishing
+		messages on those topics for you to receive anything.</para>
+		<para>Subscribe to temperature information on localhost with QoS 1:</para>
+		<itemizedlist mark="circle">
+			<listitem><para>mosquitto_sub <literal>-t</literal> sensors/temperature <literal>-q</literal> 1</para></listitem>
+		</itemizedlist>
+		<para>Subscribe to hard drive temperature updates on multiple
+		machines/hard drives. This expects each machine to be publishing its
+		hard drive temperature to
+		sensors/machines/HOSTNAME/temperature/HD_NAME.</para>
+		<itemizedlist mark="circle">
+			<listitem><para>mosquitto_sub <literal>-t</literal> sensors/machines/+/temperature/+</para></listitem>
+		</itemizedlist>
+		<para>Subscribe to all broker status messages:</para>
+		<itemizedlist mark="circle">
+			<listitem><para>mosquitto_sub <literal>-v</literal> <literal>-t</literal> \$SYS/#</para></listitem>
+		</itemizedlist>
+	</refsect1>
+
+	<refsect1>
+		<title>Files</title>
+		<variablelist>
+			<varlistentry>
+				<term><filename>$XDG_CONFIG_HOME/mosquitto_sub</filename></term>
+				<term><filename>$HOME/.config/mosquitto_sub</filename></term>
+				<listitem>
+					<para>Configuration file for default options.</para>
+				</listitem>
+			</varlistentry>
+		</variablelist>
+	</refsect1>
+
+	<refsect1>
+		<title>Bugs</title>
+		<para><command>mosquitto_sub</command> bug information can be found at
+			<uri type="webpage">https://bugs.eclipse.org/bugs/describecomponents.cgi?product=Mosquitto</uri></para>
+	</refsect1>
+
+	<refsect1>
+		<title>See Also</title>
+		<simplelist type="inline">
+			<member>
+				<citerefentry>
+					<refentrytitle><link xlink:href="mqtt-7.html">mqtt</link></refentrytitle>
+					<manvolnum>7</manvolnum>
+				</citerefentry>
+			</member>
+			<member>
+				<citerefentry>
+					<refentrytitle><link xlink:href="mosquitto_pub-1.html">mosquitto_pub</link></refentrytitle>
+					<manvolnum>1</manvolnum>
+				</citerefentry>
+			</member>
+			<member>
+				<citerefentry>
+					<refentrytitle><link xlink:href="mosquitto-8.html">mosquitto</link></refentrytitle>
+					<manvolnum>8</manvolnum>
+				</citerefentry>
+			</member>
+			<member>
+				<citerefentry>
+					<refentrytitle><link xlink:href="libmosquitto-3.html">libmosquitto</link></refentrytitle>
+					<manvolnum>3</manvolnum>
+				</citerefentry>
+			</member>
+			<member>
+				<citerefentry>
+					<refentrytitle><link xlink:href="mosquitto-tls-7.html">mosquitto-tls</link></refentrytitle>
+					<manvolnum>7</manvolnum>
+				</citerefentry>
+			</member>
+		</simplelist>
+	</refsect1>
+
+	<refsect1>
+		<title>Author</title>
+		<para>Roger Light <email>roger@atchoo.org</email></para>
+	</refsect1>
+</refentry>

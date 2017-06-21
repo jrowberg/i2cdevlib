@@ -1,0 +1,158 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<?xml-stylesheet type="text/xsl" href="manpage.xsl"?>
+
+<refentry xml:id="mosquitto_passwd" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<refmeta>
+		<refentrytitle>mosquitto_passwd</refentrytitle>
+		<manvolnum>1</manvolnum>
+		<refmiscinfo class="source">Mosquitto Project</refmiscinfo>
+		<refmiscinfo class="manual">Commands</refmiscinfo>
+	</refmeta>
+
+	<refnamediv>
+		<refname>mosquitto_passwd</refname>
+		<refpurpose>manage password files for mosquitto</refpurpose>
+	</refnamediv>
+
+	<refsynopsisdiv>
+		<cmdsynopsis>
+			<command>mosquitto_passwd</command>
+			<group>
+				<arg choice='plain'><option>-c</option></arg>
+				<arg choice='plain'><option>-D</option></arg>
+			</group>
+			<arg choice='plain'><replaceable>passwordfile</replaceable></arg>
+			<arg choice='plain'><replaceable>username</replaceable></arg>
+		</cmdsynopsis>
+		<cmdsynopsis>
+			<command>mosquitto_passwd</command>
+			<arg choice='plain'><option>-b</option></arg>
+			<arg choice='plain'><replaceable>passwordfile</replaceable></arg>
+			<arg choice='plain'><replaceable>username</replaceable></arg>
+			<arg choice='plain'><replaceable>password</replaceable></arg>
+		</cmdsynopsis>
+		<cmdsynopsis>
+			<command>mosquitto_passwd</command>
+			<arg choice='plain'><option>-U</option></arg>
+			<arg choice='plain'><replaceable>passwordfile</replaceable></arg>
+		</cmdsynopsis>
+	</refsynopsisdiv>
+
+	<refsect1>
+		<title>Description</title>
+		<para><command>mosquitto_passwd</command> is a tool for managing
+			password files the the mosquitto MQTT broker.</para>
+		<para>Usernames must not contain ":". Passwords are stored in a similar
+			format to
+			<citerefentry><refentrytitle>crypt</refentrytitle><manvolnum>3</manvolnum></citerefentry>.</para>
+	</refsect1>
+
+	<refsect1>
+		<title>Options</title>
+		<variablelist>
+			<varlistentry>
+				<term><option>-b</option></term>
+				<listitem>
+					<para>Run in batch mode. This allows the password to be
+						provided at the command line which can be convenient
+						but should be used with care because the password will
+						be visible on the command line and in command
+						history.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>-c</option></term>
+				<listitem>
+					<para>Create a new password file. If the file already
+						exists, it will be overwritten.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>-D</option></term>
+				<listitem>
+					<para>Delete the specified user from the password
+						file.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>-U</option></term>
+				<listitem>
+					<para>This option can be used to upgrade/convert a password
+						file with plain text passwords into one using hashed
+						passwords. It will modify the specified file. It does
+						not detect whether passwords are already hashed, so
+						using it on a password file that already contains
+						hashed passwords will generate new hashes based on the
+						old hashes and render the password file
+						unusable.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>passwordfile</option></term>
+				<listitem>
+					<para>The password file to modify.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>username</option></term>
+				<listitem>
+					<para>The username to add/update/delete.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>password</option></term>
+				<listitem>
+					<para>The password to use when in batch mode.</para>
+				</listitem>
+			</varlistentry>
+		</variablelist>
+	</refsect1>
+
+
+	<refsect1>
+		<title>Examples</title>
+		<para>Add a user to a new password file:</para>
+		<itemizedlist mark="circle">
+			<listitem><para>mosquitto_passwd <literal>-c</literal> /etc/mosquitto/passwd <literal>ral</literal></para></listitem>
+		</itemizedlist>
+		<para>Delete a user from a password file</para>
+		<itemizedlist mark="circle">
+			<listitem><para>mosquitto_passwd <literal>-D</literal> /etc/mosquitto/passwd <literal>ral</literal></para></listitem>
+		</itemizedlist>
+	</refsect1>
+
+	<refsect1>
+		<title>Bugs</title>
+		<para><command>mosquitto_passwd</command> bug information can be found at
+			<uri type="webpage">https://bugs.eclipse.org/bugs/describecomponents.cgi?product=Mosquitto</uri></para>
+	</refsect1>
+
+	<refsect1>
+		<title>See Also</title>
+		<simplelist type="inline">
+			<member>
+				<citerefentry>
+					<refentrytitle><link xlink:href="mosquitto-8.html">mosquitto</link></refentrytitle>
+					<manvolnum>8</manvolnum>
+				</citerefentry>
+			</member>
+			<member>
+				<citerefentry>
+					<refentrytitle><link xlink:href="mosquitto-conf-5.html">mosquitto.conf</link></refentrytitle>
+					<manvolnum>5</manvolnum>
+				</citerefentry>
+			</member>
+			<member>
+				<citerefentry>
+					<refentrytitle><link xlink:href="mqtt-7.html">mqtt</link></refentrytitle>
+					<manvolnum>7</manvolnum>
+				</citerefentry>
+			</member>
+		</simplelist>
+	</refsect1>
+
+	<refsect1>
+		<title>Author</title>
+		<para>Roger Light <email>roger@atchoo.org</email></para>
+	</refsect1>
+</refentry>

@@ -1,0 +1,187 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<?xml-stylesheet type="text/xsl" href="manpage.xsl"?>
+
+<refentry xml:id="mqtt" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<refmeta>
+		<refentrytitle>mqtt</refentrytitle>
+		<manvolnum>7</manvolnum>
+		<refmiscinfo class="source">Mosquitto Project</refmiscinfo>
+		<refmiscinfo class="manual">Conventions and miscellaneous</refmiscinfo>
+	</refmeta>
+
+	<refnamediv>
+		<refname>mqtt</refname>
+		<refpurpose>MQ Telemetry Transport</refpurpose>
+	</refnamediv>
+
+	<refsynopsisdiv>
+		<cmdsynopsis>
+			<command>MQTT</command>
+		</cmdsynopsis>
+	</refsynopsisdiv>
+
+	<refsect1>
+		<title>Description</title>
+		<para><command>MQTT</command> is a lightweight publish/subscribe
+		messaging protocol.  It is useful for use with low power sensors, but
+		is applicable to many scenarios.</para> <para>This manual describes
+		some of the features of MQTT version 3.1, to assist end users in
+		getting the most out of the protocol. For more complete information on
+		MQTT, see <uri type="webpage">http://mqtt.org/</uri>.</para>
+	</refsect1>
+
+	<refsect1>
+		<title>Publish/Subscribe</title>
+		<para>The MQTT protocol is based on the principle of publishing
+		messages and subscribing to topics, or "pub/sub". Multiple clients
+		connect to a broker and subscribe to topics that they are interested
+		in. Clients also connect to the broker and publish messages to topics.
+		Many clients may subscribe to the same topics and do with the
+		information as they please. The broker and MQTT act as a simple, common
+		interface for everything to connect to. This means that you if you have
+		clients that dump subscribed messages to a database, to Twitter,
+		Cosm or even a simple text file, then it becomes very simple to add
+		new sensors or other data input to a database, Twitter or so on.</para>
+	</refsect1>
+
+	<refsect1>
+		<title>Topics/Subscriptions</title>
+		<para>Messages in MQTT are published on topics. There is no need to
+		configure a topic, publishing on it is enough. Topics are treated as a
+		hierarchy, using a slash (/) as a separator. This allows sensible
+		arrangement of common themes to be created, much in the same way as a
+		filesystem. For example, multiple computers may all publish their
+		hard drive temperature information on the following topic, with their
+		own computer and hard drive name being replaced as appropriate:</para>
+		<itemizedlist>
+			<listitem><para>sensors/COMPUTER_NAME/temperature/HARDDRIVE_NAME</para></listitem>
+		</itemizedlist>
+		<para>Clients can receive messages by creating subscriptions. A
+		subscription may be to an explicit topic, in which case only messages
+		to that topic will be received, or it may include wildcards. Two
+		wildcards are available, <option>+</option> or <option>#</option>.</para>
+		<para><option>+</option> can be used as a wildcard for a single level
+		of hierarchy. It could be used with the topic above to get information
+		on all computers and hard drives as follows:</para>
+		<itemizedlist>
+			<listitem><para>sensors/+/temperature/+</para></listitem>
+		</itemizedlist>
+		<para>As another example, for a topic of "a/b/c/d", the following
+		example subscriptions will match:</para>
+		<itemizedlist mark="circle">
+			<listitem><para>a/b/c/d</para></listitem>
+			<listitem><para>+/b/c/d</para></listitem>
+			<listitem><para>a/+/c/d</para></listitem>
+			<listitem><para>a/+/+/d</para></listitem>
+			<listitem><para>+/+/+/+</para></listitem>
+		</itemizedlist>
+		<para>The following subscriptions will not match:</para>
+		<itemizedlist mark="circle">
+			<listitem><para>a/b/c</para></listitem>
+			<listitem><para>b/+/c/d</para></listitem>
+			<listitem><para>+/+/+</para></listitem>
+		</itemizedlist>
+		<para><option>#</option> can be used as a wildcard for all remaining levels of
+		hierarchy. This means that it must be the final character in a
+		subscription. With a topic of "a/b/c/d", the following example
+		subscriptions will match:</para>
+		<itemizedlist mark="circle">
+			<listitem><para>a/b/c/d</para></listitem>
+			<listitem><para>#</para></listitem>
+			<listitem><para>a/#</para></listitem>
+			<listitem><para>a/b/#</para></listitem>
+			<listitem><para>a/b/c/#</para></listitem>
+			<listitem><para>+/b/c/#</para></listitem>
+		</itemizedlist>
+		<para>Zero length topic levels are valid, which can lead to some
+			slightly non-obvious behaviour. For example, a topic of "a//topic"
+			would correctly match against a subscription of "a/+/topic".
+			Likewise, zero length topic levels can exist at both the beginning
+			and the end of a topic string, so "/a/topic" would match against a
+			subscription of "+/a/topic", "#" or "/#", and a topic "a/topic/"
+			would match against a subscription of "a/topic/+" or
+			"a/topic/#".</para>
+	</refsect1>
+
+	<refsect1>
+		<title>Quality of Service</title>
+		<para>MQTT defines three levels of Quality of Service (QoS). The QoS
+		defines how hard the broker/client will try to ensure that a message is
+		received. Messages may be sent at any QoS level, and clients may
+		attempt to subscribe to topics at any QoS level. This means that the
+		client chooses the maximum QoS it will receive. For example, if a
+		message is published at QoS 2 and a client is subscribed with QoS 0,
+		the message will be delivered to that client with QoS 0. If a second
+		client is also subscribed to the same topic, but with QoS 2, then it
+		will receive the same message but with QoS 2. For a second example, if
+		a client is subscribed with QoS 2 and a message is published on QoS 0,
+		the client will receive it on QoS 0.</para>
+		<para>Higher levels of QoS are more reliable, but involve higher
+		latency and have higher bandwidth requirements.</para>
+		<itemizedlist>
+			<listitem><para>0: The broker/client will deliver the message once, with no confirmation.</para></listitem>
+			<listitem><para>1: The broker/client will deliver the message at least once, with confirmation required.</para></listitem>
+			<listitem><para>2: The broker/client will deliver the message exactly once by using a four step handshake.</para></listitem>
+		</itemizedlist>
+	</refsect1>
+
+	<refsect1>
+		<title>Retained Messages</title>
+		<para>All messages may be set to be retained. This means that the
+		broker will keep the message even after sending it to all current
+		subscribers. If a new subscription is made that matches the topic of
+		the retained message, then the message will be sent to the client. This
+		is useful as a "last known good" mechanism. If a topic is only updated
+		infrequently, then without a retained message, a newly subscribed
+		client may have to wait a long time to receive an update. With a
+		retained message, the client will receive an instant update.</para>
+	</refsect1>
+
+	<refsect1>
+		<title>Clean session / Durable connections</title>
+		<para>On connection, a client sets the "clean session" flag, which is
+		sometimes also known as the "clean start" flag. If clean session is set
+		to false, then the connection is treated as durable.  This means that
+		when the client disconnects, any subscriptions it has will remain and
+		any subsequent QoS 1 or 2 messages will be stored until it connects
+		again in the future. If clean session is true, then all subscriptions
+		will be removed for the client when it disconnects.</para>
+	</refsect1>
+
+	<refsect1>
+		<title>Wills</title>
+		<para>When a client connects to a broker, it may inform the broker that
+		it has a will. This is a message that it wishes the broker to send when
+		the client disconnects unexpectedly. The will message has a topic,
+		QoS and retain status just the same as any other message.</para>
+	</refsect1>
+
+	<refsect1>
+		<title>See Also</title>
+		<simplelist type="inline">
+			<member>
+				<citerefentry>
+					<refentrytitle><link xlink:href="mosquitto-8.html">mosquitto</link></refentrytitle>
+					<manvolnum>8</manvolnum>
+				</citerefentry>
+			</member>
+			<member>
+				<citerefentry>
+					<refentrytitle><link xlink:href="mosquitto_pub-1.html">mosquitto_pub</link></refentrytitle>
+					<manvolnum>1</manvolnum>
+				</citerefentry>
+			</member>
+			<member>
+				<citerefentry>
+					<refentrytitle><link xlink:href="mosquitto_sub-1.html">mosquitto_sub</link></refentrytitle>
+					<manvolnum>1</manvolnum>
+				</citerefentry>
+			</member>
+		</simplelist>
+	</refsect1>
+
+	<refsect1>
+		<title>Author</title>
+		<para>Roger Light <email>roger@atchoo.org</email></para>
+	</refsect1>
+</refentry>

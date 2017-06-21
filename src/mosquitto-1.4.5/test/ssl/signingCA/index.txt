@@ -1,0 +1,5 @@
+V	180829220329Z		01	unknown	/C=GB/ST=Nottinghamshire/L=Nottingham/O=Server/OU=Production/CN=localhost
+V	180829220331Z		02	unknown	/C=GB/ST=Nottinghamshire/L=Nottingham/O=Server/OU=Production/CN=test client
+V	120821000000Z		03	unknown	/C=GB/ST=Nottinghamshire/L=Nottingham/O=Server/OU=Production/CN=test client expired
+R	180829220334Z	130830220335Z	04	unknown	/C=GB/ST=Nottinghamshire/L=Nottingham/O=Server/OU=Production/CN=test client revoked
+V	190525125049Z		05	unknown	/CN=test client encrypted

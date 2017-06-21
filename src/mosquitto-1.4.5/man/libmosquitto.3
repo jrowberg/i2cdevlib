@@ -1,0 +1,250 @@
+'\" t
+.\"     Title: libmosquitto
+.\"    Author: [see the "Author" section]
+.\" Generator: DocBook XSL Stylesheets v1.78.1 <http://docbook.sf.net/>
+.\"      Date: 11/08/2015
+.\"    Manual: Library calls
+.\"    Source: Mosquitto Project
+.\"  Language: English
+.\"
+.TH "LIBMOSQUITTO" "3" "11/08/2015" "Mosquitto Project" "Library calls"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+libmosquitto \- MQTT version 3\&.1 client library
+.SH "DESCRIPTION"
+.PP
+This is an overview of how to use libmosquitto to create MQTT aware client programs\&. There may be separate man pages on each of the functions described here in the future\&. There is also a binding for libmosquitto for C++ and a Python implementation\&. They are not documented here but operate in a similar way\&.
+.PP
+This is fairly incomplete, please see mosquitto\&.h for a better description of the functions\&.
+.SH "LIBMOSQUITTO SYMBOL NAMES"
+.PP
+All public functions in libmosquitto have the prefix "mosquitto_"\&. Any other functions defined in the source code are to be treated as private functions and may change between any release\&. Do not use these functions!
+.SH "FUNCTIONS"
+.SS "Library version"
+.HP \w'int\ mosquitto_lib_version('u
+.BI "int mosquitto_lib_version(int\ *" "major" ", int\ *" "minor" ", int\ *" "revision" ");"
+.PP
+Obtain version information about the library\&. If any of major, minor or revision are not NULL they will return the corresponding version numbers\&. The return value is an integer representation of the complete version number (e\&.g\&. 1009001 for 1\&.9\&.1) that can be used for comparisons\&.
+.SS "Library initialisation and cleanup"
+.HP \w'int\ mosquitto_lib_init('u
+.BI "int mosquitto_lib_init(void);"
+.HP \w'int\ mosquitto_lib_cleanup('u
+.BI "int mosquitto_lib_cleanup(void);"
+.PP
+Call mosquitto_lib_init() before using any of the other library functions and mosquitto_lib_cleanup() after finishing with the library\&.
+.SS "Client constructor/destructor"
+.HP \w'struct\ mosquitto\ *mosquitto_new('u
+.BI "struct mosquitto *mosquitto_new(const\ char\ *" "id" ", bool\ " "clean_session" ", void\ *" "userdata" ");"
+.PP
+Create a new mosquitto client instance\&.
+.HP \w'void\ mosquitto_destroy('u
+.BI "void mosquitto_destroy(struct\ mosquitto\ *" "mosq" ");"
+.PP
+Use to free memory associated with a mosquitto client instance\&.
+.HP \w'int\ mosquitto_reinitialise('u
+.BI "int mosquitto_reinitialise(struct\ mosquitto\ *" "mosq" ", const\ char\ *" "id" ", bool\ " "clean_session" ", void\ *" "userdata" ");"
+.SS "Authentication and encryption"
+.HP \w'int\ mosquitto_username_pw_set('u
+.BI "int mosquitto_username_pw_set(struct\ mosquitto\ *" "mosq" ", const\ char\ *" "username" ", const\ char\ *" "password" ");"
+.HP \w'int\ mosquitto_tls_set('u
+.BI "int mosquitto_tls_set(struct\ mosquitto\ *" "mosq" ", const\ char\ *" "cafile" ", const\ char\ *" "capath" ", const\ char\ *" "certfile" ", const\ char\ *" "keyfile" ", int\ " "(*pw_callback)(char\ *buf,\ int\ size,\ int\ rwflag,\ void\ *userdata)" ");"
+.HP \w'int\ mosquitto_tls_opts_set('u
+.BI "int mosquitto_tls_opts_set(struct\ mosquitto\ *" "mosq" ", int\ " "cert_reqs" ", const\ char\ *" "tls_version" ", const\ char\ *" "ciphers" ");"
+.HP \w'int\ mosquitto_tls_insecure_set('u
+.BI "int mosquitto_tls_insecure_set(struct\ mosquitto\ *" "mosq" ", bool\ " "value" ");"
+.HP \w'int\ mosquitto_tls_psk_set('u
+.BI "int mosquitto_tls_psk_set(struct\ mosquitto\ *" "mosq" ", const\ char\ *" "psk" ", const\ char\ *" "identity" ", const\ char\ *" "ciphers" ");"
+.SS "Wills"
+.HP \w'int\ mosquitto_will_set('u
+.BI "int mosquitto_will_set(struct\ mosquitto\ *" "mosq" ", const\ char\ *" "topic" ", int\ " "payloadlen" ", const\ void\ *" "payload" ", int\ " "qos" ", bool\ " "retain" ");"
+.HP \w'int\ mosquitto_will_clear('u
+.BI "int mosquitto_will_clear(" "struct\ mosquitto\ *mosq" ");"
+.SS "Connect/disconnect"
+.HP \w'int\ mosquitto_connect('u
+.BI "int mosquitto_connect(struct\ mosquitto\ *" "mosq" ", const\ char\ *" "host" ", int\ " "port" ", int\ " "keepalive" ");"
+.HP \w'int\ mosquitto_connect_bind('u
+.BI "int mosquitto_connect_bind(struct\ mosquitto\ *" "mosq" ", const\ char\ *" "host" ", int\ " "port" ", int\ " "keepalive" ", const\ char\ *" "bind_address" ");"
+.HP \w'int\ mosquitto_connect_async('u
+.BI "int mosquitto_connect_async(struct\ mosquitto\ *" "mosq" ", const\ char\ *" "host" ", int\ " "port" ", int\ " "keepalive" ");"
+.HP \w'int\ mosquitto_connect_bind_async('u
+.BI "int mosquitto_connect_bind_async(struct\ mosquitto\ *" "mosq" ", const\ char\ *" "host" ", int\ " "port" ", int\ " "keepalive" ", const\ char\ *" "bind_address" ");"
+.HP \w'int\ mosquitto_reconnect('u
+.BI "int mosquitto_reconnect(struct\ mosquitto\ *" "mosq" ");"
+.HP \w'int\ mosquitto_reconnect_async('u
+.BI "int mosquitto_reconnect_async(struct\ mosquitto\ *" "mosq" ");"
+.HP \w'int\ mosquitto_disconnect('u
+.BI "int mosquitto_disconnect(struct\ mosquitto\ *" "mosq" ");"
+.SS "Publish"
+.HP \w'int\ mosquitto_publish('u
+.BI "int mosquitto_publish(struct\ mosquitto\ *" "mosq" ", int\ *" "mid" ", const\ char\ *" "topic" ", int\ " "payloadlen" ", const\ void\ *" "payload" ", int\ " "qos" ", bool\ " "retain" ");"
+.SS "Subscribe/unsubscribe"
+.HP \w'int\ mosquitto_subscribe('u
+.BI "int mosquitto_subscribe(struct\ mosquitto\ *" "mosq" ", int\ *" "mid" ", const\ char\ *" "sub" ", int\ " "qos" ");"
+.HP \w'int\ mosquitto_unsubscribe('u
+.BI "int mosquitto_unsubscribe(struct\ mosquitto\ *" "mosq" ", int\ *" "mid" ", const\ char\ *" "sub" ");"
+.SS "Network loop"
+.HP \w'int\ mosquitto_loop('u
+.BI "int mosquitto_loop(struct\ mosquitto\ *" "mosq" ", int\ " "timeout" ", int\ " "max_packets" ");"
+.HP \w'int\ mosquitto_loop_read('u
+.BI "int mosquitto_loop_read(struct\ mosquitto\ *" "mosq" ", int\ " "max_packets" ");"
+.HP \w'int\ mosquitto_loop_write('u
+.BI "int mosquitto_loop_write(struct\ mosquitto\ *" "mosq" ", int\ " "max_packets" ");"
+.HP \w'int\ mosquitto_loop_misc('u
+.BI "int mosquitto_loop_misc(struct\ mosquitto\ *" "mosq" ");"
+.HP \w'int\ mosquitto_loop_forever('u
+.BI "int mosquitto_loop_forever(struct\ mosquitto\ *" "mosq" ", int\ " "timeout" ", int\ " "max_packets" ");"
+.HP \w'int\ mosquitto_socket('u
+.BI "int mosquitto_socket(struct\ mosquitto\ *" "mosq" ");"
+.HP \w'bool\ mosquitto_want_write('u
+.BI "bool mosquitto_want_write(struct\ mosquitto\ *" "mosq" ");"
+.SS "Threaded network loop"
+.HP \w'int\ mosquitto_loop_start('u
+.BI "int mosquitto_loop_start(struct\ mosquitto\ *" "mosq" ");"
+.HP \w'int\ mosquitto_loop_stop('u
+.BI "int mosquitto_loop_stop(struct\ mosquitto\ *" "mosq" ", bool\ " "force" ");"
+.SS "Misc client functions"
+.HP \w'int\ mosquitto_max_inflight_messages_set('u
+.BI "int mosquitto_max_inflight_messages_set(struct\ mosquitto\ *" "mosq" ", unsigned\ int\ " "max_inflight_messages" ");"
+.HP \w'int\ mosquitto_message_retry_set('u
+.BI "int mosquitto_message_retry_set(struct\ mosquitto\ *" "mosq" ", unsigned\ int\ " "message_retry" ");"
+.HP \w'int\ mosquitto_reconnect_delay_set('u
+.BI "int mosquitto_reconnect_delay_set(struct\ mosquitto\ *" "mosq" ", unsigned\ int\ " "reconnect_delay" ", unsigned\ int\ " "reconnect_delay_max" ", bool\ " "reconnect_exponential_backoff" ");"
+.HP \w'int\ mosquitto_user_data_set('u
+.BI "int mosquitto_user_data_set(struct\ mosquitto\ *" "mosq" ", void\ *" "userdata" ");"
+.SS "Callbacks"
+.HP \w'int\ mosquitto_connect_callback_set('u
+.BI "int mosquitto_connect_callback_set(struct\ mosquitto\ *" "mosq" ", void\ " "(*on_connect)(struct\ mosquitto\ *,\ void\ *,\ int)" ");"
+.HP \w'int\ mosquitto_disconnect_callback_set('u
+.BI "int mosquitto_disconnect_callback_set(struct\ mosquitto\ *" "mosq" ", void\ " "(*on_disconnect)(struct\ mosquitto\ *,\ void\ *,\ int)" ");"
+.HP \w'int\ mosquitto_publish_callback_set('u
+.BI "int mosquitto_publish_callback_set(struct\ mosquitto\ *" "mosq" ", void\ " "(*on_publish)(struct\ mosquitto\ *,\ void\ *,\ int)" ");"
+.HP \w'int\ mosquitto_message_callback_set('u
+.BI "int mosquitto_message_callback_set(struct\ mosquitto\ *" "mosq" ", void\ " "(*on_message)(struct\ mosquitto\ *,\ void\ *,\ const\ struct\ mosquitto_message\ *)" ");"
+.HP \w'int\ mosquitto_subscribe_callback_set('u
+.BI "int mosquitto_subscribe_callback_set(struct\ mosquitto\ *" "mosq" ", void\ " "(*on_subscribe)(struct\ mosquitto\ *,\ void\ *,\ int,\ int,\ const\ int\ *)" ");"
+.HP \w'int\ mosquitto_unsubscribe_callback_set('u
+.BI "int mosquitto_unsubscribe_callback_set(struct\ mosquitto\ *" "mosq" ", void\ " "(*on_unsubscribe)(struct\ mosquitto\ *,\ void\ *,\ int)" ");"
+.HP \w'int\ mosquitto_log_callback_set('u
+.BI "int mosquitto_log_callback_set(struct\ mosquitto\ *" "mosq" ", void\ " "(*on_unsubscribe)(struct\ mosquitto\ *,\ void\ *,\ int,\ const\ char\ *)" ");"
+.SS "Utility functions"
+.HP \w'const\ char\ *mosquitto_connack_string('u
+.BI "const char *mosquitto_connack_string(int\ " "connack_code" ");"
+.HP \w'int\ mosquitto_message_copy('u
+.BI "int mosquitto_message_copy(struct\ mosquitto_message\ *" "dst" ", const\ struct\ mosquitto_message\ *" "src" ");"
+.HP \w'int\ mosquitto_message_free('u
+.BI "int mosquitto_message_free(struct\ mosquitto_message\ **" "message" ");"
+.HP \w'const\ char\ *mosquitto_strerror('u
+.BI "const char *mosquitto_strerror(int\ " "mosq_errno" ");"
+.HP \w'int\ mosquitto_sub_topic_tokenise('u
+.BI "int mosquitto_sub_topic_tokenise(const\ char\ *" "subtopic" ", char\ ***" "topics" ", int\ *" "count" ");"
+.HP \w'int\ mosquitto_sub_topic_tokens_free('u
+.BI "int mosquitto_sub_topic_tokens_free(char\ ***" "topics" ", int\ " "count" ");"
+.HP \w'int\ mosquitto_topic_matches_sub('u
+.BI "int mosquitto_topic_matches_sub(const\ char\ *" "sub" ", const\ char\ *" "topic" ", bool\ *" "result" ");"
+.SH "EXAMPLES"
+.PP
+.if n \{\
+.RS 4
+.\}
+.nf
+#include <stdio\&.h>
+#include <mosquitto\&.h>
+
+void my_message_callback(struct mosquitto *mosq, void *userdata, const struct mosquitto_message *message)
+{
+	if(message\->payloadlen){
+		printf("%s %s\en", message\->topic, message\->payload);
+	}else{
+		printf("%s (null)\en", message\->topic);
+	}
+	fflush(stdout);
+}
+
+void my_connect_callback(struct mosquitto *mosq, void *userdata, int result)
+{
+	int i;
+	if(!result){
+		/* Subscribe to broker information topics on successful connect\&. */
+		mosquitto_subscribe(mosq, NULL, "$SYS/#", 2);
+	}else{
+		fprintf(stderr, "Connect failed\en");
+	}
+}
+
+void my_subscribe_callback(struct mosquitto *mosq, void *userdata, int mid, int qos_count, const int *granted_qos)
+{
+	int i;
+
+	printf("Subscribed (mid: %d): %d", mid, granted_qos[0]);
+	for(i=1; i<qos_count; i++){
+		printf(", %d", granted_qos[i]);
+	}
+	printf("\en");
+}
+
+void my_log_callback(struct mosquitto *mosq, void *userdata, int level, const char *str)
+{
+	/* Pring all log messages regardless of level\&. */
+	printf("%s\en", str);
+}
+
+int main(int argc, char *argv[])
+{
+	int i;
+	char *host = "localhost";
+	int port = 1883;
+	int keepalive = 60;
+	bool clean_session = true;
+	struct mosquitto *mosq = NULL;
+
+	mosquitto_lib_init();
+	mosq = mosquitto_new(NULL, clean_session, NULL);
+	if(!mosq){
+		fprintf(stderr, "Error: Out of memory\&.\en");
+		return 1;
+	}
+	mosquitto_log_callback_set(mosq, my_log_callback);
+	mosquitto_connect_callback_set(mosq, my_connect_callback);
+	mosquitto_message_callback_set(mosq, my_message_callback);
+	mosquitto_subscribe_callback_set(mosq, my_subscribe_callback);
+
+	if(mosquitto_connect(mosq, host, port, keepalive)){
+		fprintf(stderr, "Unable to connect\&.\en");
+		return 1;
+	}
+
+	while(!mosquitto_loop(mosq, \-1, 1)){
+	}
+	mosquitto_destroy(mosq);
+	mosquitto_lib_cleanup();
+	return 0;
+}
+		
+.fi
+.if n \{\
+.RE
+.\}
+.SH "SEE ALSO"
+\fBmosquitto\fR(8)\fBmqtt\fR(7)
+.SH "AUTHOR"
+.PP
+Roger Light
+<roger@atchoo\&.org>

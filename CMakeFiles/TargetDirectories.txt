@@ -1,0 +1,3 @@
+/home/pi/i2cdevlib/CMakeFiles/edit_cache.dir
+/home/pi/i2cdevlib/CMakeFiles/rebuild_cache.dir
+/home/pi/i2cdevlib/CMakeFiles/main.dir

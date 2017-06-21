@@ -1,0 +1,2 @@
+V	180829220318Z		01	unknown	/C=GB/ST=Derbyshire/O=Mosquitto Project/OU=Testing/CN=Signing CA
+V	180829220327Z		02	unknown	/C=GB/ST=Derbyshire/O=Mosquitto Project/OU=Testing/CN=Alternative Signing CA

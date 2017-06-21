@@ -41,7 +41,11 @@ To compile on a Raspberry Pi (1 or 2)
 #include <bcm2835.h>
 #include "I2Cdev.h"
 #include "ADXL345.h"
+#include <sys/time.h>
+#include <iostream>
 
+struct timeval start, end;
+float diff;
 int main(int argc, char **argv) {
   printf("ADXL345 3-axis acceleromter example program\n");
   I2Cdev::initialize();
@@ -55,10 +59,13 @@ int main(int argc, char **argv) {
   accel.initialize();
   int16_t ax, ay, az;
   while (true) {
+    gettimeofday(&start, NULL);
     accel.getAcceleration(&ax, &ay, &az);
-    printf("  x_raw:  0x%04X       y_raw:  0x%04X      z_raw:  0x%04X\r", ax, ay, az);
+    printf("  x_raw:  0x%04X       y_raw:  0x%04X      z_raw:  0x%04X\n", ax, ay, az);
     fflush(stdout);
-    bcm2835_delay(200);
+    gettimeofday(&end, NULL);
+  	diff = (end.tv_sec - start.tv_sec)*1000000 + (end.tv_usec - start.tv_usec) ;
+  	printf("The time difference is %f ns\n", diff);
   }
   return 1; 
 }
