@@ -35,7 +35,7 @@ void Communicator::on_connect(int rc) {
 void Communicator::on_disconnect(int rc) { cout << "disconnection" << endl; }
 
 void Communicator::on_publish(int mid) {
-  cout << "Message succeed to be published" << endl;
+//   cout << "Message succeed to be published" << endl;
 }
 
 bool Communicator::send_message(const char *_message) {
