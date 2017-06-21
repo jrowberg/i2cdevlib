@@ -98,6 +98,8 @@ int main(int argc, char **argv) {
 //    cout << "data range of sensor_2 after change" << int(b.getRange()) << endl;
 
   I2Cdev::initialize();
+	a.initialize();
+	b.initialize();
   comm = new Communicator("1", "192.168.1.115", 1883);
   gettimeofday(&start_t, NULL);
   printf("start time : %lld\n", start_t.tv_sec * (uint64_t)1000000+ start_t.tv_usec);
@@ -152,9 +154,9 @@ Json::Value root;
            (end_t.tv_usec - start_t.tv_usec);
   root["rpi_id"] = 1;
   root["sensor_id"] = 2;
-	  root["x"] = 1;
- 	  root["y"] = 2;
-   	  root["z"] = 3;	
+	  root["x"] = b.getAccelerationX();
+ 	  root["y"] = b.getAccelerationY();
+   	  root["z"] = b.getAccelerationZ();	
   root["elapsed_time"] = diff;
   root["msg_index"] = msg_index;
 	cout << fw.write(root);
