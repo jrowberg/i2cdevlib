@@ -1,0 +1,475 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<?xml-stylesheet type="text/xsl" href="manpage.xsl"?>
+
+<refentry xml:id="libmosquitto" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<refmeta>
+		<refentrytitle>libmosquitto</refentrytitle>
+		<manvolnum>3</manvolnum>
+		<refmiscinfo class="source">Mosquitto Project</refmiscinfo>
+		<refmiscinfo class="manual">Library calls</refmiscinfo>
+	</refmeta>
+
+	<refnamediv>
+		<refname>libmosquitto</refname>
+		<refpurpose>MQTT version 3.1 client library</refpurpose>
+	</refnamediv>
+
+	<refsect1>
+		<title>Description</title>
+		<para>This is an overview of how to use libmosquitto to create MQTT
+		aware client programs. There may be separate man pages on each of the
+		functions described here in the future. There is also a binding for
+		libmosquitto for C++ and a Python implementation. They are not
+		documented here but operate in a similar way.</para>
+		<para>This is fairly incomplete, please see mosquitto.h for a better
+		description of the functions.</para>
+	</refsect1>
+
+	<refsect1>
+		<title>libmosquitto symbol names</title>
+		<para>All public functions in libmosquitto have the prefix
+		"mosquitto_". Any other functions defined in the source code are to be
+		treated as private functions and may change between any release. Do not
+		use these functions!</para>
+	</refsect1>
+
+	<refsect1>
+		<title>Functions</title>
+
+		<refsect2>
+			<title>Library version</title>
+
+			<funcsynopsis><funcprototype><funcdef>int <function>mosquitto_lib_version</function></funcdef>
+					<paramdef>int *<parameter>major</parameter></paramdef>
+					<paramdef>int *<parameter>minor</parameter></paramdef>
+					<paramdef>int *<parameter>revision</parameter></paramdef>
+			</funcprototype></funcsynopsis>
+			<para>Obtain version information about the library. If any of
+			major, minor or revision are not NULL they will return the
+			corresponding version numbers. The return value is an integer
+			representation of the complete version number (e.g. 1009001 for 1.9.1)
+			that can be used for comparisons.</para>
+		</refsect2>
+
+		<refsect2>
+			<title>Library initialisation and cleanup</title>
+
+			<funcsynopsis><funcprototype><funcdef>int <function>mosquitto_lib_init</function></funcdef>
+			<void/></funcprototype></funcsynopsis>
+
+			<funcsynopsis><funcprototype><funcdef>int <function>mosquitto_lib_cleanup</function></funcdef>
+			<void/></funcprototype></funcsynopsis>
+			<para>Call mosquitto_lib_init() before using any of the other
+				library functions and mosquitto_lib_cleanup() after finishing
+				with the library.</para>
+		</refsect2>
+
+		<refsect2>
+			<title>Client constructor/destructor</title>
+
+			<funcsynopsis><funcprototype><funcdef>struct mosquitto *<function>mosquitto_new</function></funcdef>
+					<paramdef>const char *<parameter>id</parameter></paramdef>
+					<paramdef>bool <parameter>clean_session</parameter></paramdef>
+					<paramdef>void *<parameter>userdata</parameter></paramdef>
+			</funcprototype></funcsynopsis>
+			<para>Create a new mosquitto client instance.</para>
+
+			<funcsynopsis><funcprototype><funcdef>void <function>mosquitto_destroy</function></funcdef>
+					<paramdef>struct mosquitto *<parameter>mosq</parameter></paramdef>
+			</funcprototype></funcsynopsis>
+			<para>Use to free memory associated with a mosquitto client instance.</para>
+
+			<funcsynopsis><funcprototype><funcdef>int <function>mosquitto_reinitialise</function></funcdef>
+					<paramdef>struct mosquitto *<parameter>mosq</parameter></paramdef>
+					<paramdef>const char *<parameter>id</parameter></paramdef>
+					<paramdef>bool <parameter>clean_session</parameter></paramdef>
+					<paramdef>void *<parameter>userdata</parameter></paramdef>
+			</funcprototype></funcsynopsis>
+		</refsect2>
+
+		<refsect2>
+			<title>Authentication and encryption</title>
+
+			<funcsynopsis><funcprototype><funcdef>int <function>mosquitto_username_pw_set</function></funcdef>
+					<paramdef>struct mosquitto *<parameter>mosq</parameter></paramdef>
+					<paramdef>const char *<parameter>username</parameter></paramdef>
+					<paramdef>const char *<parameter>password</parameter></paramdef>
+			</funcprototype></funcsynopsis>
+
+			<funcsynopsis><funcprototype><funcdef>int <function>mosquitto_tls_set</function></funcdef>
+					<paramdef>struct mosquitto *<parameter>mosq</parameter></paramdef>
+					<paramdef>const char *<parameter>cafile</parameter></paramdef>
+					<paramdef>const char *<parameter>capath</parameter></paramdef>
+					<paramdef>const char *<parameter>certfile</parameter></paramdef>
+					<paramdef>const char *<parameter>keyfile</parameter></paramdef>
+					<paramdef>int <parameter>(*pw_callback)(char *buf, int size, int rwflag, void *userdata)</parameter></paramdef>
+			</funcprototype></funcsynopsis>
+
+
+			<funcsynopsis><funcprototype><funcdef>int <function>mosquitto_tls_opts_set</function></funcdef>
+					<paramdef>struct mosquitto *<parameter>mosq</parameter></paramdef>
+					<paramdef>int <parameter>cert_reqs</parameter></paramdef>
+					<paramdef>const char *<parameter>tls_version</parameter></paramdef>
+					<paramdef>const char *<parameter>ciphers</parameter></paramdef>
+			</funcprototype></funcsynopsis>
+
+			<funcsynopsis><funcprototype><funcdef>int <function>mosquitto_tls_insecure_set</function></funcdef>
+					<paramdef>struct mosquitto *<parameter>mosq</parameter></paramdef>
+					<paramdef>bool <parameter>value</parameter></paramdef>
+			</funcprototype></funcsynopsis>
+
+			<funcsynopsis><funcprototype><funcdef>int <function>mosquitto_tls_psk_set</function></funcdef>
+					<paramdef>struct mosquitto *<parameter>mosq</parameter></paramdef>
+					<paramdef>const char *<parameter>psk</parameter></paramdef>
+					<paramdef>const char *<parameter>identity</parameter></paramdef>
+					<paramdef>const char *<parameter>ciphers</parameter></paramdef>
+			</funcprototype></funcsynopsis>
+		</refsect2>
+
+		<refsect2>
+			<title>Wills</title>
+
+			<funcsynopsis><funcprototype><funcdef>int <function>mosquitto_will_set</function></funcdef>
+					<paramdef>struct mosquitto *<parameter>mosq</parameter></paramdef>
+					<paramdef>const char *<parameter>topic</parameter></paramdef>
+					<paramdef>int <parameter>payloadlen</parameter></paramdef>
+					<paramdef>const void *<parameter>payload</parameter></paramdef>
+					<paramdef>int <parameter>qos</parameter></paramdef>
+					<paramdef>bool <parameter>retain</parameter></paramdef>
+			</funcprototype></funcsynopsis>
+
+			<funcsynopsis><funcprototype><funcdef>int <function>mosquitto_will_clear</function></funcdef>
+					<paramdef><parameter>struct mosquitto *mosq</parameter></paramdef>
+			</funcprototype></funcsynopsis>
+		</refsect2>
+
+		<refsect2>
+			<title>Connect/disconnect</title>
+
+			<funcsynopsis><funcprototype><funcdef>int <function>mosquitto_connect</function></funcdef>
+					<paramdef>struct mosquitto *<parameter>mosq</parameter></paramdef>
+					<paramdef>const char *<parameter>host</parameter></paramdef>
+					<paramdef>int <parameter>port</parameter></paramdef>
+					<paramdef>int <parameter>keepalive</parameter></paramdef>
+			</funcprototype></funcsynopsis>
+
+			<funcsynopsis><funcprototype><funcdef>int <function>mosquitto_connect_bind</function></funcdef>
+					<paramdef>struct mosquitto *<parameter>mosq</parameter></paramdef>
+					<paramdef>const char *<parameter>host</parameter></paramdef>
+					<paramdef>int <parameter>port</parameter></paramdef>
+					<paramdef>int <parameter>keepalive</parameter></paramdef>
+					<paramdef>const char *<parameter>bind_address</parameter></paramdef>
+			</funcprototype></funcsynopsis>
+
+			<funcsynopsis><funcprototype><funcdef>int <function>mosquitto_connect_async</function></funcdef>
+					<paramdef>struct mosquitto *<parameter>mosq</parameter></paramdef>
+					<paramdef>const char *<parameter>host</parameter></paramdef>
+					<paramdef>int <parameter>port</parameter></paramdef>
+					<paramdef>int <parameter>keepalive</parameter></paramdef>
+			</funcprototype></funcsynopsis>
+
+			<funcsynopsis><funcprototype><funcdef>int <function>mosquitto_connect_bind_async</function></funcdef>
+					<paramdef>struct mosquitto *<parameter>mosq</parameter></paramdef>
+					<paramdef>const char *<parameter>host</parameter></paramdef>
+					<paramdef>int <parameter>port</parameter></paramdef>
+					<paramdef>int <parameter>keepalive</parameter></paramdef>
+					<paramdef>const char *<parameter>bind_address</parameter></paramdef>
+			</funcprototype></funcsynopsis>
+
+			<funcsynopsis><funcprototype><funcdef>int <function>mosquitto_reconnect</function></funcdef>
+					<paramdef>struct mosquitto *<parameter>mosq</parameter></paramdef>
+			</funcprototype></funcsynopsis>
+
+			<funcsynopsis><funcprototype><funcdef>int <function>mosquitto_reconnect_async</function></funcdef>
+					<paramdef>struct mosquitto *<parameter>mosq</parameter></paramdef>
+			</funcprototype></funcsynopsis>
+
+			<funcsynopsis><funcprototype><funcdef>int <function>mosquitto_disconnect</function></funcdef>
+					<paramdef>struct mosquitto *<parameter>mosq</parameter></paramdef>
+			</funcprototype></funcsynopsis>
+		</refsect2>
+
+		<refsect2>
+			<title>Publish</title>
+
+			<funcsynopsis><funcprototype><funcdef>int <function>mosquitto_publish</function></funcdef>
+					<paramdef>struct mosquitto *<parameter>mosq</parameter></paramdef>
+					<paramdef>int *<parameter>mid</parameter></paramdef>
+					<paramdef>const char *<parameter>topic</parameter></paramdef>
+					<paramdef>int <parameter>payloadlen</parameter></paramdef>
+					<paramdef>const void *<parameter>payload</parameter></paramdef>
+					<paramdef>int <parameter>qos</parameter></paramdef>
+					<paramdef>bool <parameter>retain</parameter></paramdef>
+			</funcprototype></funcsynopsis>
+		</refsect2>
+
+		<refsect2>
+			<title>Subscribe/unsubscribe</title>
+
+			<funcsynopsis><funcprototype><funcdef>int <function>mosquitto_subscribe</function></funcdef>
+					<paramdef>struct mosquitto *<parameter>mosq</parameter></paramdef>
+					<paramdef>int *<parameter>mid</parameter></paramdef>
+					<paramdef>const char *<parameter>sub</parameter></paramdef>
+					<paramdef>int <parameter>qos</parameter></paramdef>
+			</funcprototype></funcsynopsis>
+
+			<funcsynopsis><funcprototype><funcdef>int <function>mosquitto_unsubscribe</function></funcdef>
+					<paramdef>struct mosquitto *<parameter>mosq</parameter></paramdef>
+					<paramdef>int *<parameter>mid</parameter></paramdef>
+					<paramdef>const char *<parameter>sub</parameter></paramdef>
+			</funcprototype></funcsynopsis>
+		</refsect2>
+
+		<refsect2>
+			<title>Network loop</title>
+
+			<funcsynopsis><funcprototype><funcdef>int <function>mosquitto_loop</function></funcdef>
+					<paramdef>struct mosquitto *<parameter>mosq</parameter></paramdef>
+					<paramdef>int <parameter>timeout</parameter></paramdef>
+					<paramdef>int <parameter>max_packets</parameter></paramdef>
+			</funcprototype></funcsynopsis>
+
+			<funcsynopsis><funcprototype><funcdef>int <function>mosquitto_loop_read</function></funcdef>
+					<paramdef>struct mosquitto *<parameter>mosq</parameter></paramdef>
+					<paramdef>int <parameter>max_packets</parameter></paramdef>
+			</funcprototype></funcsynopsis>
+
+			<funcsynopsis><funcprototype><funcdef>int <function>mosquitto_loop_write</function></funcdef>
+					<paramdef>struct mosquitto *<parameter>mosq</parameter></paramdef>
+					<paramdef>int <parameter>max_packets</parameter></paramdef>
+			</funcprototype></funcsynopsis>
+
+			<funcsynopsis><funcprototype><funcdef>int <function>mosquitto_loop_misc</function></funcdef>
+					<paramdef>struct mosquitto *<parameter>mosq</parameter></paramdef>
+			</funcprototype></funcsynopsis>
+
+			<funcsynopsis><funcprototype><funcdef>int <function>mosquitto_loop_forever</function></funcdef>
+					<paramdef>struct mosquitto *<parameter>mosq</parameter></paramdef>
+					<paramdef>int <parameter>timeout</parameter></paramdef>
+					<paramdef>int <parameter>max_packets</parameter></paramdef>
+			</funcprototype></funcsynopsis>
+
+			<funcsynopsis><funcprototype><funcdef>int <function>mosquitto_socket</function></funcdef>
+					<paramdef>struct mosquitto *<parameter>mosq</parameter></paramdef>
+			</funcprototype></funcsynopsis>
+
+			<funcsynopsis><funcprototype><funcdef>bool <function>mosquitto_want_write</function></funcdef>
+					<paramdef>struct mosquitto *<parameter>mosq</parameter></paramdef>
+			</funcprototype></funcsynopsis>
+		</refsect2>
+
+		<refsect2>
+			<title>Threaded network loop</title>
+
+			<funcsynopsis><funcprototype><funcdef>int <function>mosquitto_loop_start</function></funcdef>
+					<paramdef>struct mosquitto *<parameter>mosq</parameter></paramdef>
+			</funcprototype></funcsynopsis>
+
+			<funcsynopsis><funcprototype><funcdef>int <function>mosquitto_loop_stop</function></funcdef>
+					<paramdef>struct mosquitto *<parameter>mosq</parameter></paramdef>
+					<paramdef>bool <parameter>force</parameter></paramdef>
+			</funcprototype></funcsynopsis>
+		</refsect2>
+
+		<refsect2>
+			<title>Misc client functions</title>
+
+			<funcsynopsis><funcprototype><funcdef>int <function>mosquitto_max_inflight_messages_set</function></funcdef>
+					<paramdef>struct mosquitto *<parameter>mosq</parameter></paramdef>
+					<paramdef>unsigned int <parameter>max_inflight_messages</parameter></paramdef>
+			</funcprototype></funcsynopsis>
+
+			<funcsynopsis><funcprototype><funcdef>int <function>mosquitto_message_retry_set</function></funcdef>
+					<paramdef>struct mosquitto *<parameter>mosq</parameter></paramdef>
+					<paramdef>unsigned int <parameter>message_retry</parameter></paramdef>
+			</funcprototype></funcsynopsis>
+
+			<funcsynopsis><funcprototype><funcdef>int <function>mosquitto_reconnect_delay_set</function></funcdef>
+					<paramdef>struct mosquitto *<parameter>mosq</parameter></paramdef>
+					<paramdef>unsigned int <parameter>reconnect_delay</parameter></paramdef>
+					<paramdef>unsigned int <parameter>reconnect_delay_max</parameter></paramdef>
+					<paramdef>bool <parameter>reconnect_exponential_backoff</parameter></paramdef>
+			</funcprototype></funcsynopsis>
+
+			<funcsynopsis><funcprototype><funcdef>int <function>mosquitto_user_data_set</function></funcdef>
+					<paramdef>struct mosquitto *<parameter>mosq</parameter></paramdef>
+					<paramdef>void *<parameter>userdata</parameter></paramdef>
+			</funcprototype></funcsynopsis>
+		</refsect2>
+
+		<refsect2>
+			<title>Callbacks</title>
+
+			<funcsynopsis><funcprototype><funcdef>int <function>mosquitto_connect_callback_set</function></funcdef>
+					<paramdef>struct mosquitto *<parameter>mosq</parameter></paramdef>
+					<paramdef>void <parameter>(*on_connect)(struct mosquitto *, void *, int)</parameter></paramdef>
+			</funcprototype></funcsynopsis>
+
+			<funcsynopsis><funcprototype><funcdef>int <function>mosquitto_disconnect_callback_set</function></funcdef>
+					<paramdef>struct mosquitto *<parameter>mosq</parameter></paramdef>
+					<paramdef>void <parameter>(*on_disconnect)(struct mosquitto *, void *, int)</parameter></paramdef>
+			</funcprototype></funcsynopsis>
+
+			<funcsynopsis><funcprototype><funcdef>int <function>mosquitto_publish_callback_set</function></funcdef>
+					<paramdef>struct mosquitto *<parameter>mosq</parameter></paramdef>
+					<paramdef>void <parameter>(*on_publish)(struct mosquitto *, void *, int)</parameter></paramdef>
+			</funcprototype></funcsynopsis>
+
+			<funcsynopsis><funcprototype><funcdef>int <function>mosquitto_message_callback_set</function></funcdef>
+					<paramdef>struct mosquitto *<parameter>mosq</parameter></paramdef>
+					<paramdef>void <parameter>(*on_message)(struct mosquitto *, void *, const struct mosquitto_message *)</parameter></paramdef>
+			</funcprototype></funcsynopsis>
+
+			<funcsynopsis><funcprototype><funcdef>int <function>mosquitto_subscribe_callback_set</function></funcdef>
+					<paramdef>struct mosquitto *<parameter>mosq</parameter></paramdef>
+					<paramdef>void <parameter>(*on_subscribe)(struct mosquitto *, void *, int, int, const int *)</parameter></paramdef>
+			</funcprototype></funcsynopsis>
+
+			<funcsynopsis><funcprototype><funcdef>int <function>mosquitto_unsubscribe_callback_set</function></funcdef>
+					<paramdef>struct mosquitto *<parameter>mosq</parameter></paramdef>
+					<paramdef>void <parameter>(*on_unsubscribe)(struct mosquitto *, void *, int)</parameter></paramdef>
+			</funcprototype></funcsynopsis>
+
+			<funcsynopsis><funcprototype><funcdef>int <function>mosquitto_log_callback_set</function></funcdef>
+					<paramdef>struct mosquitto *<parameter>mosq</parameter></paramdef>
+					<paramdef>void <parameter>(*on_unsubscribe)(struct mosquitto *, void *, int, const char *)</parameter></paramdef>
+			</funcprototype></funcsynopsis>
+		</refsect2>
+
+		<refsect2>
+			<title>Utility functions</title>
+
+			<funcsynopsis><funcprototype><funcdef>const char *<function>mosquitto_connack_string</function></funcdef>
+					<paramdef>int <parameter>connack_code</parameter></paramdef>
+			</funcprototype></funcsynopsis>
+
+			<funcsynopsis><funcprototype><funcdef>int <function>mosquitto_message_copy</function></funcdef>
+					<paramdef>struct mosquitto_message *<parameter>dst</parameter></paramdef>
+					<paramdef>const struct mosquitto_message *<parameter>src</parameter></paramdef>
+			</funcprototype></funcsynopsis>
+
+			<funcsynopsis><funcprototype><funcdef>int <function>mosquitto_message_free</function></funcdef>
+					<paramdef>struct mosquitto_message **<parameter>message</parameter></paramdef>
+			</funcprototype></funcsynopsis>
+
+			<funcsynopsis><funcprototype><funcdef>const char *<function>mosquitto_strerror</function></funcdef>
+					<paramdef>int <parameter>mosq_errno</parameter></paramdef>
+			</funcprototype></funcsynopsis>
+
+			<funcsynopsis><funcprototype><funcdef>int <function>mosquitto_sub_topic_tokenise</function></funcdef>
+					<paramdef>const char *<parameter>subtopic</parameter></paramdef>
+					<paramdef>char ***<parameter>topics</parameter></paramdef>
+					<paramdef>int *<parameter>count</parameter></paramdef>
+			</funcprototype></funcsynopsis>
+
+			<funcsynopsis><funcprototype><funcdef>int <function>mosquitto_sub_topic_tokens_free</function></funcdef>
+					<paramdef>char ***<parameter>topics</parameter></paramdef>
+					<paramdef>int <parameter>count</parameter></paramdef>
+			</funcprototype></funcsynopsis>
+
+			<funcsynopsis><funcprototype><funcdef>int <function>mosquitto_topic_matches_sub</function></funcdef>
+					<paramdef>const char *<parameter>sub</parameter></paramdef>
+					<paramdef>const char *<parameter>topic</parameter></paramdef>
+					<paramdef>bool *<parameter>result</parameter></paramdef>
+			</funcprototype></funcsynopsis>
+		</refsect2>
+	</refsect1>
+
+	<refsect1>
+		<title>Examples</title>
+		<para><programlisting language="C">
+#include &lt;stdio.h&gt;
+#include &lt;mosquitto.h&gt;
+
+void my_message_callback(struct mosquitto *mosq, void *userdata, const struct mosquitto_message *message)
+{
+	if(message->payloadlen){
+		printf("%s %s\n", message->topic, message->payload);
+	}else{
+		printf("%s (null)\n", message->topic);
+	}
+	fflush(stdout);
+}
+
+void my_connect_callback(struct mosquitto *mosq, void *userdata, int result)
+{
+	int i;
+	if(!result){
+		/* Subscribe to broker information topics on successful connect. */
+		mosquitto_subscribe(mosq, NULL, "$SYS/#", 2);
+	}else{
+		fprintf(stderr, "Connect failed\n");
+	}
+}
+
+void my_subscribe_callback(struct mosquitto *mosq, void *userdata, int mid, int qos_count, const int *granted_qos)
+{
+	int i;
+
+	printf("Subscribed (mid: %d): %d", mid, granted_qos[0]);
+	for(i=1; i&lt;qos_count; i++){
+		printf(", %d", granted_qos[i]);
+	}
+	printf("\n");
+}
+
+void my_log_callback(struct mosquitto *mosq, void *userdata, int level, const char *str)
+{
+	/* Pring all log messages regardless of level. */
+	printf("%s\n", str);
+}
+
+int main(int argc, char *argv[])
+{
+	int i;
+	char *host = "localhost";
+	int port = 1883;
+	int keepalive = 60;
+	bool clean_session = true;
+	struct mosquitto *mosq = NULL;
+
+	mosquitto_lib_init();
+	mosq = mosquitto_new(NULL, clean_session, NULL);
+	if(!mosq){
+		fprintf(stderr, "Error: Out of memory.\n");
+		return 1;
+	}
+	mosquitto_log_callback_set(mosq, my_log_callback);
+	mosquitto_connect_callback_set(mosq, my_connect_callback);
+	mosquitto_message_callback_set(mosq, my_message_callback);
+	mosquitto_subscribe_callback_set(mosq, my_subscribe_callback);
+
+	if(mosquitto_connect(mosq, host, port, keepalive)){
+		fprintf(stderr, "Unable to connect.\n");
+		return 1;
+	}
+
+	while(!mosquitto_loop(mosq, -1, 1)){
+	}
+	mosquitto_destroy(mosq);
+	mosquitto_lib_cleanup();
+	return 0;
+}
+		</programlisting></para>
+	</refsect1>
+	<refsect1>
+		<title>See Also</title>
+		<simplelist type="inline">
+			<member>
+				<citerefentry>
+					<refentrytitle><link xlink:href="mosquitto-8.html">mosquitto</link></refentrytitle>
+					<manvolnum>8</manvolnum>
+				</citerefentry>
+				<citerefentry>
+					<refentrytitle><link xlink:href="mqtt-7.html">mqtt</link></refentrytitle>
+					<manvolnum>7</manvolnum>
+				</citerefentry>
+			</member>
+		</simplelist>
+	</refsect1>
+
+	<refsect1>
+		<title>Author</title>
+		<para>Roger Light <email>roger@atchoo.org</email></para>
+	</refsect1>
+</refentry>

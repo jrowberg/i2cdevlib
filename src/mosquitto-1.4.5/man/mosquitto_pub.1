@@ -1,0 +1,429 @@
+'\" t
+.\"     Title: mosquitto_pub
+.\"    Author: [see the "Author" section]
+.\" Generator: DocBook XSL Stylesheets v1.78.1 <http://docbook.sf.net/>
+.\"      Date: 11/08/2015
+.\"    Manual: Commands
+.\"    Source: Mosquitto Project
+.\"  Language: English
+.\"
+.TH "MOSQUITTO_PUB" "1" "11/08/2015" "Mosquitto Project" "Commands"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+mosquitto_pub \- an MQTT version 3\&.1/3\&.1\&.1 client for publishing simple messages
+.SH "SYNOPSIS"
+.HP \w'\fBmosquitto_pub\fR\ 'u
+\fBmosquitto_pub\fR [\fB\-A\fR\ \fIbind_address\fR] [\fB\-d\fR] [\fB\-h\fR\ \fIhostname\fR] [\fB\-i\fR\ \fIclient_id\fR] [\fB\-I\fR\ \fIclient\ id\ prefix\fR] [\fB\-k\fR\ \fIkeepalive\ time\fR] [\fB\-p\fR\ \fIport\ number\fR] [\fB\-q\fR\ \fImessage\ QoS\fR] [\fB\-\-quiet\fR] [\fB\-r\fR] [\fB\-S\fR] {\fB\-f\fR\ \fIfile\fR | \fB\-l\fR | \fB\-m\fR\ \fImessage\fR | \fB\-n\fR | \fB\-s\fR} [[\fB\-u\fR\ \fIusername\fR]\ [\fB\-P\fR\ \fIpassword\fR]] [\fB\-\-will\-topic\fR\ \fItopic\fR\ [\fB\-\-will\-payload\fR\ \fIpayload\fR]\ [\fB\-\-will\-qos\fR\ \fIqos\fR]\ [\fB\-\-will\-retain\fR]] [[{\fB\-\-cafile\fR\ \fIfile\fR\ |\ \fB\-\-capath\fR\ \fIdir\fR}\ [\fB\-\-cert\fR\ \fIfile\fR]\ [\fB\-\-key\fR\ \fIfile\fR]\ [\fB\-\-ciphers\fR\ \fIciphers\fR]\ [\fB\-\-tls\-version\fR\ \fIversion\fR]\ [\fB\-\-insecure\fR]] | [\fB\-\-psk\fR\ \fIhex\-key\fR\ \fB\-\-psk\-identity\fR\ \fIidentity\fR\ [\fB\-\-ciphers\fR\ \fIciphers\fR]\ [\fB\-\-tls\-version\fR\ \fIversion\fR]]] [\fB\-\-proxy\fR\ \fIsocks\-url\fR] [\fB\-V\fR\ \fIprotocol\-version\fR] \fB\-t\fR\ \fImessage\-topic\fR
+.HP \w'\fBmosquitto_pub\fR\ 'u
+\fBmosquitto_pub\fR [\fB\-\-help\fR] 
+.SH "DESCRIPTION"
+.PP
+\fBmosquitto_pub\fR
+is a simple MQTT version 3\&.1 client that will publish a single message on a topic and exit\&.
+.SH "OPTIONS"
+.PP
+The options below may be given on the command line, but may also be placed in a config file located at
+\fB$XDG_CONFIG_HOME/mosquitto_pub\fR
+or
+\fB$HOME/\&.config/mosquitto_sub\fR
+with one pair of
+\fB\-option \fR\fB\fIvalue\fR\fR
+per line\&. The values in the config file will be used as defaults and can be overridden by using the command line\&. The exceptions to this are the message type options, of which only one can be specified\&. Note also that currently some options cannot be negated, e\&.g\&.
+\fB\-S\fR\&. Config file lines that have a
+\fB#\fR
+as the first character are treated as comments and not processed any further\&.
+.PP
+\fB\-A\fR
+.RS 4
+Bind the outgoing connection to a local ip address/hostname\&. Use this argument if you need to restrict network communication to a particular interface\&.
+.RE
+.PP
+\fB\-\-cafile\fR
+.RS 4
+Define the path to a file containing PEM encoded CA certificates that are trusted\&. Used to enable SSL communication\&.
+.sp
+See also
+\fB\-\-capath\fR
+.RE
+.PP
+\fB\-\-capath\fR
+.RS 4
+Define the path to a directory containing PEM encoded CA certificates that are trusted\&. Used to enable SSL communication\&.
+.sp
+For
+\fB\-\-capath\fR
+to work correctly, the certificate files must have "\&.crt" as the file ending and you must run "c_rehash <path to capath>" each time you add/remove a certificate\&.
+.sp
+See also
+\fB\-\-cafile\fR
+.RE
+.PP
+\fB\-\-cert\fR
+.RS 4
+Define the path to a file containing a PEM encoded certificate for this client, if required by the server\&.
+.sp
+See also
+\fB\-\-key\fR\&.
+.RE
+.PP
+\fB\-\-ciphers\fR
+.RS 4
+An openssl compatible list of TLS ciphers to support in the client\&. See
+\fBciphers\fR(1)
+for more information\&.
+.RE
+.PP
+\fB\-d\fR, \fB\-\-debug\fR
+.RS 4
+Enable debug messages\&.
+.RE
+.PP
+\fB\-f\fR, \fB\-\-file\fR
+.RS 4
+Send the contents of a file as the message\&.
+.RE
+.PP
+\fB\-\-help\fR
+.RS 4
+Display usage information\&.
+.RE
+.PP
+\fB\-h\fR, \fB\-\-host\fR
+.RS 4
+Specify the host to connect to\&. Defaults to localhost\&.
+.RE
+.PP
+\fB\-i\fR, \fB\-\-id\fR
+.RS 4
+The id to use for this client\&. If not given, defaults to mosquitto_pub_ appended with the process id of the client\&. Cannot be used at the same time as the
+\fB\-\-id\-prefix\fR
+argument\&.
+.RE
+.PP
+\fB\-I\fR, \fB\-\-id\-prefix\fR
+.RS 4
+Provide a prefix that the client id will be built from by appending the process id of the client\&. This is useful where the broker is using the clientid_prefixes option\&. Cannot be used at the same time as the
+\fB\-\-id\fR
+argument\&.
+.RE
+.PP
+\fB\-\-insecure\fR
+.RS 4
+When using certificate based encryption, this option disables verification of the server hostname in the server certificate\&. This can be useful when testing initial server configurations but makes it possible for a malicious third party to impersonate your server through DNS spoofing, for example\&. Use this option in testing
+\fIonly\fR\&. If you need to resort to using this option in a production environment, your setup is at fault and there is no point using encryption\&.
+.RE
+.PP
+\fB\-k\fR, \fB\-\-keepalive\fR
+.RS 4
+The number of seconds between sending PING commands to the broker for the purposes of informing it we are still connected and functioning\&. Defaults to 60 seconds\&.
+.RE
+.PP
+\fB\-\-key\fR
+.RS 4
+Define the path to a file containing a PEM encoded private key for this client, if required by the server\&.
+.sp
+See also
+\fB\-\-cert\fR\&.
+.RE
+.PP
+\fB\-l\fR, \fB\-\-stdin\-line\fR
+.RS 4
+Send messages read from stdin, splitting separate lines into separate messages\&. Note that blank lines won\*(Aqt be sent\&.
+.RE
+.PP
+\fB\-m\fR, \fB\-\-message\fR
+.RS 4
+Send a single message from the command line\&.
+.RE
+.PP
+\fB\-n\fR, \fB\-\-null\-message\fR
+.RS 4
+Send a null (zero length) message\&.
+.RE
+.PP
+\fB\-p\fR, \fB\-\-port\fR
+.RS 4
+Connect to the port specified instead of the default 1883\&.
+.RE
+.PP
+\fB\-P\fR, \fB\-\-pw\fR
+.RS 4
+Provide a password to be used for authenticating with the broker\&. Using this argument without also specifying a username is invalid\&. This requires a broker that supports MQTT v3\&.1\&. See also the
+\fB\-\-username\fR
+option\&.
+.RE
+.PP
+\fB\-\-proxy\fR
+.RS 4
+Specify a SOCKS5 proxy to connect through\&. "None" and "username" authentication types are supported\&. The
+\fBsocks\-url\fR
+must be of the form
+\fBsocks5h://[username[:password]@]host[:port]\fR\&. The protocol prefix
+\fBsocks5h\fR
+means that hostnames are resolved by the proxy\&. The symbols %25, %3A and %40 are URL decoded into %, : and @ respectively, if present in the username or password\&.
+.sp
+If username is not given, then no authentication is attempted\&. If the port is not given, then the default of 1080 is used\&.
+.sp
+More SOCKS versions may be available in the future, depending on demand, and will use different protocol prefixes as described in
+\fBcurl\fR(1)\&.
+.RE
+.PP
+\fB\-\-psk\fR
+.RS 4
+Provide the hexadecimal (no leading 0x) pre\-shared\-key matching the one used on the broker to use TLS\-PSK encryption support\&.
+\fB\-\-psk\-identity\fR
+must also be provided to enable TLS\-PSK\&.
+.RE
+.PP
+\fB\-\-psk\-identity\fR
+.RS 4
+The client identity to use with TLS\-PSK support\&. This may be used instead of a username if the broker is configured to do so\&.
+.RE
+.PP
+\fB\-q\fR, \fB\-\-qos\fR
+.RS 4
+Specify the quality of service to use for the message, from 0, 1 and 2\&. Defaults to 0\&.
+.RE
+.PP
+\fB\-\-quiet\fR
+.RS 4
+If this argument is given, no runtime errors will be printed\&. This excludes any error messages given in case of invalid user input (e\&.g\&. using
+\fB\-\-port\fR
+without a port)\&.
+.RE
+.PP
+\fB\-r\fR, \fB\-\-retain\fR
+.RS 4
+If retain is given, the message will be retained as a "last known good" value on the broker\&. See
+\fBmqtt\fR(7)
+for more information\&.
+.RE
+.PP
+\fB\-s\fR, \fB\-\-stdin\-file\fR
+.RS 4
+Send a message read from stdin, sending the entire content as a single message\&.
+.RE
+.PP
+\fB\-S\fR
+.RS 4
+Use SRV lookups to determine which host to connect to\&. Performs lookups to
+\fB_mqtt\&._tcp\&.<host>\fR
+when used in conjunction with
+\fB\-h\fR, otherwise uses
+\fB_mqtt\&._tcp\&.<local dns domain>\fR\&.
+.RE
+.PP
+\fB\-t\fR, \fB\-\-topic\fR
+.RS 4
+The MQTT topic on which to publish the message\&. See
+\fBmqtt\fR(7)
+for more information on MQTT topics\&.
+.RE
+.PP
+\fB\-\-tls\-version\fR
+.RS 4
+Choose which TLS protocol version to use when communicating with the broker\&. Valid options are
+\fBtlsv1\&.2\fR,
+\fBtlsv1\&.1\fR
+and
+\fBtlsv1\fR\&. The default value is
+\fBtlsv1\&.2\fR\&. If the installed version of openssl is too old, only
+\fBtlsv1\fR
+will be available\&. Must match the protocol version used by the broker\&.
+.RE
+.PP
+\fB\-u\fR, \fB\-\-username\fR
+.RS 4
+Provide a username to be used for authenticating with the broker\&. This requires a broker that supports MQTT v3\&.1\&. See also the
+\fB\-\-pw\fR
+argument\&.
+.RE
+.PP
+\fB\-V\fR, \fB\-\-protocol\-version\fR
+.RS 4
+Specify which version of the MQTT protocol should be used when connecting to the rmeote broker\&. Can be
+\fBmqttv31\fR
+or
+\fBmqttv311\fR\&. Defaults to
+\fBmqttv31\fR\&.
+.RE
+.PP
+\fB\-\-will\-payload\fR
+.RS 4
+Specify a message that will be stored by the broker and sent out if this client disconnects unexpectedly\&. This must be used in conjunction with
+\fB\-\-will\-topic\fR\&.
+.RE
+.PP
+\fB\-\-will\-qos\fR
+.RS 4
+The QoS to use for the Will\&. Defaults to 0\&. This must be used in conjunction with
+\fB\-\-will\-topic\fR\&.
+.RE
+.PP
+\fB\-\-will\-retain\fR
+.RS 4
+If given, if the client disconnects unexpectedly the message sent out will be treated as a retained message\&. This must be used in conjunction with
+\fB\-\-will\-topic\fR\&.
+.RE
+.PP
+\fB\-\-will\-topic\fR
+.RS 4
+The topic on which to send a Will, in the event that the client disconnects unexpectedly\&.
+.RE
+.SH "WILLS"
+.PP
+mosquitto_sub can register a message with the broker that will be sent out if it disconnects unexpectedly\&. See
+\fBmqtt\fR(7)
+for more information\&.
+.PP
+The minimum requirement for this is to use
+\fB\-\-will\-topic\fR
+to specify which topic the will should be sent out on\&. This will result in a non\-retained, zero length message with QoS 0\&.
+.PP
+Use the
+\fB\-\-will\-retain\fR,
+\fB\-\-will\-payload\fR
+and
+\fB\-\-will\-qos\fR
+arguments to modify the other will parameters\&.
+.SH "EXAMPLES"
+.PP
+Publish temperature information to localhost with QoS 1:
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+mosquitto_pub
+\-t
+sensors/temperature
+\-m
+32
+\-q
+1
+.RE
+.PP
+Publish timestamp and temperature information to a remote host on a non\-standard port and QoS 0:
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+mosquitto_pub
+\-h
+192\&.168\&.1\&.1
+\-p
+1885
+\-t
+sensors/temperature
+\-m
+"1266193804 32"
+.RE
+.PP
+Publish light switch status\&. Message is set to retained because there may be a long period of time between light switch events:
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+mosquitto_pub
+\-r\-t
+switches/kitchen_lights/status
+\-m
+"on"
+.RE
+.PP
+Send the contents of a file in two ways:
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+mosquitto_pub
+\-t
+my/topic
+\-f
+\&./data
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+mosquitto_pub
+\-t
+my/topic
+\-s
+< \&./data
+.RE
+.PP
+Send parsed electricity usage data from a Current Cost meter, reading from stdin with one line/reading as one message:
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+read_cc128\&.pl | mosquitto_pub
+\-t
+sensors/cc128
+\-l
+.RE
+.SH "FILES"
+.PP
+$XDG_CONFIG_HOME/mosquitto_pub, $HOME/\&.config/mosquitto_pub
+.RS 4
+Configuration file for default options\&.
+.RE
+.SH "BUGS"
+.PP
+\fBmosquitto_pub\fR
+bug information can be found at
+https://bugs\&.eclipse\&.org/bugs/describecomponents\&.cgi?product=Mosquitto
+.SH "SEE ALSO"
+\fBmqtt\fR(7), \fBmosquitto_sub\fR(1), \fBmosquitto\fR(8), \fBlibmosquitto\fR(3), \fBmosquitto-tls\fR(7)
+.SH "AUTHOR"
+.PP
+Roger Light
+<roger@atchoo\&.org>

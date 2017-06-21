@@ -1,0 +1,470 @@
+'\" t
+.\"     Title: mosquitto
+.\"    Author: [see the "Author" section]
+.\" Generator: DocBook XSL Stylesheets v1.78.1 <http://docbook.sf.net/>
+.\"      Date: 06/20/2017
+.\"    Manual: System management commands
+.\"    Source: Mosquitto Project
+.\"  Language: English
+.\"
+.TH "MOSQUITTO" "8" "06/20/2017" "Mosquitto Project" "System management commands"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+mosquitto \- an MQTT broker
+.SH "SYNOPSIS"
+.HP \w'\fBmosquitto\fR\ 'u
+\fBmosquitto\fR [\-c\ \fIconfig\ file\fR] [\-d | \-\-daemon] [\-p\ \fIport\ number\fR] [\-v]
+.SH "DESCRIPTION"
+.PP
+\fBmosquitto\fR
+is a broker for the MQTT protocol version 3\&.1\&.
+.SH "OPTIONS"
+.PP
+\fB\-c\fR, \fB\-\-config\-file\fR
+.RS 4
+Load configuration from a file\&. If not given, the default values as described in
+\fBmosquitto.conf\fR(5)
+are used\&.
+.RE
+.PP
+\fB\-d\fR, \fB\-\-daemon\fR
+.RS 4
+Run
+\fBmosquitto\fR
+in the background as a daemon\&. All other behaviour remains the same\&.
+.RE
+.PP
+\fB\-p\fR, \fB\-\-port\fR
+.RS 4
+Listen on the port specified instead of the default 1883\&. This acts in addition to the port setting in the config file\&. May be specified multiple times to open multiple sockets listening on different ports\&. This socket will be bound to all network interfaces\&.
+.RE
+.PP
+\fB\-v\fR, \fB\-\-verbose\fR
+.RS 4
+Use verbose logging\&. This is equivalent to setting
+\fBlog_type\fR
+to
+\fBall\fR
+in the configuration file\&. This overrides and logging options given in the configuration file\&.
+.RE
+.SH "CONFIGURATION"
+.PP
+The broker can be configured using a configuration file as described in
+\fBmosquitto.conf\fR(5)
+and this is the main point of information for mosquitto\&. The files required for SSL/TLS support are described in
+\fBmosquitto-tls\fR(7)\&.
+.SH "BROKER STATUS"
+.PP
+Clients can find information about the broker by subscribing to topics in the $SYS hierarchy as follows\&. Topics marked as static are only sent once per client on subscription\&. All other topics are updated every
+\fBsys_interval\fR
+seconds\&. If
+\fBsys_interval\fR
+is 0, then updates are not sent\&.
+.PP
+Note that if you are using a command line client to interact with the $SYS topics and your shell interprets $ as an environment variable, you need to place the topic in single quotes \*(Aq$SYS/\&.\&.\&.\*(Aq or to escape the dollar symbol: \e$SYS/\&.\&.\&. otherwise the $SYS will be treated as an environment variable\&.
+.PP
+\fB$SYS/broker/bytes/received\fR
+.RS 4
+The total number of bytes received since the broker started\&.
+.RE
+.PP
+\fB$SYS/broker/bytes/sent\fR
+.RS 4
+The total number of bytes sent since the broker started\&.
+.RE
+.PP
+\fB$SYS/broker/clients/connected\fR, \fB$SYS/broker/clients/active\fR (deprecated)
+.RS 4
+The number of currently connected clients\&.
+.RE
+.PP
+\fB$SYS/broker/clients/expired\fR
+.RS 4
+The number of disconnected persistent clients that have been expired and removed through the persistent_client_expiration option\&.
+.RE
+.PP
+\fB$SYS/broker/clients/disconnected\fR, \fB$SYS/broker/clients/inactive\fR (deprecated)
+.RS 4
+The total number of persistent clients (with clean session disabled) that are registered at the broker but are currently disconnected\&.
+.RE
+.PP
+\fB$SYS/broker/clients/maximum\fR
+.RS 4
+The maximum number of clients that have been connected to the broker at the same time\&.
+.RE
+.PP
+\fB$SYS/broker/clients/total\fR
+.RS 4
+The total number of active and inactive clients currently connected and registered on the broker\&.
+.RE
+.PP
+\fB$SYS/broker/connection/#\fR
+.RS 4
+When bridges are configured to/from the broker, common practice is to provide a status topic that indicates the state of the connection\&. This is provided within $SYS/broker/connection/ by default\&. If the value of the topic is 1 the connection is active, if 0 then it is not active\&. See the Bridges section below for more information on bridges\&.
+.RE
+.PP
+\fB$SYS/broker/heap/current size\fR
+.RS 4
+The current size of the heap memory in use by mosquitto\&. Note that this topic may be unavailable depending on compile time options\&.
+.RE
+.PP
+\fB$SYS/broker/heap/maximum size\fR
+.RS 4
+The largest amount of heap memory used by mosquitto\&. Note that this topic may be unavailable depending on compile time options\&.
+.RE
+.PP
+\fB$SYS/broker/load/connections/+\fR
+.RS 4
+The moving average of the number of CONNECT packets received by the broker over different time intervals\&. The final "+" of the hierarchy can be 1min, 5min or 15min\&. The value returned represents the number of connections received in 1 minute, averaged over 1, 5 or 15 minutes\&.
+.RE
+.PP
+\fB$SYS/broker/load/bytes/received/+\fR
+.RS 4
+The moving average of the number of bytes received by the broker over different time intervals\&. The final "+" of the hierarchy can be 1min, 5min or 15min\&. The value returned represents the number of bytes received in 1 minute, averaged over 1, 5 or 15 minutes\&.
+.RE
+.PP
+\fB$SYS/broker/load/bytes/sent/+\fR
+.RS 4
+The moving average of the number of bytes sent by the broker over different time intervals\&. The final "+" of the hierarchy can be 1min, 5min or 15min\&. The value returned represents the number of bytes sent in 1 minute, averaged over 1, 5 or 15 minutes\&.
+.RE
+.PP
+\fB$SYS/broker/load/messages/received/+\fR
+.RS 4
+The moving average of the number of all types of MQTT messages received by the broker over different time intervals\&. The final "+" of the hierarchy can be 1min, 5min or 15min\&. The value returned represents the number of messages received in 1 minute, averaged over 1, 5 or 15 minutes\&.
+.RE
+.PP
+\fB$SYS/broker/load/messages/sent/+\fR
+.RS 4
+The moving average of the number of all types of MQTT messages sent by the broker over different time intervals\&. The final "+" of the hierarchy can be 1min, 5min or 15min\&. The value returned represents the number of messages send in 1 minute, averaged over 1, 5 or 15 minutes\&.
+.RE
+.PP
+\fB$SYS/broker/load/publish/dropped/+\fR
+.RS 4
+The moving average of the number of publish messages dropped by the broker over different time intervals\&. This shows the rate at which durable clients that are disconnected are losing messages\&. The final "+" of the hierarchy can be 1min, 5min or 15min\&. The value returned represents the number of messages dropped in 1 minute, averaged over 1, 5 or 15 minutes\&.
+.RE
+.PP
+\fB$SYS/broker/load/publish/received/+\fR
+.RS 4
+The moving average of the number of publish messages received by the broker over different time intervals\&. The final "+" of the hierarchy can be 1min, 5min or 15min\&. The value returned represents the number of publish messages received in 1 minute, averaged over 1, 5 or 15 minutes\&.
+.RE
+.PP
+\fB$SYS/broker/load/publish/sent/+\fR
+.RS 4
+The moving average of the number of publish messages sent by the broker over different time intervals\&. The final "+" of the hierarchy can be 1min, 5min or 15min\&. The value returned represents the number of publish messages sent in 1 minute, averaged over 1, 5 or 15 minutes\&.
+.RE
+.PP
+\fB$SYS/broker/load/sockets/+\fR
+.RS 4
+The moving average of the number of socket connections opened to the broker over different time intervals\&. The final "+" of the hierarchy can be 1min, 5min or 15min\&. The value returned represents the number of socket connections in 1 minute, averaged over 1, 5 or 15 minutes\&.
+.RE
+.PP
+\fB$SYS/broker/messages/inflight\fR
+.RS 4
+The number of messages with QoS>0 that are awaiting acknowledgments\&.
+.RE
+.PP
+\fB$SYS/broker/messages/received\fR
+.RS 4
+The total number of messages of any type received since the broker started\&.
+.RE
+.PP
+\fB$SYS/broker/messages/sent\fR
+.RS 4
+The total number of messages of any type sent since the broker started\&.
+.RE
+.PP
+\fB$SYS/broker/messages/stored\fR
+.RS 4
+The number of messages currently held in the message store\&. This includes retained messages and messages queued for durable clients\&.
+.RE
+.PP
+\fB$SYS/broker/publish/messages/dropped\fR
+.RS 4
+The total number of publish messages that have been dropped due to inflight/queuing limits\&. See the max_inflight_messages and max_queued_messages options in
+\fBmosquitto.conf\fR(5)
+for more information\&.
+.RE
+.PP
+\fB$SYS/broker/publish/messages/received\fR
+.RS 4
+The total number of PUBLISH messages received since the broker started\&.
+.RE
+.PP
+\fB$SYS/broker/publish/messages/sent\fR
+.RS 4
+The total number of PUBLISH messages sent since the broker started\&.
+.RE
+.PP
+\fB$SYS/broker/retained messages/count\fR
+.RS 4
+The total number of retained messages active on the broker\&.
+.RE
+.PP
+\fB$SYS/broker/subscriptions/count\fR
+.RS 4
+The total number of subscriptions active on the broker\&.
+.RE
+.PP
+\fB$SYS/broker/timestamp\fR
+.RS 4
+The timestamp at which this particular build of the broker was made\&. Static\&.
+.RE
+.PP
+\fB$SYS/broker/uptime\fR
+.RS 4
+The amount of time in seconds the broker has been online\&.
+.RE
+.PP
+\fB$SYS/broker/version\fR
+.RS 4
+The version of the broker\&. Static\&.
+.RE
+.SH "WILDCARD TOPIC SUBSCRIPTIONS"
+.PP
+In addition to allowing clients to subscribe to specific topics, mosquitto also allows the use of two wildcards in subscriptions\&.
+\fB+\fR
+is the wildcard used to match a single level of hierarchy\&. For example, for a topic of "a/b/c/d", the following example subscriptions will match:
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+a/b/c/d
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
++/b/c/d
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+a/+/c/d
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+a/+/+/d
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
++/+/+/+
+.RE
+.PP
+The following subscriptions will not match:
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+a/b/c
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+b/+/c/d
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
++/+/+
+.RE
+.PP
+The second wildcard is
+\fB#\fR
+and is used to match all subsequent levels of hierarchy\&. With a topic of "a/b/c/d", the following example subscriptions will match:
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+a/b/c/d
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+#
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+a/#
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+a/b/#
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+a/b/c/#
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
++/b/c/#
+.RE
+.PP
+The $SYS hierarchy does not match a subscription of "#"\&. If you want to observe the entire $SYS hierarchy, subscribe to $SYS/#\&.
+.PP
+Note that the wildcards must be only ever used on their own, so a subscription of "a/b+/c" is not valid use of a wildcard\&. The
+\fB#\fR
+wildcard must only ever be used as the final character of a subscription\&.
+.SH "BRIDGES"
+.PP
+Multiple brokers can be connected together with the bridging functionality\&. This is useful where it is desirable to share information between locations, but where not all of the information needs to be shared\&. An example could be where a number of users are running a broker to help record power usage and for a number of other reasons\&. The power usage could be shared through bridging all of the user brokers to a common broker, allowing the power usage of all users to be collected and compared\&. The other information would remain local to each broker\&.
+.PP
+For information on configuring bridges, see
+\fBmosquitto.conf\fR(5)\&.
+.SH "SIGNALS"
+.PP
+SIGHUP
+.RS 4
+Upon receiving the SIGHUP signal, mosquitto will attempt to reload configuration file data, assuming that the
+\fB\-c\fR
+argument was provided when mosquitto was started\&. Not all configuration parameters can be reloaded without restarting\&. See
+\fBmosquitto.conf\fR(5)
+for details\&.
+.RE
+.PP
+SIGUSR1
+.RS 4
+Upon receiving the SIGUSR1 signal, mosquitto will write the persistence database to disk\&. This signal is only acted upon if persistence is enabled\&.
+.RE
+.PP
+SIGUSR2
+.RS 4
+The SIGUSR2 signal causes mosquitto to print out the current subscription tree, along with information about where retained messages exist\&. This is intended as a testing feature only and may be removed at any time\&.
+.RE
+.SH "FILES"
+.PP
+/etc/mosquitto/mosquitto\&.conf
+.RS 4
+Configuration file\&. See
+\fBmosquitto.conf\fR(5)\&.
+.RE
+.PP
+/var/lib/mosquitto/mosquitto\&.db
+.RS 4
+Persistent message data storage location if persist enabled\&.
+.RE
+.PP
+/etc/hosts\&.allow, /etc/hosts\&.deny
+.RS 4
+Host access control via tcp\-wrappers as described in
+\fBhosts_access\fR(5)\&.
+.RE
+.SH "BUGS"
+.PP
+\fBmosquitto\fR
+bug information can be found at
+https://bugs\&.eclipse\&.org/bugs/describecomponents\&.cgi?product=Mosquitto
+.SH "SEE ALSO"
+\fBmqtt\fR(7), \fBmosquitto-tls\fR(7), \fBmosquitto.conf\fR(5), \fBhosts_access\fR(5), \fBmosquitto_passwd\fR(1), \fBmosquitto_pub\fR(1), \fBmosquitto_sub\fR(1), \fBlibmosquitto\fR(3)
+.SH "THANKS"
+.PP
+Thanks to Andy Stanford\-Clark for being one of the people who came up with MQTT in the first place\&. Thanks to Andy and Nicholas O\*(AqLeary for providing clarifications of the protocol\&.
+.PP
+Thanks also to everybody at the Ubuntu UK Podcast and Linux Outlaws for organising OggCamp, where Andy gave a talk that inspired mosquitto\&.
+.SH "AUTHOR"
+.PP
+Roger Light
+<roger@atchoo\&.org>

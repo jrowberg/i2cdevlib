@@ -1,0 +1,1136 @@
+'\" t
+.\"     Title: mosquitto.conf
+.\"    Author: [see the "Author" section]
+.\" Generator: DocBook XSL Stylesheets v1.78.1 <http://docbook.sf.net/>
+.\"      Date: 06/20/2017
+.\"    Manual: File formats and conventions
+.\"    Source: Mosquitto Project
+.\"  Language: English
+.\"
+.TH "MOSQUITTO\&.CONF" "5" "06/20/2017" "Mosquitto Project" "File formats and conventions"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+mosquitto.conf \- the configuration file for mosquitto
+.SH "SYNOPSIS"
+.HP \w'\fBmosquitto\&.conf\fR\ 'u
+\fBmosquitto\&.conf\fR
+.SH "DESCRIPTION"
+.PP
+\fBmosquitto\&.conf\fR
+is the configuration file for mosquitto\&. This file can reside anywhere as long as mosquitto can read it\&. By default, mosquitto does not need a configuration file and will use the default values listed below\&. See
+\fBmosquitto\fR(8)
+for information on how to load a configuration file\&.
+.SH "FILE FORMAT"
+.PP
+All lines with a # as the very first character are treated as a comment\&.
+.PP
+Configuration lines start with a variable name\&. The variable value is separated from the name by a single space\&.
+.SH "AUTHENTICATION"
+.PP
+The authentication options described below allow a wide range of possibilities in conjunction with the listener options\&. This section aims to clarify the possibilities\&.
+.PP
+The simplest option is to have no authentication at all\&. This is the default if no other options are given\&. Unauthenticated encrypted support is provided by using the certificate based SSL/TLS based options cafile/capath, certfile and keyfile\&.
+.PP
+MQTT provides username/password authentication as part of the protocol\&. Use the password_file option to define the valid usernames and passwords\&. Be sure to use network encryption if you are using this option otherwise the username and password will be vulnerable to interception\&.
+.PP
+When using certificate based encryption there are two options that affect authentication\&. The first is require_certificate, which may be set to true or false\&. If false, the SSL/TLS component of the client will verify the server but there is no requirement for the client to provide anything for the server: authentication is limited to the MQTT built in username/password\&. If require_certificate is true, the client must provide a valid certificate in order to connect successfully\&. In this case, the second option, use_identity_as_username, becomes relevant\&. If set to true, the Common Name (CN) from the client certificate is used instead of the MQTT username for access control purposes\&. The password is not replaced because it is assumed that only authenticated clients have valid certificates\&. If use_identity_as_username is false, the client must authenticate as normal (if required by password_file) through the MQTT options\&.
+.PP
+When using pre\-shared\-key based encryption through the psk_hint and psk_file options, the client must provide a valid identity and key in order to connect to the broker before any MQTT communication takes place\&. If use_identity_as_username is true, the PSK identity is used instead of the MQTT username for access control purposes\&. If use_identity_as_username is false, the client may still authenticate using the MQTT username/password if using the password_file option\&.
+.PP
+Both certificate and PSK based encryption are configured on a per\-listener basis\&.
+.PP
+Authentication plugins can be created to replace the password_file and psk_file options (as well as the ACL options) with e\&.g\&. SQL based lookups\&.
+.PP
+It is possible to support multiple authentication schemes at once\&. A config could be created that had a listener for all of the different encryption options described above and hence a large number of ways of authenticating\&.
+.SH "GENERAL OPTIONS"
+.PP
+\fBacl_file\fR \fIfile path\fR
+.RS 4
+Set the path to an access control list file\&. If defined, the contents of the file are used to control client access to topics on the broker\&.
+.sp
+If this parameter is defined then only the topics listed will have access\&. Topic access is added with lines of the format:
+.sp
+topic [read|write|readwrite] <topic>
+.sp
+The access type is controlled using "read", "write" or "readwrite"\&. This parameter is optional (unless <topic> includes a space character) \- if not given then the access is read/write\&. <topic> can contain the + or # wildcards as in subscriptions\&.
+.sp
+The first set of topics are applied to anonymous clients, assuming
+\fBallow_anonymous\fR
+is true\&. User specific topic ACLs are added after a user line as follows:
+.sp
+user <username>
+.sp
+The username referred to here is the same as in
+\fBpassword_fil\fRe\&. It is not the clientid\&.
+.sp
+It is also possible to define ACLs based on pattern substitution within the topic\&. The form is the same as for the topic keyword, but using pattern as the keyword\&.
+.sp
+pattern [read|write|readwrite] <topic>
+.sp
+The patterns available for substition are:
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+%c to match the client id of the client
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+%u to match the username of the client
+.RE
+.sp
+The substitution pattern must be the only text for that level of hierarchy\&. Pattern ACLs apply to all users even if the "user" keyword has previously been given\&.
+.sp
+Example:
+.sp
+pattern write sensor/%u/data
+.sp
+Allow access for bridge connection messages:
+.sp
+pattern write $SYS/broker/connection/%c/state
+.sp
+If the first character of a line of the ACL file is a # it is treated as a comment\&.
+.sp
+Reloaded on reload signal\&. The currently loaded ACLs will be freed and reloaded\&. Existing subscriptions will be affected after the reload\&.
+.RE
+.PP
+\fBallow_anonymous\fR [ true | false ]
+.RS 4
+Boolean value that determines whether clients that connect without providing a username are allowed to connect\&. If set to
+\fIfalse\fR
+then another means of connection should be created to control authenticated client access\&. Defaults to
+\fItrue\fR\&.
+.sp
+Reloaded on reload signal\&.
+.RE
+.PP
+\fBallow_duplicate_messages\fR [ true | false ]
+.RS 4
+If a client is subscribed to multiple subscriptions that overlap, e\&.g\&. foo/# and foo/+/baz , then MQTT expects that when the broker receives a message on a topic that matches both subscriptions, such as foo/bar/baz, then the client should only receive the message once\&.
+.sp
+Mosquitto keeps track of which clients a message has been sent to in order to meet this requirement\&. This option allows this behaviour to be disabled, which may be useful if you have a large number of clients subscribed to the same set of topics and want to minimise memory usage\&.
+.sp
+It can be safely set to
+\fItrue\fR
+if you know in advance that your clients will never have overlapping subscriptions, otherwise your clients must be able to correctly deal with duplicate messages even when then have QoS=2\&.
+.sp
+Defaults to
+\fItrue\fR\&.
+.sp
+Reloaded on reload signal\&.
+.RE
+.PP
+\fBauth_opt_*\fR \fIvalue\fR
+.RS 4
+Options to be passed to the auth plugin\&. See the specific plugin instructions\&.
+.RE
+.PP
+\fBauth_plugin\fR \fIfile path\fR
+.RS 4
+Specify an external module to use for authentication and access control\&. This allows custom username/password and access control functions to be created\&.
+.sp
+Not currently reloaded on reload signal\&.
+.RE
+.PP
+\fBautosave_interval\fR \fIseconds\fR
+.RS 4
+The number of seconds that mosquitto will wait between each time it saves the in\-memory database to disk\&. If set to 0, the in\-memory database will only be saved when mosquitto exits or when receiving the SIGUSR1 signal\&. Note that this setting only has an effect if persistence is enabled\&. Defaults to 1800 seconds (30 minutes)\&.
+.sp
+Reloaded on reload signal\&.
+.RE
+.PP
+\fBautosave_on_changes\fR [ true | false ]
+.RS 4
+If
+\fItrue\fR, mosquitto will count the number of subscription changes, retained messages received and queued messages and if the total exceeds
+\fBautosave_interval\fR
+then the in\-memory database will be saved to disk\&. If
+\fIfalse\fR, mosquitto will save the in\-memory database to disk by treating
+\fBautosave_interval\fR
+as a time in seconds\&.
+.sp
+Reloaded on reload signal\&.
+.RE
+.PP
+\fBclientid_prefixes\fR \fIprefix\fR
+.RS 4
+If defined, only clients that have a clientid with a prefix that matches clientid_prefixes will be allowed to connect to the broker\&. For example, setting "secure\-" here would mean a client "secure\-client" could connect but another with clientid "mqtt" couldn\*(Aqt\&. By default, all client ids are valid\&.
+.sp
+Reloaded on reload signal\&. Note that currently connected clients will be unaffected by any changes\&.
+.RE
+.PP
+\fBconnection_messages\fR [ true | false ]
+.RS 4
+If set to
+\fItrue\fR, the log will include entries when clients connect and disconnect\&. If set to
+\fIfalse\fR, these entries will not appear\&.
+.sp
+Reloaded on reload signal\&.
+.RE
+.PP
+\fBinclude_dir\fR \fIdir\fR
+.RS 4
+External configuration files may be included by using the include_dir option\&. This defines a directory that will be searched for config files\&. All files that end in \*(Aq\&.conf\*(Aq will be loaded as a configuration file\&. It is best to have this as the last option in the main file\&. This option will only be processed from the main configuration file\&. The directory specified must not contain the main configuration file\&.
+.RE
+.PP
+\fBlog_dest\fR \fIdestinations\fR
+.RS 4
+Send log messages to a particular destination\&. Possible destinations are:
+\fBstdout\fR\fBstderr\fR\fBsyslog\fR\fBtopic\fR\&.
+.sp
+\fBstdout\fR
+and
+\fBstderr\fR
+log to the console on the named output\&.
+.sp
+\fBsyslog\fR
+uses the userspace syslog facility which usually ends up in /var/log/messages or similar and topic logs to the broker topic \*(Aq$SYS/broker/log/<severity>\*(Aq, where severity is one of D, E, W, N, I, M which are debug, error, warning, notice, information and message\&. Message type severity is used by the subscribe and unsubscribe log_type options and publishes log messages at $SYS/broker/log/M/subscribe and $SYS/broker/log/M/unsubscribe\&.
+.sp
+The
+\fBfile\fR
+destination requires an additional parameter which is the file to be logged to, e\&.g\&. "log_dest file /var/log/mosquitto\&.log"\&. The file will be closed and reopened when the broker receives a HUP signal\&. Only a single file destination may be configured\&.
+.sp
+Use "log_dest none" if you wish to disable logging\&. Defaults to stderr\&. This option may be specified multiple times\&.
+.sp
+Note that if the broker is running as a Windows service it will default to "log_dest none" and neither stdout nor stderr logging is available\&.
+.sp
+Reloaded on reload signal\&.
+.RE
+.PP
+\fBlog_facility\fR \fIlocal facility\fR
+.RS 4
+If using syslog logging (not on Windows), messages will be logged to the "daemon" facility by default\&. Use the
+\fBlog_facility\fR
+option to choose which of local0 to local7 to log to instead\&. The option value should be an integer value, e\&.g\&. "log_facility 5" to use local5\&.
+.RE
+.PP
+\fBlog_timestamp\fR [ true | false ]
+.RS 4
+Boolean value, if set to
+\fItrue\fR
+a timestamp value will be added to each log entry\&. The default is
+\fItrue\fR\&.
+.sp
+Reloaded on reload signal\&.
+.RE
+.PP
+\fBlog_type\fR \fItypes\fR
+.RS 4
+Choose types of messages to log\&. Possible types are:
+\fIdebug\fR,
+\fIerror\fR,
+\fIwarning\fR,
+\fInotice\fR,
+\fIinformation\fR,
+\fIsubscribe\fR,
+\fIunsubscribe\fR,
+\fIwebsockets\fR,
+\fInone\fR,
+\fIall\fR\&.
+.sp
+Defaults to
+\fIerror\fR,
+\fIwarning\fR,
+\fInotice \fRand
+\fIinformation\fR\&. This option may be specified multiple times\&. Note that the
+\fIdebug \fRtype (used for decoding incoming/outgoing network packets) is never logged in topics\&.
+.sp
+Reloaded on reload signal\&.
+.RE
+.PP
+\fBmax_inflight_messages\fR \fIcount\fR
+.RS 4
+The maximum number of QoS 1 or 2 messages that can be in the process of being transmitted simultaneously\&. This includes messages currently going through handshakes and messages that are being retried\&. Defaults to 20\&. Set to 0 for no maximum\&. If set to 1, this will guarantee in\-order delivery of messages\&.
+.sp
+Reloaded on reload signal\&.
+.RE
+.PP
+\fBmax_queued_messages\fR \fIcount\fR
+.RS 4
+The maximum number of QoS 1 or 2 messages to hold in the queue above those messages that are currently in flight\&. Defaults to 100\&. Set to 0 for no maximum (not recommended)\&. See also the
+\fBqueue_qos0_messages\fR
+option\&.
+.sp
+Reloaded on reload signal\&.
+.RE
+.PP
+\fBmessage_size_limit\fR \fIlimit\fR
+.RS 4
+This option sets the maximum publish payload size that the broker will allow\&. Received messages that exceed this size will not be accepted by the broker\&. The default value is 0, which means that all valid MQTT messages are accepted\&. MQTT imposes a maximum payload size of 268435455 bytes\&.
+.RE
+.PP
+\fBpassword_file\fR \fIfile path\fR
+.RS 4
+Set the path to a password file\&. If defined, the contents of the file are used to control client access to the broker\&. The file can be created using the
+\fBmosquitto_passwd\fR(1)
+utility\&. If mosquitto is compiled without TLS support (it is recommended that TLS support is included), then the password file should be a text file with each line in the format "username:password", where the colon and password are optional but recommended\&. If
+\fBallow_anonymous\fR
+is set to
+\fIfalse\fR, only users defined in this file will be able to connect\&. Setting
+\fBallow_anonymous\fR
+to
+\fItrue\fR
+when
+\fIpassword_file\fRis defined is valid and could be used with acl_file to have e\&.g\&. read only guest/anonymous accounts and defined users that can publish\&.
+.sp
+Reloaded on reload signal\&. The currently loaded username and password data will be freed and reloaded\&. Clients that are already connected will not be affected\&.
+.sp
+See also
+\fBmosquitto_passwd\fR(1)\&.
+.RE
+.PP
+\fBpersistence\fR [ true | false ]
+.RS 4
+If
+\fItrue\fR, connection, subscription and message data will be written to the disk in mosquitto\&.db at the location dictated by persistence_location\&. When mosquitto is restarted, it will reload the information stored in mosquitto\&.db\&. The data will be written to disk when mosquitto closes and also at periodic intervals as defined by autosave_interval\&. Writing of the persistence database may also be forced by sending mosquitto the SIGUSR1 signal\&. If
+\fIfalse\fR, the data will be stored in memory only\&. Defaults to
+\fIfalse\fR\&.
+.sp
+Reloaded on reload signal\&.
+.RE
+.PP
+\fBpersistence_file\fR \fIfile name\fR
+.RS 4
+The filename to use for the persistent database\&. Defaults to mosquitto\&.db\&.
+.sp
+Reloaded on reload signal\&.
+.RE
+.PP
+\fBpersistence_location\fR \fIpath\fR
+.RS 4
+The path where the persistence database should be stored\&. Must end in a trailing slash\&. If not given, then the current directory is used\&.
+.sp
+Reloaded on reload signal\&.
+.RE
+.PP
+\fBpersistent_client_expiration\fR \fIduration\fR
+.RS 4
+This option allows persistent clients (those with clean session set to false) to be removed if they do not reconnect within a certain time frame\&. This is a non\-standard option\&. As far as the MQTT spec is concerned, persistent clients persist forever\&.
+.sp
+Badly designed clients may set clean session to false whilst using a randomly generated client id\&. This leads to persistent clients that will never reconnect\&. This option allows these clients to be removed\&.
+.sp
+The expiration period should be an integer followed by one of h d w m y for hour, day, week, month and year respectively\&. For example:
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+persistent_client_expiration 2m
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+persistent_client_expiration 14d
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+persistent_client_expiration 1y
+.RE
+.sp
+As this is a non\-standard option, the default if not set is to never expire persistent clients\&.
+.sp
+Reloaded on reload signal\&.
+.RE
+.PP
+\fBpid_file\fR \fIfile path\fR
+.RS 4
+Write a pid file to the file specified\&. If not given (the default), no pid file will be written\&. If the pid file cannot be written, mosquitto will exit\&. This option only has an effect is mosquitto is run in daemon mode\&.
+.sp
+If mosquitto is being automatically started by an init script it will usually be required to write a pid file\&. This should then be configured as e\&.g\&. /var/run/mosquitto\&.pid
+.sp
+Not reloaded on reload signal\&.
+.RE
+.PP
+\fBpsk_file\fR \fIfile path\fR
+.RS 4
+Set the path to a pre\-shared\-key file\&. This option requires a listener to be have PSK support enabled\&. If defined, the contents of the file are used to control client access to the broker\&. Each line should be in the format "identity:key", where the key is a hexadecimal string with no leading "0x"\&. A client connecting to a listener that has PSK support enabled must provide a matching identity and PSK to allow the encrypted connection to proceed\&.
+.sp
+Reloaded on reload signal\&. The currently loaded identity and key data will be freed and reloaded\&. Clients that are already connected will not be affected\&.
+.RE
+.PP
+\fBqueue_qos0_messages\fR [ true | false ]
+.RS 4
+Set to
+\fItrue\fR
+to queue messages with QoS 0 when a persistent client is disconnected\&. These messages are included in the limit imposed by max_queued_messages\&. Defaults to
+\fIfalse\fR\&.
+.sp
+Note that the MQTT v3\&.1 spec states that only QoS 1 and 2 messages should be saved in this situation so this is a non\-standard option\&.
+.sp
+Reloaded on reload signal\&.
+.RE
+.PP
+\fBretained_persistence\fR [ true | false ]
+.RS 4
+This is a synonym of the
+\fBpersistence\fR
+option\&.
+.sp
+Reloaded on reload signal\&.
+.RE
+.PP
+\fBretry_interval\fR \fIseconds\fR
+.RS 4
+The integer number of seconds after a QoS=1 or QoS=2 message has been sent that mosquitto will wait before retrying when no response is received\&. If unset, defaults to 20 seconds\&.
+.sp
+Reloaded on reload signal\&.
+.RE
+.PP
+\fBstore_clean_interval\fR \fIseconds\fR
+.RS 4
+The integer number of seconds between the internal message store being cleaned of messages that are no longer referenced\&. Lower values will result in lower memory usage but more processor time, higher values will have the opposite effect\&. Setting a value of 0 means the unreferenced messages will be disposed of as quickly as possible\&. Defaults to 10 seconds\&.
+.sp
+Reloaded on reload signal\&.
+.RE
+.PP
+\fBsys_interval\fR \fIseconds\fR
+.RS 4
+The integer number of seconds between updates of the $SYS subscription hierarchy, which provides status information about the broker\&. If unset, defaults to 10 seconds\&.
+.sp
+Set to 0 to disable publishing the $SYS hierarchy completely\&.
+.sp
+Reloaded on reload signal\&.
+.RE
+.PP
+\fBupgrade_outgoing_qos\fR [ true | false ]
+.RS 4
+The MQTT specification requires that the QoS of a message delivered to a subscriber is never upgraded to match the QoS of the subscription\&. Enabling this option changes this behaviour\&. If
+\fBupgrade_outgoing_qos\fR
+is set
+\fItrue\fR, messages sent to a subscriber will always match the QoS of its subscription\&. This is a non\-standard option not provided for by the spec\&. Defaults to
+\fIfalse\fR\&.
+.sp
+Reloaded on reload signal\&.
+.RE
+.PP
+\fBuser\fR \fIusername\fR
+.RS 4
+When run as root, change to this user and its primary group on startup\&. If mosquitto is unable to change to this user and group, it will exit with an error\&. The user specified must have read/write access to the persistence database if it is to be written\&. If run as a non\-root user, this setting has no effect\&. Defaults to mosquitto\&.
+.sp
+This setting has no effect on Windows and so you should run mosquitto as the user you wish it to run as\&.
+.sp
+Not reloaded on reload signal\&.
+.RE
+.SH "LISTENERS"
+.PP
+The network ports that mosquitto listens on can be controlled using listeners\&. The default listener options can be overridden and further listeners can be created\&.
+.SS "General Options"
+.PP
+\fBbind_address\fR \fIaddress\fR
+.RS 4
+Listen for incoming network connections on the specified IP address/hostname only\&. This is useful to restrict access to certain network interfaces\&. To restrict access to mosquitto to the local host only, use "bind_address localhost"\&. This only applies to the default listener\&. Use the listener variable to control other listeners\&.
+.sp
+Not reloaded on reload signal\&.
+.RE
+.PP
+\fBhttp_dir\fR \fIdirectory\fR
+.RS 4
+When a listener is using the websockets protocol, it is possible to serve http data as well\&. Set
+\fBhttp_dir\fR
+to a directory which contains the files you wish to serve\&. If this option is not specified, then no normal http connections will be possible\&.
+.sp
+Not reloaded on reload signal\&.
+.RE
+.PP
+\fBlistener\fR \fIport\fR
+.RS 4
+Listen for incoming network connection on the specified port\&. A second optional argument allows the listener to be bound to a specific ip address/hostname\&. If this variable is used and neither
+\fBbind_address\fR
+nor
+\fBport\fR
+are used then the default listener will not be started\&. This option may be specified multiple times\&. See also the
+\fBmount_point\fR
+option\&.
+.sp
+Not reloaded on reload signal\&.
+.RE
+.PP
+\fBmax_connections\fR \fIcount\fR
+.RS 4
+Limit the total number of clients connected for the current listener\&. Set to
+\-1
+to have "unlimited" connections\&. Note that other limits may be imposed that are outside the control of mosquitto\&. See e\&.g\&.
+\fBlimits.conf\fR(5)\&.
+.sp
+Not reloaded on reload signal\&.
+.RE
+.PP
+\fBmount_point\fR \fItopic prefix\fR
+.RS 4
+This option is used with the listener option to isolate groups of clients\&. When a client connects to a listener which uses this option, the string argument is attached to the start of all topics for this client\&. This prefix is removed when any messages are sent to the client\&. This means a client connected to a listener with mount point
+\fIexample\fR
+can only see messages that are published in the topic hierarchy
+\fIexample\fR
+and above\&.
+.sp
+Not reloaded on reload signal\&.
+.RE
+.PP
+\fBport\fR \fIport number\fR
+.RS 4
+Set the network port for the default listener to listen on\&. Defaults to 1883\&.
+.sp
+Not reloaded on reload signal\&.
+.RE
+.PP
+\fBprotocol\fR \fIvalue\fR
+.RS 4
+Set the protocol to accept for this listener\&. Can be
+\fBmqtt\fR, the default, or
+\fBwebsockets\fR
+if available\&.
+.sp
+Websockets support is currently disabled by default at compile time\&. Certificate based TLS may be used with websockets, except that only the
+\fBcafile\fR,
+\fBcertfile\fR,
+\fBkeyfile\fR
+and
+\fBciphers\fR
+options are supported\&.
+.sp
+Not reloaded on reload signal\&.
+.RE
+.PP
+\fBuse_username_as_clientid\fR [ true | false ]
+.RS 4
+Set
+\fBuse_username_as_clientid\fR
+to true to replace the clientid that a client connected with with its username\&. This allows authentication to be tied to the clientid, which means that it is possible to prevent one client disconnecting another by using the same clientid\&. Defaults to false\&.
+.sp
+If a client connects with no username it will be disconnected as not authorised when this option is set to true\&. Do not use in conjunction with
+\fBclientid_prefixes\fR\&.
+.sp
+See also
+\fBuse_identity_as_username\fR\&.
+.sp
+Not reloaded on reload signal\&.
+.RE
+.PP
+\fBwebsockets_log_level\fR \fIlevel\fR
+.RS 4
+Change the websockets logging level\&. This is a global option, it is not possible to set per listener\&. This is an integer that is interpreted by libwebsockets as a bit mask for its lws_log_levels enum\&. See the libwebsockets documentation for more details\&.
+.sp
+To use this option,
+\fBlog_type websockets\fR
+must also be enabled\&. Defaults to 0\&.
+.RE
+.SS "Certificate based SSL/TLS Support"
+.PP
+The following options are available for all listeners to configure certificate based SSL support\&. See also "Pre\-shared\-key based SSL/TLS support"\&.
+.PP
+\fBcafile\fR \fIfile path\fR
+.RS 4
+At least one of
+\fBcafile\fR
+or
+\fBcapath\fR
+must be provided to allow SSL support\&.
+.sp
+\fBcafile\fR
+is used to define the path to a file containing the PEM encoded CA certificates that are trusted\&.
+.RE
+.PP
+\fBcapath\fR \fIdirectory path\fR
+.RS 4
+At least one of
+\fBcafile\fR
+or
+\fBcapath\fR
+must be provided to allow SSL support\&.
+.sp
+\fBcapath\fR
+is used to define a directory that contains PEM encoded CA certificates that are trusted\&. For
+\fBcapath\fR
+to work correctly, the certificates files must have "\&.pem" as the file ending and you must run "c_rehash <path to capath>" each time you add/remove a certificate\&.
+.RE
+.PP
+\fBcertfile\fR \fIfile path\fR
+.RS 4
+Path to the PEM encoded server certificate\&.
+.RE
+.PP
+\fBciphers\fR \fIcipher:list\fR
+.RS 4
+The list of allowed ciphers, each separated with a colon\&. Available ciphers can be obtained using the "openssl ciphers" command\&.
+.RE
+.PP
+\fBcrlfile\fR \fIfile path\fR
+.RS 4
+If you have
+\fBrequire_certificate\fR
+set to
+\fItrue\fR, you can create a certificate revocation list file to revoke access to particular client certificates\&. If you have done this, use crlfile to point to the PEM encoded revocation file\&.
+.RE
+.PP
+\fBkeyfile\fR \fIfile path\fR
+.RS 4
+Path to the PEM encoded keyfile\&.
+.RE
+.PP
+\fBrequire_certificate\fR [ true | false ]
+.RS 4
+By default an SSL/TLS enabled listener will operate in a similar fashion to a https enabled web server, in that the server has a certificate signed by a CA and the client will verify that it is a trusted certificate\&. The overall aim is encryption of the network traffic\&. By setting
+\fBrequire_certificate\fR
+to
+\fItrue\fR, the client must provide a valid certificate in order for the network connection to proceed\&. This allows access to the broker to be controlled outside of the mechanisms provided by MQTT\&.
+.RE
+.PP
+\fBtls_version\fR \fIversion\fR
+.RS 4
+Configure the version of the TLS protocol to be used for this listener\&. Possible values are
+\fItlsv1\&.2\fR,
+\fItlsv1\&.1\fR
+and
+\fItlsv1\fR\&. If left unset, the default of allowing all of TLS v1\&.2, v1\&.1 and v1\&.0 is used\&.
+.RE
+.PP
+\fBuse_identity_as_username\fR [ true | false ]
+.RS 4
+If
+\fBrequire_certificate\fR
+is
+\fItrue\fR, you may set
+\fBuse_identity_as_username\fR
+to
+\fItrue\fR
+to use the CN value from the client certificate as a username\&. If this is
+\fItrue\fR, the
+\fBpassword_file\fR
+option will not be used for this listener\&.
+.RE
+.SS "Pre\-shared\-key based SSL/TLS Support"
+.PP
+The following options are available for all listeners to configure pre\-shared\-key based SSL support\&. See also "Certificate based SSL/TLS support"\&.
+.PP
+\fBciphers\fR \fIcipher:list\fR
+.RS 4
+When using PSK, the encryption ciphers used will be chosen from the list of available PSK ciphers\&. If you want to control which ciphers are available, use this option\&. The list of available ciphers can be optained using the "openssl ciphers" command and should be provided in the same format as the output of that command\&.
+.RE
+.PP
+\fBpsk_hint\fR \fIhint\fR
+.RS 4
+The
+\fBpsk_hint\fR
+option enables pre\-shared\-key support for this listener and also acts as an identifier for this listener\&. The hint is sent to clients and may be used locally to aid authentication\&. The hint is a free form string that doesn\*(Aqt have much meaning in itself, so feel free to be creative\&.
+.sp
+If this option is provided, see
+\fBpsk_file\fR
+to define the pre\-shared keys to be used or create a security plugin to handle them\&.
+.RE
+.PP
+\fBtls_version\fR \fIversion\fR
+.RS 4
+Configure the version of the TLS protocol to be used for this listener\&. Possible values are
+\fItlsv1\&.2\fR,
+\fItlsv1\&.1\fR
+and
+\fItlsv1\fR\&. If left unset, the default of allowing all of TLS v1\&.2, v1\&.1 and v1\&.0 is used\&.
+.RE
+.PP
+\fBuse_identity_as_username\fR [ true | false ]
+.RS 4
+Set
+\fBuse_identity_as_username\fR
+to have the psk identity sent by the client used as its username\&. The username will be checked as normal, so
+\fBpassword_file\fR
+or another means of authentication checking must be used\&. No password will be used\&.
+.RE
+.SH "CONFIGURING BRIDGES"
+.PP
+Multiple bridges (connections to other brokers) can be configured using the following variables\&.
+.PP
+Bridges cannot currently be reloaded on reload signal\&.
+.PP
+\fBaddress\fR \fIaddress[:port]\fR \fI[address[:port]]\fR, \fBaddresses\fR \fIaddress[:port]\fR \fI[address[:port]]\fR
+.RS 4
+Specify the address and optionally the port of the bridge to connect to\&. This must be given for each bridge connection\&. If the port is not specified, the default of 1883 is used\&.
+.sp
+Multiple host addresses can be specified on the address config\&. See the
+\fBround_robin\fR
+option for more details on the behaviour of bridges with multiple addresses\&.
+.RE
+.PP
+\fBbridge_attempt_unsubscribe\fR [ true | false ]
+.RS 4
+If a bridge has topics that have "out" direction, the default behaviour is to send an unsubscribe request to the remote broker on that topic\&. This means that changing a topic direction from "in" to "out" will not keep receiving incoming messages\&. Sending these unsubscribe requests is not always desirable, setting
+\fBbridge_attempt_unsubscribe\fR
+to
+\fIfalse\fR
+will disable sending the unsubscribe request\&. Defaults to
+\fItrue\fR\&.
+.RE
+.PP
+\fBbridge_protocol_version\fR \fIversion\fR
+.RS 4
+Set the version of the MQTT protocol to use with for this bridge\&. Can be one of
+\fImqttv31\fR
+or
+\fImqttv311\fR\&. Defaults to
+\fImqttv31\fR\&.
+.RE
+.PP
+\fBcleansession\fR [ true | false ]
+.RS 4
+Set the clean session option for this bridge\&. Setting to
+\fIfalse\fR
+(the default), means that all subscriptions on the remote broker are kept in case of the network connection dropping\&. If set to
+\fItrue\fR, all subscriptions and messages on the remote broker will be cleaned up if the connection drops\&. Note that setting to
+\fItrue\fR
+may cause a large amount of retained messages to be sent each time the bridge reconnects\&.
+.sp
+If you are using bridges with
+\fBcleansession\fR
+set to
+\fIfalse\fR
+(the default), then you may get unexpected behaviour from incoming topics if you change what topics you are subscribing to\&. This is because the remote broker keeps the subscription for the old topic\&. If you have this problem, connect your bridge with
+\fBcleansession\fR
+set to
+\fItrue\fR, then reconnect with cleansession set to
+\fIfalse\fR
+as normal\&.
+.RE
+.PP
+\fBconnection\fR \fIname\fR
+.RS 4
+This variable marks the start of a new bridge connection\&. It is also used to give the bridge a name which is used as the client id on the remote broker\&.
+.RE
+.PP
+\fBkeepalive_interval\fR \fIseconds\fR
+.RS 4
+Set the number of seconds after which the bridge should send a ping if no other traffic has occurred\&. Defaults to 60\&. A minimum value of 5 seconds is allowed\&.
+.RE
+.PP
+\fBidle_timeout\fR \fIseconds\fR
+.RS 4
+Set the amount of time a bridge using the lazy start type must be idle before it will be stopped\&. Defaults to 60 seconds\&.
+.RE
+.PP
+\fBlocal_clientid\fR \fIid\fR
+.RS 4
+Set the clientid to use on the local broker\&. If not defined, this defaults to
+\fBlocal\&.<clientid>\fR\&. If you are bridging a broker to itself, it is important that local_clientid and clientid do not match\&.
+.RE
+.PP
+\fBlocal_password\fR \fIpassword\fR
+.RS 4
+Configure the password to be used when connecting this bridge to the local broker\&. This may be important when authentication and ACLs are being used\&.
+.RE
+.PP
+\fBlocal_username\fR \fIusername\fR
+.RS 4
+Configure the username to be used when connecting this bridge to the local broker\&. This may be important when authentication and ACLs are being used\&.
+.RE
+.PP
+\fBnotifications\fR [ true | false ]
+.RS 4
+If set to
+\fItrue\fR, publish notification messages to the local and remote brokers giving information about the state of the bridge connection\&. Retained messages are published to the topic $SYS/broker/connection/<clientid>/state unless otherwise set with
+\fBnotification_topic\fRs\&. If the message is 1 then the connection is active, or 0 if the connection has failed\&. Defaults to
+\fItrue\fR\&.
+.RE
+.PP
+\fBnotification_topic\fR \fItopic\fR
+.RS 4
+Choose the topic on which notifications will be published for this bridge\&. If not set the messages will be sent on the topic $SYS/broker/connection/<clientid>/state\&.
+.RE
+.PP
+\fBremote_clientid\fR \fIid\fR
+.RS 4
+Set the client id for this bridge connection\&. If not defined, this defaults to \*(Aqname\&.hostname\*(Aq, where name is the connection name and hostname is the hostname of this computer\&.
+.sp
+This replaces the old "clientid" option to avoid confusion with local/remote sides of the bridge\&. "clientid" remains valid for the time being\&.
+.RE
+.PP
+\fBremote_password\fR \fIvalue\fR
+.RS 4
+Configure a password for the bridge\&. This is used for authentication purposes when connecting to a broker that supports MQTT v3\&.1 and up and requires a username and/or password to connect\&. This option is only valid if a remote_username is also supplied\&.
+.sp
+This replaces the old "password" option to avoid confusion with local/remote sides of the bridge\&. "password" remains valid for the time being\&.
+.RE
+.PP
+\fBremote_username\fR \fIname\fR
+.RS 4
+Configure a username for the bridge\&. This is used for authentication purposes when connecting to a broker that supports MQTT v3\&.1 and up and requires a username and/or password to connect\&. See also the
+\fBremote_password\fR
+option\&.
+.sp
+This replaces the old "username" option to avoid confusion with local/remote sides of the bridge\&. "username" remains valid for the time being\&.
+.RE
+.PP
+\fBrestart_timeout\fR \fIvalue\fR
+.RS 4
+Set the amount of time a bridge using the automatic start type will wait until attempting to reconnect\&. Defaults to 30 seconds\&.
+.RE
+.PP
+\fBround_robin\fR [ true | false ]
+.RS 4
+If the bridge has more than one address given in the address/addresses configuration, the round_robin option defines the behaviour of the bridge on a failure of the bridge connection\&. If round_robin is
+\fIfalse\fR, the default value, then the first address is treated as the main bridge connection\&. If the connection fails, the other secondary addresses will be attempted in turn\&. Whilst connected to a secondary bridge, the bridge will periodically attempt to reconnect to the main bridge until successful\&.
+.sp
+If round_robin is
+\fItrue\fR, then all addresses are treated as equals\&. If a connection fails, the next address will be tried and if successful will remain connected until it fails\&.
+.RE
+.PP
+\fBstart_type\fR [ automatic | lazy | once ]
+.RS 4
+Set the start type of the bridge\&. This controls how the bridge starts and can be one of three types:
+\fIautomatic\fR,
+\fIlazy \fRand
+\fIonce\fR\&. Note that RSMB provides a fourth start type "manual" which isn\*(Aqt currently supported by mosquitto\&.
+.sp
+\fIautomatic\fR
+is the default start type and means that the bridge connection will be started automatically when the broker starts and also restarted after a short delay (30 seconds) if the connection fails\&.
+.sp
+Bridges using the
+\fIlazy\fR
+start type will be started automatically when the number of queued messages exceeds the number set with the
+\fBthreshold\fR
+option\&. It will be stopped automatically after the time set by the
+\fBidle_timeout\fR
+parameter\&. Use this start type if you wish the connection to only be active when it is needed\&.
+.sp
+A bridge using the
+\fIonce\fR
+start type will be started automatically when the broker starts but will not be restarted if the connection fails\&.
+.RE
+.PP
+\fBthreshold\fR \fIcount\fR
+.RS 4
+Set the number of messages that need to be queued for a bridge with lazy start type to be restarted\&. Defaults to 10 messages\&.
+.RE
+.PP
+\fBtopic\fR \fIpattern\fR [[[ out | in | both ] qos\-level] local\-prefix remote\-prefix]
+.RS 4
+Define a topic pattern to be shared between the two brokers\&. Any topics matching the pattern (which may include wildcards) are shared\&. The second parameter defines the direction that the messages will be shared in, so it is possible to import messages from a remote broker using
+\fIin\fR, export messages to a remote broker using
+\fIout\fR
+or share messages in both directions\&. If this parameter is not defined, the default of
+\fIout\fR
+is used\&. The QoS level defines the publish/subscribe QoS level used for this topic and defaults to 0\&.
+.sp
+The
+\fIlocal\-prefix\fR
+and
+\fIremote\-prefix\fR
+options allow topics to be remapped when publishing to and receiving from remote brokers\&. This allows a topic tree from the local broker to be inserted into the topic tree of the remote broker at an appropriate place\&.
+.sp
+For incoming topics, the bridge will prepend the pattern with the remote prefix and subscribe to the resulting topic on the remote broker\&. When a matching incoming message is received, the remote prefix will be removed from the topic and then the local prefix added\&.
+.sp
+For outgoing topics, the bridge will prepend the pattern with the local prefix and subscribe to the resulting topic on the local broker\&. When an outgoing message is processed, the local prefix will be removed from the topic then the remote prefix added\&.
+.sp
+When using topic mapping, an empty prefix can be defined using the place marker
+\fI""\fR\&. Using the empty marker for the topic itself is also valid\&. The table below defines what combination of empty or value is valid\&.
+.TS
+allbox tab(:);
+lB lB lB lB lB.
+T{
+\ \&
+T}:T{
+\fITopic\fR
+T}:T{
+\fILocal Prefix\fR
+T}:T{
+\fIRemote Prefix\fR
+T}:T{
+\fIValidity\fR
+T}
+.T&
+l l l l l
+l l l l l
+l l l l l
+l l l l l
+l l l l l
+l l l l l
+l l l l l
+l l l l l.
+T{
+1
+T}:T{
+value
+T}:T{
+value
+T}:T{
+value
+T}:T{
+valid
+T}
+T{
+2
+T}:T{
+value
+T}:T{
+value
+T}:T{
+""
+T}:T{
+valid
+T}
+T{
+3
+T}:T{
+value
+T}:T{
+""
+T}:T{
+value
+T}:T{
+valid
+T}
+T{
+4
+T}:T{
+value
+T}:T{
+""
+T}:T{
+""
+T}:T{
+valid (no remapping)
+T}
+T{
+5
+T}:T{
+""
+T}:T{
+value
+T}:T{
+value
+T}:T{
+valid (remap single local topic to remote)
+T}
+T{
+6
+T}:T{
+""
+T}:T{
+value
+T}:T{
+""
+T}:T{
+invalid
+T}
+T{
+7
+T}:T{
+""
+T}:T{
+""
+T}:T{
+value
+T}:T{
+invalid
+T}
+T{
+8
+T}:T{
+""
+T}:T{
+""
+T}:T{
+""
+T}:T{
+invalid
+T}
+.TE
+.sp 1
+To remap an entire topic tree, use e\&.g\&.:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+topic # both 2 local/topic/ remote/topic/
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+This option can be specified multiple times per bridge\&.
+.sp
+Care must be taken to ensure that loops are not created with this option\&. If you are experiencing high CPU load from a broker, it is possible that you have a loop where each broker is forever forwarding each other the same messages\&.
+.sp
+See also the
+\fBcleansession\fR
+option if you have messages arriving on unexpected topics when using incoming topics\&.
+.PP
+\fBExample\ \&Bridge Topic Remapping.\ \&\fR
+The configuration below connects a bridge to the broker at
+\fBtest\&.mosquitto\&.org\fR\&. It subscribes to the remote topic
+\fB$SYS/broker/clients/total\fR
+and republishes the messages received to the local topic
+\fBtest/mosquitto/org/clients/total\fR
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+connection test\-mosquitto\-org
+address test\&.mosquitto\&.org
+cleansession true
+topic clients/total in 0 test/mosquitto/org $SYS/broker/
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.PP
+\fBtry_private\fR [ true | false ]
+.RS 4
+If try_private is set to
+\fItrue\fR, the bridge will attempt to indicate to the remote broker that it is a bridge not an ordinary client\&. If successful, this means that loop detection will be more effective and that retained messages will be propagated correctly\&. Not all brokers support this feature so it may be necessary to set
+\fBtry_private\fR
+to
+\fIfalse\fR
+if your bridge does not connect properly\&.
+.sp
+Defaults to
+\fItrue\fR\&.
+.RE
+.SS "SSL/TLS Support"
+.PP
+The following options are available for all bridges to configure SSL/TLS support\&.
+.PP
+\fBbridge_attempt_unsubscribe\fR [ true | false ]
+.RS 4
+If a bridge has topics that have "out" direction, the default behaviour is to send an unsubscribe request to the remote broker on that topic\&. This means that changing a topic direction from "in" to "out" will not keep receiving incoming messages\&. Sending these unsubscribe requests is not always desirable, setting
+\fBbridge_attempt_unsubscribe\fR
+to
+\fIfalse\fR
+will disable sending the unsubscribe request\&.
+.RE
+.PP
+\fBbridge_cafile\fR \fIfile path\fR
+.RS 4
+One of
+\fBbridge_cafile\fR
+or
+\fBbridge_capath\fR
+must be provided to allow SSL/TLS support\&.
+.sp
+bridge_cafile is used to define the path to a file containing the PEM encoded CA certificates that have signed the certificate for the remote broker\&.
+.RE
+.PP
+\fBbridge_capath\fR \fIfile path\fR
+.RS 4
+One of
+\fBbridge_capath\fR
+or
+\fBbridge_capath\fR
+must be provided to allow SSL/TLS support\&.
+.sp
+bridge_capath is used to define the path to a directory containing the PEM encoded CA certificates that have signed the certificate for the remote broker\&. For bridge_capath to work correctly, the certificate files must have "\&.crt" as the file ending and you must run "c_rehash <path to bridge_capath>" each time you add/remove a certificate\&.
+.RE
+.PP
+\fBbridge_certfile\fR \fIfile path\fR
+.RS 4
+Path to the PEM encoded client certificate for this bridge, if required by the remote broker\&.
+.RE
+.PP
+\fBbridge_identity\fR \fIidentity\fR
+.RS 4
+Pre\-shared\-key encryption provides an alternative to certificate based encryption\&. A bridge can be configured to use PSK with the
+\fBbridge_identity\fR
+and
+\fBbridge_psk\fR
+options\&. This is the client identity used with PSK encryption\&. Only one of certificate and PSK based encryption can be used on one bridge at once\&.
+.RE
+.PP
+\fBbridge_insecure\fR [ true | false ]
+.RS 4
+When using certificate based TLS, the bridge will attempt to verify the hostname provided in the remote certificate matches the host/address being connected to\&. This may cause problems in testing scenarios, so
+\fBbridge_insecure\fR
+may be set to
+\fIfalse\fR
+to disable the hostname verification\&.
+.sp
+Setting this option to
+\fItrue\fR
+means that a malicious third party could potentially inpersonate your server, so it should always be set to
+\fIfalse\fR
+in production environments\&.
+.RE
+.PP
+\fBbridge_keyfile\fR \fIfile path\fR
+.RS 4
+Path to the PEM encoded private key for this bridge, if required by the remote broker\&.
+.RE
+.PP
+\fBbridge_psk\fR \fIkey\fR
+.RS 4
+Pre\-shared\-key encryption provides an alternative to certificate based encryption\&. A bridge can be configured to use PSK with the
+\fBbridge_identity\fR
+and
+\fBbridge_psk\fR
+options\&. This is the pre\-shared\-key in hexadecimal format with no "0x"\&. Only one of certificate and PSK based encryption can be used on one bridge at once\&.
+.RE
+.PP
+\fBbridge_tls_version\fR \fIversion\fR
+.RS 4
+Configure the version of the TLS protocol to be used for this bridge\&. Possible values are
+\fItlsv1\&.2\fR,
+\fItlsv1\&.1\fR
+and
+\fItlsv1\fR\&. Defaults to
+\fItlsv1\&.2\fR\&. The remote broker must support the same version of TLS for the connection to succeed\&.
+.RE
+.SH "FILES"
+.PP
+mosquitto\&.conf
+.SH "BUGS"
+.PP
+\fBmosquitto\fR
+bug information can be found at
+https://bugs\&.eclipse\&.org/bugs/describecomponents\&.cgi?product=Mosquitto
+.SH "SEE ALSO"
+\fBmosquitto\fR(8), \fBmosquitto_passwd\fR(1), \fBmosquitto-tls\fR(7), \fBmqtt\fR(7), \fBlimits.conf\fR(5)
+.SH "AUTHOR"
+.PP
+Roger Light
+<roger@atchoo\&.org>

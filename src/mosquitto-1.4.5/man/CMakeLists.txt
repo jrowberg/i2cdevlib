@@ -1,0 +1,5 @@
+install(FILES mosquitto_passwd.1 mosquitto_pub.1 mosquitto_sub.1 DESTINATION ${MANDIR}/man1)
+install(FILES libmosquitto.3 DESTINATION ${MANDIR}/man3)
+install(FILES mosquitto.conf.5 DESTINATION ${MANDIR}/man5)
+install(FILES mosquitto-tls.7 mqtt.7 DESTINATION ${MANDIR}/man7)
+install(FILES mosquitto.8 DESTINATION ${MANDIR}/man8)

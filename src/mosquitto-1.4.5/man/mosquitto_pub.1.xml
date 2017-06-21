@@ -1,0 +1,521 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<?xml-stylesheet type="text/xsl" href="manpage.xsl"?>
+
+<refentry xml:id="mosquitto_pub" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<refmeta>
+		<refentrytitle>mosquitto_pub</refentrytitle>
+		<manvolnum>1</manvolnum>
+		<refmiscinfo class="source">Mosquitto Project</refmiscinfo>
+		<refmiscinfo class="manual">Commands</refmiscinfo>
+	</refmeta>
+
+	<refnamediv>
+		<refname>mosquitto_pub</refname>
+		<refpurpose>an MQTT version 3.1/3.1.1 client for publishing simple messages</refpurpose>
+	</refnamediv>
+
+	<refsynopsisdiv>
+		<cmdsynopsis>
+			<command>mosquitto_pub</command>
+			<arg><option>-A</option> <replaceable>bind_address</replaceable></arg>
+			<arg><option>-d</option></arg>
+			<arg><option>-h</option> <replaceable>hostname</replaceable></arg>
+			<arg><option>-i</option> <replaceable>client_id</replaceable></arg>
+			<arg><option>-I</option> <replaceable>client id prefix</replaceable></arg>
+			<arg><option>-k</option> <replaceable>keepalive time</replaceable></arg>
+			<arg><option>-p</option> <replaceable>port number</replaceable></arg>
+			<arg><option>-q</option> <replaceable>message QoS</replaceable></arg>
+			<arg><option>--quiet</option></arg>
+			<arg><option>-r</option></arg>
+			<arg><option>-S</option></arg>
+			<group choice='req'>
+				<arg choice='plain'><option>-f</option> <replaceable>file</replaceable></arg>
+				<arg choice='plain'><option>-l</option></arg>
+				<arg choice='plain'><option>-m</option> <replaceable>message</replaceable></arg>
+				<arg choice='plain'><option>-n</option></arg>
+				<arg choice='plain'><option>-s</option></arg>
+			</group>
+			<arg>
+				<arg><option>-u</option> <replaceable>username</replaceable></arg>
+				<arg><option>-P</option> <replaceable>password</replaceable></arg>
+			</arg>
+			<arg>
+				<option>--will-topic</option> <replaceable>topic</replaceable>
+				<arg><option>--will-payload</option> <replaceable>payload</replaceable></arg>
+				<arg><option>--will-qos</option> <replaceable>qos</replaceable></arg>
+				<arg><option>--will-retain</option></arg>
+			</arg>
+			<group>
+				<arg>
+					<group choice='req'>
+						<arg choice='plain'><option>--cafile</option> <replaceable>file</replaceable></arg>
+						<arg choice='plain'><option>--capath</option> <replaceable>dir</replaceable></arg>
+					</group>
+					<arg><option>--cert</option> <replaceable>file</replaceable></arg>
+					<arg><option>--key</option> <replaceable>file</replaceable></arg>
+					<arg><option>--ciphers</option> <replaceable>ciphers</replaceable></arg>
+					<arg><option>--tls-version</option> <replaceable>version</replaceable></arg>
+					<arg><option>--insecure</option></arg>
+				</arg>
+				<arg>
+					<arg choice='plain'><option>--psk</option> <replaceable>hex-key</replaceable></arg>
+					<arg choice='plain'><option>--psk-identity</option> <replaceable>identity</replaceable></arg>
+					<arg><option>--ciphers</option> <replaceable>ciphers</replaceable></arg>
+					<arg><option>--tls-version</option> <replaceable>version</replaceable></arg>
+				</arg>
+			</group>
+			<arg><option>--proxy</option> <replaceable>socks-url</replaceable></arg>
+			<arg><option>-V</option> <replaceable>protocol-version</replaceable></arg>
+
+			<arg choice='plain'><option>-t</option> <replaceable>message-topic</replaceable></arg>
+		</cmdsynopsis>
+		<cmdsynopsis>
+			<command>mosquitto_pub</command>
+			<group choice='plain'>
+				<arg><option>--help</option></arg>
+			</group>
+		</cmdsynopsis>
+	</refsynopsisdiv>
+
+	<refsect1>
+		<title>Description</title>
+		<para><command>mosquitto_pub</command> is a simple MQTT version 3.1 client that will publish a single message on a topic and exit.</para>
+	</refsect1>
+
+	<refsect1>
+		<title>Options</title>
+		<para>The options below may be given on the command line, but may also
+			be placed in a config file located at
+			<option>$XDG_CONFIG_HOME/mosquitto_pub</option> or
+			<option>$HOME/.config/mosquitto_sub</option> with one pair of
+			<option>-option <replaceable>value</replaceable></option>
+			per line. The values in the config file will be used as defaults
+			and can be overridden by using the command line. The exceptions to
+			this are the message type options, of which only one can be
+			specified. Note also that currently some options cannot be negated,
+			e.g. <option>-S</option>. Config file lines that have a
+			<option>#</option> as the first character are treated as comments
+			and not processed any further.</para>
+		<variablelist>
+			<varlistentry>
+				<term><option>-A</option></term>
+				<listitem>
+					<para>Bind the outgoing connection to a local ip
+						address/hostname. Use this argument if you need to
+						restrict network communication to a particular
+						interface.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>--cafile</option></term>
+				<listitem>
+					<para>Define the path to a file containing PEM encoded CA
+						certificates that are trusted. Used to enable SSL
+						communication.</para>
+					<para>See also <option>--capath</option></para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>--capath</option></term>
+				<listitem>
+					<para>Define the path to a directory containing PEM encoded CA
+						certificates that are trusted. Used to enable SSL
+						communication.</para>
+					<para>For <option>--capath</option> to work correctly, the
+						certificate files must have ".crt" as the file ending
+						and you must run "c_rehash &lt;path to capath&gt;" each
+						time you add/remove a certificate.</para>
+					<para>See also <option>--cafile</option></para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>--cert</option></term>
+				<listitem>
+					<para>Define the path to a file containing a PEM encoded
+						certificate for this client, if required by the
+						server.</para>
+					<para>See also <option>--key</option>.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>--ciphers</option></term>
+				<listitem>
+					<para>An openssl compatible list of TLS ciphers to support
+						in the client. See
+						<citerefentry><refentrytitle>ciphers</refentrytitle><manvolnum>1</manvolnum></citerefentry>
+						for more information.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>-d</option></term>
+				<term><option>--debug</option></term>
+				<listitem>
+					<para>Enable debug messages.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>-f</option></term>
+				<term><option>--file</option></term>
+				<listitem>
+					<para>Send the contents of a file as the message.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>--help</option></term>
+				<listitem>
+					<para>Display usage information.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>-h</option></term>
+				<term><option>--host</option></term>
+				<listitem>
+					<para>Specify the host to connect to. Defaults to localhost.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>-i</option></term>
+				<term><option>--id</option></term>
+				<listitem>
+					<para>The id to use for this client. If not given, defaults
+					to mosquitto_pub_ appended with the process id of the
+					client. Cannot be used at the same time as the
+					<option>--id-prefix</option> argument.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>-I</option></term>
+				<term><option>--id-prefix</option></term>
+				<listitem>
+					<para>Provide a prefix that the client id will be built
+					from by appending the process id of the client. This is
+					useful where the broker is using the clientid_prefixes
+					option. Cannot be used at the same time as the
+					<option>--id</option> argument.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>--insecure</option></term>
+				<listitem>
+					<para>When using certificate based encryption, this option
+						disables verification of the server hostname in the
+						server certificate. This can be useful when testing
+						initial server configurations but makes it possible for
+						a malicious third party to impersonate your server
+						through DNS spoofing, for example. Use this option in
+						testing <emphasis>only</emphasis>. If you need to
+						resort to using this option in a production
+						environment, your setup is at fault and there is no
+						point using encryption.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>-k</option></term>
+				<term><option>--keepalive</option></term>
+				<listitem>
+					<para>The number of seconds between sending PING commands
+					to the broker for the purposes of informing it we are still
+					connected and functioning. Defaults to 60 seconds.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>--key</option></term>
+				<listitem>
+					<para>Define the path to a file containing a PEM encoded
+						private key for this client, if required by the
+						server.</para>
+					<para>See also <option>--cert</option>.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>-l</option></term>
+				<term><option>--stdin-line</option></term>
+				<listitem>
+					<para>Send messages read from stdin, splitting separate lines into separate messages. Note that blank lines won't be sent.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>-m</option></term>
+				<term><option>--message</option></term>
+				<listitem>
+					<para>Send a single message from the command line.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>-n</option></term>
+				<term><option>--null-message</option></term>
+				<listitem>
+					<para>Send a null (zero length) message.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>-p</option></term>
+				<term><option>--port</option></term>
+				<listitem>
+					<para>Connect to the port specified instead of the default 1883.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>-P</option></term>
+				<term><option>--pw</option></term>
+				<listitem>
+					<para>Provide a password to be used for authenticating with
+					the broker. Using this argument without also specifying a
+					username is invalid. This requires a broker that supports
+					MQTT v3.1.  See also the <option>--username</option> option.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>--proxy</option></term>
+				<listitem>
+					<para>Specify a SOCKS5 proxy to connect through. "None" and
+						"username" authentication types are supported. The
+						<option>socks-url</option> must be of the form
+						<option>socks5h://[username[:password]@]host[:port]</option>.
+						The protocol prefix <option>socks5h</option> means that
+						hostnames are resolved by the proxy. The symbols %25,
+						%3A and %40 are URL decoded into %, : and @
+						respectively, if present in the username or
+						password.</para>
+					<para>If username is not given, then no authentication is
+						attempted. If the port is not given, then the default
+						of 1080 is used.</para>
+					<para>More SOCKS versions may be available in the future,
+						depending on demand, and will use different protocol
+						prefixes as described in <citerefentry>
+							<refentrytitle>curl</refentrytitle>
+							<manvolnum>1</manvolnum> </citerefentry>.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>--psk</option></term>
+				<listitem>
+					<para>Provide the hexadecimal (no leading 0x)
+						pre-shared-key matching the one used on the broker to
+						use TLS-PSK encryption support.
+						<option>--psk-identity</option> must also be provided
+						to enable TLS-PSK.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>--psk-identity</option></term>
+				<listitem>
+					<para>The client identity to use with TLS-PSK support. This
+						may be used instead of a username if the broker is
+						configured to do so.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>-q</option></term>
+				<term><option>--qos</option></term>
+				<listitem>
+					<para>Specify the quality of service to use for the message, from 0, 1 and 2. Defaults to 0.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>--quiet</option></term>
+				<listitem>
+					<para>If this argument is given, no runtime errors will be
+					printed. This excludes any error messages given in case of
+					invalid user input (e.g. using <option>--port</option> without a
+					port).</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>-r</option></term>
+				<term><option>--retain</option></term>
+				<listitem>
+					<para>If retain is given, the message will be retained as a "last known good" value on the broker. See <citerefentry><refentrytitle>mqtt</refentrytitle><manvolnum>7</manvolnum></citerefentry> for more information.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>-s</option></term>
+				<term><option>--stdin-file</option></term>
+				<listitem>
+					<para>Send a message read from stdin, sending the entire content as a single message.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>-S</option></term>
+				<listitem>
+					<para>Use SRV lookups to determine which host to connect
+						to. Performs lookups to
+						<option>_mqtt._tcp.&lt;host&gt;</option> when used in
+						conjunction with <option>-h</option>, otherwise uses
+						<option>_mqtt._tcp.&lt;local dns
+							domain&gt;</option>.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>-t</option></term>
+				<term><option>--topic</option></term>
+				<listitem>
+					<para>The MQTT topic on which to publish the message. See <citerefentry><refentrytitle>mqtt</refentrytitle><manvolnum>7</manvolnum></citerefentry> for more information on MQTT topics.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>--tls-version</option></term>
+				<listitem>
+					<para>Choose which TLS protocol version to use when
+						communicating with the broker. Valid options are
+						<option>tlsv1.2</option>, <option>tlsv1.1</option> and
+						<option>tlsv1</option>. The default value is
+						<option>tlsv1.2</option>. If the installed version of
+						openssl is too old, only <option>tlsv1</option> will be
+						available. Must match the protocol version used by the
+						broker.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>-u</option></term>
+				<term><option>--username</option></term>
+				<listitem>
+					<para>Provide a username to be used for authenticating with
+					the broker. This requires a broker that supports MQTT v3.1.
+					See also the <option>--pw</option> argument.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>-V</option></term>
+				<term><option>--protocol-version</option></term>
+				<listitem>
+					<para>Specify which version of the MQTT protocol should be
+						used when connecting to the rmeote broker. Can be
+						<option>mqttv31</option> or <option>mqttv311</option>.
+						Defaults to <option>mqttv31</option>.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>--will-payload</option></term>
+				<listitem>
+					<para>Specify a message that will be stored by the broker
+					and sent out if this client disconnects unexpectedly. This
+					must be used in conjunction with <option>--will-topic</option>.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>--will-qos</option></term>
+				<listitem>
+					<para>The QoS to use for the Will. Defaults to 0. This must
+					be used in conjunction with <option>--will-topic</option>.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>--will-retain</option></term>
+				<listitem>
+					<para>If given, if the client disconnects unexpectedly the
+					message sent out will be treated as a retained message.
+					This must be used in conjunction with <option>--will-topic</option>.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>--will-topic</option></term>
+				<listitem>
+					<para>The topic on which to send a Will, in the event that
+					the client disconnects unexpectedly.</para>
+				</listitem>
+			</varlistentry>
+		</variablelist>
+	</refsect1>
+
+	<refsect1>
+		<title>Wills</title>
+		<para>mosquitto_sub can register a message with the broker that will be
+		sent out if it disconnects unexpectedly. See
+		<citerefentry><refentrytitle>mqtt</refentrytitle><manvolnum>7</manvolnum></citerefentry>
+		for more information.</para>
+		<para>The minimum requirement for this is to use <option>--will-topic</option> to
+		specify which topic the will should be sent out on. This will result in
+		a non-retained, zero length message with QoS 0.</para>
+		<para>Use the <option>--will-retain</option>,
+		<option>--will-payload</option> and <option>--will-qos</option>
+		arguments to modify the other will parameters.</para>
+	</refsect1>
+
+	<refsect1>
+		<title>Examples</title>
+		<para>Publish temperature information to localhost with QoS 1:</para>
+		<itemizedlist mark="circle">
+			<listitem><para>mosquitto_pub <literal>-t</literal> sensors/temperature <literal>-m</literal> 32 <literal>-q</literal> 1</para></listitem>
+		</itemizedlist>
+		<para>Publish timestamp and temperature information to a remote host on a non-standard port and QoS 0:</para>
+		<itemizedlist mark="circle">
+			<listitem><para>mosquitto_pub <literal>-h</literal> 192.168.1.1
+			<literal>-p</literal> 1885 <literal>-t</literal>
+			sensors/temperature <literal>-m</literal> "1266193804
+			32"</para></listitem>
+		</itemizedlist>
+		<para>Publish light switch status. Message is set to retained because there may be a long period of time between light switch events:</para>
+		<itemizedlist mark="circle">
+			<listitem><para>mosquitto_pub <literal>-r</literal> <literal>-t</literal> switches/kitchen_lights/status <literal>-m</literal> "on"</para></listitem>
+		</itemizedlist>
+		<para>Send the contents of a file in two ways:</para>
+		<itemizedlist mark="circle">
+			<listitem><para>mosquitto_pub <literal>-t</literal> my/topic <literal>-f</literal> ./data</para></listitem>
+			<listitem><para>mosquitto_pub <literal>-t</literal> my/topic <literal>-s</literal> &lt; ./data</para></listitem>
+		</itemizedlist>
+		<para>Send parsed electricity usage data from a Current Cost meter, reading from stdin with one line/reading as one message:</para>
+		<itemizedlist mark="circle">
+			<listitem><para>read_cc128.pl | mosquitto_pub <literal>-t</literal> sensors/cc128 <literal>-l</literal></para></listitem>
+		</itemizedlist>
+	</refsect1>
+
+	<refsect1>
+		<title>Files</title>
+		<variablelist>
+			<varlistentry>
+				<term><filename>$XDG_CONFIG_HOME/mosquitto_pub</filename></term>
+				<term><filename>$HOME/.config/mosquitto_pub</filename></term>
+				<listitem>
+					<para>Configuration file for default options.</para>
+				</listitem>
+			</varlistentry>
+		</variablelist>
+	</refsect1>
+
+	<refsect1>
+		<title>Bugs</title>
+		<para><command>mosquitto_pub</command> bug information can be found at <uri type="webpage">https://bugs.eclipse.org/bugs/describecomponents.cgi?product=Mosquitto</uri></para>
+	</refsect1>
+
+	<refsect1>
+		<title>See Also</title>
+		<simplelist type="inline">
+			<member>
+				<citerefentry>
+					<refentrytitle><link xlink:href="mqtt-7.html">mqtt</link></refentrytitle>
+					<manvolnum>7</manvolnum>
+				</citerefentry>
+			</member>
+			<member>
+				<citerefentry>
+					<refentrytitle><link xlink:href="mosquitto_sub-1.html">mosquitto_sub</link></refentrytitle>
+					<manvolnum>1</manvolnum>
+				</citerefentry>
+			</member>
+			<member>
+				<citerefentry>
+					<refentrytitle><link xlink:href="mosquitto-8.html">mosquitto</link></refentrytitle>
+					<manvolnum>8</manvolnum>
+				</citerefentry>
+			</member>
+			<member>
+				<citerefentry>
+					<refentrytitle><link xlink:href="libmosquitto-3.html">libmosquitto</link></refentrytitle>
+					<manvolnum>3</manvolnum>
+				</citerefentry>
+			</member>
+			<member>
+				<citerefentry>
+					<refentrytitle><link xlink:href="mosquitto-tls-7.html">mosquitto-tls</link></refentrytitle>
+					<manvolnum>7</manvolnum>
+				</citerefentry>
+			</member>
+		</simplelist>
+	</refsect1>
+
+	<refsect1>
+		<title>Author</title>
+		<para>Roger Light <email>roger@atchoo.org</email></para>
+	</refsect1>
+</refentry>

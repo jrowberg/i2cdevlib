@@ -1,0 +1,547 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<?xml-stylesheet type="text/xsl" href="manpage.xsl"?>
+
+<refentry xml:id="mosquitto" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<refmeta>
+		<refentrytitle>mosquitto</refentrytitle>
+		<manvolnum>8</manvolnum>
+		<refmiscinfo class="source">Mosquitto Project</refmiscinfo>
+		<refmiscinfo class="manual">System management commands</refmiscinfo>
+	</refmeta>
+
+	<refnamediv>
+		<refname>mosquitto</refname>
+		<refpurpose>an MQTT broker</refpurpose>
+	</refnamediv>
+
+	<refsynopsisdiv>
+		<cmdsynopsis>
+			<command>mosquitto</command>
+			<arg>-c <replaceable>config file</replaceable></arg>
+			<group>
+				<arg choice='plain'>-d</arg>
+				<arg choice='plain'>--daemon</arg>
+			</group>
+			<arg>-p <replaceable>port number</replaceable></arg>
+			<arg>-v</arg>
+		</cmdsynopsis>
+	</refsynopsisdiv>
+
+	<refsect1>
+		<title>Description</title>
+		<para><command>mosquitto</command> is a broker for the MQTT protocol version 3.1.</para>
+	</refsect1>
+
+	<refsect1>
+		<title>Options</title>
+		<variablelist>
+			<varlistentry>
+				<term><option>-c</option></term>
+				<term><option>--config-file</option></term>
+				<listitem>
+					<para>Load configuration from a file. If not given, the default values as described in <citerefentry><refentrytitle>mosquitto.conf</refentrytitle><manvolnum>5</manvolnum></citerefentry> are used.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>-d</option></term>
+				<term><option>--daemon</option></term>
+				<listitem>
+					<para>Run <command>mosquitto</command> in the background as a daemon. All other behaviour remains the same.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>-p</option></term>
+				<term><option>--port</option></term>
+				<listitem>
+					<para>Listen on the port specified instead of the default 1883. This acts in addition to the port setting in the config file. May be specified multiple times to open multiple sockets listening on different ports. This socket will be bound to all network interfaces.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>-v</option></term>
+				<term><option>--verbose</option></term>
+				<listitem>
+					<para>Use verbose logging. This is equivalent to setting
+						<option>log_type</option> to <option>all</option> in
+						the configuration file. This overrides and logging
+						options given in the configuration file.</para>
+				</listitem>
+			</varlistentry>
+		</variablelist>
+	</refsect1>
+
+	<refsect1>
+		<title>Configuration</title>
+		<para>The broker can be configured using a configuration file as
+			described in
+			<citerefentry><refentrytitle>mosquitto.conf</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+			and this is the main point of information for mosquitto.
+			The files required for SSL/TLS support are described in 
+			<citerefentry><refentrytitle>mosquitto-tls</refentrytitle><manvolnum>7</manvolnum></citerefentry>.
+		</para>
+	</refsect1>
+
+	<refsect1>
+		<title>Broker Status</title>
+		<para>Clients can find information about the broker by subscribing to
+		topics in the $SYS hierarchy as follows. Topics marked as static are
+		only sent once per client on subscription. All other topics are updated
+		every <option>sys_interval</option> seconds. If
+		<option>sys_interval</option> is 0, then updates are not sent.</para>
+		<para>Note that if you are using a command line client to interact with the
+			$SYS topics and your shell interprets $ as an environment variable,
+			you need to place the topic in single quotes '$SYS/...' or to
+			escape the dollar symbol: \$SYS/... otherwise the $SYS will be
+			treated as an environment variable.</para>
+		<variablelist>
+			<varlistentry>
+				<term><option>$SYS/broker/bytes/received</option></term>
+				<listitem>
+					<para>The total number of bytes received since the broker
+					started.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>$SYS/broker/bytes/sent</option></term>
+				<listitem>
+					<para>The total number of bytes sent since the broker
+					started.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>$SYS/broker/clients/connected</option></term>
+				<term><option>$SYS/broker/clients/active</option> (deprecated)</term>
+				<listitem>
+					<para>The number of currently connected clients.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>$SYS/broker/clients/expired</option></term>
+				<listitem>
+					<para>The number of disconnected persistent clients that
+						have been expired and removed through the
+						persistent_client_expiration option.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>$SYS/broker/clients/disconnected</option></term>
+				<term><option>$SYS/broker/clients/inactive</option> (deprecated)</term>
+				<listitem>
+					<para>The total number of persistent clients (with clean
+					session disabled) that are registered at the broker but are
+					currently disconnected.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>$SYS/broker/clients/maximum</option></term>
+				<listitem>
+					<para>The maximum number of clients that have been
+						connected to the broker at the same time.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>$SYS/broker/clients/total</option></term>
+				<listitem>
+					<para>The total number of active and inactive clients
+						currently connected and registered on the
+						broker.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>$SYS/broker/connection/#</option></term>
+				<listitem>
+					<para>When bridges are configured to/from the broker,
+						common practice is to provide a status topic that
+						indicates the state of the connection. This is provided
+						within $SYS/broker/connection/ by default. If the value
+						of the topic is 1 the connection is active, if 0 then
+						it is not active. See the Bridges section below for
+						more information on bridges.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>$SYS/broker/heap/current size</option></term>
+				<listitem>
+					<para>The current size of the heap memory in use by
+					mosquitto. Note that this topic may be unavailable
+					depending on compile time options.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>$SYS/broker/heap/maximum size</option></term>
+				<listitem>
+					<para>The largest amount of heap memory used by
+					mosquitto. Note that this topic may be unavailable
+					depending on compile time options.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>$SYS/broker/load/connections/+</option></term>
+				<listitem>
+					<para>The moving average of the number of CONNECT packets
+						received by the broker over different time intervals.
+						The final "+" of the hierarchy can be 1min, 5min or
+						15min. The value returned represents the number of
+						connections received in 1 minute, averaged over 1, 5 or
+						15 minutes.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>$SYS/broker/load/bytes/received/+</option></term>
+				<listitem>
+					<para>The moving average of the number of bytes received by
+						the broker over different time intervals. The final "+"
+						of the hierarchy can be 1min, 5min or 15min. The value
+						returned represents the number of bytes received in 1
+						minute, averaged over 1, 5 or 15 minutes.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>$SYS/broker/load/bytes/sent/+</option></term>
+				<listitem>
+					<para>The moving average of the number of bytes sent by the
+						broker over different time intervals. The final "+" of
+						the hierarchy can be 1min, 5min or 15min. The value
+						returned represents the number of bytes sent in 1
+						minute, averaged over 1, 5 or 15 minutes.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>$SYS/broker/load/messages/received/+</option></term>
+				<listitem>
+					<para>The moving average of the number of all types of MQTT
+						messages received by the broker over different time
+						intervals.  The final "+" of the hierarchy can be 1min,
+						5min or 15min. The value returned represents the number
+						of messages received in 1 minute, averaged over 1, 5 or
+						15 minutes.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>$SYS/broker/load/messages/sent/+</option></term>
+				<listitem>
+					<para>The moving average of the number of all types of MQTT
+						messages sent by the broker over different time
+						intervals. The final "+" of the hierarchy can be 1min,
+						5min or 15min. The value returned represents the number
+						of messages send in 1 minute, averaged over 1, 5 or 15
+						minutes.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>$SYS/broker/load/publish/dropped/+</option></term>
+				<listitem>
+					<para>The moving average of the number of publish messages
+						dropped by the broker over different time intervals.
+						This shows the rate at which durable clients that are
+						disconnected are losing messages. The final "+" of the
+						hierarchy can be 1min, 5min or 15min. The value
+						returned represents the number of messages dropped in 1
+						minute, averaged over 1, 5 or 15 minutes.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>$SYS/broker/load/publish/received/+</option></term>
+				<listitem>
+					<para>The moving average of the number of publish messages
+						received by the broker over different time intervals.
+						The final "+" of the hierarchy can be 1min, 5min or
+						15min. The value returned represents the number of
+						publish messages received in 1 minute, averaged over 1,
+						5 or 15 minutes.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>$SYS/broker/load/publish/sent/+</option></term>
+				<listitem>
+					<para>The moving average of the number of publish messages
+						sent by the broker over different time intervals. The
+						final "+" of the hierarchy can be 1min, 5min or 15min.
+						The value returned represents the number of publish
+						messages sent in 1 minute, averaged over 1, 5 or 15
+						minutes.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>$SYS/broker/load/sockets/+</option></term>
+				<listitem>
+					<para>The moving average of the number of socket
+						connections opened to the broker over different time
+						intervals. The final "+" of the hierarchy can be 1min,
+						5min or 15min. The value returned represents the number
+						of socket connections in 1 minute, averaged over 1, 5
+						or 15 minutes.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>$SYS/broker/messages/inflight</option></term>
+				<listitem>
+					<para>The number of messages with QoS>0 that are awaiting
+					acknowledgments.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>$SYS/broker/messages/received</option></term>
+				<listitem>
+					<para>The total number of messages of any type received since the broker started.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>$SYS/broker/messages/sent</option></term>
+				<listitem>
+					<para>The total number of messages of any type sent since the broker started.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>$SYS/broker/messages/stored</option></term>
+				<listitem>
+					<para>The number of messages currently held in the message
+						store. This includes retained messages and messages
+						queued for durable clients.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>$SYS/broker/publish/messages/dropped</option></term>
+				<listitem>
+					<para>The total number of publish messages that have been
+						dropped due to inflight/queuing limits. See the
+						max_inflight_messages and max_queued_messages options
+						in
+						<citerefentry><refentrytitle>mosquitto.conf</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+						for more information.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>$SYS/broker/publish/messages/received</option></term>
+				<listitem>
+					<para>The total number of PUBLISH messages received since the broker started.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>$SYS/broker/publish/messages/sent</option></term>
+				<listitem>
+					<para>The total number of PUBLISH messages sent since the broker started.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>$SYS/broker/retained messages/count</option></term>
+				<listitem>
+					<para>The total number of retained messages active on the broker.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>$SYS/broker/subscriptions/count</option></term>
+				<listitem>
+					<para>The total number of subscriptions active on the broker.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>$SYS/broker/timestamp</option></term>
+				<listitem>
+					<para>The timestamp at which this particular build of the broker was made. Static.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>$SYS/broker/uptime</option></term>
+				<listitem>
+					<para>The amount of time in seconds the broker has been online.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><option>$SYS/broker/version</option></term>
+				<listitem>
+					<para>The version of the broker. Static.</para>
+				</listitem>
+			</varlistentry>
+		</variablelist>
+	</refsect1>
+
+	<refsect1>
+		<title>Wildcard Topic Subscriptions</title>
+		<para>In addition to allowing clients to subscribe to specific topics,
+		mosquitto also allows the use of two wildcards in subscriptions.
+		<option>+</option> is the wildcard used to match a single level of
+		hierarchy. For example, for a topic of "a/b/c/d", the following example
+		subscriptions will match:</para>
+		<itemizedlist mark="circle">
+			<listitem><para>a/b/c/d</para></listitem>
+			<listitem><para>+/b/c/d</para></listitem>
+			<listitem><para>a/+/c/d</para></listitem>
+			<listitem><para>a/+/+/d</para></listitem>
+			<listitem><para>+/+/+/+</para></listitem>
+		</itemizedlist>
+		<para>The following subscriptions will not match:</para>
+		<itemizedlist mark="circle">
+			<listitem><para>a/b/c</para></listitem>
+			<listitem><para>b/+/c/d</para></listitem>
+			<listitem><para>+/+/+</para></listitem>
+		</itemizedlist>
+		<para>The second wildcard is <option>#</option> and is used to match
+		all subsequent levels of hierarchy. With a topic of "a/b/c/d", the
+		following example subscriptions will match:</para>
+		<itemizedlist mark="circle">
+			<listitem><para>a/b/c/d</para></listitem>
+			<listitem><para>#</para></listitem>
+			<listitem><para>a/#</para></listitem>
+			<listitem><para>a/b/#</para></listitem>
+			<listitem><para>a/b/c/#</para></listitem>
+			<listitem><para>+/b/c/#</para></listitem>
+		</itemizedlist>
+		<para>The $SYS hierarchy does not match a subscription of
+		"#". If you want to observe the entire $SYS hierarchy, subscribe to
+		$SYS/#.</para>
+		<para>Note that the wildcards must be only ever used on their own, so a
+		subscription of "a/b+/c" is not valid use of a wildcard. The
+		<option>#</option> wildcard must only ever be used as the final
+		character of a subscription.</para>
+	</refsect1>
+
+	<refsect1>
+		<title>Bridges</title>
+		<para>Multiple brokers can be connected together with the bridging
+		functionality. This is useful where it is desirable to share
+		information between locations, but where not all of the information
+		needs to be shared. An example could be where a number of users are
+		running a broker to help record power usage and for a number of other
+		reasons. The power usage could be shared through bridging all of the
+		user brokers to a common broker, allowing the power usage of all
+		users to be collected and compared. The other information would remain
+		local to each
+		broker.</para>
+		<para>For information on configuring bridges, see
+		<citerefentry><refentrytitle>mosquitto.conf</refentrytitle><manvolnum>5</manvolnum></citerefentry>.</para>
+	</refsect1>
+
+	<refsect1>
+		<title>Signals</title>
+		<variablelist>
+			<varlistentry>
+				<term>SIGHUP</term>
+				<listitem>
+					<para>Upon receiving the SIGHUP signal, mosquitto will
+					attempt to reload configuration file data, assuming that
+					the <option>-c</option> argument was provided when
+					mosquitto was started. Not all configuration parameters can
+					be reloaded without restarting. See
+					<citerefentry><refentrytitle>mosquitto.conf</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+					for details.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>SIGUSR1</term>
+				<listitem>
+					<para>Upon receiving the SIGUSR1 signal, mosquitto will
+					write the persistence database to disk. This signal is only
+					acted upon if persistence is enabled.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>SIGUSR2</term>
+				<listitem>
+					<para>The SIGUSR2 signal causes mosquitto to print out the
+					current subscription tree, along with information about
+					where retained messages exist. This is intended as a
+					testing feature only and may be removed at any time.</para>
+				</listitem>
+			</varlistentry>
+		</variablelist>
+	</refsect1>
+
+	<refsect1>
+		<title>Files</title>
+		<variablelist>
+			<varlistentry>
+				<term><filename>/etc/mosquitto/mosquitto.conf</filename></term>
+				<listitem>
+					<para>Configuration file. See <citerefentry><refentrytitle>mosquitto.conf</refentrytitle><manvolnum>5</manvolnum></citerefentry>.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><filename>/var/lib/mosquitto/mosquitto.db</filename></term>
+				<listitem>
+					<para>Persistent message data storage location if persist enabled.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><filename>/etc/hosts.allow</filename></term>
+				<term><filename>/etc/hosts.deny</filename></term>
+				<listitem>
+					<para>Host access control via tcp-wrappers as described in <citerefentry><refentrytitle>hosts_access</refentrytitle><manvolnum>5</manvolnum></citerefentry>.</para>
+				</listitem>
+			</varlistentry>
+		</variablelist>
+	</refsect1>
+
+	<refsect1>
+		<title>Bugs</title>
+		<para><command>mosquitto</command> bug information can be found at <uri type="webpage">https://bugs.eclipse.org/bugs/describecomponents.cgi?product=Mosquitto</uri></para>
+	</refsect1>
+
+	<refsect1>
+		<title>See Also</title>
+		<simplelist type="inline">
+			<member>
+				<citerefentry>
+					<refentrytitle><link xlink:href="mqtt-7.html">mqtt</link></refentrytitle>
+					<manvolnum>7</manvolnum>
+				</citerefentry>
+			</member>
+			<member>
+				<citerefentry>
+					<refentrytitle><link xlink:href="mosquitto-tls-7.html">mosquitto-tls</link></refentrytitle>
+					<manvolnum>7</manvolnum>
+				</citerefentry>
+			</member>
+			<member>
+				<citerefentry>
+					<refentrytitle><link xlink:href="mosquitto-conf-5.html">mosquitto.conf</link></refentrytitle>
+					<manvolnum>5</manvolnum>
+				</citerefentry>
+			</member>
+			<member>
+				<citerefentry>
+					<refentrytitle><link xlink:href="http://www.linuxmanpages.com/man5/hosts_access.5.html">hosts_access</link></refentrytitle>
+					<manvolnum>5</manvolnum>
+				</citerefentry>
+			</member>
+			<member>
+				<citerefentry>
+					<refentrytitle><link xlink:href="mosquitto_passwd-1.html">mosquitto_passwd</link></refentrytitle>
+					<manvolnum>1</manvolnum>
+				</citerefentry>
+			</member>
+			<member>
+				<citerefentry>
+					<refentrytitle><link xlink:href="mosquitto_pub-1.html">mosquitto_pub</link></refentrytitle>
+					<manvolnum>1</manvolnum>
+				</citerefentry>
+			</member>
+			<member>
+				<citerefentry>
+					<refentrytitle><link xlink:href="mosquitto_sub-1.html">mosquitto_sub</link></refentrytitle>
+					<manvolnum>1</manvolnum>
+				</citerefentry>
+			</member>
+			<member>
+				<citerefentry>
+					<refentrytitle><link xlink:href="libmosquitto-3.html">libmosquitto</link></refentrytitle>
+					<manvolnum>3</manvolnum>
+				</citerefentry>
+			</member>
+		</simplelist>
+	</refsect1>
+
+	<refsect1>
+		<title>Thanks</title>
+		<para>Thanks to Andy Stanford-Clark for being one of the people who
+			came up with MQTT in the first place. Thanks to Andy and Nicholas
+			O'Leary for providing clarifications of the protocol.</para>
+		<para>Thanks also to everybody at the Ubuntu UK Podcast and Linux
+			Outlaws for organising OggCamp, where Andy gave a talk that
+			inspired mosquitto.</para>
+	</refsect1>
+
+	<refsect1>
+		<title>Author</title>
+		<para>Roger Light <email>roger@atchoo.org</email></para>
+	</refsect1>
+</refentry>

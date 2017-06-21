@@ -1,0 +1,100 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<?xml-stylesheet type="text/xsl" href="manpage.xsl"?>
+
+<refentry xml:id="mosquitto-tls" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<refmeta>
+		<refentrytitle>mosquitto-tls</refentrytitle>
+		<manvolnum>7</manvolnum>
+		<refmiscinfo class="source">Mosquitto Project</refmiscinfo>
+		<refmiscinfo class="manual">Conventions and miscellaneous</refmiscinfo>
+	</refmeta>
+
+	<refnamediv>
+		<refname>mosquitto-tls</refname>
+		<refpurpose>Configure SSL/TLS support for Mosquitto</refpurpose>
+	</refnamediv>
+
+	<refsect1>
+		<title>Description</title>
+		<para><command>mosquitto</command> provides SSL support for encrypted
+			network connections and authentication. This manual describes how
+			to create the files needed.</para>
+		<note><para>It is important to use different certificate subject
+				parameters for your CA, server and clients. If the certificates
+				appear identical, even though generated separately, the
+				broker/client will not be able to distinguish between them and
+				you will experience difficult to diagnose errors.</para></note>
+	</refsect1>
+
+	<refsect1>
+		<title>Certificate Authority</title>
+		<para>Generate a certificate authority certificate and key.</para>
+		<itemizedlist mark="circle">
+			<listitem><para>openssl req -new -x509 -days &lt;duration&gt; -extensions v3_ca -keyout ca.key -out ca.crt</para></listitem>
+		</itemizedlist>
+	</refsect1>
+
+	<refsect1>
+		<title>Server</title>
+		<para>Generate a server key.</para>
+		<itemizedlist mark="circle">
+			<listitem><para>openssl genrsa -des3 -out server.key 2048</para></listitem>
+		</itemizedlist>
+
+		<para>Generate a server key without encryption.</para>
+		<itemizedlist mark="circle">
+			<listitem><para>openssl genrsa -out server.key 2048</para></listitem>
+		</itemizedlist>
+
+		<para>Generate a certificate signing request to send to the CA.</para>
+		<itemizedlist mark="circle">
+			<listitem><para>openssl req -out server.csr -key server.key -new</para></listitem>
+		</itemizedlist>
+
+		<para>Send the CSR to the CA, or sign it with your CA key:</para>
+		<itemizedlist mark="circle">
+			<listitem><para>openssl x509 -req -in server.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out server.crt -days &lt;duration&gt;</para></listitem>
+		</itemizedlist>
+	</refsect1>
+
+	<refsect1>
+		<title>Client</title>
+		<para>Generate a client key.</para>
+		<itemizedlist mark="circle">
+			<listitem><para>openssl genrsa -des3 -out client.key 2048</para></listitem>
+		</itemizedlist>
+
+		<para>Generate a certificate signing request to send to the CA.</para>
+		<itemizedlist mark="circle">
+			<listitem><para>openssl req -out client.csr -key client.key -new</para></listitem>
+		</itemizedlist>
+
+		<para>Send the CSR to the CA, or sign it with your CA key:</para>
+		<itemizedlist mark="circle">
+			<listitem><para>openssl x509 -req -in client.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out client.crt -days &lt;duration&gt;</para></listitem>
+		</itemizedlist>
+	</refsect1>
+
+	<refsect1>
+		<title>See Also</title>
+		<simplelist type="inline">
+			<member>
+				<citerefentry>
+					<refentrytitle><link xlink:href="mosquitto-8.html">mosquitto</link></refentrytitle>
+					<manvolnum>8</manvolnum>
+				</citerefentry>
+			</member>
+			<member>
+				<citerefentry>
+					<refentrytitle><link xlink:href="mosquitto-conf-5.html">mosquitto-conf</link></refentrytitle>
+					<manvolnum>5</manvolnum>
+				</citerefentry>
+			</member>
+		</simplelist>
+	</refsect1>
+
+	<refsect1>
+		<title>Author</title>
+		<para>Roger Light <email>roger@atchoo.org</email></para>
+	</refsect1>
+</refentry>

@@ -1,0 +1,80 @@
+/* Linker version script - currently used here primarily to control which
+ * symbols are exported.
+ */
+
+MOSQ_1.0 {
+	global:
+		mosquitto_lib_version;
+		mosquitto_lib_init;
+		mosquitto_lib_cleanup;
+		mosquitto_new;
+		mosquitto_destroy;
+		mosquitto_reinitialise;
+		mosquitto_will_set;
+		mosquitto_will_clear;
+		mosquitto_username_pw_set;
+		mosquitto_connect;
+		mosquitto_connect_async;
+		mosquitto_reconnect;
+		mosquitto_disconnect;
+		mosquitto_publish;
+		mosquitto_subscribe;
+		mosquitto_unsubscribe;
+		mosquitto_message_copy;
+		mosquitto_message_free;
+		mosquitto_loop;
+		mosquitto_socket;
+		mosquitto_loop_start;
+		mosquitto_loop_stop;
+		mosquitto_loop_read;
+		mosquitto_loop_write;
+		mosquitto_loop_misc;
+		mosquitto_connect_callback_set;
+		mosquitto_disconnect_callback_set;
+		mosquitto_publish_callback_set;
+		mosquitto_message_callback_set;
+		mosquitto_subscribe_callback_set;
+		mosquitto_unsubscribe_callback_set;
+		mosquitto_log_callback_set;
+		mosquitto_message_retry_set;
+		mosquitto_want_write;
+		mosquitto_user_data_set;
+		mosquitto_strerror;
+		mosquitto_connack_string;
+		mosquitto_tls_set;
+		mosquitto_tls_opts_set;
+		mosquitto_tls_psk_set;
+		mosquitto_sub_topic_tokenise;
+		mosquitto_sub_topic_tokens_free;
+		mosquitto_topic_matches_sub;
+	local: *;
+};
+
+MOSQ_1.1 {
+	global:
+		mosquitto_loop_forever;
+} MOSQ_1.0;
+
+MOSQ_1.2 {
+	global:
+		mosquitto_connect_bind;
+		mosquitto_connect_bind_async;
+		mosquitto_max_inflight_messages_set;
+		mosquitto_reconnect_delay_set;
+		mosquitto_reconnect_async;
+		mosquitto_tls_insecure_set;
+} MOSQ_1.1;
+
+MOSQ_1.3 {
+	global:
+		mosquitto_connect_srv;
+} MOSQ_1.2;
+
+MOSQ_1.4 {
+	global:
+		mosquitto_threaded_set;
+		mosquitto_opts_set;
+		mosquitto_pub_topic_check;
+		mosquitto_sub_topic_check;
+		mosquitto_socks5_set;
+} MOSQ_1.3;

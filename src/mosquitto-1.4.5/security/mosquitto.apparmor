@@ -1,0 +1,27 @@
+/usr/sbin/mosquitto {
+	#include <abstractions/base>
+	#include <abstractions/nameservice>
+
+	/usr/sbin/mosquitto r,
+	/etc/mosquitto/mosquitto.conf r,
+	/etc/mosquitto/ca_certificates/* r,
+	/etc/mosquitto/certs/* r,
+	/etc/mosquitto/conf.d/* r,
+	/var/lib/mosquitto/ r,
+	/var/lib/mosquitto/mosquitto.db rwk,
+	/var/run/mosquitto.pid rw,
+
+	network inet stream,
+	network inet6 stream,
+	network inet dgram,
+	network inet6 dgram,
+
+	# For drop privileges
+	capability setgid,
+	capability setuid,
+
+	# For tcp-wrappers
+	/lib{,32,64}/libwrap.so*  rm,
+	/etc/hosts.allow r,
+	/etc/hosts.deny r,
+}

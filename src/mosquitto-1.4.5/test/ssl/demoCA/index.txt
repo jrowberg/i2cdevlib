@@ -1,0 +1,1 @@
+R	391118144000Z	120703155846Z	CDAE0E564A2891A7	unknown	/C=GB/ST=United Kingdom/L=Derby/O=Mosquitto Test Suite/OU=Broker Test/CN=localhost-client-test

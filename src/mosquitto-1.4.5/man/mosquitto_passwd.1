@@ -1,0 +1,125 @@
+'\" t
+.\"     Title: mosquitto_passwd
+.\"    Author: [see the "Author" section]
+.\" Generator: DocBook XSL Stylesheets v1.78.1 <http://docbook.sf.net/>
+.\"      Date: 06/20/2017
+.\"    Manual: Commands
+.\"    Source: Mosquitto Project
+.\"  Language: English
+.\"
+.TH "MOSQUITTO_PASSWD" "1" "06/20/2017" "Mosquitto Project" "Commands"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+mosquitto_passwd \- manage password files for mosquitto
+.SH "SYNOPSIS"
+.HP \w'\fBmosquitto_passwd\fR\ 'u
+\fBmosquitto_passwd\fR [\fB\-c\fR | \fB\-D\fR] \fIpasswordfile\fR \fIusername\fR
+.HP \w'\fBmosquitto_passwd\fR\ 'u
+\fBmosquitto_passwd\fR \fB\-b\fR \fIpasswordfile\fR \fIusername\fR \fIpassword\fR
+.HP \w'\fBmosquitto_passwd\fR\ 'u
+\fBmosquitto_passwd\fR \fB\-U\fR \fIpasswordfile\fR
+.SH "DESCRIPTION"
+.PP
+\fBmosquitto_passwd\fR
+is a tool for managing password files the the mosquitto MQTT broker\&.
+.PP
+Usernames must not contain ":"\&. Passwords are stored in a similar format to
+\fBcrypt\fR(3)\&.
+.SH "OPTIONS"
+.PP
+\fB\-b\fR
+.RS 4
+Run in batch mode\&. This allows the password to be provided at the command line which can be convenient but should be used with care because the password will be visible on the command line and in command history\&.
+.RE
+.PP
+\fB\-c\fR
+.RS 4
+Create a new password file\&. If the file already exists, it will be overwritten\&.
+.RE
+.PP
+\fB\-D\fR
+.RS 4
+Delete the specified user from the password file\&.
+.RE
+.PP
+\fB\-U\fR
+.RS 4
+This option can be used to upgrade/convert a password file with plain text passwords into one using hashed passwords\&. It will modify the specified file\&. It does not detect whether passwords are already hashed, so using it on a password file that already contains hashed passwords will generate new hashes based on the old hashes and render the password file unusable\&.
+.RE
+.PP
+\fBpasswordfile\fR
+.RS 4
+The password file to modify\&.
+.RE
+.PP
+\fBusername\fR
+.RS 4
+The username to add/update/delete\&.
+.RE
+.PP
+\fBpassword\fR
+.RS 4
+The password to use when in batch mode\&.
+.RE
+.SH "EXAMPLES"
+.PP
+Add a user to a new password file:
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+mosquitto_passwd
+\-c
+/etc/mosquitto/passwd
+ral
+.RE
+.PP
+Delete a user from a password file
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+mosquitto_passwd
+\-D
+/etc/mosquitto/passwd
+ral
+.RE
+.SH "BUGS"
+.PP
+\fBmosquitto_passwd\fR
+bug information can be found at
+https://bugs\&.eclipse\&.org/bugs/describecomponents\&.cgi?product=Mosquitto
+.SH "SEE ALSO"
+\fBmosquitto\fR(8), \fBmosquitto.conf\fR(5), \fBmqtt\fR(7)
+.SH "AUTHOR"
+.PP
+Roger Light
+<roger@atchoo\&.org>

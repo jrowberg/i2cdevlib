@@ -1,0 +1,164 @@
+'\" t
+.\"     Title: mosquitto-tls
+.\"    Author: [see the "Author" section]
+.\" Generator: DocBook XSL Stylesheets v1.78.1 <http://docbook.sf.net/>
+.\"      Date: 11/08/2015
+.\"    Manual: Conventions and miscellaneous
+.\"    Source: Mosquitto Project
+.\"  Language: English
+.\"
+.TH "MOSQUITTO\-TLS" "7" "11/08/2015" "Mosquitto Project" "Conventions and miscellaneous"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+mosquitto-tls \- Configure SSL/TLS support for Mosquitto
+.SH "DESCRIPTION"
+.PP
+\fBmosquitto\fR
+provides SSL support for encrypted network connections and authentication\&. This manual describes how to create the files needed\&.
+.if n \{\
+.sp
+.\}
+.RS 4
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBNote\fR
+.ps -1
+.br
+.PP
+It is important to use different certificate subject parameters for your CA, server and clients\&. If the certificates appear identical, even though generated separately, the broker/client will not be able to distinguish between them and you will experience difficult to diagnose errors\&.
+.sp .5v
+.RE
+.SH "CERTIFICATE AUTHORITY"
+.PP
+Generate a certificate authority certificate and key\&.
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+openssl req \-new \-x509 \-days <duration> \-extensions v3_ca \-keyout ca\&.key \-out ca\&.crt
+.RE
+.SH "SERVER"
+.PP
+Generate a server key\&.
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+openssl genrsa \-des3 \-out server\&.key 2048
+.RE
+.PP
+Generate a server key without encryption\&.
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+openssl genrsa \-out server\&.key 2048
+.RE
+.PP
+Generate a certificate signing request to send to the CA\&.
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+openssl req \-out server\&.csr \-key server\&.key \-new
+.RE
+.PP
+Send the CSR to the CA, or sign it with your CA key:
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+openssl x509 \-req \-in server\&.csr \-CA ca\&.crt \-CAkey ca\&.key \-CAcreateserial \-out server\&.crt \-days <duration>
+.RE
+.SH "CLIENT"
+.PP
+Generate a client key\&.
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+openssl genrsa \-des3 \-out client\&.key 2048
+.RE
+.PP
+Generate a certificate signing request to send to the CA\&.
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+openssl req \-out client\&.csr \-key client\&.key \-new
+.RE
+.PP
+Send the CSR to the CA, or sign it with your CA key:
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+openssl x509 \-req \-in client\&.csr \-CA ca\&.crt \-CAkey ca\&.key \-CAcreateserial \-out client\&.crt \-days <duration>
+.RE
+.SH "SEE ALSO"
+\fBmosquitto\fR(8), \fBmosquitto-conf\fR(5)
+.SH "AUTHOR"
+.PP
+Roger Light
+<roger@atchoo\&.org>
