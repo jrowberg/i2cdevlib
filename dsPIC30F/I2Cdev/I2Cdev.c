@@ -144,7 +144,7 @@ int8_t I2Cdev_readWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint16
     unsigned char Onebyte[100];
     I2Cdev_readBytes(devAddr,regAddr,length*2,Onebyte);
     unsigned int i;
-    for (int i = 0 ; i < length ; i++ ){
+    for (i = 0 ; i < length ; i++ ){
         data[i] = Onebyte[i*2] << 8 | Onebyte[i*2+1];
     }
     return length;

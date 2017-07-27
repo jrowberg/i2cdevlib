@@ -2935,7 +2935,8 @@ void MPU6050_readMemoryBlock(uint8_t *data, uint16_t dataSize, uint8_t bank, uin
     MPU6050_setMemoryBank(bank, false, false);
     MPU6050_setMemoryStartAddress(address);
     uint8_t chunkSize;
-    for (uint16_t i = 0; i < dataSize;) {
+    uint16_t i;
+    for (i = 0; i < dataSize;) {
         // determine correct chunk size according to bank position and data size
         chunkSize = MPU6050_DMP_MEMORY_CHUNK_SIZE;
 
