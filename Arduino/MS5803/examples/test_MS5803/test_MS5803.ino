@@ -18,7 +18,7 @@ uint32_t wake_time = millis();
 void setup() {
   Serial.begin(57600);
   Wire.begin();
-  // Start up and get Calubration constants.
+  // Start up and get Calibration constants.
   presstemp.initialize(MS_MODEL);
   if ( presstemp.testConnection() ) Serial.println("We are communicating with MS5803 via I2C.");
   else Serial.println("I2C Communications with MS5803 failed.");

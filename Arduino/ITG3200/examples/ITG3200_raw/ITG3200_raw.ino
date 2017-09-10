@@ -66,7 +66,7 @@ void setup() {
     Serial.println("Testing device connections...");
     Serial.println(gyro.testConnection() ? "ITG3200 connection successful" : "ITG3200 connection failed");
 
-    // configure Arduino LED for
+    // configure Arduino LED pin for output
     pinMode(LED_PIN, OUTPUT);
 }
 

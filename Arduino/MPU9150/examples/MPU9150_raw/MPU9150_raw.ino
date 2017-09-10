@@ -69,7 +69,7 @@ void setup() {
     Serial.println("Testing device connections...");
     Serial.println(accelGyroMag.testConnection() ? "MPU9150 connection successful" : "MPU9150 connection failed");
 
-    // configure Arduino LED for
+    // configure Arduino LED pin for output
     pinMode(LED_PIN, OUTPUT);
 }
 
