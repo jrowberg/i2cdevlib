@@ -49,7 +49,7 @@ Z acceleration, for which it will report 16384 (that is, 2^14).  Your device
 probably won't do quite this well, but good offsets will all get the baseline 
 outputs close to these target values.
 
-  Put the MPU6050 in a flat and horizontal surface, and leave it operating for 
+  Put the MPU6050 on a flat and horizontal surface, and leave it operating for 
 5-10 minutes so its temperature gets stabilized.
 
   Run this program.  A "----- done -----" line will indicate that it has done its best.
