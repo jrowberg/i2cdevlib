@@ -34,7 +34,7 @@ THE SOFTWARE.
 ADS1115 adc0(ADS1115_DEFAULT_ADDRESS); 
 
 void setup() {                
-    Wire.begin();  // join I2C bus
+    I2Cdev::begin();  // join I2C bus
     Serial.begin(19200); // initialize serial communication 
     Serial.println("Initializing I2C devices..."); 
     adc0.initialize(); // initialize ADS1115 16 bit A/D chip

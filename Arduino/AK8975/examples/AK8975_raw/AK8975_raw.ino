@@ -29,9 +29,6 @@ THE SOFTWARE.
 ===============================================
 */
 
-// Arduino Wire library is required if I2Cdev I2CDEV_ARDUINO_WIRE implementation
-// is used in I2Cdev.h
-#include "Wire.h"
 
 // I2Cdev and AK8975 must be installed as libraries, or else the .cpp/.h files
 // for both classes must be in the include path of your project
@@ -53,7 +50,7 @@ bool blinkState = false;
 
 void setup() {
     // join I2C bus (I2Cdev library doesn't do this automatically)
-    Wire.begin();
+    I2Cdev::begin();
 
     // initialize serial communication
     // (38400 chosen because it works as well at 8MHz as it does at 16MHz, but

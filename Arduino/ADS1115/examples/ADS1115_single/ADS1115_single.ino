@@ -38,9 +38,9 @@ ADS1115 adc0(ADS1115_DEFAULT_ADDRESS);
 const int alertReadyPin = 2;
 
 void setup() {    
-    //I2Cdev::begin();  // join I2C bus
-    Wire.begin();
-    Serial.begin(115200); // initialize serial communication 
+    I2Cdev::begin();  // join I2C bus
+    
+    Serial.begin(19200); // initialize serial communication 
     
     Serial.println("Testing device connections...");
     Serial.println(adc0.testConnection() ? "ADS1115 connection successful" : "ADS1115 connection failed");
@@ -98,9 +98,8 @@ void loop() {
     
     adc0.setMultiplexer(ADS1115_MUX_P3_NG);
     // Do conversion polling via I2C on this last reading: 
-    Serial.print("A3: "); Serial.print(adc0.getMilliVolts(true)); Serial.print("mV");
+    Serial.print("A3: "); Serial.print(adc0.getMilliVolts(true)); Serial.println("mV");
     
-    Serial.println(digitalRead(alertReadyPin));
     delay(500);
 }
   

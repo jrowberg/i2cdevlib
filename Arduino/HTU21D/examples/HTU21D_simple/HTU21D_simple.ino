@@ -35,12 +35,11 @@ THE SOFTWARE.
 HTU21D htu21d;
 
 void setup() {
-  //I2Cdev::begin();  // join I2C bus
-  Wire.begin();
-  Serial.begin(38400);
-  htu21d.initialize();
-  Serial.println("Testing device connections...");
-  Serial.println(htu21d.testConnection() ? "HTU21D connection successful" : "HTU21D connection failed");
+    I2Cdev::begin();  // join I2C bus
+    Serial.begin(38400);
+    htu21d.initialize();
+    Serial.println("Testing device connections...");
+    Serial.println(htu21d.testConnection() ? "HTU21D connection successful" : "HTU21D connection failed");
 }
 
 void loop() {
