@@ -111,7 +111,7 @@ class BMP085 {
         float       getTemperatureC();
         float       getTemperatureF();
         uint32_t    getRawPressure();
-        float       getPressure();
+        int32_t     getPressure();
         float       getAltitude(float pressure, float seaLevelPressure=101325);
 
    private:

@@ -46,8 +46,7 @@ BMP085 barometer;
 
 float temperature;
 float pressure;
-float altitude;
-int32_t lastMicros;
+int32_t altitude;
 
 #define LED_PIN 13 // (Arduino is 13, Teensy is 11, Teensy++ is 6)
 bool blinkState = false;
@@ -77,16 +76,11 @@ void loop() {
     // request temperature
     barometer.setControl(BMP085_MODE_TEMPERATURE);
     
-    // wait appropriate time for conversion (4.5ms delay)
-    lastMicros = micros();
-    while (micros() - lastMicros < barometer.getMeasureDelayMicroseconds());
-
     // read calibrated temperature value in degrees Celsius
     temperature = barometer.getTemperatureC();
 
     // request pressure (3x oversampling mode, high detail, 23.5ms delay)
     barometer.setControl(BMP085_MODE_PRESSURE_3);
-    while (micros() - lastMicros < barometer.getMeasureDelayMicroseconds());
 
     // read calibrated pressure value in Pascals (Pa)
     pressure = barometer.getPressure();

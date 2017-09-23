@@ -167,10 +167,14 @@ void BMP085::setControl(uint8_t value) {
 /* measurement register methods */
 
 uint16_t BMP085::getMeasurement2() {
+    // wait for end of conversion
+    while(getControl() & 0x20);
     I2Cdev::readBytes(devAddr, BMP085_RA_MSB, 2, buffer);
     return ((uint16_t)buffer[0] << 8) + buffer[1];
 }
 uint32_t BMP085::getMeasurement3() {
+    // wait for end of conversion
+    while(getControl() & 0x20);
     I2Cdev::readBytes(devAddr, BMP085_RA_MSB, 3, buffer);
     return ((uint32_t)buffer[0] << 16) + ((uint16_t)buffer[1] << 8) + buffer[2];
 }
@@ -224,7 +228,7 @@ uint32_t BMP085::getRawPressure() {
     return 0; // wrong measurement mode for pressure request
 }
 
-float BMP085::getPressure() {
+int32_t BMP085::getPressure() {
     /*
     Datasheet forumla
         UP = raw pressure
