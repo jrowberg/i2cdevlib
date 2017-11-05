@@ -1,5 +1,5 @@
 /**
- * @author      : shmakins (shmakins@Denyss-MacBook-Pro.local)
+ * @author      : shmakins (shmakins@gmail.com)
  * @file        : APDS9960
  * @created     : Thursday Oct 12, 2017 23:44:51 EEST
  */
