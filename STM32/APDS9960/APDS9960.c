@@ -620,7 +620,7 @@ bool APDS9960_disablePower()
 bool APDS9960_readAmbientLight(uint16_t *val)
 {
     uint8_t val_byte;
-    val = 0;
+    *val = 0;
 
     /* Read value from clear channel, low byte register */
     if( !wireReadDataByte(APDS9960_CDATAL, &val_byte) ) {
@@ -632,7 +632,7 @@ bool APDS9960_readAmbientLight(uint16_t *val)
     if( !wireReadDataByte(APDS9960_CDATAH, &val_byte) ) {
         return false;
     }
-    val = val + ((uint16_t)val_byte << 8);
+    *val = *val + ((uint16_t)val_byte << 8);
 
     return true;
 }
@@ -646,7 +646,7 @@ bool APDS9960_readAmbientLight(uint16_t *val)
 bool APDS9960_readRedLight(uint16_t *val)
 {
     uint8_t val_byte;
-    val = 0;
+    *val = 0;
 
     /* Read value from clear channel, low byte register */
     if( !wireReadDataByte(APDS9960_RDATAL, &val_byte) ) {
@@ -658,7 +658,7 @@ bool APDS9960_readRedLight(uint16_t *val)
     if( !wireReadDataByte(APDS9960_RDATAH, &val_byte) ) {
         return false;
     }
-    val = val + ((uint16_t)val_byte << 8);
+    *val = *val + ((uint16_t)val_byte << 8);
 
     return true;
 }
@@ -672,7 +672,7 @@ bool APDS9960_readRedLight(uint16_t *val)
 bool APDS9960_readGreenLight(uint16_t *val)
 {
     uint8_t val_byte;
-    val = 0;
+    *val = 0;
 
     /* Read value from clear channel, low byte register */
     if( !wireReadDataByte(APDS9960_GDATAL, &val_byte) ) {
@@ -684,7 +684,7 @@ bool APDS9960_readGreenLight(uint16_t *val)
     if( !wireReadDataByte(APDS9960_GDATAH, &val_byte) ) {
         return false;
     }
-    val = val + ((uint16_t)val_byte << 8);
+    *val = *val + ((uint16_t)val_byte << 8);
 
     return true;
 }
@@ -698,7 +698,7 @@ bool APDS9960_readGreenLight(uint16_t *val)
 bool APDS9960_readBlueLight(uint16_t *val)
 {
     uint8_t val_byte;
-    val = 0;
+    *val = 0;
 
     /* Read value from clear channel, low byte register */
     if( !wireReadDataByte(APDS9960_BDATAL, &val_byte) ) {
@@ -710,7 +710,7 @@ bool APDS9960_readBlueLight(uint16_t *val)
     if( !wireReadDataByte(APDS9960_BDATAH, &val_byte) ) {
         return false;
     }
-    val = val + ((uint16_t)val_byte << 8);
+    *val = *val + ((uint16_t)val_byte << 8);
 
     return true;
 }
@@ -727,13 +727,14 @@ bool APDS9960_readBlueLight(uint16_t *val)
  */
 bool APDS9960_readProximity(uint8_t *val)
 {
-    val = 0;
+    uint8_t val_byte;
+    *val = 0;
 
     /* Read value from proximity data register */
-    if( !wireReadDataByte(APDS9960_PDATA, val) ) {
+    if( !wireReadDataByte(APDS9960_PDATA, &val_byte) ) {
         return false;
     }
-
+    *val = val_byte;
     return true;
 }
 
@@ -1685,7 +1686,7 @@ bool setGestureWaitTime(uint8_t time)
 bool APDS9960_getLightIntLowThreshold(uint16_t *threshold)
 {
     uint8_t val_byte;
-    threshold = 0;
+    *threshold = 0;
 
     /* Read value from ambient light low threshold, low byte register */
     if( !wireReadDataByte(APDS9960_AILTL, &val_byte) ) {
@@ -1697,7 +1698,7 @@ bool APDS9960_getLightIntLowThreshold(uint16_t *threshold)
     if( !wireReadDataByte(APDS9960_AILTH, &val_byte) ) {
         return false;
     }
-    threshold = threshold + ((uint16_t)val_byte << 8);
+    *threshold = *threshold + ((uint16_t)val_byte << 8);
 
     return true;
 }
@@ -1739,7 +1740,7 @@ bool APDS9960_setLightIntLowThreshold(uint16_t threshold)
 bool APDS9960_getLightIntHighThreshold(uint16_t *threshold)
 {
     uint8_t val_byte;
-    threshold = 0;
+    *threshold = 0;
 
     /* Read value from ambient light high threshold, low byte register */
     if( !wireReadDataByte(APDS9960_AIHTL, &val_byte) ) {
@@ -1751,7 +1752,7 @@ bool APDS9960_getLightIntHighThreshold(uint16_t *threshold)
     if( !wireReadDataByte(APDS9960_AIHTH, &val_byte) ) {
         return false;
     }
-    threshold = threshold + ((uint16_t)val_byte << 8);
+    *threshold = *threshold + ((uint16_t)val_byte << 8);
 
     return true;
 }
