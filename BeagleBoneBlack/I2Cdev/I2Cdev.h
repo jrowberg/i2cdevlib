@@ -1,7 +1,10 @@
 // I2Cdev library collection - Main I2C device class
 // Abstracts bit and byte I2C R/W functions into a convenient class
 // Based on Arduino's I2Cdev by Jeff Rowberg <jeff@rowberg.net>
+// BeagleBone Black (potencially other linux boards) port by Mateus Amarante <mateus.amarujo@gmail.com>
 //
+// Changelog:
+//      2018-03-02 - Initial release
 
 /* ============================================
 I2Cdev device library code is placed under the MIT license
@@ -26,19 +29,15 @@ THE SOFTWARE.
 #ifndef _I2CDEV_H_
 #define _I2CDEV_H_
 
-#include <sys/ioctl.h>
-#include <fcntl.h>
-#include <unistd.h>
 #include <stdint.h>
-#include <linux/i2c-dev.h>
+
+#define DEFAULT_BBB_I2C_BUS 2
 
 class I2Cdev
 {
 public:
   I2Cdev();
-
-  static void initialize();
-  static void enable(bool isEnabled);
+  I2Cdev(uint8_t busAddr);
 
   static int8_t readBit(uint8_t devAddr, uint8_t regAddr, uint8_t bitNum, uint8_t *data);
   static int8_t readBitW(uint8_t devAddr, uint8_t regAddr, uint8_t bitNum, uint16_t *data);
@@ -58,7 +57,8 @@ public:
   static bool writeBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8_t *data);
   static bool writeWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint16_t *data);
 
-  static uint16_t readTimeout;
+private:
+  char path_[13]; // Maximum is "/dev/i2c-255"
 };
 
 #endif /* _I2CDEV_H_ */

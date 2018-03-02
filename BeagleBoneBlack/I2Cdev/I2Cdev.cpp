@@ -1,7 +1,10 @@
 // I2Cdev library collection - Main I2C device class
 // Abstracts bit and byte I2C R/W functions into a convenient class
 // Based on Arduino's I2Cdev by Jeff Rowberg <jeff@rowberg.net>
+// BeagleBone Black (potencially other linux boards) port by Mateus Amarante <mateus.amarujo@gmail.com>
 //
+// Changelog:
+//      2018-03-02 - Initial release
 
 /* ============================================
 I2Cdev device library code is placed under the MIT license
@@ -24,19 +27,22 @@ THE SOFTWARE.
 */
 
 #include "I2Cdev.h"
+#include <sys/ioctl.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <linux/i2c-dev.h>
 #include <stdio.h>
+#include <errno.h>
+#include <string.h>
+#include <math.h>
 
 #define I2C_PATH "/dev/i2c-2"
 
-I2Cdev::I2Cdev() {}
+I2Cdev::I2Cdev() : I2Cdev(DEFAULT_BBB_I2C_BUS) {}
 
-void I2Cdev::initialize() {}
-
-/** Enable or disable I2C,
- * @param isEnabled true = enable, false = disable
- */
-void I2Cdev::enable(bool isEnabled)
+I2Cdev::I2Cdev(uint8_t busAddr)
 {
+    sprintf(path_, "/dev/i2c-%hhd", busAddr);
 }
 
 /** Read a single bit from an 8-bit device register.
@@ -162,7 +168,7 @@ int8_t I2Cdev::readBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8
 {
     int fd;
 
-    if ((fd = open(I2C_PATH, O_RDWR) < 0))
+    if ((fd = open(I2C_PATH, O_RDWR)) < 0)
     {
         perror("Failed to open " I2C_PATH);
         return -1;
@@ -170,8 +176,13 @@ int8_t I2Cdev::readBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8
 
     if (ioctl(fd, I2C_SLAVE, devAddr) < 0)
     {
-        fprintf(stderr, "Failed to access slave at %u address\n", devAddr);
+        fprintf(stderr, "Failed to access slave at %u address. %s\n", regAddr, strerror(errno));
         return -1;
+    }
+
+    if (write(fd, &regAddr, 1) != 1)
+    {
+        perror("Failed to write data into " I2C_PATH);
     }
 
     if (read(fd, data, length) != length)
@@ -195,8 +206,16 @@ int8_t I2Cdev::readBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8
  */
 int8_t I2Cdev::readWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint16_t *data)
 {
-    if (readBytes(devAddr, regAddr, length * 2, reinterpret_cast<uint8_t *>(data)) > 0)
+    uint8_t buff[length * 2];
+
+    if (readBytes(devAddr, regAddr, length * 2, buff) > 0)
+    {
+        for (int i = 0; i < length; i++)
+        {
+            data[i] = (buff[i * 2] << 8) | buff[i * 2 + 1];
+        }
         return length;
+    }
 
     return -1;
 }
@@ -330,7 +349,7 @@ bool I2Cdev::writeBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8_
 {
     int fd;
 
-    if ((fd = open(I2C_PATH, O_RDWR) < 0))
+    if ((fd = open(I2C_PATH, O_RDWR)) < 0)
     {
         perror("Failed to open " I2C_PATH);
         return false;
@@ -338,11 +357,17 @@ bool I2Cdev::writeBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8_
 
     if (ioctl(fd, I2C_SLAVE, devAddr) < 0)
     {
-        fprintf(stderr, "Failed to access slave at %u address\n", devAddr);
+        fprintf(stderr, "Failed to access slave at %u address. %s\n", regAddr, strerror(errno));
         return false;
     }
 
-    if (write(fd, data, length) != length)
+    uint16_t buff_length = length + 1;
+    uint8_t buff[buff_length];
+    buff[0] = regAddr;
+
+    memcpy(&buff[1], data, length);
+
+    if (write(fd, buff, buff_length) != buff_length)
     {
         perror("Failed to write into " I2C_PATH);
         return false;
@@ -362,5 +387,13 @@ bool I2Cdev::writeBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8_
  */
 bool I2Cdev::writeWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint16_t *data)
 {
-    return writeBytes(devAddr, regAddr, length * 2, reinterpret_cast<uint8_t *>(data));
+    uint8_t buff[length * 2];
+
+    for (int i = 0; i < length; i++)
+    {
+        buff[2 * i] = (uint8_t)(data[i] >> 8);     //MSByte
+        buff[1 + 2 * i] = (uint8_t)(data[i] >> 0); //LSByte
+    }
+
+    return writeBytes(devAddr, regAddr, length * 2, buff);
 }
