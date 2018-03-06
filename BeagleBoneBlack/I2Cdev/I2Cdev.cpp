@@ -42,7 +42,7 @@ I2Cdev::I2Cdev() : I2Cdev(DEFAULT_BBB_I2C_BUS) {}
 
 I2Cdev::I2Cdev(uint8_t busAddr)
 {
-    sprintf(path_, "/dev/i2c-%hhd", busAddr);
+    sprintf(path_, "/dev/i2c-%hhu", busAddr);
 }
 
 /** Read a single bit from an 8-bit device register.
