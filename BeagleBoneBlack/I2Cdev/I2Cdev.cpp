@@ -36,8 +36,6 @@ THE SOFTWARE.
 #include <string.h>
 #include <math.h>
 
-#define I2C_PATH "/dev/i2c-2"
-
 I2Cdev::I2Cdev() : I2Cdev(DEFAULT_BBB_I2C_BUS) {}
 
 I2Cdev::I2Cdev(uint8_t busAddr)

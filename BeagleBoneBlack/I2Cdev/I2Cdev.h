@@ -58,7 +58,7 @@ public:
   static bool writeWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint16_t *data);
 
 private:
-  char path_[13]; // Maximum is "/dev/i2c-255"
+  char path_[13]; // up to "/dev/i2c-255"
 };
 
 #endif /* _I2CDEV_H_ */
