@@ -736,6 +736,17 @@ uint8_t MPU6050::dmpGetLinearAccelInWorld(VectorInt16 *v, VectorInt16 *vReal, Qu
 // uint8_t MPU6050::dmpGetControlData(long *data, const uint8_t* packet);
 // uint8_t MPU6050::dmpGetTemperature(long *data, const uint8_t* packet);
 // uint8_t MPU6050::dmpGetGravity(long *data, const uint8_t* packet);
+uint8_t MPU6050::dmpGetGravity(int16_t *data, const uint8_t* packet) {
+    /* +1g corresponds to +8192, sensitivity is 2g. */
+    int16_t qI[4];
+    uint8_t status = dmpGetQuaternion(qI, packet);
+    data[0] = ((int32_t)qI[1] * qI[3] - (int32_t)qI[0] * qI[2]) / 16384;
+    data[1] = ((int32_t)qI[0] * qI[1] + (int32_t)qI[2] * qI[3]) / 16384;
+    data[2] = ((int32_t)qI[0] * qI[0] - (int32_t)qI[1] * qI[1]
+	       - (int32_t)qI[2] * qI[2] + (int32_t)qI[3] * qI[3]) / (2 * 16384);
+    return status;
+}
+
 uint8_t MPU6050::dmpGetGravity(VectorFloat *v, Quaternion *q) {
     v -> x = 2 * (q -> x*q -> z - q -> w*q -> y);
     v -> y = 2 * (q -> w*q -> x + q -> y*q -> z);
