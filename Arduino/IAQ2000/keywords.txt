@@ -11,9 +11,9 @@ IAQ2000	KEYWORD1
 # Methods and Functions (KEYWORD2)
 #######################################
 
-initialize   	KEYWORD2
+initialize	KEYWORD2
 testConnection	KEYWORD2
-getIaq   	KEYWORD2
+getIaq	KEYWORD2
 
 #######################################
 # Instances (KEYWORD2)
