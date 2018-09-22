@@ -36,6 +36,10 @@ THE SOFTWARE.
 #include <string.h>
 #include <math.h>
 
+#define OPEN_ERROR_MSG  "Failed to open "
+#define WRITE_ERROR_MSG "Failed to write into "
+#define READ_ERROR_MSG  "Failed to read from "
+
 I2Cdev::I2Cdev() : I2Cdev(DEFAULT_BBB_I2C_BUS) {}
 
 I2Cdev::I2Cdev(uint8_t busAddr)
@@ -166,9 +170,11 @@ int8_t I2Cdev::readBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8
 {
     int fd;
 
-    if ((fd = open(I2C_PATH, O_RDWR)) < 0)
+    if ((fd = open(path_, O_RDWR)) < 0)
     {
-        perror("Failed to open " I2C_PATH);
+        char error_msg[sizeof(OPEN_ERROR_MSG) + sizeof(path_)] = OPEN_ERROR_MSG;
+
+        perror(strcat(error_msg, path_));
         return -1;
     }
 
@@ -180,12 +186,16 @@ int8_t I2Cdev::readBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8
 
     if (write(fd, &regAddr, 1) != 1)
     {
-        perror("Failed to write data into " I2C_PATH);
+        char error_msg[sizeof(WRITE_ERROR_MSG) + sizeof(path_)] = WRITE_ERROR_MSG;
+
+        perror(strcat(error_msg, path_));
     }
 
     if (read(fd, data, length) != length)
     {
-        perror("Failed to read data from " I2C_PATH);
+        char error_msg[sizeof(READ_ERROR_MSG) + sizeof(path_)] = READ_ERROR_MSG;
+
+        perror(strcat(error_msg, path_));
         return -1;
     }
 
@@ -347,9 +357,11 @@ bool I2Cdev::writeBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8_
 {
     int fd;
 
-    if ((fd = open(I2C_PATH, O_RDWR)) < 0)
+    if ((fd = open(path_, O_RDWR)) < 0)
     {
-        perror("Failed to open " I2C_PATH);
+        char error_msg[sizeof(OPEN_ERROR_MSG) + sizeof(path_)] = OPEN_ERROR_MSG;
+
+        perror(strcat(error_msg, path_));
         return false;
     }
 
@@ -367,7 +379,9 @@ bool I2Cdev::writeBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8_
 
     if (write(fd, buff, buff_length) != buff_length)
     {
-        perror("Failed to write into " I2C_PATH);
+        char error_msg[sizeof(WRITE_ERROR_MSG) + sizeof(path_)] = WRITE_ERROR_MSG;
+
+        perror(strcat(error_msg, path_));
         return false;
     }
 
