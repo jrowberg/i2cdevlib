@@ -3,6 +3,7 @@
 // Updates should (hopefully) always be available at https://github.com/jrowberg/i2cdevlib
 //
 // Changelog:
+//      2016-04-18 - Eliminated a potential infinite loop
 //      2013-05-08 - added seamless Fastwire support
 //                 - added note about gyro calibration
 //      2012-06-21 - added note about Arduino 1.0.1 + Leonardo compatibility error
@@ -212,7 +213,9 @@ void setup() {
         mpu.setDMPEnabled(true);
 
         // enable Arduino interrupt detection
-        Serial.println(F("Enabling interrupt detection (Arduino external interrupt 0)..."));
+        Serial.print(F("Enabling interrupt detection (Arduino external interrupt "));
+        Serial.print(digitalPinToInterrupt(INTERRUPT_PIN));
+        Serial.println(F(")..."));
         attachInterrupt(digitalPinToInterrupt(INTERRUPT_PIN), dmpDataReady, RISING);
         mpuIntStatus = mpu.getIntStatus();
 
@@ -248,6 +251,10 @@ void loop() {
 
     // wait for MPU interrupt or extra packet(s) available
     while (!mpuInterrupt && fifoCount < packetSize) {
+        if (mpuInterrupt && fifoCount < packetSize) {
+          // try to get out of the infinite loop 
+          fifoCount = mpu.getFIFOCount();
+        }  
         // other program behavior stuff here
         // .
         // .
@@ -268,13 +275,14 @@ void loop() {
     fifoCount = mpu.getFIFOCount();
 
     // check for overflow (this should never happen unless our code is too inefficient)
-    if ((mpuIntStatus & 0x10) || fifoCount == 1024) {
+    if ((mpuIntStatus & _BV(MPU6050_INTERRUPT_FIFO_OFLOW_BIT)) || fifoCount >= 1024) {
         // reset so we can continue cleanly
         mpu.resetFIFO();
+        fifoCount = mpu.getFIFOCount();
         Serial.println(F("FIFO overflow!"));
 
     // otherwise, check for DMP data ready interrupt (this should happen frequently)
-    } else if (mpuIntStatus & 0x02) {
+    } else if (mpuIntStatus & _BV(MPU6050_INTERRUPT_DMP_INT_BIT)) {
         // wait for correct available data length, should be a VERY short wait
         while (fifoCount < packetSize) fifoCount = mpu.getFIFOCount();
 

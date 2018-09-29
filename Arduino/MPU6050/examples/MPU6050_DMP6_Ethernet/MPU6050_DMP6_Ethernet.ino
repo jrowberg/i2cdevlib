@@ -4,8 +4,9 @@
 // Updates should (hopefully) always be available at https://github.com/jrowberg/i2cdevlib
 //
 // Changelog:
+//      2016-04-18 - Eliminated a potential infinite loop
 //      2016-02-28 - Cleaned up code to be in line with other example codes 
- //                - Added Ethernet outputs for Quaternion, Euler, RealAccel, WorldAccel
+//                 - Added Ethernet outputs for Quaternion, Euler, RealAccel, WorldAccel
 //      2016-02-27 - Initial working code compiled
 // Bugs:
 //                 - There is still a hangup after some time, though it only occurs when you are reading data from the website. 
@@ -218,7 +219,9 @@ void setup() {
         mpu.setDMPEnabled(true);
 
         // enable Arduino interrupt detection
-        Serial.println(F("Enabling interrupt detection (Arduino external interrupt 0)..."));
+        Serial.print(F("Enabling interrupt detection (Arduino external interrupt "));
+        Serial.print(digitalPinToInterrupt(INTERRUPT_PIN));
+        Serial.println(F(")..."));
         attachInterrupt(digitalPinToInterrupt(INTERRUPT_PIN), dmpDataReady, RISING);
         mpuIntStatus = mpu.getIntStatus();
 
@@ -236,7 +239,6 @@ void setup() {
         Serial.print(F("DMP Initialization failed (code "));
         Serial.print(devStatus);
         Serial.println(F(")"));
-        return;
     }
 
     // configure LED for output
@@ -252,9 +254,14 @@ void setup() {
 void loop() {
     // if programming failed, don't try to do anything
     if (!dmpReady) return;
+
     wdt_reset();//Resets the watchdog timer. If the timer is not reset, and the timer expires, a watchdog-initiated device reset will occur.
     // wait for MPU interrupt or extra packet(s) available
     while (!mpuInterrupt && fifoCount < packetSize) {
+        if (mpuInterrupt && fifoCount < packetSize) {
+          // try to get out of the infinite loop 
+          fifoCount = mpu.getFIFOCount();
+        }  
         // other program behavior stuff here        
         // .
         // .
@@ -274,13 +281,14 @@ void loop() {
     fifoCount = mpu.getFIFOCount();
 
     // check for overflow (this should never happen unless our code is too inefficient)
-    if ((mpuIntStatus & 0x10) || fifoCount == 1024) {
+    if ((mpuIntStatus & _BV(MPU6050_INTERRUPT_FIFO_OFLOW_BIT)) || fifoCount >= 1024) {
         // reset so we can continue cleanly
         mpu.resetFIFO();
+        fifoCount = mpu.getFIFOCount();
         Serial.println(F("FIFO overflow!"));
 
     // otherwise, check for DMP data ready interrupt (this should happen frequently)
-    } else if (mpuIntStatus & 0x02) {
+    } else if (mpuIntStatus & _BV(MPU6050_INTERRUPT_DMP_INT_BIT)) {
         // wait for correct available data length, should be a VERY short wait
         while (fifoCount < packetSize) fifoCount = mpu.getFIFOCount();
 
