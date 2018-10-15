@@ -87,6 +87,11 @@ THE SOFTWARE.
 
 #endif
 
+#ifndef BUFFER_LENGTH
+// band-aid fix for platforms without Wire-defined BUFFER_LENGTH (removed from some official implementations)
+#define BUFFER_LENGTH 32
+#endif
+
 /** Default constructor.
  */
 I2Cdev::I2Cdev() {
