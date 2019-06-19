@@ -146,7 +146,7 @@ const unsigned int outPort = 9999;          // remote port to receive OSC
 // ================================================================
 
 volatile bool mpuInterrupt = false;     // indicates whether MPU interrupt pin has gone high
-void dmpDataReady() {
+void ICACHE_RAM_ATTR dmpDataReady() {
     mpuInterrupt = true;
 }
 
