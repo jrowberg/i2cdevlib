@@ -31,6 +31,7 @@ THE SOFTWARE.
 */
 
 #include "BMP085.h"
+#include <math.h>
 
 /**
  * Default constructor, uses default I2C device address.
@@ -166,10 +167,14 @@ void BMP085::setControl(uint8_t value) {
 /* measurement register methods */
 
 uint16_t BMP085::getMeasurement2() {
+    // wait for end of conversion
+    while(getControl() & 0x20);
     I2Cdev::readBytes(devAddr, BMP085_RA_MSB, 2, buffer);
     return ((uint16_t)buffer[0] << 8) + buffer[1];
 }
 uint32_t BMP085::getMeasurement3() {
+    // wait for end of conversion
+    while(getControl() & 0x20);
     I2Cdev::readBytes(devAddr, BMP085_RA_MSB, 3, buffer);
     return ((uint32_t)buffer[0] << 16) + ((uint16_t)buffer[1] << 8) + buffer[2];
 }
@@ -207,6 +212,7 @@ float BMP085::getTemperatureC() {
         T = (B5 + 8) / 2^4
     */
     int32_t ut = getRawTemperature();
+    if(ut == 0) return NAN;
     int32_t x1 = ((ut - (int32_t)ac6) * (int32_t)ac5) >> 15;
     int32_t x2 = ((int32_t)mc << 11) / (x1 + md);
     b5 = x1 + x2;
@@ -222,7 +228,7 @@ uint32_t BMP085::getRawPressure() {
     return 0; // wrong measurement mode for pressure request
 }
 
-float BMP085::getPressure() {
+int32_t BMP085::getPressure() {
     /*
     Datasheet forumla
         UP = raw pressure
@@ -244,6 +250,7 @@ float BMP085::getPressure() {
         p = p + (X1 + X2 + 3791) / 2^4
     */
     uint32_t up = getRawPressure();
+    if(up == 0) return NAN;
     uint8_t oss = (measureMode & 0xC0) >> 6;
     int32_t p;
     int32_t b6 = b5 - 4000;

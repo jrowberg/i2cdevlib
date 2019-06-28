@@ -34,6 +34,7 @@ THE SOFTWARE.
 extern "C"{
 #include "nrf_drv_twi.h"
 #include "app_util_platform.h"
+#include <string.h> // For memcpy
 }
 #include "I2Cdev.h"
 static nrf_drv_twi_t m_twi=NRF_DRV_TWI_INSTANCE(0);
@@ -212,10 +213,15 @@ bool I2Cdev::writeByte(uint8_t devAddr, uint8_t regAddr, uint8_t data) {
  * @return Status of operation (true = success)
  */
 bool I2Cdev::writeBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8_t* data) {
-	if (NRF_SUCCESS!=nrf_drv_twi_tx(&m_twi,devAddr,&regAddr,1,true))
-		return false;
-	return NRF_SUCCESS==nrf_drv_twi_tx(&m_twi,devAddr,data,length,false);
+    const uint8_t buf_len = length+1; // Register address + number of bytes
+    uint8_t tx_buf[buf_len];
+
+    tx_buf[0] = regAddr;
+    memcpy(tx_buf+1, data, length);
+
+    return NRF_SUCCESS == nrf_drv_twi_tx(&m_twi, devAddr, tx_buf, buf_len, true);
 }
+
 /** Write single word to a 16-bit device register.
  * @param devAddr I2C slave device address
  * @param regAddr Register address to write to
@@ -225,6 +231,7 @@ bool I2Cdev::writeBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8_
 bool I2Cdev::writeWord(uint8_t devAddr, uint8_t regAddr, uint16_t data) {
     return writeWords(devAddr, regAddr, 1, &data);
 }
+
 /** Write multiple words to a 16-bit device register.
  * @param devAddr I2C slave device address
  * @param regAddr First register address to write to

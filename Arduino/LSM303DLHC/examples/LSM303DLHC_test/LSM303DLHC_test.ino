@@ -71,7 +71,7 @@ void setup() {
     // set scale to 2Gs
     accelMag.setAccelFullScale(2);
 
-    // set accel data rate to 200hz
+    // set accel data rate to 200Hz
     accelMag.setAccelOutputDataRate(200);
 
     // test scale
@@ -82,7 +82,7 @@ void setup() {
     Serial.print("Accel Output Data Rate: ");
     Serial.println(accelMag.getAccelOutputDataRate());
 
-    // set mag data rate to 220hz
+    // set mag data rate to 220Hz
     accelMag.setMagOutputDataRate(220);
 
     // test mag data rate
@@ -108,7 +108,7 @@ void loop() {
     accelMag.getAcceleration(&ax, &ay, &az);
     accelMag.getMag(&mx, &my, &mz);
 
-    // Serial.print("Accelation:\t");
+    // Serial.print("Acceleration:\t");
     // Serial.print(ax,HEX); Serial.print("\t");
     // Serial.print(ay,HEX); Serial.print("\t");
     // Serial.print(az,HEX);
@@ -118,7 +118,7 @@ void loop() {
     // Serial.print(my,HEX); Serial.print("\t");
     // Serial.println(mz,HEX);
 
-    // Serial.print("Accelation:\t");
+    // Serial.print("Acceleration:\t");
     // Serial.print(ax); Serial.print("\t");
     // Serial.print(ay); Serial.print("\t");
     // Serial.print(az);
@@ -128,7 +128,7 @@ void loop() {
     // Serial.print(my); Serial.print("\t");
     // Serial.println(mz);
 
-    Serial.print("Accelation:\t");
+    Serial.print("Acceleration:\t");
     Serial.print(ax*0.0000625F,4); Serial.print("\t");
     Serial.print(ay*0.0000625F,4); Serial.print("\t");
     Serial.print(az*0.0000625F,4);

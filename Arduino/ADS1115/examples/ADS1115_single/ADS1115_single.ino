@@ -53,7 +53,7 @@ void setup() {
     // Slow things down so that we can see that the "poll for conversion" code works
     adc0.setRate(ADS1115_RATE_8);
       
-    // Set the gain (PGA) +/- 6.144v
+    // Set the gain (PGA) +/- 6.144V
     // Note that any analog input must be higher than –0.3V and less than VDD +0.3
     adc0.setGain(ADS1115_PGA_6P144);
     // ALERT/RDY pin will indicate when conversion is ready

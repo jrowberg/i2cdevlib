@@ -113,7 +113,7 @@ void setup() {
     Serial.print("\n");
     */
 
-    // configure Arduino LED for
+    // configure Arduino LED pin for output
     pinMode(LED_PIN, OUTPUT);
 }
 

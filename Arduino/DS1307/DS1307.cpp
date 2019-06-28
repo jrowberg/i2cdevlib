@@ -360,7 +360,7 @@ void DS1307::setDateTime24(uint16_t year, uint8_t month, uint8_t day, uint8_t ho
     ////////////////////////////////////////////////////////////////////////////////
     // utility code, some of this could be exposed in the DateTime API if needed
     
-    static uint8_t daysInMonth [] PROGMEM = { 31,28,31,30,31,30,31,31,30,31,30,31 };
+    static const uint8_t daysInMonth [] PROGMEM = { 31,28,31,30,31,30,31,31,30,31,30,31 };
     
     // number of days since 2000/01/01, valid for 2001..2099
     static uint16_t date2days(uint16_t y, uint8_t m, uint8_t d) {
@@ -435,7 +435,7 @@ void DS1307::setDateTime24(uint16_t year, uint8_t month, uint8_t day, uint8_t ho
         yOff = conv2d(date + 9);
         // Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec 
         switch (date[0]) {
-            case 'J': m = date[1] == 'a' ? 1 : m = date[2] == 'n' ? 6 : 7; break;
+            case 'J': m = (date[1] == 'a' ? 1 : (date[2] == 'n' ? 6 : 7)); break;
             case 'F': m = 2; break;
             case 'A': m = date[2] == 'r' ? 4 : 8; break;
             case 'M': m = date[2] == 'r' ? 3 : 5; break;
