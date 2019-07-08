@@ -208,6 +208,10 @@ void setup() {
 
     // make sure it worked (returns 0 if so)
     if (devStatus == 0) {
+        // Calibration Time: generate offsets and calibrate our MPU6050
+        mpu.CalibrateAccel(6);
+        mpu.CalibrateGyro(6);
+        mpu.PrintActiveOffsets();
         // turn on the DMP, now that it's ready
         Serial.println(F("Enabling DMP..."));
         mpu.setDMPEnabled(true);
@@ -273,26 +277,27 @@ void loop() {
 
     // get current FIFO count
     fifoCount = mpu.getFIFOCount();
-
+	if(fifoCount < packetSize){
+	        // go back and wait we shouldn't be here we got an interrupt from another trigger
+			// This is blocking don't do it   while (fifoCount < packetSize) fifoCount = mpu.getFIFOCount();
+	}
     // check for overflow (this should never happen unless our code is too inefficient)
-    if ((mpuIntStatus & _BV(MPU6050_INTERRUPT_FIFO_OFLOW_BIT)) || fifoCount >= 1024) {
+    else if ((mpuIntStatus & _BV(MPU6050_INTERRUPT_FIFO_OFLOW_BIT)) || fifoCount >= 1024) {
         // reset so we can continue cleanly
         mpu.resetFIFO();
-        fifoCount = mpu.getFIFOCount();
+      //  fifoCount = mpu.getFIFOCount();  // will be zero after reset no need to ask
         Serial.println(F("FIFO overflow!"));
 
     // otherwise, check for DMP data ready interrupt (this should happen frequently)
     } else if (mpuIntStatus & _BV(MPU6050_INTERRUPT_DMP_INT_BIT)) {
-        // wait for correct available data length, should be a VERY short wait
-        while (fifoCount < packetSize) fifoCount = mpu.getFIFOCount();
 
         // read a packet from FIFO
-        mpu.getFIFOBytes(fifoBuffer, packetSize);
-        
-        // track FIFO count here in case there is > 1 packet available
-        // (this lets us immediately read more without waiting for an interrupt)
-        fifoCount -= packetSize;
-
+		while(fifoCount >= packetSize){ // Lets catch to NOW someone is using the dreded delay()!
+			mpu.getFIFOBytes(fifoBuffer, packetSize);
+			// track FIFO count here in case there is > 1 packet available
+			// (this lets us immediately read more without waiting for an interrupt)
+			fifoCount -= packetSize;
+		}
         #ifdef OUTPUT_READABLE_QUATERNION
             // display quaternion values in easy matrix form: w x y z
             mpu.dmpGetQuaternion(&q, fifoBuffer);
