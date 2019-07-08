@@ -3,6 +3,8 @@
 // Updates should (hopefully) always be available at https://github.com/jrowberg/i2cdevlib
 //
 // Changelog:
+//      2019-07-08 - Added Auto Calibration and offset generator
+//		   - and altered FIFO retrieval sequence to avoid using blocking code
 //      2016-04-18 - Eliminated a potential infinite loop
 //      2013-05-08 - added seamless Fastwire support
 //                 - added note about gyro calibration
