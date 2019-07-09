@@ -4,6 +4,7 @@
 // Updates should (hopefully) always be available at https://github.com/jrowberg/i2cdevlib
 //
 // Changelog:
+//  2019-07-08 - Added Auto Calibration routine
 //     ... - ongoing debug release
 
 // NOTE: THIS IS ONLY A PARIAL RELEASE. THIS DEVICE CLASS IS CURRENTLY UNDERGOING ACTIVE
@@ -3202,4 +3203,93 @@ uint8_t MPU6050::getDMPConfig2() {
 }
 void MPU6050::setDMPConfig2(uint8_t config) {
     I2Cdev::writeByte(devAddr, MPU6050_RA_DMP_CFG_2, config);
+}
+
+
+//***************************************************************************************
+//**********************           Calibration Routines            **********************
+//***************************************************************************************
+/**
+  @brief      Fully calibrate Gyro from ZERO in about 6-7 Loops 600-700 readings
+*/
+void MPU6050::CalibrateGyro(int Loops = 6) {
+  int16_t Reading, Offset;
+  float Error, PTerm, ITerm[3];
+  double kP = 0.3;
+  double kI = 90;
+  float x;
+  x = (100 - map(Loops, 1, 5, 20, 0)) * .01;
+  kP *= x;
+  kI *= x;
+  
+  PID( 0x43,  0x13,  kP, kI,  Loops);
+}
+
+/**
+  @brief      Fully calibrate Accel from ZERO in about 6-7 Loops 600-700 readings
+*/
+void MPU6050::CalibrateAccel(int Loops = 6) {
+//  int16_t Reading, Offset;
+//  float Error, PTerm, ITerm[3];
+  double kP = 0.15;
+  double kI = 8;
+  float x;
+  x = (100 - map(Loops, 1, 5, 20, 0)) * .01;
+  kP *= x;
+  kI *= x;
+  PID( 0x3B,  0x06,  kP, kI,  Loops);
+}
+
+void MPU6050::PID(uint8_t ReadAddress, uint8_t SaveAddress, float kP,float kI, uint8_t Loops) {
+  int16_t Reading, Offset;
+  float Error, PTerm, ITerm[3];
+  float x;
+  for (int i = 0; i < 3; i++) {
+	I2Cdev::readWords(devAddr, SaveAddress + (i * 2), 1, &Reading); // reads 1 or more 16 bit integers (Word)
+//    MPUi2cReadInt(SaveAddress + (i * 2), &Reading); // XG_OFFSET_H_READ: Load the active Gyro offset to fine tune
+    ITerm[i] = Reading * 8;
+  }
+  for (int L = 0; L < Loops; L++) {
+    for (int c = 0; c < 100; c++) {// 100 PI Calculations
+      for (int i = 0; i < 3; i++) {
+		I2Cdev::readWords(devAddr, ReadAddress + (i * 2), 1, &Reading); // reads 1 or more 16 bit integers (Word)
+//        MPUi2cReadInt(ReadAddress + (i * 2), &Reading);
+        if ((ReadAddress == 0x3B)&&(i == 2)) Reading -= 16384; //remove Gravity
+        if (abs(Reading) < 25000) {
+          Error = 0 - Reading ;
+          PTerm = kP * Error;
+          ITerm[i] += Error * 0.002 * kI; // Integral term 1000 Calculations a second = 0.001
+          Offset = round((PTerm + ITerm[i] ) / 8); //Compute PID Output
+		  I2Cdev::writeWords(devAddr, SaveAddress + (i * 2), 1,  &Offset);
+        //  MPUi2cWriteInt(SaveAddress + (i * 2), Offset);
+        }
+      }
+      delay(1);
+    }
+    Serial.write('.');
+    kP *= .95;
+    kI *= .95;
+    for (int i = 0; i < 3; i++){
+	 Offset = round((ITerm[i]) / 8);
+	 I2Cdev::writeWords(devAddr, SaveAddress + (i * 2), 1, &Offset );
+	// MPUi2cWriteInt(SaveAddress + (i * 2), round((ITerm[i]) / 8)); // ITerm is more of a running total rather than a reaction.
+	}
+  }
+  resetFIFO();
+  resetDMP();
+}
+#define printfloatx(Name,Variable,Spaces,Precision,EndTxt)  Serial.print(F(Name)); {char S[(Spaces + Precision + 3)];Serial.print(F(" ")); Serial.print(dtostrf((float)Variable,Spaces,Precision ,S));}Serial.print(F(EndTxt));//Name,Variable,Spaces,Precision,EndTxt
+void MPU6050::PrintActiveOffsets() {
+	int16_t Data[3];
+	Serial.print(F("//       X Accel  Y Accel  Z Accel   X Gyro   Y Gyro   Z Gyro\nOFFSETS   "));
+	I2Cdev::readWords(devAddr, 0x06, 3, Data); 
+//	A_OFFSET_H_READ_A_OFFS(Data);
+	printfloatx("", Data[0], 5, 0, ",  ");
+	printfloatx("", Data[1], 5, 0, ",  ");
+	printfloatx("", Data[2], 5, 0, ",  ");
+	I2Cdev::readWords(devAddr, 0x13, 3, Data);
+//	XG_OFFSET_H_READ_OFFS_USR(Data);
+	printfloatx("", Data[0], 5, 0, ",  ");
+	printfloatx("", Data[1], 5, 0, ",  ");
+	printfloatx("", Data[2], 5, 0, "\n");
 }
