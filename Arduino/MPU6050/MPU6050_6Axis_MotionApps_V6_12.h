@@ -1,10 +1,11 @@
-// I2Cdev library collection - MPU6050 I2C device class, 6-axis MotionApps 2.0 implementation
+// I2Cdev library collection - MPU6050 I2C device class, 6-axis MotionApps 6.12 implementation
 // Based on InvenSense MPU-6050 register map document rev. 2.0, 5/19/2011 (RM-MPU-6000A-00)
 // 5/20/2013 by Jeff Rowberg <jeff@rowberg.net>
 // Updates should (hopefully) always be available at https://github.com/jrowberg/i2cdevlib
 //
 // Changelog:
 // 2019/7/10 - I incorporated DMP Firmware Version 6.12 Latest as of today with many features and bug fixes.
+//           - MPU6050 Registers have not changed just the DMP Image so that full backwards compatibility is present
 //           - Run-time calibration routine is enabled which calibrates after no motion state is detected
 //           - once no motion state is detected Calibration completes within 0.5 seconds
 //           - The Drawback is that the firmware image is larger.
