@@ -4,7 +4,7 @@
 // Updates should (hopefully) always be available at https://github.com/jrowberg/i2cdevlib
 //
 // Changelog:
-// 2019/7/10 - I incorporated DMP Firmware Version 6.1.2 Latest as of today with many features and bug fixes.
+// 2019/7/10 - I incorporated DMP Firmware Version 6.12 Latest as of today with many features and bug fixes.
 //           - Run-time calibration routine is enabled which calibrates after no motion state is detected
 //           - once no motion state is detected Calibration completes within 0.5 seconds
 //           - The Drawback is that the firmware image is larger.
