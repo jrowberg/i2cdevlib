@@ -341,13 +341,13 @@ const unsigned char dmpMemory[MPU6050_DMP_CODE_SIZE] PROGMEM = {
 0xA6, 0xD9, 0x00, 0xD8, 0xF1, 0xFF,
 };
 
+// this divisor is pre configured into the above image and can't be modified at this time.
 #ifndef MPU6050_DMP_FIFO_RATE_DIVISOR 
-#define MPU6050_DMP_FIFO_RATE_DIVISOR 0x01 // The New instance of the Firmware has this as the default
+#define MPU6050_DMP_FIFO_RATE_DIVISOR 0x01 // The New instance of the Firmware has this as the default 
 #endif
 
-// this is the most basic initialization I can create we access the register bytes as few times as needed to get the job done:
-
-
+// this is the most basic initialization I can create. with the intent that we access the register bytes as few times as needed to get the job done.
+// for detailed descriptins of all registers and there purpose google "MPU-6000/MPU-6050 Register Map and Descriptions"
 uint8_t MPU6050::dmpInitialize() { // Lets get it over with fast Write everything once and set it up necely
 	uint8_t val;
 	uint16_t ival;
@@ -370,7 +370,7 @@ uint8_t MPU6050::dmpInitialize() { // Lets get it over with fast Write everythin
 	I2Cdev::writeBytes(devAddr,0x6A, 1, &(val = 0xC0)); // 1100 1100 USER_CTRL: Enable Fifo and Reset Fifo
 	I2Cdev::writeBytes(devAddr,0x38, 1, &(val = 0x02)); // 0000 0010 INT_ENABLE: RAW_DMP_INT_EN on
 	I2Cdev::writeBit(devAddr,0x6A, 2, &(val = 1));      // Reset FIFO one last time just for kicks. (MPUi2cWrite reads 0x6A first and only alters 1 bit and then saves the byte)
-	setDMPEnabled(false);
+	setDMPEnabled(false); // disable DMP for compatibility with the MPU6050 library
 /*
     dmpPacketSize += 16;//DMP_FEATURE_6X_LP_QUAT
     dmpPacketSize += 6;//DMP_FEATURE_SEND_RAW_ACCEL
