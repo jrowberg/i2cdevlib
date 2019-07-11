@@ -6,6 +6,9 @@
 // Updates should (hopefully) always be available at https://github.com/jrowberg/i2cdevlib
 //
 // Changelog:
+//      2019-07-11 - added PID offset generation at begninning Generates first offsets 
+//                 - in @ 6 seconds and completes with 4 more sets @ 10 seconds
+//                 - then continues with origional 2016 calibration code.
 //      2016-11-25 - added delays to reduce sampling rate to ~200 Hz
 //                   added temporizing printing during long computations
 //      2016-10-25 - requires inequality (Low < Target, High > Target) during expansion
@@ -165,6 +168,43 @@ void Initialize()
     // verify connection
     Serial.println("Testing device connections...");
     Serial.println(accelgyro.testConnection() ? "MPU6050 connection successful" : "MPU6050 connection failed");
+    Serial.println("PID tuning Each Dot = 100 readings");
+  /*A tidbit on how PID (PI actually) tuning works. 
+    When we change the offset in the MPU6050 we can get instant results. This allows us to use Proportional and 
+    integral of the PID to discover the ideal offsets. Integral is the key to discovering these offsets, Integral 
+    uses the error from set-point (set-point is zero), it takes a fraction of this error (error * ki) and adds it 
+    to the integral value. Each reading narrows the error down to the desired offset. The greater the error from 
+    set-point, the more we adjust the integral value. The proportional does its part by hiding the noise from the 
+    integral math. The Derivative is not used because of the noise and because the sensor is stationary. With the 
+    noise removed the integral value lands on a solid offset after just 600 readings. At the end of each set of 100 
+    readings, the integral value is used for the actual offsets and the last proportional reading is ignored due to 
+    the fact it reacts to any noise.
+  */
+        accelgyro.CalibrateAccel(6);
+        accelgyro.CalibrateGyro(6);
+        Serial.println("\nat 600 Readings");
+        accelgyro.PrintActiveOffsets();
+        Serial.println();
+        accelgyro.CalibrateAccel(1);
+        accelgyro.CalibrateGyro(1);
+        Serial.println("700 Total Readings");
+        accelgyro.PrintActiveOffsets();
+        Serial.println();
+        accelgyro.CalibrateAccel(1);
+        accelgyro.CalibrateGyro(1);
+        Serial.println("800 Total Readings");
+        accelgyro.PrintActiveOffsets();
+        Serial.println();
+        accelgyro.CalibrateAccel(1);
+        accelgyro.CalibrateGyro(1);
+        Serial.println("900 Total Readings");
+        accelgyro.PrintActiveOffsets();
+        Serial.println();    
+        accelgyro.CalibrateAccel(1);
+        accelgyro.CalibrateGyro(1);
+        Serial.println("1000 Total Readings");
+        accelgyro.PrintActiveOffsets();
+     Serial.println("\n\n Any of the above offsets will work nice \n\n Lets proof the PID tuning using another method:"); 
   } // Initialize
 
 void SetOffsets(int TheOffsets[6])
