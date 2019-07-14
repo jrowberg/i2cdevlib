@@ -54,6 +54,7 @@ THE SOFTWARE.
 #define I2CDEV_IMPLEMENTATION       I2CDEV_ARDUINO_WIRE
 //#define I2CDEV_IMPLEMENTATION       I2CDEV_BUILTIN_SBWIRE
 //#define I2CDEV_IMPLEMENTATION       I2CDEV_BUILTIN_FASTWIRE
+//#define I2CDEV_IMPLEMENTATION       I2CDEV_ARDUINO_SOFTWIRE
 #endif // I2CDEV_IMPLEMENTATION
 
 // comment this out if you are using a non-optimal IDE/implementation setting
@@ -69,6 +70,7 @@ THE SOFTWARE.
 #define I2CDEV_BUILTIN_FASTWIRE     3 // FastWire object from Francesco Ferrara's project
 #define I2CDEV_I2CMASTER_LIBRARY    4 // I2C object from DSSCircuits I2C-Master Library at https://github.com/DSSCircuits/I2C-Master-Library
 #define I2CDEV_BUILTIN_SBWIRE	    5 // I2C object from Shuning (Steve) Bian's SBWire Library at https://github.com/freespace/SBWire 
+#define I2CDEV_ARDUINO_SOFTWIRE     6 // SoftWire object from STM32duino, fall back on arduino wire for non-STM32
 
 // -----------------------------------------------------------------------------
 // Arduino-style "Serial.print" debug constant (uncomment to enable)
@@ -90,6 +92,16 @@ THE SOFTWARE.
 	#if I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_SBWIRE
 		#include "SBWire.h"
 	#endif
+    #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_SOFTWIRE
+        #ifdef ARDUINO_ARCH_STM32
+            #include <SoftWire.h>
+            #define _TWOWIRE_H_
+            extern SoftWire SWire;
+            #define Wire SWire
+        #else // ARDUINO_ARCH_STM32
+            #include <Wire.h>
+        #endif // ARDUINO_ARCH_STM32
+    #endif
 #endif
 
 #ifdef SPARK
