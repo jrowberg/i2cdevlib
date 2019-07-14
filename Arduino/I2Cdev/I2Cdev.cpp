@@ -665,21 +665,21 @@ bool I2Cdev::writeWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint16
         Fastwire::beginTransmission(devAddr);
         Fastwire::write(regAddr);
     #endif
-    for (uint8_t i = 0; i < length * 2; i++) {
+    for (uint8_t i = 0; i < length; i++) { 
         #ifdef I2CDEV_SERIAL_DEBUG
             Serial.print(data[i], HEX);
             if (i + 1 < length) Serial.print(" ");
         #endif
         #if ((I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE && ARDUINO < 100) || I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_NBWIRE)
             Wire.send((uint8_t)(data[i] >> 8));     // send MSB
-            Wire.send((uint8_t)data[i++]);          // send LSB
+            Wire.send((uint8_t)data[i]);          // send LSB
 		#elif (I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE && ARDUINO >= 100 \
 			|| I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_SBWIRE && ARDUINO >= 100)
 			Wire.write((uint8_t)(data[i] >> 8));    // send MSB
-            Wire.write((uint8_t)data[i++]);         // send LSB
+            Wire.write((uint8_t)data[i]);         // send LSB
         #elif (I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_FASTWIRE)
             Fastwire::write((uint8_t)(data[i] >> 8));       // send MSB
-            status = Fastwire::write((uint8_t)data[i++]);   // send LSB
+            status = Fastwire::write((uint8_t)data[i]);   // send LSB
             if (status != 0) break;
         #endif
     }
