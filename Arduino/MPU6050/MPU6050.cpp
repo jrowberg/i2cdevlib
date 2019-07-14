@@ -3212,7 +3212,7 @@ void MPU6050::setDMPConfig2(uint8_t config) {
 /**
   @brief      Fully calibrate Gyro from ZERO in about 6-7 Loops 600-700 readings
 */
-void MPU6050::CalibrateGyro(int Loops = 6) {
+void MPU6050::CalibrateGyro(uint16_t Loops = 6) {
   int16_t Reading, Offset;
   float Error, PTerm, ITerm[3];
   double kP = 0.3;
