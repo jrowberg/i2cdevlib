@@ -3226,6 +3226,12 @@ void MPU6050::CalibrateGyro(uint16_t Loops = 6) {
 /**
   @brief      Fully calibrate Accel from ZERO in about 6-7 Loops 600-700 readings
 */
+void MPU6050::CalibrateAccel_MPU9250(uint8_t Loops = 6) {
+	CalibrateAccel(Loops,0x77);
+}
+void MPU6050::CalibrateAccel_MPU6500(uint8_t Loops = 6) {
+	CalibrateAccel(Loops,0x77);
+}
 void MPU6050::CalibrateAccel(uint16_t Loops = 6,uint8_t OffsetSaveAddress = 0x06) {
   double kP = 0.15;
   double kI = 8;
@@ -3304,7 +3310,7 @@ void MPU6050::PrintActiveOffsets_MPU9250() {
 	PrintActiveOffsets(0x77);
 }
 void MPU6050::PrintActiveOffsets_MPU6500() {
-	PrintActiveOffsets(0x77)
+	PrintActiveOffsets(0x77);
 }
 
 void MPU6050::PrintActiveOffsets(uint8_t AOffsetRegister = 0x06) {
