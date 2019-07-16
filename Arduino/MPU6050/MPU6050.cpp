@@ -3232,7 +3232,7 @@ void MPU6050::CalibrateAccel_MPU9250(uint8_t Loops = 6) {
 void MPU6050::CalibrateAccel_MPU6500(uint8_t Loops = 6) {
 	CalibrateAccel(Loops,0x77);
 }
-void MPU6050::CalibrateAccel(uint16_t Loops = 6,uint8_t OffsetSaveAddress = 0x06) {
+void MPU6050::CalibrateAccel(uint8_t Loops = 6,uint8_t OffsetSaveAddress = 0x06) {
   double kP = 0.15;
   double kI = 8;
   float x;
