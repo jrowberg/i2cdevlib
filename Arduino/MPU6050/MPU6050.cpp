@@ -3212,7 +3212,7 @@ void MPU6050::setDMPConfig2(uint8_t config) {
 /**
   @brief      Fully calibrate Gyro from ZERO in about 6-7 Loops 600-700 readings
 */
-void MPU6050::CalibrateGyro(uint16_t Loops = 6) {
+void MPU6050::CalibrateGyro(uint8_t Loops = 6) {
   double kP = 0.3;
   double kI = 90;
   float x;
@@ -3279,7 +3279,6 @@ void MPU6050::PID(uint8_t ReadAddress, uint8_t SaveAddress, float kP,float kI, u
 						I2Cdev::writeWords(devAddr, SaveAddress + (i * 2), 1,  &Offset);
 					}
 				}
-				//	if(SaveAddress != 0x13)	PrintActiveOffsets();
 			}
 			delay(1);
 		}
@@ -3322,12 +3321,10 @@ void MPU6050::PrintActiveOffsets(uint8_t AOffsetRegister = 0x06) {
 		I2Cdev::readWords(devAddr, AOffsetRegister+3, 1, Data+1); // Shifts 3 bytes
 		I2Cdev::readWords(devAddr, AOffsetRegister+6, 1, Data+2); // Shifts 3 more bytes
 	}
-//	A_OFFSET_H_READ_A_OFFS(Data);
 	printfloatx("", Data[0], 5, 0, ",  ");
 	printfloatx("", Data[1], 5, 0, ",  ");
 	printfloatx("", Data[2], 5, 0, ",  ");
 	I2Cdev::readWords(devAddr, 0x13, 3, Data);
-//	XG_OFFSET_H_READ_OFFS_USR(Data);
 	printfloatx("", Data[0], 5, 0, ",  ");
 	printfloatx("", Data[1], 5, 0, ",  ");
 	printfloatx("", Data[2], 5, 0, "\n");
