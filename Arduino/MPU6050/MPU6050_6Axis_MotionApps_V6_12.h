@@ -353,9 +353,9 @@ uint8_t MPU6050::dmpInitialize() { // Lets get it over with fast Write everythin
 	uint8_t val;
 	uint16_t ival;
   // Reset procedure per instructions in the "MPU-6000/MPU-6050 Register Map and Descriptions" page 41
-	I2Cdev::writeBit(devAddr,0x6B, 7, &(val = 1)); //PWR_MGMT_1: reset with 100ms delay
+	I2Cdev::writeBit(devAddr,0x6B, 7, (val = 1)); //PWR_MGMT_1: reset with 100ms delay
 	delay(100);
-	I2Cdev::writeBits(devAddr,0x6A, 2, 3, &(val = 0b111)); // full SIGNAL_PATH_RESET: with another 100ms delay
+	I2Cdev::writeBits(devAddr,0x6A, 2, 3, (val = 0b111)); // full SIGNAL_PATH_RESET: with another 100ms delay
 	delay(100);         
 	I2Cdev::writeBytes(devAddr,0x6B, 1, &(val = 0x01)); // 1000 0001 PWR_MGMT_1:Clock Source Select PLL_X_gyro
 	I2Cdev::writeBytes(devAddr,0x38, 1, &(val = 0x00)); // 0000 0000 INT_ENABLE: no Interrupt
@@ -370,7 +370,7 @@ uint8_t MPU6050::dmpInitialize() { // Lets get it over with fast Write everythin
 	I2Cdev::writeBytes(devAddr,0x1B, 1, &(val = 0x18)); // 0001 1000 GYRO_CONFIG: 3 = +2000 Deg/sec
 	I2Cdev::writeBytes(devAddr,0x6A, 1, &(val = 0xC0)); // 1100 1100 USER_CTRL: Enable Fifo and Reset Fifo
 	I2Cdev::writeBytes(devAddr,0x38, 1, &(val = 0x02)); // 0000 0010 INT_ENABLE: RAW_DMP_INT_EN on
-	I2Cdev::writeBit(devAddr,0x6A, 2, &(val = 1));      // Reset FIFO one last time just for kicks. (MPUi2cWrite reads 0x6A first and only alters 1 bit and then saves the byte)
+	I2Cdev::writeBit(devAddr,0x6A, 2, (val = 1));      // Reset FIFO one last time just for kicks. (MPUi2cWrite reads 0x6A first and only alters 1 bit and then saves the byte)
 	setDMPEnabled(false); // disable DMP for compatibility with the MPU6050 library
 /*
     dmpPacketSize += 16;//DMP_FEATURE_6X_LP_QUAT
