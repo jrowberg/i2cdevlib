@@ -3212,7 +3212,7 @@ void MPU6050::setDMPConfig2(uint8_t config) {
 /**
   @brief      Fully calibrate Gyro from ZERO in about 6-7 Loops 600-700 readings
 */
-void MPU6050::CalibrateGyro(uint8_t Loops = 6) {
+void MPU6050::CalibrateGyro(uint8_t Loops) {
   double kP = 0.3;
   double kI = 90;
   float x;
@@ -3226,13 +3226,13 @@ void MPU6050::CalibrateGyro(uint8_t Loops = 6) {
 /**
   @brief      Fully calibrate Accel from ZERO in about 6-7 Loops 600-700 readings
 */
-void MPU6050::CalibrateAccel_MPU9250(uint8_t Loops = 6) {
+void MPU6050::CalibrateAccel_MPU9250(uint8_t Loops) {
 	CalibrateAccel(Loops,0x77);
 }
-void MPU6050::CalibrateAccel_MPU6500(uint8_t Loops = 6) {
+void MPU6050::CalibrateAccel_MPU6500(uint8_t Loops) {
 	CalibrateAccel(Loops,0x77);
 }
-void MPU6050::CalibrateAccel(uint8_t Loops = 6,uint8_t OffsetSaveAddress = 0x06) {
+void MPU6050::CalibrateAccel(uint8_t Loops,uint8_t OffsetSaveAddress) {
   double kP = 0.15;
   double kI = 8;
   float x;
