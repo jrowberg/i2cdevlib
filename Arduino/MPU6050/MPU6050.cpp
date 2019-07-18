@@ -3249,7 +3249,7 @@ void MPU6050::PID(uint8_t ReadAddress, uint8_t SaveAddress, float kP,float kI, u
 	float Error, PTerm, ITerm[3];
 	for (int i = 0; i < 3; i++) {
 		shift =(SaveAddress == 0x06)?2:3;
-		I2Cdev::readWords(devAddr, SaveAddress + (i * shift), 1, &Reading); // reads 1 or more 16 bit integers (Word)
+		I2Cdev::readWords(devAddr, SaveAddress + (i * shift), 1, (uint16_t *)&Reading); // reads 1 or more 16 bit integers (Word)
 		if(SaveAddress != 0x13){
 			BitZero[i] = Reading & 1; // Capture Bit Zero to properly handle Accelerometer calibration
 			ITerm[i] = ((int32_t)Reading/2) * 16; // remove bit 0 while keeping +- bit
@@ -3260,7 +3260,7 @@ void MPU6050::PID(uint8_t ReadAddress, uint8_t SaveAddress, float kP,float kI, u
 	for (int L = 0; L < Loops; L++) {
 		for (int c = 0; c < 100; c++) {// 100 PI Calculations
 			for (int i = 0; i < 3; i++) {
-				I2Cdev::readWords(devAddr, ReadAddress + (i * 2), 1, &Reading); // reads 1 or more 16 bit integers (Word)
+				I2Cdev::readWords(devAddr, ReadAddress + (i * 2), 1, (uint16_t *)&Reading); // reads 1 or more 16 bit integers (Word)
 				if ((ReadAddress == 0x3B)&&(i == 2)) Reading -= 16384; //remove Gravity
 				if (abs(Reading) < 25000) {
 					Error = 0 - Reading ;
@@ -3270,13 +3270,13 @@ void MPU6050::PID(uint8_t ReadAddress, uint8_t SaveAddress, float kP,float kI, u
 						Offset = round((PTerm + ITerm[i] ) / 16); //Compute PID Output
 						Offset = (Offset*2) |BitZero[i]; // Insert Bit0 Saved at beginning
 						if(SaveAddress == 0x06){
-							I2Cdev::writeWords(devAddr, SaveAddress + (i * 2), 1,  &Offset);
+							I2Cdev::writeWords(devAddr, SaveAddress + (i * 2), 1,  (uint16_t *)&Offset);
 							} else { // SaveAddress == 0x77
-							I2Cdev::writeWords(devAddr, SaveAddress + (i * 3), 1,  &Offset); // 0x77, 0x7A, 0x7D Space every 3 instead of 2
+							I2Cdev::writeWords(devAddr, SaveAddress + (i * 3), 1,  (uint16_t *)&Offset); // 0x77, 0x7A, 0x7D Space every 3 instead of 2
 						}
 						} else {
 						Offset = round((PTerm + ITerm[i] ) / 4); //Compute PID Output
-						I2Cdev::writeWords(devAddr, SaveAddress + (i * 2), 1,  &Offset);
+						I2Cdev::writeWords(devAddr, SaveAddress + (i * 2), 1,  (uint16_t *)&Offset);
 					}
 				}
 			}
@@ -3290,13 +3290,13 @@ void MPU6050::PID(uint8_t ReadAddress, uint8_t SaveAddress, float kP,float kI, u
 				Offset = round((ITerm[i] ) / 16); //Compute PID Output
 				Offset = (Offset*2) |BitZero[i];  // Insert Bit0 Saved at beginning
 				if(SaveAddress == 0x06){
-					I2Cdev::writeWords(devAddr, SaveAddress + (i * 2), 1,  &Offset);
+					I2Cdev::writeWords(devAddr, SaveAddress + (i * 2), 1,  (uint16_t *)&Offset);
 					} else { // SaveAddress == 0x77
-					I2Cdev::writeWords(devAddr, SaveAddress + (i * 3), 1,  &Offset); // 0x77, 0x7A, 0x7D Space every 3 instead of 2
+					I2Cdev::writeWords(devAddr, SaveAddress + (i * 3), 1,  (uint16_t *)&Offset); // 0x77, 0x7A, 0x7D Space every 3 instead of 2
 				}
 				} else {
 				Offset = round((ITerm[i]) / 4);
-				I2Cdev::writeWords(devAddr, SaveAddress + (i * 2), 1, &Offset );
+				I2Cdev::writeWords(devAddr, SaveAddress + (i * 2), 1, (uint16_t *)&Offset );
 			}
 		}
 	}
@@ -3312,19 +3312,19 @@ void MPU6050::PrintActiveOffsets_MPU6500() {
 	PrintActiveOffsets(0x77);
 }
 
-void MPU6050::PrintActiveOffsets(uint8_t AOffsetRegister = 0x06) {
+void MPU6050::PrintActiveOffsets(uint8_t AOffsetRegister) {
 	int16_t Data[3];
 	Serial.print(F("\n//                X Accel  Y Accel  Z Accel   X Gyro   Y Gyro   Z Gyro\n//#define OFFSETS "));
-	if(AOffsetRegister == 0x06)	I2Cdev::readWords(devAddr, AOffsetRegister, 3, Data);
+	if(AOffsetRegister == 0x06)	I2Cdev::readWords(devAddr, AOffsetRegister, 3, (uint16_t *)Data);
 	else {
-		I2Cdev::readWords(devAddr, AOffsetRegister, 1, Data);
-		I2Cdev::readWords(devAddr, AOffsetRegister+3, 1, Data+1); // Shifts 3 bytes
-		I2Cdev::readWords(devAddr, AOffsetRegister+6, 1, Data+2); // Shifts 3 more bytes
+		I2Cdev::readWords(devAddr, AOffsetRegister, 1, (uint16_t *)Data);
+		I2Cdev::readWords(devAddr, AOffsetRegister+3, 1, (uint16_t *)Data+1); // Shifts 3 bytes
+		I2Cdev::readWords(devAddr, AOffsetRegister+6, 1, (uint16_t *)Data+2); // Shifts 3 more bytes
 	}
 	printfloatx("", Data[0], 5, 0, ",  ");
 	printfloatx("", Data[1], 5, 0, ",  ");
 	printfloatx("", Data[2], 5, 0, ",  ");
-	I2Cdev::readWords(devAddr, 0x13, 3, Data);
+	I2Cdev::readWords(devAddr, 0x13, 3, (uint16_t *)Data);
 	printfloatx("", Data[0], 5, 0, ",  ");
 	printfloatx("", Data[1], 5, 0, ",  ");
 	printfloatx("", Data[2], 5, 0, "\n");
