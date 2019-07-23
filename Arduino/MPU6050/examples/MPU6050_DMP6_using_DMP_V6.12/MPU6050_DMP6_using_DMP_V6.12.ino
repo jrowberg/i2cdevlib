@@ -1,10 +1,11 @@
-// I2C device class (I2Cdev) demonstration Arduino sketch for MPU6050 class using DMP (MotionApps v2.0)
+// I2C device class (I2Cdev) demonstration Arduino sketch for MPU6050 class using DMP (MotionApps v6.12)
 // 6/21/2012 by Jeff Rowberg <jeff@rowberg.net>
 // Updates should (hopefully) always be available at https://github.com/jrowberg/i2cdevlib
 //
 // Changelog:
-//      2019-07-08 - Added Auto Calibration and offset generator
-//		   - and altered FIFO retrieval sequence to avoid using blocking code
+//      2019-07-10 - Uses the new version of the DMP Firmware V6.12
+//                 - Note: I believe the Teapot demo is broken with this versin as 
+//                 - the fifo buffer structure has changed
 //      2016-04-18 - Eliminated a potential infinite loop
 //      2013-05-08 - added seamless Fastwire support
 //                 - added note about gyro calibration
@@ -48,7 +49,7 @@ THE SOFTWARE.
 // for both classes must be in the include path of your project
 #include "I2Cdev.h"
 
-#include "MPU6050_6Axis_MotionApps20.h"
+#include "MPU6050_6Axis_MotionApps_V6_12.h"
 //#include "MPU6050.h" // not necessary if using MotionApps include file
 
 // Arduino Wire library is required if I2Cdev I2CDEV_ARDUINO_WIRE implementation
@@ -136,6 +137,7 @@ uint8_t fifoBuffer[64]; // FIFO storage buffer
 // orientation/motion vars
 Quaternion q;           // [w, x, y, z]         quaternion container
 VectorInt16 aa;         // [x, y, z]            accel sensor measurements
+VectorInt16 gy;         // [x, y, z]            gyro sensor measurements
 VectorInt16 aaReal;     // [x, y, z]            gravity-free accel sensor measurements
 VectorInt16 aaWorld;    // [x, y, z]            world-frame accel sensor measurements
 VectorFloat gravity;    // [x, y, z]            gravity vector
@@ -203,16 +205,18 @@ void setup() {
     devStatus = mpu.dmpInitialize();
 
     // supply your own gyro offsets here, scaled for min sensitivity
-    mpu.setXGyroOffset(220);
-    mpu.setYGyroOffset(76);
-    mpu.setZGyroOffset(-85);
-    mpu.setZAccelOffset(1788); // 1688 factory default for my test chip
-
+    mpu.setXGyroOffset(51);
+    mpu.setYGyroOffset(8);
+    mpu.setZGyroOffset(21);
+    mpu.setXAccelOffset(1150); 
+    mpu.setYAccelOffset(-50); 
+    mpu.setZAccelOffset(1060); 
     // make sure it worked (returns 0 if so)
     if (devStatus == 0) {
         // Calibration Time: generate offsets and calibrate our MPU6050
         mpu.CalibrateAccel(6);
         mpu.CalibrateGyro(6);
+        Serial.println();
         mpu.PrintActiveOffsets();
         // turn on the DMP, now that it's ready
         Serial.println(F("Enabling DMP..."));
@@ -279,27 +283,26 @@ void loop() {
 
     // get current FIFO count
     fifoCount = mpu.getFIFOCount();
-	if(fifoCount < packetSize){
-	        //Lets go back and wait for another interrupt. We shouldn't be here, we got an interrupt from another event
-			// This is blocking so don't do it   while (fifoCount < packetSize) fifoCount = mpu.getFIFOCount();
-	}
+
     // check for overflow (this should never happen unless our code is too inefficient)
-    else if ((mpuIntStatus & _BV(MPU6050_INTERRUPT_FIFO_OFLOW_BIT)) || fifoCount >= 1024) {
+    if ((mpuIntStatus & _BV(MPU6050_INTERRUPT_FIFO_OFLOW_BIT)) || fifoCount >= 1024) {
         // reset so we can continue cleanly
         mpu.resetFIFO();
-      //  fifoCount = mpu.getFIFOCount();  // will be zero after reset no need to ask
+        fifoCount = mpu.getFIFOCount();
         Serial.println(F("FIFO overflow!"));
 
     // otherwise, check for DMP data ready interrupt (this should happen frequently)
     } else if (mpuIntStatus & _BV(MPU6050_INTERRUPT_DMP_INT_BIT)) {
+        // wait for correct available data length, should be a VERY short wait
+        while (fifoCount < packetSize) fifoCount = mpu.getFIFOCount();
 
         // read a packet from FIFO
-	while(fifoCount >= packetSize){ // Lets catch up to NOW, someone is using the dreaded delay()!
-		mpu.getFIFOBytes(fifoBuffer, packetSize);
-		// track FIFO count here in case there is > 1 packet available
-		// (this lets us immediately read more without waiting for an interrupt)
-		fifoCount -= packetSize;
-	}
+        mpu.getFIFOBytes(fifoBuffer, packetSize);
+        
+        // track FIFO count here in case there is > 1 packet available
+        // (this lets us immediately read more without waiting for an interrupt)
+        fifoCount -= packetSize;
+
         #ifdef OUTPUT_READABLE_QUATERNION
             // display quaternion values in easy matrix form: w x y z
             mpu.dmpGetQuaternion(&q, fifoBuffer);
@@ -335,7 +338,25 @@ void loop() {
             Serial.print("\t");
             Serial.print(ypr[1] * 180/M_PI);
             Serial.print("\t");
-            Serial.println(ypr[2] * 180/M_PI);
+            Serial.print(ypr[2] * 180/M_PI);
+            /*
+            mpu.dmpGetAccel(&aa, fifoBuffer);
+            Serial.print("\tRaw Accl XYZ\t");
+            Serial.print(aa.x);
+            Serial.print("\t");
+            Serial.print(aa.y);
+            Serial.print("\t");
+            Serial.print(aa.z);
+            mpu.dmpGetGyro(&gy, fifoBuffer);
+            Serial.print("\tRaw Gyro XYZ\t");
+            Serial.print(gy.x);
+            Serial.print("\t");
+            Serial.print(gy.y);
+            Serial.print("\t");
+            Serial.print(gy.z);
+            */
+            Serial.println();
+
         #endif
 
         #ifdef OUTPUT_READABLE_REALACCEL
