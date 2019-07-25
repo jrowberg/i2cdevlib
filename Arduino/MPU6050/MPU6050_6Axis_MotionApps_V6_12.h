@@ -370,8 +370,9 @@ uint8_t MPU6050::dmpInitialize() { // Lets get it over with fast Write everythin
 	I2Cdev::writeBytes(devAddr,0x1B, 1, &(val = 0x18)); // 0001 1000 GYRO_CONFIG: 3 = +2000 Deg/sec
 	I2Cdev::writeBytes(devAddr,0x6A, 1, &(val = 0xC0)); // 1100 1100 USER_CTRL: Enable Fifo and Reset Fifo
 	I2Cdev::writeBytes(devAddr,0x38, 1, &(val = 0x02)); // 0000 0010 INT_ENABLE: RAW_DMP_INT_EN on
-	I2Cdev::writeBit(devAddr,0x6A, 2, (val = 1));      // Reset FIFO one last time just for kicks. (MPUi2cWrite reads 0x6A first and only alters 1 bit and then saves the byte)
-	setDMPEnabled(false); // disable DMP for compatibility with the MPU6050 library
+	I2Cdev::writeBit(devAddr,0x6A, 2, 1);      // Reset FIFO one last time just for kicks. (MPUi2cWrite reads 0x6A first and only alters 1 bit and then saves the byte)
+
+  setDMPEnabled(false); // disable DMP for compatibility with the MPU6050 library
 /*
     dmpPacketSize += 16;//DMP_FEATURE_6X_LP_QUAT
     dmpPacketSize += 6;//DMP_FEATURE_SEND_RAW_ACCEL

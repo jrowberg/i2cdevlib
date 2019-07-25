@@ -821,14 +821,11 @@ class MPU6050 {
         void setDMPConfig2(uint8_t config);
 
 		// Calibration Routines
-		void CalibrateGyro(uint8_t Loops = 6); // Fine tune after setting offsets with less Loops.
-		void CalibrateAccel(uint8_t Loops = 6,uint8_t OffsetSaveAddress = 0x06); // Fine tune after setting offsets with less Loops.
-		void CalibrateAccel_MPU9250(uint8_t Loops = 6);
-		void CalibrateAccel_MPU6500(uint8_t Loops = 6);
-		void PID(uint8_t ReadAddress, uint8_t SaveAddress, float kP,float kI, uint8_t Loops);  // Does the math
-		void PrintActiveOffsets(uint8_t AOffsetRegister = 0x06); // See the results of the Calibration
-		void PrintActiveOffsets_MPU6500();
-		void PrintActiveOffsets_MPU9250();
+		void CalibrateGyro(uint8_t Loops = 15); // Fine tune after setting offsets with less Loops.
+		void CalibrateAccel(uint8_t Loops = 15);// Fine tune after setting offsets with less Loops.
+		void PID(uint8_t ReadAddress, float kP,float kI, uint8_t Loops);  // Does the math
+		void PrintActiveOffsets(); // See the results of the Calibration
+
 
 
         // special methods for MotionApps 2.0 implementation
