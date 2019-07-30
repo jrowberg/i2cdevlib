@@ -3246,7 +3246,7 @@ void MPU6050::CalibrateAccel(uint8_t Loops ) {
 void MPU6050::PID(uint8_t ReadAddress, float kP,float kI, uint8_t Loops){
 	uint8_t SaveAddress = (ReadAddress == 0x3B)?((getDeviceID() < 0x38 )? 0x06:0x77):0x13;
 
-	int16_t  Data;
+	uint16_t  Data;
 	float Reading;
 	int16_t BitZero[3];
 	uint8_t shift =(SaveAddress == 0x77)?3:2;
@@ -3308,7 +3308,7 @@ void MPU6050::PID(uint8_t ReadAddress, float kP,float kI, uint8_t Loops){
 #define printfloatx(Name,Variable,Spaces,Precision,EndTxt)  Serial.print(F(Name)); {char S[(Spaces + Precision + 3)];Serial.print(F(" ")); Serial.print(dtostrf((float)Variable,Spaces,Precision ,S));}Serial.print(F(EndTxt));//Name,Variable,Spaces,Precision,EndTxt
 void MPU6050::PrintActiveOffsets() {
 	uint8_t AOffsetRegister = (getDeviceID() < 0x38 )? MPU6050_RA_XA_OFFS_H:0x77;
-	int16_t Data[3];
+	uint16_t Data[3];
 	//Serial.print(F("Offset Register 0x"));
 	//Serial.print(AOffsetRegister>>4,HEX);Serial.print(AOffsetRegister&0x0F,HEX);
 	Serial.print(F("\n//           X Accel  Y Accel  Z Accel   X Gyro   Y Gyro   Z Gyro\n//OFFSETS   "));
