@@ -3255,7 +3255,7 @@ void MPU6050::PID(uint8_t ReadAddress, float kP,float kI, uint8_t Loops){
 	uint32_t eSum ;
 	Serial.write('>');
 	for (int i = 0; i < 3; i++) {
-		I2Cdev::readWords(devAddr, SaveAddress + (i * shift), 1, &Data); // reads 1 or more 16 bit integers (Word)
+		I2Cdev::readWords(devAddr, SaveAddress + (i * shift), 1, (uint16_t *)&Data); // reads 1 or more 16 bit integers (Word)
 		Reading = Data;
 		if(SaveAddress != 0x13){
 			BitZero[i] = Data & 1;										 // Capture Bit Zero to properly handle Accelerometer calibration
@@ -3269,7 +3269,7 @@ void MPU6050::PID(uint8_t ReadAddress, float kP,float kI, uint8_t Loops){
 		for (int c = 0; c < 100; c++) {// 100 PI Calculations
 			eSum = 0;
 			for (int i = 0; i < 3; i++) {
-				I2Cdev::readWords(devAddr, ReadAddress + (i * 2), 1, &Data); // reads 1 or more 16 bit integers (Word)
+				I2Cdev::readWords(devAddr, ReadAddress + (i * 2), 1, (uint16_t *)&Data); // reads 1 or more 16 bit integers (Word)
 				Reading = Data;
 				if ((ReadAddress == 0x3B)&&(i == 2)) Reading -= 16384;	//remove Gravity
 				Error = -Reading;
@@ -3280,7 +3280,7 @@ void MPU6050::PID(uint8_t ReadAddress, float kP,float kI, uint8_t Loops){
 					Data = round((PTerm + ITerm[i] ) / 8);		//Compute PID Output
 					Data = ((Data)&0xFFFE) |BitZero[i];			// Insert Bit0 Saved at beginning
 				} else Data = round((PTerm + ITerm[i] ) / 4);	//Compute PID Output
-				I2Cdev::writeWords(devAddr, SaveAddress + (i * shift), 1,  &Data);
+				I2Cdev::writeWords(devAddr, SaveAddress + (i * shift), 1, (uint16_t *)&Data);
 			}
 			if((c == 99) && eSum > 1000){						// Error is still to great to continue 
 				c = 0;
@@ -3298,7 +3298,7 @@ void MPU6050::PID(uint8_t ReadAddress, float kP,float kI, uint8_t Loops){
 				Data = round((ITerm[i] ) / 8);		//Compute PID Output
 				Data = ((Data)&0xFFFE) |BitZero[i];	// Insert Bit0 Saved at beginning
 			} else Data = round((ITerm[i]) / 4);
-			I2Cdev::writeWords(devAddr, SaveAddress + (i * shift), 1, &Data );
+			I2Cdev::writeWords(devAddr, SaveAddress + (i * shift), 1, (uint16_t *)&Data);
 		}
 	}
 	resetFIFO();
@@ -3312,17 +3312,17 @@ void MPU6050::PrintActiveOffsets() {
 	//Serial.print(F("Offset Register 0x"));
 	//Serial.print(AOffsetRegister>>4,HEX);Serial.print(AOffsetRegister&0x0F,HEX);
 	Serial.print(F("\n//           X Accel  Y Accel  Z Accel   X Gyro   Y Gyro   Z Gyro\n//OFFSETS   "));
-	if(AOffsetRegister == 0x06)	I2Cdev::readWords(devAddr, AOffsetRegister, 3, Data);
+	if(AOffsetRegister == 0x06)	I2Cdev::readWords(devAddr, AOffsetRegister, 3, (uint16_t *)Data);
 	else {
-		I2Cdev::readWords(devAddr, AOffsetRegister, 1, Data);
-		I2Cdev::readWords(devAddr, AOffsetRegister+3, 1, Data+1);
-		I2Cdev::readWords(devAddr, AOffsetRegister+6, 1, Data+2);
+		I2Cdev::readWords(devAddr, AOffsetRegister, 1, (uint16_t *)Data);
+		I2Cdev::readWords(devAddr, AOffsetRegister+3, 1, (uint16_t *)Data+1);
+		I2Cdev::readWords(devAddr, AOffsetRegister+6, 1, (uint16_t *)Data+2);
 	}
 	//	A_OFFSET_H_READ_A_OFFS(Data);
 	printfloatx("", Data[0], 5, 0, ",  ");
 	printfloatx("", Data[1], 5, 0, ",  ");
 	printfloatx("", Data[2], 5, 0, ",  ");
-	I2Cdev::readWords(devAddr, 0x13, 3, Data);
+	I2Cdev::readWords(devAddr, 0x13, 3, (uint16_t *)Data);
 	//	XG_OFFSET_H_READ_OFFS_USR(Data);
 	printfloatx("", Data[0], 5, 0, ",  ");
 	printfloatx("", Data[1], 5, 0, ",  ");
