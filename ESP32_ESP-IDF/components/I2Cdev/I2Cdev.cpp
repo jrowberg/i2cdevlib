@@ -253,3 +253,19 @@ bool I2Cdev::writeBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8_
 }
 
 
+/**
+ * read word
+ * @param devAddr
+ * @param regAddr
+ * @param data
+ * @param timeout
+ * @return
+ */
+int8_t I2Cdev::readWord(uint8_t devAddr, uint8_t regAddr, uint16_t *data, uint16_t timeout){
+	uint8_t msb[2] = {0,0};
+	readBytes(devAddr, regAddr, 2, msb);
+	*data = (int16_t)((msb[0] << 8) | msb[1]);
+	return 0;
+}
+
+
