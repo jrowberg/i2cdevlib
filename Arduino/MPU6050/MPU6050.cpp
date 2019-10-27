@@ -2740,6 +2740,101 @@ void MPU6050::getFIFOBytes(uint8_t *data, uint8_t length) {
     	*data = 0;
     }
 }
+
+/** Get latest byte from FIFO buffer no matter how much time has passed.
+ * ===                  GetCurrentFIFOPacket                    ===
+ * ================================================================
+ * Returns 1) when nothing special was done
+ *         2) when recovering from overflow
+ *         0) when no valid data is available
+ * ================================================================ */
+ int8_t MPU6050::GetCurrentFIFOPacket(uint8_t *data, uint8_t length) { // overflow proof
+	 uint16_t fifoC;
+	 uint8_t Error;
+	 uint8_t Flag = 0;
+	 uint8_t overflowed = 0;
+	 uint8_t mpuIntStatus;   // holds actual interrupt status byte from MPU
+	 do {
+		 if (Error = (fifoC = getFIFOCount()) %  length) {
+			 mpuIntStatus = getIntStatus();
+			 if ( mpuIntStatus & _BV(MPU6050_INTERRUPT_FIFO_OFLOW_BIT)) {
+				 getFIFOBytes(data, Error); // lets remove the overflow portion
+				 getFIFOBytes(data, length);
+				 overflowed = 1;
+				 if (Error = (fifoC = getFIFOCount()) %  length) { // there could be some remaining bytes to deal with that arrived after we freed up some space
+					 getFIFOBytes(data, Error); // lets remove the overflow portion again
+					 if ((fifoC = getFIFOCount()) %  length) {
+						 resetFIFO();
+						 return 0;
+					 }
+				 }
+			 }
+		 }
+		 while(fifoC >(2*length)){  // Quickly remove all but 2 packets
+			 getFIFOBytes(data, length);
+			 fifoC -= length;
+			 Flag++;
+		 }
+		 if (fifoC >= length){ // Get the newest and last packet
+			 getFIFOBytes(data, length);
+			 fifoC -= length;
+			 Flag++;
+		 }
+	 } while (fifoC >= length); // always reprocess the last packet for additional data
+	 return (overflowed ? -1:Flag);
+ }
+
+int8_t MPU6050::GetCurrentFIFOPacketTimed(uint8_t *data, uint8_t length) { // overflow proof
+	static unsigned long xTimer;
+	static int t = 10000;
+	static int x = 1;
+	if (micros() - xTimer < (t)) return 0;// This is an auto tuning routine to discover the exact time the fifo buffer is filled
+    uint16_t fifoC;
+    uint8_t Error;
+    uint8_t Flag = 0;
+    uint8_t overflowed = 0;
+	uint8_t mpuIntStatus;   // holds actual interrupt status byte from MPU
+	do {
+		 if (Error = (fifoC = getFIFOCount()) %  length) {
+			 mpuIntStatus = getIntStatus();
+			 if ( mpuIntStatus & _BV(MPU6050_INTERRUPT_FIFO_OFLOW_BIT)) {
+				 getFIFOBytes(data, Error); // lets remove the overflow portion
+				 getFIFOBytes(data, length);
+				 overflowed = 1;
+				 if (Error = (fifoC = getFIFOCount()) %  length) { // there could be some remaining bytes to deal with that arrived after we freed up some space
+					 getFIFOBytes(data, Error); // lets remove the overflow portion again
+					 if ((fifoC = getFIFOCount()) %  length) {
+						 resetFIFO();
+						 return 0;
+					 }
+				 }
+			 }
+		 }
+		if(fifoC == 0 && (fifoC = getFIFOCount())){ // no data was present above but now we have it Timing is perfect!!!
+			x = 0;	// Lets stop moving around and changing the timing!
+		}
+		while(fifoC >(2*length)){  // Quickly remove all but 2 packets
+			getFIFOBytes(data, length);
+			fifoC -= length;
+			x = 1; // Something caused a delay and everything off again start searching for the sweet spot
+		}
+		if (fifoC >= length){  // Get the newest and last packet
+			getFIFOBytes(data, length);
+			Flag = 1 + overflowed;
+			fifoC -= length;
+			xTimer = micros();
+			t -= x;
+			t = max(t,5000); // we have to limit this if there are external delays to deal with. 
+
+		}else{
+			t += x;
+			fifoC = getFIFOCount(); // We didn't have data before but I bet we have it now!!! Lets check
+		}
+	} while (fifoC >= length);
+	return Flag;
+}
+
+
 /** Write byte to FIFO buffer.
  * @see getFIFOByte()
  * @see MPU6050_RA_FIFO_R_W
