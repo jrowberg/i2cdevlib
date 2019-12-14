@@ -70,7 +70,9 @@ THE SOFTWARE.
 
 #elif I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_FASTWIRE
 
+    //*******************************It is now fixed****************************************************
     //#error The I2CDEV_BUILTIN_FASTWIRE implementation is known to be broken right now. Patience, Iago!
+    //*******************************Tested with MPU6050 DMP********************************************
 
 #elif I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_NBWIRE
 
@@ -448,10 +450,15 @@ int8_t I2Cdev::readWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint1
 
         // Fastwire library
         // no loop required for fastwire
-        uint16_t intermediate[(uint8_t)length];
-        uint8_t status = Fastwire::readBuf(devAddr << 1, regAddr, (uint8_t *)intermediate, (uint8_t)(length * 2));
+	
+        //uint16_t intermediate[(uint8_t)length];	//***********************Change this line
+    	uint8_t intermediate[(uint8_t)length*2];
+	
+	//uint8_t status = Fastwire::readBuf(devAddr << 1, regAddr, (uint8_t *)intermediate, (uint8_t)(length * 2));	//******************Change this line
+    	uint8_t status = Fastwire::readBuf(devAddr << 1, regAddr, intermediate, (uint8_t)(length * 2));
+	
         if (status == 0) {
-            count = length; // success
+            count = length; // success. length = Number of words read.
             for (uint8_t i = 0; i < length; i++) {
                 data[i] = (intermediate[2*i] << 8) | intermediate[2*i + 1];
             }
@@ -665,6 +672,8 @@ bool I2Cdev::writeWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint16
         Fastwire::beginTransmission(devAddr);
         Fastwire::write(regAddr);
     #endif
+    //Here length refers to the number of words.
+    //We are processing two bytes at a time which is equal to one word.
     for (uint8_t i = 0; i < length; i++) { 
         #ifdef I2CDEV_SERIAL_DEBUG
             Serial.print(data[i], HEX);
