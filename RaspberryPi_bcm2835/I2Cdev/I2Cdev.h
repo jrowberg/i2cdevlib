@@ -30,6 +30,10 @@ THE SOFTWARE.
 #ifndef _I2CDEV_H_
 #define _I2CDEV_H_
 
+#ifndef __cplusplus
+#error A C++ compiler is required!
+#endif 
+
 #include <bcm2835.h>
 #include <math.h> // required for BMP180
 #include <stdlib.h> // required for MPU6060

@@ -87,6 +87,11 @@ THE SOFTWARE.
 
 #endif
 
+#ifndef BUFFER_LENGTH
+// band-aid fix for platforms without Wire-defined BUFFER_LENGTH (removed from some official implementations)
+#define BUFFER_LENGTH 32
+#endif
+
 /** Default constructor.
  */
 I2Cdev::I2Cdev() {
@@ -225,7 +230,7 @@ int8_t I2Cdev::readBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8
             // I2C/TWI subsystem uses internal buffer that breaks with large data requests
             // so if user requests more than BUFFER_LENGTH bytes, we have to do it in
             // smaller chunks instead of all at once
-            for (uint8_t k = 0; k < length; k += min(length, BUFFER_LENGTH)) {
+            for (uint8_t k = 0; k < length; k += min((int)length, BUFFER_LENGTH)) {
                 Wire.beginTransmission(devAddr);
                 Wire.send(regAddr);
                 Wire.endTransmission();
@@ -249,7 +254,7 @@ int8_t I2Cdev::readBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8
             // I2C/TWI subsystem uses internal buffer that breaks with large data requests
             // so if user requests more than BUFFER_LENGTH bytes, we have to do it in
             // smaller chunks instead of all at once
-            for (uint8_t k = 0; k < length; k += min(length, BUFFER_LENGTH)) {
+            for (uint8_t k = 0; k < length; k += min((int)length, BUFFER_LENGTH)) {
                 Wire.beginTransmission(devAddr);
                 Wire.write(regAddr);
                 Wire.endTransmission();
@@ -273,7 +278,7 @@ int8_t I2Cdev::readBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8
             // I2C/TWI subsystem uses internal buffer that breaks with large data requests
             // so if user requests more than BUFFER_LENGTH bytes, we have to do it in
             // smaller chunks instead of all at once
-            for (uint8_t k = 0; k < length; k += min(length, BUFFER_LENGTH)) {
+            for (uint8_t k = 0; k < length; k += min((int)length, BUFFER_LENGTH)) {
                 Wire.beginTransmission(devAddr);
                 Wire.write(regAddr);
                 Wire.endTransmission();
@@ -660,21 +665,21 @@ bool I2Cdev::writeWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint16
         Fastwire::beginTransmission(devAddr);
         Fastwire::write(regAddr);
     #endif
-    for (uint8_t i = 0; i < length * 2; i++) {
+    for (uint8_t i = 0; i < length; i++) { 
         #ifdef I2CDEV_SERIAL_DEBUG
             Serial.print(data[i], HEX);
             if (i + 1 < length) Serial.print(" ");
         #endif
         #if ((I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE && ARDUINO < 100) || I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_NBWIRE)
             Wire.send((uint8_t)(data[i] >> 8));     // send MSB
-            Wire.send((uint8_t)data[i++]);          // send LSB
+            Wire.send((uint8_t)data[i]);          // send LSB
 		#elif (I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE && ARDUINO >= 100 \
 			|| I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_SBWIRE && ARDUINO >= 100)
 			Wire.write((uint8_t)(data[i] >> 8));    // send MSB
-            Wire.write((uint8_t)data[i++]);         // send LSB
+            Wire.write((uint8_t)data[i]);         // send LSB
         #elif (I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_FASTWIRE)
             Fastwire::write((uint8_t)(data[i] >> 8));       // send MSB
-            status = Fastwire::write((uint8_t)data[i++]);   // send LSB
+            status = Fastwire::write((uint8_t)data[i]);   // send LSB
             if (status != 0) break;
         #endif
     }

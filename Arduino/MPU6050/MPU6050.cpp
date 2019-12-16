@@ -4,6 +4,7 @@
 // Updates should (hopefully) always be available at https://github.com/jrowberg/i2cdevlib
 //
 // Changelog:
+//  2019-07-08 - Added Auto Calibration routine
 //     ... - ongoing debug release
 
 // NOTE: THIS IS ONLY A PARIAL RELEASE. THIS DEVICE CLASS IS CURRENTLY UNDERGOING ACTIVE
@@ -36,21 +37,13 @@ THE SOFTWARE.
 
 #include "MPU6050.h"
 
-/** Default constructor, uses default I2C address.
- * @see MPU6050_DEFAULT_ADDRESS
- */
-MPU6050::MPU6050() {
-    devAddr = MPU6050_DEFAULT_ADDRESS;
-}
-
 /** Specific address constructor.
- * @param address I2C address
+ * @param address I2C address, uses default I2C address if none is specified
  * @see MPU6050_DEFAULT_ADDRESS
  * @see MPU6050_ADDRESS_AD0_LOW
  * @see MPU6050_ADDRESS_AD0_HIGH
  */
-MPU6050::MPU6050(uint8_t address) {
-    devAddr = address;
+MPU6050::MPU6050(uint8_t address):devAddr(address) {
 }
 
 /** Power on and prepare for general usage.
@@ -2853,31 +2846,37 @@ void MPU6050::setZFineGain(int8_t gain) {
 // XA_OFFS_* registers
 
 int16_t MPU6050::getXAccelOffset() {
-    I2Cdev::readBytes(devAddr, MPU6050_RA_XA_OFFS_H, 2, buffer);
-    return (((int16_t)buffer[0]) << 8) | buffer[1];
+	uint8_t SaveAddress = ((getDeviceID() < 0x38 )? MPU6050_RA_XA_OFFS_H:0x77); // MPU6050,MPU9150 Vs MPU6500,MPU9250
+	I2Cdev::readBytes(devAddr, SaveAddress, 2, buffer);
+	return (((int16_t)buffer[0]) << 8) | buffer[1];
 }
 void MPU6050::setXAccelOffset(int16_t offset) {
-    I2Cdev::writeWord(devAddr, MPU6050_RA_XA_OFFS_H, offset);
+	uint8_t SaveAddress = ((getDeviceID() < 0x38 )? MPU6050_RA_XA_OFFS_H:0x77); // MPU6050,MPU9150 Vs MPU6500,MPU9250
+	I2Cdev::writeWord(devAddr, SaveAddress, offset);
 }
 
 // YA_OFFS_* register
 
 int16_t MPU6050::getYAccelOffset() {
-    I2Cdev::readBytes(devAddr, MPU6050_RA_YA_OFFS_H, 2, buffer);
-    return (((int16_t)buffer[0]) << 8) | buffer[1];
+	uint8_t SaveAddress = ((getDeviceID() < 0x38 )? MPU6050_RA_YA_OFFS_H:0x7A); // MPU6050,MPU9150 Vs MPU6500,MPU9250
+	I2Cdev::readBytes(devAddr, SaveAddress, 2, buffer);
+	return (((int16_t)buffer[0]) << 8) | buffer[1];
 }
 void MPU6050::setYAccelOffset(int16_t offset) {
-    I2Cdev::writeWord(devAddr, MPU6050_RA_YA_OFFS_H, offset);
+	uint8_t SaveAddress = ((getDeviceID() < 0x38 )? MPU6050_RA_YA_OFFS_H:0x7A); // MPU6050,MPU9150 Vs MPU6500,MPU9250
+	I2Cdev::writeWord(devAddr, SaveAddress, offset);
 }
 
 // ZA_OFFS_* register
 
 int16_t MPU6050::getZAccelOffset() {
-    I2Cdev::readBytes(devAddr, MPU6050_RA_ZA_OFFS_H, 2, buffer);
-    return (((int16_t)buffer[0]) << 8) | buffer[1];
+	uint8_t SaveAddress = ((getDeviceID() < 0x38 )? MPU6050_RA_ZA_OFFS_H:0x7D); // MPU6050,MPU9150 Vs MPU6500,MPU9250
+	I2Cdev::readBytes(devAddr, SaveAddress, 2, buffer);
+	return (((int16_t)buffer[0]) << 8) | buffer[1];
 }
 void MPU6050::setZAccelOffset(int16_t offset) {
-    I2Cdev::writeWord(devAddr, MPU6050_RA_ZA_OFFS_H, offset);
+	uint8_t SaveAddress = ((getDeviceID() < 0x38 )? MPU6050_RA_ZA_OFFS_H:0x7D); // MPU6050,MPU9150 Vs MPU6500,MPU9250
+	I2Cdev::writeWord(devAddr, SaveAddress, offset);
 }
 
 // XG_OFFS_USR* registers
@@ -3210,4 +3209,122 @@ uint8_t MPU6050::getDMPConfig2() {
 }
 void MPU6050::setDMPConfig2(uint8_t config) {
     I2Cdev::writeByte(devAddr, MPU6050_RA_DMP_CFG_2, config);
+}
+
+
+//***************************************************************************************
+//**********************           Calibration Routines            **********************
+//***************************************************************************************
+/**
+  @brief      Fully calibrate Gyro from ZERO in about 6-7 Loops 600-700 readings
+*/
+void MPU6050::CalibrateGyro(uint8_t Loops ) {
+  double kP = 0.3;
+  double kI = 90;
+  float x;
+  x = (100 - map(Loops, 1, 5, 20, 0)) * .01;
+  kP *= x;
+  kI *= x;
+  
+  PID( 0x43,  kP, kI,  Loops);
+}
+
+/**
+  @brief      Fully calibrate Accel from ZERO in about 6-7 Loops 600-700 readings
+*/
+void MPU6050::CalibrateAccel(uint8_t Loops ) {
+
+	float kP = 0.3;
+	float kI = 20;
+	float x;
+	x = (100 - map(Loops, 1, 5, 20, 0)) * .01;
+	kP *= x;
+	kI *= x;
+	PID( 0x3B, kP, kI,  Loops);
+}
+
+void MPU6050::PID(uint8_t ReadAddress, float kP,float kI, uint8_t Loops){
+	uint8_t SaveAddress = (ReadAddress == 0x3B)?((getDeviceID() < 0x38 )? 0x06:0x77):0x13;
+
+	int16_t  Data;
+	float Reading;
+	int16_t BitZero[3];
+	uint8_t shift =(SaveAddress == 0x77)?3:2;
+	float Error, PTerm, ITerm[3];
+	int16_t eSample;
+	uint32_t eSum ;
+	Serial.write('>');
+	for (int i = 0; i < 3; i++) {
+		I2Cdev::readWords(devAddr, SaveAddress + (i * shift), 1, (uint16_t *)&Data); // reads 1 or more 16 bit integers (Word)
+		Reading = Data;
+		if(SaveAddress != 0x13){
+			BitZero[i] = Data & 1;										 // Capture Bit Zero to properly handle Accelerometer calibration
+			ITerm[i] = ((float)Reading) * 8;
+			} else {
+			ITerm[i] = Reading * 4;
+		}
+	}
+	for (int L = 0; L < Loops; L++) {
+		eSample = 0;
+		for (int c = 0; c < 100; c++) {// 100 PI Calculations
+			eSum = 0;
+			for (int i = 0; i < 3; i++) {
+				I2Cdev::readWords(devAddr, ReadAddress + (i * 2), 1, (uint16_t *)&Data); // reads 1 or more 16 bit integers (Word)
+				Reading = Data;
+				if ((ReadAddress == 0x3B)&&(i == 2)) Reading -= 16384;	//remove Gravity
+				Error = -Reading;
+				eSum += abs(Reading);
+				PTerm = kP * Error;
+				ITerm[i] += (Error * 0.001) * kI;				// Integral term 1000 Calculations a second = 0.001
+				if(SaveAddress != 0x13){
+					Data = round((PTerm + ITerm[i] ) / 8);		//Compute PID Output
+					Data = ((Data)&0xFFFE) |BitZero[i];			// Insert Bit0 Saved at beginning
+				} else Data = round((PTerm + ITerm[i] ) / 4);	//Compute PID Output
+				I2Cdev::writeWords(devAddr, SaveAddress + (i * shift), 1, (uint16_t *)&Data);
+			}
+			if((c == 99) && eSum > 1000){						// Error is still to great to continue 
+				c = 0;
+				Serial.write('*');
+			}
+			if((eSum * ((ReadAddress == 0x3B)?.05: 1)) < 5) eSample++;	// Successfully found offsets prepare to  advance
+			if((eSum < 100) && (c > 10) && (eSample >= 10)) break;		// Advance to next Loop
+			delay(1);
+		}
+		Serial.write('.');
+		kP *= .75;
+		kI *= .75;
+		for (int i = 0; i < 3; i++){
+			if(SaveAddress != 0x13) {
+				Data = round((ITerm[i] ) / 8);		//Compute PID Output
+				Data = ((Data)&0xFFFE) |BitZero[i];	// Insert Bit0 Saved at beginning
+			} else Data = round((ITerm[i]) / 4);
+			I2Cdev::writeWords(devAddr, SaveAddress + (i * shift), 1, (uint16_t *)&Data);
+		}
+	}
+	resetFIFO();
+	resetDMP();
+}
+
+#define printfloatx(Name,Variable,Spaces,Precision,EndTxt) { Serial.print(F(Name)); {char S[(Spaces + Precision + 3)];Serial.print(F(" ")); Serial.print(dtostrf((float)Variable,Spaces,Precision ,S));}Serial.print(F(EndTxt)); }//Name,Variable,Spaces,Precision,EndTxt
+void MPU6050::PrintActiveOffsets() {
+	uint8_t AOffsetRegister = (getDeviceID() < 0x38 )? MPU6050_RA_XA_OFFS_H:0x77;
+	int16_t Data[3];
+	//Serial.print(F("Offset Register 0x"));
+	//Serial.print(AOffsetRegister>>4,HEX);Serial.print(AOffsetRegister&0x0F,HEX);
+	Serial.print(F("\n//           X Accel  Y Accel  Z Accel   X Gyro   Y Gyro   Z Gyro\n//OFFSETS   "));
+	if(AOffsetRegister == 0x06)	I2Cdev::readWords(devAddr, AOffsetRegister, 3, (uint16_t *)Data);
+	else {
+		I2Cdev::readWords(devAddr, AOffsetRegister, 1, (uint16_t *)Data);
+		I2Cdev::readWords(devAddr, AOffsetRegister+3, 1, (uint16_t *)Data+1);
+		I2Cdev::readWords(devAddr, AOffsetRegister+6, 1, (uint16_t *)Data+2);
+	}
+	//	A_OFFSET_H_READ_A_OFFS(Data);
+	printfloatx("", Data[0], 5, 0, ",  ");
+	printfloatx("", Data[1], 5, 0, ",  ");
+	printfloatx("", Data[2], 5, 0, ",  ");
+	I2Cdev::readWords(devAddr, 0x13, 3, (uint16_t *)Data);
+	//	XG_OFFSET_H_READ_OFFS_USR(Data);
+	printfloatx("", Data[0], 5, 0, ",  ");
+	printfloatx("", Data[1], 5, 0, ",  ");
+	printfloatx("", Data[2], 5, 0, "\n");
 }

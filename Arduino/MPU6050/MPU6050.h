@@ -435,8 +435,7 @@ THE SOFTWARE.
 
 class MPU6050 {
     public:
-        MPU6050();
-        MPU6050(uint8_t address);
+        MPU6050(uint8_t address=MPU6050_DEFAULT_ADDRESS);
 
         void initialize();
         bool testConnection();
@@ -459,15 +458,15 @@ class MPU6050 {
         uint8_t getFullScaleGyroRange();
         void setFullScaleGyroRange(uint8_t range);
 
-		// SELF_TEST registers
-		uint8_t getAccelXSelfTestFactoryTrim();
-		uint8_t getAccelYSelfTestFactoryTrim();
-		uint8_t getAccelZSelfTestFactoryTrim();
+        // SELF_TEST registers
+        uint8_t getAccelXSelfTestFactoryTrim();
+        uint8_t getAccelYSelfTestFactoryTrim();
+        uint8_t getAccelZSelfTestFactoryTrim();
 
-		uint8_t getGyroXSelfTestFactoryTrim();
-		uint8_t getGyroYSelfTestFactoryTrim();
-		uint8_t getGyroZSelfTestFactoryTrim();
-		
+        uint8_t getGyroXSelfTestFactoryTrim();
+        uint8_t getGyroYSelfTestFactoryTrim();
+        uint8_t getGyroZSelfTestFactoryTrim();
+
         // ACCEL_CONFIG register
         bool getAccelXSelfTest();
         void setAccelXSelfTest(bool enabled);
@@ -821,10 +820,16 @@ class MPU6050 {
         uint8_t getDMPConfig2();
         void setDMPConfig2(uint8_t config);
 
+		// Calibration Routines
+		void CalibrateGyro(uint8_t Loops = 15); // Fine tune after setting offsets with less Loops.
+		void CalibrateAccel(uint8_t Loops = 15);// Fine tune after setting offsets with less Loops.
+		void PID(uint8_t ReadAddress, float kP,float kI, uint8_t Loops);  // Does the math
+		void PrintActiveOffsets(); // See the results of the Calibration
+
+
+
         // special methods for MotionApps 2.0 implementation
         #ifdef MPU6050_INCLUDE_DMP_MOTIONAPPS20
-            uint8_t *dmpPacketBuffer;
-            uint16_t dmpPacketSize;
 
             uint8_t dmpInitialize();
             bool dmpPacketAvailable();
@@ -924,8 +929,6 @@ class MPU6050 {
 
         // special methods for MotionApps 4.1 implementation
         #ifdef MPU6050_INCLUDE_DMP_MOTIONAPPS41
-            uint8_t *dmpPacketBuffer;
-            uint16_t dmpPacketSize;
 
             uint8_t dmpInitialize();
             bool dmpPacketAvailable();
@@ -1027,6 +1030,10 @@ class MPU6050 {
     private:
         uint8_t devAddr;
         uint8_t buffer[14];
+    #if defined(MPU6050_INCLUDE_DMP_MOTIONAPPS20) or defined(MPU6050_INCLUDE_DMP_MOTIONAPPS41)
+        uint8_t *dmpPacketBuffer;
+        uint16_t dmpPacketSize;
+    #endif
 };
 
 #endif /* _MPU6050_H_ */
