@@ -84,6 +84,7 @@ THE SOFTWARE.
     #endif
     #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
         #include <Wire.h>
+    #endif
     #if I2CDEV_IMPLEMENTATION == I2CDEV_TEENSY_3X_WIRE
         #include <i2c_t3.h>
     #endif
