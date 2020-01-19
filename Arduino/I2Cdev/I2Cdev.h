@@ -93,9 +93,9 @@ THE SOFTWARE.
     #if I2CDEV_IMPLEMENTATION == I2CDEV_I2CMASTER_LIBRARY
         #include <I2C.h>
     #endif
-	#if I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_SBWIRE
-		#include "SBWire.h"
-	#endif
+    #if I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_SBWIRE
+        #include "SBWire.h"
+    #endif
 #endif
 
 #ifdef SPARK
