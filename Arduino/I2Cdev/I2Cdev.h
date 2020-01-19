@@ -3,6 +3,7 @@
 // 2013-06-05 by Jeff Rowberg <jeff@rowberg.net>
 //
 // Changelog:
+//      2020-01-20 - hardija : complete support for Teensy 3.x
 //      2015-10-30 - simondlevy : support i2c_t3 for Teensy3.1
 //      2013-05-06 - add Francesco Ferrara's Fastwire v0.24 implementation with small modifications
 //      2013-05-05 - fix issue with writing bit values to words (Sasquatch/Farzanegan)
@@ -70,6 +71,7 @@ THE SOFTWARE.
 #define I2CDEV_BUILTIN_FASTWIRE     3 // FastWire object from Francesco Ferrara's project
 #define I2CDEV_I2CMASTER_LIBRARY    4 // I2C object from DSSCircuits I2C-Master Library at https://github.com/DSSCircuits/I2C-Master-Library
 #define I2CDEV_BUILTIN_SBWIRE	    5 // I2C object from Shuning (Steve) Bian's SBWire Library at https://github.com/freespace/SBWire 
+#define I2CDEV_TEENSY_3X_WIRE       6 // Teensy 3.x support using i2c_t3 library
 
 // -----------------------------------------------------------------------------
 // Arduino-style "Serial.print" debug constant (uncomment to enable)
@@ -91,9 +93,9 @@ THE SOFTWARE.
     #if I2CDEV_IMPLEMENTATION == I2CDEV_I2CMASTER_LIBRARY
         #include <I2C.h>
     #endif
-	#if I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_SBWIRE
-		#include "SBWire.h"
-	#endif
+    #if I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_SBWIRE
+        #include "SBWire.h"
+    #endif
 #endif
 
 #ifdef SPARK
