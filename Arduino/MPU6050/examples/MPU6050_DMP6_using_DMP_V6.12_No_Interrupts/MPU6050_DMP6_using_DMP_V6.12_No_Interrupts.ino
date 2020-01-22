@@ -11,8 +11,6 @@
 //                 - added note about gyro calibration
 //      2012-06-21 - added note about Arduino 1.0.1 + Leonardo compatibility error
 //      2012-06-20 - improved FIFO overflow handling and simplified read process
-//      2012-06-19 - completely rearranged DMP initialization code and simplification
-//      2012-06-13 - pull gyro and accel data from FIFO packet instead of reading directly
 //      2012-06-09 - fix broken FIFO read sequence and change interrupt detection to RISING
 //      2012-06-05 - add gravity-compensated initial reference frame acceleration output
 //                 - add 3D math helper file to DMP6 example sketch
