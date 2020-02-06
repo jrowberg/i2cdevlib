@@ -612,4 +612,10 @@ uint16_t MPU6050::dmpGetFIFOPacketSize() {
     return dmpPacketSize;
 }
 
+
+
+uint8_t MPU6050::dmpGetCurrentFIFOPacket(uint8_t *data) { // overflow proof
+    return(GetCurrentFIFOPacket(data, dmpPacketSize));
+}
+
 #endif /* _MPU6050_6AXIS_MOTIONAPPS20_H_ */

@@ -2740,6 +2740,47 @@ void MPU6050::getFIFOBytes(uint8_t *data, uint8_t length) {
     	*data = 0;
     }
 }
+
+/** Get latest byte from FIFO buffer no matter how much time has passed.
+ * ===                  GetCurrentFIFOPacket                    ===
+ * ================================================================
+ * Returns 1) when nothing special was done
+ *         2) when recovering from overflow
+ *         0) when no valid data is available
+ * ================================================================ */
+ int8_t MPU6050::GetCurrentFIFOPacket(uint8_t *data, uint8_t length) { // overflow proof
+     int16_t fifoC;
+     // This section of code is for when we allowed more than 1 packet to be acquired
+     uint32_t BreakTimer = micros();
+     do {
+         if ((fifoC = getFIFOCount())  > length) {
+
+             if (fifoC > 200) { // if you waited to get the FIFO buffer to > 200 bytes it will take longer to get the last packet in the FIFO Buffer than it will take to  reset the buffer and wait for the next to arrive
+                 resetFIFO(); // Fixes any overflow corruption
+                 fifoC = 0;
+                 while (!(fifoC = getFIFOCount()) && ((micros() - BreakTimer) <= (11000))); // Get Next New Packet
+                 } else { //We have more than 1 packet but less than 200 bytes of data in the FIFO Buffer
+                 uint8_t Trash[BUFFER_LENGTH];
+                 while (fifoC = getFIFOCount() > length) { // Test each time just in case the MPU is writing to the FIFO Buffer
+                     fifoC = fifoC - length; // Save the last packet
+                     uint16_t  RemoveBytes;
+                     while (fifoC) { // fifo count will reach zero so this is safe
+                         RemoveBytes = min((int)fifoC, BUFFER_LENGTH); // Buffer Length is different than the packet length this will efficiently clear the buffer
+                         getFIFOBytes(Trash, (uint8_t)RemoveBytes);
+                         fifoC -= RemoveBytes;
+                     }
+                 }
+             }
+         }
+         if (!fifoC) return 0; // Called too early no data or we timed out after FIFO Reset
+         // We have 1 packet
+         if ((micros() - BreakTimer) > (11000)) return 0;
+     } while (fifoC != length);
+     getFIFOBytes(data, length); //Get 1 packet
+     return 1;
+}
+
+
 /** Write byte to FIFO buffer.
  * @see getFIFOByte()
  * @see MPU6050_RA_FIFO_R_W

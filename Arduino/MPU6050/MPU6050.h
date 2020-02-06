@@ -714,6 +714,7 @@ class MPU6050 {
 
         // FIFO_R_W register
         uint8_t getFIFOByte();
+		int8_t GetCurrentFIFOPacket(uint8_t *data, uint8_t length);
         void setFIFOByte(uint8_t data);
         void getFIFOBytes(uint8_t *data, uint8_t length);
 
@@ -925,6 +926,7 @@ class MPU6050 {
             uint32_t dmpGetAccelSumOfSquare();
             void dmpOverrideQuaternion(long *q);
             uint16_t dmpGetFIFOPacketSize();
+            uint8_t dmpGetCurrentFIFOPacket(uint8_t *data); // overflow proof
         #endif
 
         // special methods for MotionApps 4.1 implementation
