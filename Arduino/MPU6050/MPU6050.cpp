@@ -2761,7 +2761,7 @@ void MPU6050::getFIFOBytes(uint8_t *data, uint8_t length) {
                  while (!(fifoC = getFIFOCount()) && ((micros() - BreakTimer) <= (11000))); // Get Next New Packet
                  } else { //We have more than 1 packet but less than 200 bytes of data in the FIFO Buffer
                  uint8_t Trash[BUFFER_LENGTH];
-                 while (fifoC = getFIFOCount() > length) { // Test each time just in case the MPU is writing to the FIFO Buffer
+                 while ((fifoC = getFIFOCount()) > length) {  // Test each time just in case the MPU is writing to the FIFO Buffer
                      fifoC = fifoC - length; // Save the last packet
                      uint16_t  RemoveBytes;
                      while (fifoC) { // fifo count will reach zero so this is safe
