@@ -135,9 +135,9 @@ int8_t I2Cdev::readBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8
 	ESP_ERROR_CHECK(i2c_master_write_byte(cmd, (devAddr << 1) | I2C_MASTER_READ, 1));
 
 	if(length>1)
-		ESP_ERROR_CHECK(i2c_master_read(cmd, data, length-1, 0));
+		ESP_ERROR_CHECK(i2c_master_read(cmd, data, length-1, I2C_MASTER_ACK));
 
-	ESP_ERROR_CHECK(i2c_master_read_byte(cmd, data+length-1, 1));
+	ESP_ERROR_CHECK(i2c_master_read_byte(cmd, data+length-1, I2C_MASTER_NACK));
 
 	ESP_ERROR_CHECK(i2c_master_stop(cmd));
 	ESP_ERROR_CHECK(i2c_master_cmd_begin(I2C_NUM, cmd, 1000/portTICK_PERIOD_MS));

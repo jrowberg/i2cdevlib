@@ -49,9 +49,9 @@ void MPU6050::ReadRegister(uint8_t reg, uint8_t *data, uint8_t len){
 	ESP_ERROR_CHECK(i2c_master_write_byte(cmd, (dev << 1) | I2C_MASTER_READ, 1));
 
 	if(len>1)
-		ESP_ERROR_CHECK(i2c_master_read(cmd, data, len, 0));
+		ESP_ERROR_CHECK(i2c_master_read(cmd, data, len, I2C_MASTER_ACK));
 
-	ESP_ERROR_CHECK(i2c_master_read_byte(cmd, data+len-1, 1));
+	ESP_ERROR_CHECK(i2c_master_read_byte(cmd, data+len-1, I2C_MASTER_NACK));
 
 	ESP_ERROR_CHECK(i2c_master_stop(cmd));
 	ESP_ERROR_CHECK(i2c_master_cmd_begin(I2C_NUM, cmd, 1000));
