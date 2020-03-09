@@ -2741,6 +2741,22 @@ void MPU6050::getFIFOBytes(uint8_t *data, uint8_t length) {
     }
 }
 
+/** Get timeout to get a packet from FIFO buffer.
+ * @return Current timeout to get a packet from FIFO buffer
+ * @see MPU6050_FIFO_DEFAULT_TIMEOUT
+ */
+uint32_t MPU6050::getFIFOTimeout() {
+	return fifoTimeout;
+}
+
+/** Set timeout to get a packet from FIFO buffer.
+ * @param New timeout to get a packet from FIFO buffer
+ * @see MPU6050_FIFO_DEFAULT_TIMEOUT
+ */
+void MPU6050::setFIFOTimeout(uint32_t fifoTimeout) {
+	this->fifoTimeout = fifoTimeout;
+}
+
 /** Get latest byte from FIFO buffer no matter how much time has passed.
  * ===                  GetCurrentFIFOPacket                    ===
  * ================================================================
@@ -2753,12 +2769,13 @@ void MPU6050::getFIFOBytes(uint8_t *data, uint8_t length) {
      // This section of code is for when we allowed more than 1 packet to be acquired
      uint32_t BreakTimer = micros();
      do {
+         if ((micros() - BreakTimer) > (getFIFOTimeout())) return 0;
          if ((fifoC = getFIFOCount())  > length) {
 
              if (fifoC > 200) { // if you waited to get the FIFO buffer to > 200 bytes it will take longer to get the last packet in the FIFO Buffer than it will take to  reset the buffer and wait for the next to arrive
                  resetFIFO(); // Fixes any overflow corruption
                  fifoC = 0;
-                 while (!(fifoC = getFIFOCount()) && ((micros() - BreakTimer) <= (11000))); // Get Next New Packet
+                 while (!(fifoC = getFIFOCount()) && ((micros() - BreakTimer) <= (getFIFOTimeout()))); // Get Next New Packet
                  } else { //We have more than 1 packet but less than 200 bytes of data in the FIFO Buffer
                  uint8_t Trash[BUFFER_LENGTH];
                  while ((fifoC = getFIFOCount()) > length) {  // Test each time just in case the MPU is writing to the FIFO Buffer
@@ -2774,7 +2791,7 @@ void MPU6050::getFIFOBytes(uint8_t *data, uint8_t length) {
          }
          if (!fifoC) return 0; // Called too early no data or we timed out after FIFO Reset
          // We have 1 packet
-         if ((micros() - BreakTimer) > (11000)) return 0;
+        
      } while (fifoC != length);
      getFIFOBytes(data, length); //Get 1 packet
      return 1;
