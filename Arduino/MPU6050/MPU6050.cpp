@@ -2768,8 +2768,8 @@ void MPU6050::setFIFOTimeout(uint32_t fifoTimeout) {
      int16_t fifoC;
      // This section of code is for when we allowed more than 1 packet to be acquired
      uint32_t BreakTimer = micros();
+     bool packetReceived = false;
      do {
-         if ((micros() - BreakTimer) > (getFIFOTimeout())) return 0;
          if ((fifoC = getFIFOCount())  > length) {
 
              if (fifoC > 200) { // if you waited to get the FIFO buffer to > 200 bytes it will take longer to get the last packet in the FIFO Buffer than it will take to  reset the buffer and wait for the next to arrive
@@ -2791,8 +2791,9 @@ void MPU6050::setFIFOTimeout(uint32_t fifoTimeout) {
          }
          if (!fifoC) return 0; // Called too early no data or we timed out after FIFO Reset
          // We have 1 packet
-        
-     } while (fifoC != length);
+         packetReceived = fifoC == length;
+         if (!packetReceived && (micros() - BreakTimer) > (getFIFOTimeout())) return 0;
+     } while (!packetReceived);
      getFIFOBytes(data, length); //Get 1 packet
      return 1;
 }
