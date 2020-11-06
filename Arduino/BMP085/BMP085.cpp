@@ -250,7 +250,7 @@ int32_t BMP085::getPressure() {
         p = p + (X1 + X2 + 3791) / 2^4
     */
     uint32_t up = getRawPressure();
-    if(up == 0) return NAN;
+    if(up == 0) return 0;
     uint8_t oss = (measureMode & 0xC0) >> 6;
     int32_t p;
     int32_t b6 = b5 - 4000;
