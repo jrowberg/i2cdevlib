@@ -291,10 +291,10 @@ uint8_t MPU6050::dmpInitialize() {
 	// get MPU hardware revision
 	setMemoryBank(0x10, true, true);
 	setMemoryStartAddress(0x06);
-	Serial.println(F("Checking hardware revision..."));
-	Serial.print(F("Revision @ user[16][6] = "));
-	Serial.println(readMemoryByte(), HEX);
-	Serial.println(F("Resetting memory bank selection to 0..."));
+	DEBUG_PRINTLN(F("Checking hardware revision..."));
+	DEBUG_PRINT(F("Revision @ user[16][6] = "));
+	DEBUG_PRINTLN(readMemoryByte());
+	DEBUG_PRINTLN(F("Resetting memory bank selection to 0..."));
 	setMemoryBank(0, false, false);
 
 	// check OTP bank valid
