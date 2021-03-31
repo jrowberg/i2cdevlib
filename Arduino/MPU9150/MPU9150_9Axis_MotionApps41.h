@@ -831,7 +831,7 @@ uint8_t MPU9150::dmpReadAndProcessFIFOPacket(uint8_t numPackets, uint8_t *proces
         if ((status = dmpProcessFIFOPacket(buf)) > 0) return status;
         
         // increment external process count variable, if supplied
-        if (processed != 0) *processed++;
+        if (processed != 0) (*processed)++;
     }
     return 0;
 }
