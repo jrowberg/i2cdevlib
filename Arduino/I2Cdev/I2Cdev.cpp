@@ -753,7 +753,7 @@ uint16_t I2Cdev::readTimeout = I2CDEV_DEFAULT_READ_TIMEOUT;
         #endif
 
         TWSR = 0; // no prescaler => prescaler = 1
-        TWBR = ((16000L / khz) - 16) / 2; // change the I2C clock rate
+        TWBR = F_CPU / 2000 / khz - 8; // change the I2C clock rate
         TWCR = 1 << TWEN; // enable twi module, no interrupt
     }
 
