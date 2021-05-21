@@ -431,6 +431,8 @@ THE SOFTWARE.
 #define MPU6050_DMP_MEMORY_BANK_SIZE    256
 #define MPU6050_DMP_MEMORY_CHUNK_SIZE   16
 
+#define MPU6050_FIFO_DEFAULT_TIMEOUT 11000
+
 // note: DMP code memory blocks defined at end of header file
 
 class MPU6050 {
@@ -717,6 +719,8 @@ class MPU6050 {
 		int8_t GetCurrentFIFOPacket(uint8_t *data, uint8_t length);
         void setFIFOByte(uint8_t data);
         void getFIFOBytes(uint8_t *data, uint8_t length);
+        void setFIFOTimeout(uint32_t fifoTimeout);
+        uint32_t getFIFOTimeout();
 
         // WHO_AM_I register
         uint8_t getDeviceID();
@@ -1032,6 +1036,7 @@ class MPU6050 {
     private:
         uint8_t devAddr;
         uint8_t buffer[14];
+        uint32_t fifoTimeout = MPU6050_FIFO_DEFAULT_TIMEOUT;
     #if defined(MPU6050_INCLUDE_DMP_MOTIONAPPS20) or defined(MPU6050_INCLUDE_DMP_MOTIONAPPS41)
         uint8_t *dmpPacketBuffer;
         uint16_t dmpPacketSize;
