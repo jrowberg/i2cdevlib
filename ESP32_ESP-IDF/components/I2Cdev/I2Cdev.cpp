@@ -149,7 +149,6 @@ int8_t I2Cdev::readBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8
 bool I2Cdev::writeWord(uint8_t devAddr, uint8_t regAddr, uint16_t data){
 
 	uint8_t data1[] = {(uint8_t)(data>>8), (uint8_t)(data & 0xff)};
-	uint8_t data2[] = {(uint8_t)(data & 0xff), (uint8_t)(data>>8)};
 	writeBytes(devAddr, regAddr, 2, data1);
 	return true;
 }
