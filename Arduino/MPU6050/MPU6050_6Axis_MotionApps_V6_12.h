@@ -49,7 +49,7 @@ THE SOFTWARE.
 // Tom Carpenter's conditional PROGMEM code
 // http://forum.arduino.cc/index.php?topic=129407.0
 #ifdef __AVR__
-    #include <avr/pgmspace.h>.
+    #include <avr/pgmspace.h>
 #elif defined(ESP32)
     #include <pgmspace.h>
 #else
