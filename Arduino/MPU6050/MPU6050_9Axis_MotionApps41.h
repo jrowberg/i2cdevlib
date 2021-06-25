@@ -45,6 +45,8 @@ THE SOFTWARE.
 // http://forum.arduino.cc/index.php?topic=129407.0
 #ifdef __AVR__
     #include <avr/pgmspace.h>
+#elif defined(ESP32)
+    #include <pgmspace.h>
 #else
     // Teensy 3.0 library conditional PROGMEM code from Paul Stoffregen
     #ifndef __PGMSPACE_H_
