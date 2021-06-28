@@ -89,17 +89,27 @@ void loop() {
 //  Serial.print(gx); Serial.print("\t");
 //  Serial.print(gy); Serial.print("\t");
 //  Serial.print(gz); Serial.print("\t");
-    Serial.print(int(mx)*int(mx)); Serial.print("\t");
-    Serial.print(int(my)*int(my)); Serial.print("\t");
-    Serial.print(int(mz)*int(mz)); Serial.print("\t | ");
+    //Serial.print(int(mx)*int(mx)); Serial.print("\t");
+    //Serial.print(int(my)*int(my)); Serial.print("\t");
+    //Serial.print(int(mz)*int(mz)); Serial.print("\t | ");
 
-    const float N = 256;
-    float mag = mx*mx/N + my*my/N + mz*mz/N;
+    //const float N = 256;
+    //float mag = mx*mx/N + my*my/N + mz*mz/N;
 
-    Serial.print(mag); Serial.print("\t");
-    for (int i=0; i<mag; i++)
-        Serial.print("*");
-    Serial.print("\n");
+    //Serial.print(mag); Serial.print("\t");
+    //for (int i=0; i<mag; i++)
+    //    Serial.print("*");
+
+
+    //Sensitivity Scale Factor:
+    //| MIN   | TYP | MAX   | UNITS   |
+    //| 0.285 | 0.3 | 0.315 | uT /LSB |
+    //compass data in uT
+    Serial.print(mx * 0.3f); Serial.print("\t");
+    Serial.print(my * 0.3f); Serial.print("\t");
+    Serial.print(mz * 0.3f); Serial.println("\t | uT");
+
+    //Serial.print("\n");
 
     // blink LED to indicate activity
     blinkState = !blinkState;
