@@ -73,6 +73,7 @@ THE SOFTWARE.
 #define I2CDEV_BUILTIN_SBWIRE	    5 // I2C object from Shuning (Steve) Bian's SBWire Library at https://github.com/freespace/SBWire 
 #define I2CDEV_TEENSY_3X_WIRE       6 // Teensy 3.x support using i2c_t3 library
 
+#define BUFFER_LENGTH 32
 // -----------------------------------------------------------------------------
 // Arduino-style "Serial.print" debug constant (uncomment to enable)
 // -----------------------------------------------------------------------------
