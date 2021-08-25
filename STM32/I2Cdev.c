@@ -264,7 +264,7 @@ int8_t 	I2Cdev_writeWord(uint8_t dev_addr, uint8_t reg_addr, uint16_t data) {
 	int8_t err;
 	uint8_t ts_data[3] = {reg_addr, (data >> 8) & 0xFF, data & 0xFF};
 
-	err = i2c_transmit_nack(reg_addr, ts_data, 3);
+	err = i2c_transmit_nack(dev_addr, ts_data, 3);
 	return err;
 }
 
