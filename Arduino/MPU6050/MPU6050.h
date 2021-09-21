@@ -46,9 +46,6 @@ THE SOFTWARE.
 #include <avr/pgmspace.h>
 #elif defined(ESP32)
     #include <pgmspace.h>
-    #ifndef BUFFER_LENGTH
-        #define BUFFER_LENGTH 32
-    #endif
 #else
 //#define PROGMEM /* empty */
 //#define pgm_read_byte(x) (*(x))

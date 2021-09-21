@@ -103,6 +103,19 @@ THE SOFTWARE.
     #define ARDUINO 101
 #endif
 
+#if defined(I2C_BUFFER_LENGTH)
+    // Arduino ESP32 core Wire uses this
+    #define I2CDEVLIB_WIRE_BUFFER_LENGTH I2C_BUFFER_LENGTH
+#elif defined(BUFFER_LENGTH)
+    // Arduino AVR core Wire and many others use this
+    #define I2CDEVLIB_WIRE_BUFFER_LENGTH BUFFER_LENGTH
+#elif defined(SERIAL_BUFFER_SIZE)
+    // Arduino SAMD core Wire uses this
+    #define I2CDEVLIB_WIRE_BUFFER_LENGTH SERIAL_BUFFER_SIZE
+#else
+    // should be a safe fallback, though possibly inefficient
+    #define I2CDEVLIB_WIRE_BUFFER_LENGTH 32
+#endif
 
 // 1000ms default read timeout (modify with "I2Cdev::readTimeout = [ms];")
 #define I2CDEV_DEFAULT_READ_TIMEOUT     1000
