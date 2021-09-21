@@ -988,7 +988,7 @@ uint16_t I2Cdev::readTimeout = I2CDEV_DEFAULT_READ_TIMEOUT;
         TWBR = ((CPU_FREQ / TWI_FREQ) - 16) / 2; // bitrate register
         // enable twi module, acks, and twi interrupt
 
-        TWCR = _BV(TWEN) | _BV(TWIE) | _BV(TWEA);
+        TWCR = (1 << TWEN) | (1 << TWIE) | (1 << TWEA);
 
         /* TWEN - TWI Enable Bit
         TWIE - TWI Interrupt Enable
@@ -1057,7 +1057,7 @@ uint16_t I2Cdev::readTimeout = I2CDEV_DEFAULT_READ_TIMEOUT;
     }
 
     void twii_SetStart() {
-        TWCR = _BV(TWEN) | _BV(TWIE) | _BV(TWEA) | _BV(TWINT) | _BV(TWSTA);
+        TWCR = (1 << TWEN) | (1 << TWIE) | (1 << TWEA) | (1 << TWINT) | (1 << TWSTA);
     }
 
     void twi_write01() {
@@ -1140,19 +1140,19 @@ uint16_t I2Cdev::readTimeout = I2CDEV_DEFAULT_READ_TIMEOUT;
     void twi_reply(uint8_t ack) {
         // transmit master read ready signal, with or without ack
         if (ack){
-            TWCR = _BV(TWEN) | _BV(TWIE) | _BV(TWINT) | _BV(TWEA);
+            TWCR = (1 << TWEN) | (1 << TWIE) | (1 << TWINT) | (1 << TWEA);
         } else {
-            TWCR = _BV(TWEN) | _BV(TWIE) | _BV(TWINT);
+            TWCR = (1 << TWEN) | (1 << TWIE) | (1 << TWINT);
         }
     }
     
     void twi_stop(void) {
         // send stop condition
-        TWCR = _BV(TWEN) | _BV(TWIE) | _BV(TWEA) | _BV(TWINT) | _BV(TWSTO);
+        TWCR = (1 << TWEN) | (1 << TWIE) | (1 << TWEA) | (1 << TWINT) | (1 << TWSTO);
     
         // wait for stop condition to be exectued on bus
         // TWINT is not set after a stop condition!
-        while (TWCR & _BV(TWSTO)) {
+        while (TWCR & (1 << TWSTO)) {
             continue;
         }
     
@@ -1162,7 +1162,7 @@ uint16_t I2Cdev::readTimeout = I2CDEV_DEFAULT_READ_TIMEOUT;
 
     void twi_releaseBus(void) {
         // release bus
-        TWCR = _BV(TWEN) | _BV(TWIE) | _BV(TWEA) | _BV(TWINT);
+        TWCR = (1 << TWEN) | (1 << TWIE) | (1 << TWEA) | (1 << TWINT);
     
         // update twi state
         twi_state = TWI_READY;

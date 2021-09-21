@@ -213,7 +213,7 @@ class I2Cdev {
     
     /* TWI Status is in TWSR, in the top 5 bits: TWS7 - TWS3 */
     
-    #define TW_STATUS_MASK              (_BV(TWS7)|_BV(TWS6)|_BV(TWS5)|_BV(TWS4)|_BV(TWS3))
+    #define TW_STATUS_MASK              ((1 << TWS7)|(1 << TWS6)|(1 << TWS5)|(1 << TWS4)|(1 << TWS3))
     #define TW_STATUS                   (TWSR & TW_STATUS_MASK)
     #define TW_START                    0x08
     #define TW_REP_START                0x10
@@ -248,11 +248,11 @@ class I2Cdev {
     //#define _SFR_BYTE(sfr) _MMIO_BYTE(_SFR_ADDR(sfr))
     
     #ifndef sbi // set bit
-        #define sbi(sfr, bit) (_SFR_BYTE(sfr) |= _BV(bit))
+        #define sbi(sfr, bit) (_SFR_BYTE(sfr) |= (1 << bit))
     #endif // sbi
     
     #ifndef cbi // clear bit
-        #define cbi(sfr, bit) (_SFR_BYTE(sfr) &= ~_BV(bit))
+        #define cbi(sfr, bit) (_SFR_BYTE(sfr) &= ~(1 << bit))
     #endif // cbi
     
     extern TwoWire Wire;
