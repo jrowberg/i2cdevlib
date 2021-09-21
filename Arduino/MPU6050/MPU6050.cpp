@@ -1767,6 +1767,10 @@ bool MPU6050::getIntDataReadyStatus() {
  * @see MPU6050_RA_ACCEL_XOUT_H
  */
 void MPU6050::getMotion9(int16_t* ax, int16_t* ay, int16_t* az, int16_t* gx, int16_t* gy, int16_t* gz, int16_t* mx, int16_t* my, int16_t* mz) {
+    (void)mx; // unused parameter
+    (void)my; // unused parameter
+    (void)mz; // unused parameter
+    
     getMotion6(ax, ay, az, gx, gy, gz);
     // TODO: magnetometer integration
 }

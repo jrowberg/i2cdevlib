@@ -576,6 +576,7 @@ uint8_t MPU6050::dmpGetYawPitchRoll(float *data, Quaternion *q, VectorFloat *gra
 // uint8_t MPU6050::dmpGetQuaternionFloat(float *data, const uint8_t* packet);
 
 uint8_t MPU6050::dmpProcessFIFOPacket(const unsigned char *dmpData) {
+    (void)dmpData; // unused parameter
     /*for (uint8_t k = 0; k < dmpPacketSize; k++) {
         if (dmpData[k] < 0x10) Serial.print("0");
         Serial.print(dmpData[k], HEX);
