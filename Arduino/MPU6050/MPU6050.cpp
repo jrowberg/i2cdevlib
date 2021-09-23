@@ -3297,7 +3297,9 @@ void MPU6050::PID(uint8_t ReadAddress, float kP,float kI, uint8_t Loops){
 	uint8_t shift =(SaveAddress == 0x77)?3:2;
 	float Error, PTerm, ITerm[3];
 	int16_t eSample;
-	uint32_t eSum ;
+	uint32_t eSum;
+	uint16_t gravity;
+	if (ReadAddress == 0x3B) gravity = 16384 >> getFullScaleAccelRange();
 	Serial.write('>');
 	for (int i = 0; i < 3; i++) {
 		I2Cdev::readWords(devAddr, SaveAddress + (i * shift), 1, (uint16_t *)&Data); // reads 1 or more 16 bit integers (Word)
@@ -3316,7 +3318,7 @@ void MPU6050::PID(uint8_t ReadAddress, float kP,float kI, uint8_t Loops){
 			for (int i = 0; i < 3; i++) {
 				I2Cdev::readWords(devAddr, ReadAddress + (i * 2), 1, (uint16_t *)&Data); // reads 1 or more 16 bit integers (Word)
 				Reading = Data;
-				if ((ReadAddress == 0x3B)&&(i == 2)) Reading -= 16384;	//remove Gravity
+				if ((ReadAddress == 0x3B)&&(i == 2)) Reading -= gravity;	//remove Gravity
 				Error = -Reading;
 				eSum += abs(Reading);
 				PTerm = kP * Error;
