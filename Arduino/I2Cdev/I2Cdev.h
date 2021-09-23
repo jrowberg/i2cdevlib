@@ -99,8 +99,9 @@ THE SOFTWARE.
 #endif
 
 #ifdef SPARK
-    #include <spark_wiring_i2c.h>
+    #include "application.h"
     #define ARDUINO 101
+    #define BUFFER_LENGTH 32
 #endif
 
 #ifndef I2CDEVLIB_WIRE_BUFFER_LENGTH
