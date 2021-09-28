@@ -4,11 +4,12 @@
 // Updates should (hopefully) always be available at https://github.com/jrowberg/i2cdevlib
 //
 // Changelog:
-// 2019/7/10 - I incorporated DMP Firmware Version 6.12 Latest as of today with many features and bug fixes.
-//           - MPU6050 Registers have not changed just the DMP Image so that full backwards compatibility is present
-//           - Run-time calibration routine is enabled which calibrates after no motion state is detected
-//           - once no motion state is detected Calibration completes within 0.5 seconds
-//           - The Drawback is that the firmware image is larger.
+//  2021/09/27 - split implementations out of header files, finally
+//  2019/07/10 - I incorporated DMP Firmware Version 6.12 Latest as of today with many features and bug fixes.
+//             - MPU6050 Registers have not changed just the DMP Image so that full backwards compatibility is present
+//             - Run-time calibration routine is enabled which calibrates after no motion state is detected
+//             - once no motion state is detected Calibration completes within 0.5 seconds
+//             - The Drawback is that the firmware image is larger.
 //     ... - ongoing debug release
 
 /* ============================================
@@ -35,16 +36,10 @@ THE SOFTWARE.
 ===============================================
 */
 
-#ifndef _MPU6050_6AXIS_MOTIONAPPS20_H_
-#define _MPU6050_6AXIS_MOTIONAPPS20_H_
-
-#include "I2Cdev.h"
-#include "helper_3dmath.h"
-
 // MotionApps 2.0 DMP implementation, built using the MPU-6050EVB evaluation board
-#define MPU6050_INCLUDE_DMP_MOTIONAPPS20 // same definitions Should work with V6.12
+#define MPU6050_INCLUDE_DMP_MOTIONAPPS612
 
-#include "MPU6050.h"
+#include "MPU6050_6Axis_MotionApps612.h"
 
 // Tom Carpenter's conditional PROGMEM code
 // http://forum.arduino.cc/index.php?topic=129407.0
@@ -521,7 +516,7 @@ uint8_t MPU6050::dmpGetGravity(int16_t *data, const uint8_t* packet) {
     data[0] = ((int32_t)qI[1] * qI[3] - (int32_t)qI[0] * qI[2]) / 16384;
     data[1] = ((int32_t)qI[0] * qI[1] + (int32_t)qI[2] * qI[3]) / 16384;
     data[2] = ((int32_t)qI[0] * qI[0] - (int32_t)qI[1] * qI[1]
-	       - (int32_t)qI[2] * qI[2] + (int32_t)qI[3] * qI[3]) / (2 * 16384);
+	       - (int32_t)qI[2] * qI[2] + (int32_t)qI[3] * qI[3]) / (int32_t)(2 * 16384L);
     return status;
 }
 
@@ -620,5 +615,3 @@ uint16_t MPU6050::dmpGetFIFOPacketSize() {
 uint8_t MPU6050::dmpGetCurrentFIFOPacket(uint8_t *data) { // overflow proof
     return(GetCurrentFIFOPacket(data, dmpPacketSize));
 }
-
-#endif /* _MPU6050_6AXIS_MOTIONAPPS20_H_ */

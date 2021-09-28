@@ -49,7 +49,7 @@
 // for both classes must be in the include path of your project
 #include "I2Cdev.h"
 
-#include "MPU6050_6Axis_MotionApps_V6_12.h"
+#include "MPU6050_6Axis_MotionApps612.h"
 //#include "MPU6050.h" // not necessary if using MotionApps include file
 
 // Arduino Wire library is required if I2Cdev I2CDEV_ARDUINO_WIRE implementation
