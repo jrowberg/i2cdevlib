@@ -435,11 +435,9 @@ THE SOFTWARE.
 
 #define MPU6050_FIFO_DEFAULT_TIMEOUT 11000
 
-// note: DMP code memory blocks defined at end of header file
-
-class MPU6050 {
+class MPU6050_Base {
     public:
-        MPU6050(uint8_t address=MPU6050_DEFAULT_ADDRESS);
+        MPU6050_Base(uint8_t address=MPU6050_DEFAULT_ADDRESS);
 
         void initialize();
         bool testConnection();
@@ -1035,7 +1033,7 @@ class MPU6050 {
             uint16_t dmpGetFIFOPacketSize();
         #endif
 
-    private:
+    protected:
         uint8_t devAddr;
         uint8_t buffer[14];
         uint32_t fifoTimeout = MPU6050_FIFO_DEFAULT_TIMEOUT;
