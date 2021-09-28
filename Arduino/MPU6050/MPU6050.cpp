@@ -2787,7 +2787,7 @@ void MPU6050_Base::setFIFOTimeout(uint32_t fifoTimeout) {
                      fifoC = fifoC - length; // Save the last packet
                      uint16_t  RemoveBytes;
                      while (fifoC) { // fifo count will reach zero so this is safe
-                         RemoveBytes = min((int)fifoC, I2CDEVLIB_WIRE_BUFFER_LENGTH); // Buffer Length is different than the packet length this will efficiently clear the buffer
+                         RemoveBytes = (fifoC < I2CDEVLIB_WIRE_BUFFER_LENGTH) ? fifoC : I2CDEVLIB_WIRE_BUFFER_LENGTH; // Buffer Length is different than the packet length this will efficiently clear the buffer
                          getFIFOBytes(Trash, (uint8_t)RemoveBytes);
                          fifoC -= RemoveBytes;
                      }

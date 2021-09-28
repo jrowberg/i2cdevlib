@@ -607,7 +607,7 @@ uint8_t MPU6050_9Axis_MotionApps41::dmpInitialize() {
             DEBUG_PRINTLN(F("Waiting for FIRO count >= 46..."));
             while ((fifoCount = getFIFOCount()) < 46);
             DEBUG_PRINTLN(F("Reading FIFO..."));
-            getFIFOBytes(fifoBuffer, min(fifoCount, 128)); // safeguard only 128 bytes
+            getFIFOBytes(fifoBuffer, (fifoCount < 128) ? fifoCount : 128); // safeguard only 128 bytes
             DEBUG_PRINTLN(F("Reading interrupt status..."));
             getIntStatus();
 
@@ -618,13 +618,13 @@ uint8_t MPU6050_9Axis_MotionApps41::dmpInitialize() {
             DEBUG_PRINTLN(F("Waiting for FIRO count >= 48..."));
             while ((fifoCount = getFIFOCount()) < 48);
             DEBUG_PRINTLN(F("Reading FIFO..."));
-            getFIFOBytes(fifoBuffer, min(fifoCount, 128)); // safeguard only 128 bytes
+            getFIFOBytes(fifoBuffer, (fifoCount < 128) ? fifoCount : 128); // safeguard only 128 bytes
             DEBUG_PRINTLN(F("Reading interrupt status..."));
             getIntStatus();
             DEBUG_PRINTLN(F("Waiting for FIRO count >= 48..."));
             while ((fifoCount = getFIFOCount()) < 48);
             DEBUG_PRINTLN(F("Reading FIFO..."));
-            getFIFOBytes(fifoBuffer, min(fifoCount, 128)); // safeguard only 128 bytes
+            getFIFOBytes(fifoBuffer, (fifoCount < 128) ? fifoCount : 128); // safeguard only 128 bytes
             DEBUG_PRINTLN(F("Reading interrupt status..."));
             getIntStatus();
 
