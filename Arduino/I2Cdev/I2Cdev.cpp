@@ -230,7 +230,7 @@ int8_t I2Cdev::readBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8
                 Wire.send(regAddr);
                 Wire.endTransmission();
                 Wire.beginTransmission(devAddr);
-                Wire.requestFrom(devAddr, (int)min(length - k, I2CDEVLIB_WIRE_BUFFER_LENGTH));
+                Wire.requestFrom((uint8_t)devAddr, (uint8_t)min((int)length - k, I2CDEVLIB_WIRE_BUFFER_LENGTH));
 
                 for (; Wire.available() && (timeout == 0 || millis() - t1 < timeout); count++) {
                     data[count] = Wire.receive();
@@ -254,7 +254,7 @@ int8_t I2Cdev::readBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8
                 Wire.write(regAddr);
                 Wire.endTransmission();
                 Wire.beginTransmission(devAddr);
-                Wire.requestFrom(devAddr, (int)min(length - k, I2CDEVLIB_WIRE_BUFFER_LENGTH));
+                Wire.requestFrom((uint8_t)devAddr, (uint8_t)min((int)length - k, I2CDEVLIB_WIRE_BUFFER_LENGTH));
         
                 for (; Wire.available() && (timeout == 0 || millis() - t1 < timeout); count++) {
                     data[count] = Wire.read();
@@ -278,7 +278,7 @@ int8_t I2Cdev::readBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8
                 Wire.write(regAddr);
                 Wire.endTransmission();
                 Wire.beginTransmission(devAddr);
-                Wire.requestFrom(devAddr, (int)min(length - k, I2CDEVLIB_WIRE_BUFFER_LENGTH));
+                Wire.requestFrom((uint8_t)devAddr, (uint8_t)min((int)length - k, I2CDEVLIB_WIRE_BUFFER_LENGTH));
         
                 for (; Wire.available() && (timeout == 0 || millis() - t1 < timeout); count++) {
                     data[count] = Wire.read();
