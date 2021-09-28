@@ -3316,7 +3316,7 @@ void MPU6050::PID(uint8_t ReadAddress, float kP,float kI, uint8_t Loops){
 	float Error, PTerm, ITerm[3];
 	int16_t eSample;
 	uint32_t eSum;
-	uint16_t gravity;
+	uint16_t gravity = 8192; // prevent uninitialized compiler warning
 	if (ReadAddress == 0x3B) gravity = 16384 >> getFullScaleAccelRange();
 	Serial.write('>');
 	for (int i = 0; i < 3; i++) {
