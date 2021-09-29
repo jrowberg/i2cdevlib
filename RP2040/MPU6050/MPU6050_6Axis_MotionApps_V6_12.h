@@ -1,9 +1,11 @@
-// I2Cdev library collection - MPU6050 I2C device class, 6-axis MotionApps 6.12 implementation
+// I2Cdev library collection
+// Raspberry Pi Pico port for: MPU6050 I2C device class, 6-axis MotionApps 6.12 implementation
 // Based on InvenSense MPU-6050 register map document rev. 2.0, 5/19/2011 (RM-MPU-6000A-00)
 // 5/20/2013 by Jeff Rowberg <jeff@rowberg.net>
 // Updates should (hopefully) always be available at https://github.com/jrowberg/i2cdevlib
 //
 // Changelog:
+// 2021-09-29 - Initial port release by Gino Ipóliti.
 // 2019/7/10 - I incorporated DMP Firmware Version 6.12 Latest as of today with many features and bug fixes.
 //           - MPU6050 Registers have not changed just the DMP Image so that full backwards compatibility is present
 //           - Run-time calibration routine is enabled which calibrates after no motion state is detected
@@ -47,7 +49,7 @@ THE SOFTWARE.
 
 #include "MPU6050.h"
 
-#define PI 3.1415926535897932384626433832795
+const double PI = 3.1415926535897932384626433832795
 
 /* Source is from the InvenSense MotionApps v2 demo code. Original source is
  * unavailable, unless you happen to be amazing as decompiling binary by
