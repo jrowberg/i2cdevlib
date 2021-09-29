@@ -839,4 +839,9 @@ class MPU6050_Base {
         uint32_t fifoTimeout = MPU6050_FIFO_DEFAULT_TIMEOUT;
 };
 
+#ifndef I2CDEVLIB_MPU6050_TYPEDEF
+#define I2CDEVLIB_MPU6050_TYPEDEF
+typedef MPU6050_Base MPU6050;
+#endif
+
 #endif /* _MPU6050_H_ */

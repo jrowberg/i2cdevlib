@@ -38,6 +38,9 @@ THE SOFTWARE.
 #ifndef _MPU6050_6AXIS_MOTIONAPPS612_H_
 #define _MPU6050_6AXIS_MOTIONAPPS612_H_
 
+// take ownership of the "MPU6050" typedef
+#define I2CDEVLIB_MPU6050_TYPEDEF
+
 #include "MPU6050.h"
 
 class MPU6050_6Axis_MotionApps612 : public MPU6050_Base {
@@ -143,9 +146,6 @@ class MPU6050_6Axis_MotionApps612 : public MPU6050_Base {
         uint16_t dmpPacketSize;
 };
 
-#ifndef I2CDEVLIB_MPU6050_TYPEDEF
-#define I2CDEVLIB_MPU6050_TYPEDEF
 typedef MPU6050_6Axis_MotionApps612 MPU6050;
-#endif
 
 #endif /* _MPU6050_6AXIS_MOTIONAPPS612_H_ */
