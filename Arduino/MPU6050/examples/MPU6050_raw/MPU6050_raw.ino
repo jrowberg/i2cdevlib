@@ -48,6 +48,7 @@ THE SOFTWARE.
 // AD0 high = 0x69
 MPU6050 accelgyro;
 //MPU6050 accelgyro(0x69); // <-- use for AD0 high
+//MPU6050 accelgyro(0x68, &Wire1); // <-- use for AD0 low, but 2nd Wire (TWI/I2C) object
 
 int16_t ax, ay, az;
 int16_t gx, gy, gz;

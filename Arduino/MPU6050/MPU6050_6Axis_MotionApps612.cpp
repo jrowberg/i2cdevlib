@@ -350,24 +350,24 @@ uint8_t MPU6050::dmpInitialize() { // Lets get it over with fast Write everythin
 	uint8_t val;
 	uint16_t ival;
   // Reset procedure per instructions in the "MPU-6000/MPU-6050 Register Map and Descriptions" page 41
-	I2Cdev::writeBit(devAddr,0x6B, 7, (val = 1)); //PWR_MGMT_1: reset with 100ms delay
+	I2Cdev::writeBit(devAddr,0x6B, 7, (val = 1), wireObj); //PWR_MGMT_1: reset with 100ms delay
 	delay(100);
-	I2Cdev::writeBits(devAddr,0x6A, 2, 3, (val = 0b111)); // full SIGNAL_PATH_RESET: with another 100ms delay
+	I2Cdev::writeBits(devAddr,0x6A, 2, 3, (val = 0b111), wireObj); // full SIGNAL_PATH_RESET: with another 100ms delay
 	delay(100);         
-	I2Cdev::writeBytes(devAddr,0x6B, 1, &(val = 0x01)); // 1000 0001 PWR_MGMT_1:Clock Source Select PLL_X_gyro
-	I2Cdev::writeBytes(devAddr,0x38, 1, &(val = 0x00)); // 0000 0000 INT_ENABLE: no Interrupt
-	I2Cdev::writeBytes(devAddr,0x23, 1, &(val = 0x00)); // 0000 0000 MPU FIFO_EN: (all off) Using DMP's FIFO instead
-	I2Cdev::writeBytes(devAddr,0x1C, 1, &(val = 0x00)); // 0000 0000 ACCEL_CONFIG: 0 =  Accel Full Scale Select: 2g
-	I2Cdev::writeBytes(devAddr,0x37, 1, &(val = 0x80)); // 1001 0000 INT_PIN_CFG: ACTL The logic level for int pin is active low. and interrupt status bits are cleared on any read
-	I2Cdev::writeBytes(devAddr,0x6B, 1, &(val = 0x01)); // 0000 0001 PWR_MGMT_1: Clock Source Select PLL_X_gyro
-	I2Cdev::writeBytes(devAddr,0x19, 1, &(val = 0x04)); // 0000 0100 SMPLRT_DIV: Divides the internal sample rate 400Hz ( Sample Rate = Gyroscope Output Rate / (1 + SMPLRT_DIV))
-	I2Cdev::writeBytes(devAddr,0x1A, 1, &(val = 0x01)); // 0000 0001 CONFIG: Digital Low Pass Filter (DLPF) Configuration 188HZ  //Im betting this will be the beat
+	I2Cdev::writeBytes(devAddr,0x6B, 1, &(val = 0x01), wireObj); // 1000 0001 PWR_MGMT_1:Clock Source Select PLL_X_gyro
+	I2Cdev::writeBytes(devAddr,0x38, 1, &(val = 0x00), wireObj); // 0000 0000 INT_ENABLE: no Interrupt
+	I2Cdev::writeBytes(devAddr,0x23, 1, &(val = 0x00), wireObj); // 0000 0000 MPU FIFO_EN: (all off) Using DMP's FIFO instead
+	I2Cdev::writeBytes(devAddr,0x1C, 1, &(val = 0x00), wireObj); // 0000 0000 ACCEL_CONFIG: 0 =  Accel Full Scale Select: 2g
+	I2Cdev::writeBytes(devAddr,0x37, 1, &(val = 0x80), wireObj); // 1001 0000 INT_PIN_CFG: ACTL The logic level for int pin is active low. and interrupt status bits are cleared on any read
+	I2Cdev::writeBytes(devAddr,0x6B, 1, &(val = 0x01), wireObj); // 0000 0001 PWR_MGMT_1: Clock Source Select PLL_X_gyro
+	I2Cdev::writeBytes(devAddr,0x19, 1, &(val = 0x04), wireObj); // 0000 0100 SMPLRT_DIV: Divides the internal sample rate 400Hz ( Sample Rate = Gyroscope Output Rate / (1 + SMPLRT_DIV))
+	I2Cdev::writeBytes(devAddr,0x1A, 1, &(val = 0x01), wireObj); // 0000 0001 CONFIG: Digital Low Pass Filter (DLPF) Configuration 188HZ  //Im betting this will be the beat
 	if (!writeProgMemoryBlock(dmpMemory, MPU6050_DMP_CODE_SIZE)) return 1; // Loads the DMP image into the MPU6050 Memory // Should Never Fail
-	I2Cdev::writeWords(devAddr, 0x70, 1, &(ival = 0x0400)); // DMP Program Start Address
-	I2Cdev::writeBytes(devAddr,0x1B, 1, &(val = 0x18)); // 0001 1000 GYRO_CONFIG: 3 = +2000 Deg/sec
-	I2Cdev::writeBytes(devAddr,0x6A, 1, &(val = 0xC0)); // 1100 1100 USER_CTRL: Enable Fifo and Reset Fifo
-	I2Cdev::writeBytes(devAddr,0x38, 1, &(val = 0x02)); // 0000 0010 INT_ENABLE: RAW_DMP_INT_EN on
-	I2Cdev::writeBit(devAddr,0x6A, 2, 1);      // Reset FIFO one last time just for kicks. (MPUi2cWrite reads 0x6A first and only alters 1 bit and then saves the byte)
+	I2Cdev::writeWords(devAddr, 0x70, 1, &(ival = 0x0400), wireObj); // DMP Program Start Address
+	I2Cdev::writeBytes(devAddr,0x1B, 1, &(val = 0x18), wireObj); // 0001 1000 GYRO_CONFIG: 3 = +2000 Deg/sec
+	I2Cdev::writeBytes(devAddr,0x6A, 1, &(val = 0xC0), wireObj); // 1100 1100 USER_CTRL: Enable Fifo and Reset Fifo
+	I2Cdev::writeBytes(devAddr,0x38, 1, &(val = 0x02), wireObj); // 0000 0010 INT_ENABLE: RAW_DMP_INT_EN on
+	I2Cdev::writeBit(devAddr,0x6A, 2, 1, wireObj);      // Reset FIFO one last time just for kicks. (MPUi2cWrite reads 0x6A first and only alters 1 bit and then saves the byte)
 
   setDMPEnabled(false); // disable DMP for compatibility with the MPU6050 library
 /*
