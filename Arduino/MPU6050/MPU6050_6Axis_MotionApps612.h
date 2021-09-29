@@ -45,7 +45,7 @@ THE SOFTWARE.
 
 class MPU6050_6Axis_MotionApps612 : public MPU6050_Base {
     public:
-		MPU6050_6Axis_MotionApps612(uint8_t address=MPU6050_DEFAULT_ADDRESS, void *wireObj=0) : MPU6050_Base(address, wireObj) { }
+        MPU6050_6Axis_MotionApps612(uint8_t address=MPU6050_DEFAULT_ADDRESS, void *wireObj=0) : MPU6050_Base(address, wireObj) { }
 
         uint8_t dmpInitialize();
         bool dmpPacketAvailable();
