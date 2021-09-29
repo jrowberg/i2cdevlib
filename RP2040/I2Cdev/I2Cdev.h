@@ -1,25 +1,10 @@
-// I2Cdev library collection - Main I2C device class header file
+// Raspberry Pi Pico port for:
+// I2Cdev library collection - Main I2C device class
 // Abstracts bit and byte I2C R/W functions into a convenient class
 // 2013-06-05 by Jeff Rowberg <jeff@rowberg.net>
 //
 // Changelog:
-//      2020-01-20 - hardija : complete support for Teensy 3.x
-//      2015-10-30 - simondlevy : support i2c_t3 for Teensy3.1
-//      2013-05-06 - add Francesco Ferrara's Fastwire v0.24 implementation with small modifications
-//      2013-05-05 - fix issue with writing bit values to words (Sasquatch/Farzanegan)
-//      2012-06-09 - fix major issue with reading > 32 bytes at a time with Arduino Wire
-//                 - add compiler warnings when using outdated or IDE or limited I2Cdev implementation
-//      2011-11-01 - fix write*Bits mask calculation (thanks sasquatch @ Arduino forums)
-//      2011-10-03 - added automatic Arduino version detection for ease of use
-//      2011-10-02 - added Gene Knight's NBWire TwoWire class implementation with small modifications
-//      2011-08-31 - added support for Arduino 1.0 Wire library (methods are different from 0.x)
-//      2011-08-03 - added optional timeout parameter to read* methods to easily change from default
-//      2011-08-02 - added support for 16-bit registers
-//                 - fixed incorrect Doxygen comments on some methods
-//                 - added timeout value for read operations (thanks mem @ Arduino forums)
-//      2011-07-30 - changed read/write function structures to return success or byte counts
-//                 - made all methods static for multi-device memory savings
-//      2011-07-28 - initial release
+//		2021-09-29 - Initial port release by Gino Ipóliti.
 
 /* ============================================
 I2Cdev device library code is placed under the MIT license
@@ -56,7 +41,7 @@ THE SOFTWARE.
 #include "hardware/i2c.h"
 
 // 1000ms default read timeout (modify with "I2Cdev::readTimeout = [ms];")
-#define I2CDEV_DEFAULT_READ_TIMEOUT     ((uint32_t)1000000) // RP2040 I2C functions with timeout uses microseconds so we have to multiply by 10^3
+#define I2CDEV_DEFAULT_READ_TIMEOUT     ((uint32_t)1000000) // RP2040 I2C functions with timeout use microseconds so we have to multiply by 10^3
 
 class I2Cdev {
     public:
