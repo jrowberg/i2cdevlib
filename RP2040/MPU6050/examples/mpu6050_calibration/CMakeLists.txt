@@ -8,28 +8,28 @@ set(CMAKE_CXX_STANDARD 17)
 # Pull in Raspberry Pi Pico SDK (must be before project)
 include(pico_sdk_import.cmake)
 
-project(mpu6050_i2c_calibration C CXX ASM)
+project(mpu6050_calibration C CXX ASM)
 
 # Initialise the Raspberry Pi Pico SDK
 pico_sdk_init()
 
 # Add executable. Default name is the project name, version 0.1
 
-add_executable(mpu6050_i2c_calibration mpu6050_i2c_calibration.c )
+add_executable(mpu6050_calibration mpu6050_calibration.cpp I2Cdev.cpp MPU6050.cpp )
 
-pico_set_program_name(mpu6050_i2c_calibration "mpu6050_i2c_calibration")
-pico_set_program_version(mpu6050_i2c_calibration "0.1")
+pico_set_program_name(mpu6050_calibration "mpu6050_calibration")
+pico_set_program_version(mpu6050_calibration "0.1")
 
-pico_enable_stdio_uart(mpu6050_i2c_calibration 0)
-pico_enable_stdio_usb(mpu6050_i2c_calibration 1)
+pico_enable_stdio_uart(mpu6050_calibration 0)
+pico_enable_stdio_usb(mpu6050_calibration 1)
 
 # Add the standard library to the build
-target_link_libraries(mpu6050_i2c_calibration pico_stdlib)
+target_link_libraries(mpu6050_calibration pico_stdlib)
 
 # Add any user requested libraries
-target_link_libraries(mpu6050_i2c_calibration
+target_link_libraries(mpu6050_calibration
         hardware_i2c
         )
 
-pico_add_extra_outputs(mpu6050_i2c_calibration)
+pico_add_extra_outputs(mpu6050_calibration)
 

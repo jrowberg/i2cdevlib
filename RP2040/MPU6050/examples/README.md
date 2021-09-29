@@ -1,5 +1,5 @@
-These are examples for the Raspberry Pi Pico development board, have VS Code support and serial output through USB. You will have to edit the include paths so they match the ones on your computer, but VS Code should warn you about it if you don't.
-Also, you must have the libraries files (I2Cdev.h, I2Cdev.cpp, MPU6050.h, MPU6050.cpp, MPU6050\_6Axis\_MotionApps\_V6\_12.h, helper\_3dmath.h) inside the example folder (whichever you want to build), unless you modify the CMakeLists.txt and specify the path.
+These are examples for the Raspberry Pi Pico development board and have serial output enabled through USB.
+Also, if the libraries files (I2Cdev.h, I2Cdev.cpp, MPU6050.h, MPU6050.cpp, MPU6050\_6Axis\_MotionApps\_V6\_12.h, helper\_3dmath.h) are not in a common include directory, you will have to copy them to the example folder (whichever you want to build), unless you modify the CMakeLists.txt and specify the path.
 
 #### Instructions for building examples
 1. ```cd``` to the folder of the example you want to build.
