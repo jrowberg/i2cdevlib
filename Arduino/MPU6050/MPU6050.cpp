@@ -3371,23 +3371,18 @@ void MPU6050_Base::PID(uint8_t ReadAddress, float kP,float kI, uint8_t Loops){
 	resetDMP();
 }
 
-float * MPU6050_Base::GetActiveOffsets() {
-    
-	uint8_t AOffsetRegister = (getDeviceID() < 0x38 )? MPU6050_RA_XA_OFFS_H:0x77;
-	int16_t Data[6]{0};
-    int16_t Data1[3]{0};
-	if(AOffsetRegister == 0x06)	I2Cdev::readWords(devAddr, AOffsetRegister, 3, (uint16_t *)Data, I2Cdev::readTimeout, wireObj);
-	else {
-		I2Cdev::readWords(devAddr, AOffsetRegister, 1, (uint16_t *)Data, I2Cdev::readTimeout, wireObj);
-		I2Cdev::readWords(devAddr, AOffsetRegister+3, 1, (uint16_t *)Data+1, I2Cdev::readTimeout, wireObj);
-		I2Cdev::readWords(devAddr, AOffsetRegister+6, 1, (uint16_t *)Data+2, I2Cdev::readTimeout, wireObj);
-	}
-	I2Cdev::readWords(devAddr, 0x13, 3, (uint16_t *)Data1, I2Cdev::readTimeout, wireObj);
-    Data[3] = Data1[0];
-    Data[4] = Data1[1];
-    Data[5] = Data1[2];
+int16_t * MPU6050_Base::GetActiveOffsets() {
+    uint8_t AOffsetRegister = (getDeviceID() < 0x38 )? MPU6050_RA_XA_OFFS_H:0x77;
+    int16_t Data[6]{0};
+    if(AOffsetRegister == 0x06)	I2Cdev::readWords(devAddr, AOffsetRegister, 3, (uint16_t *)Data, I2Cdev::readTimeout, wireObj);
+    else {
+        I2Cdev::readWords(devAddr, AOffsetRegister, 1, (uint16_t *)Data, I2Cdev::readTimeout, wireObj);
+        I2Cdev::readWords(devAddr, AOffsetRegister+3, 1, (uint16_t *)(Data+1), I2Cdev::readTimeout, wireObj);
+        I2Cdev::readWords(devAddr, AOffsetRegister+6, 1, (uint16_t *)(Data+2), I2Cdev::readTimeout, wireObj);
+    }
+    I2Cdev::readWords(devAddr, 0x13, 3, (uint16_t *)(Data+3), I2Cdev::readTimeout, wireObj);
     for(uint i = 0; i < 6; i++){
-        offsets[i] = Data[i];
+        offsets[i] = (float)Data[i];
     }
     return offsets;
 }
