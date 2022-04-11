@@ -832,12 +832,16 @@ class MPU6050_Base {
 		void CalibrateAccel(uint8_t Loops = 15);// Fine tune after setting offsets with less Loops.
 		void PID(uint8_t ReadAddress, float kP,float kI, uint8_t Loops);  // Does the math
 		void PrintActiveOffsets(); // See the results of the Calibration
+		int16_t GetActiveOffsets();
 
     protected:
         uint8_t devAddr;
         void *wireObj;
         uint8_t buffer[14];
         uint32_t fifoTimeout = MPU6050_FIFO_DEFAULT_TIMEOUT;
+    
+    private:
+        int16_t offsets[6];
 };
 
 #ifndef I2CDEVLIB_MPU6050_TYPEDEF
