@@ -3382,9 +3382,7 @@ float * MPU6050_Base::GetActiveOffsets() {
 		I2Cdev::readWords(devAddr, AOffsetRegister+3, 1, (uint16_t *)Data+1, I2Cdev::readTimeout, wireObj);
 		I2Cdev::readWords(devAddr, AOffsetRegister+6, 1, (uint16_t *)Data+2, I2Cdev::readTimeout, wireObj);
 	}
-    delay(500);
 	I2Cdev::readWords(devAddr, 0x13, 3, (uint16_t *)Data1, I2Cdev::readTimeout, wireObj);
-    delay(500);
     Data[3] = Data1[0];
     Data[4] = Data1[1];
     Data[5] = Data1[2];
