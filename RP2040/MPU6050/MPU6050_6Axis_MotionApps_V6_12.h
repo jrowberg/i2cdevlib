@@ -49,7 +49,7 @@ THE SOFTWARE.
 
 #include "MPU6050.h"
 
-const double PI = 3.1415926535897932384626433832795
+const double PI = 3.1415926535897932384626433832795;
 
 /* Source is from the InvenSense MotionApps v2 demo code. Original source is
  * unavailable, unless you happen to be amazing as decompiling binary by
