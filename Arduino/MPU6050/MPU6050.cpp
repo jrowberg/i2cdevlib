@@ -3381,7 +3381,7 @@ int16_t * MPU6050_Base::GetActiveOffsets() {
         I2Cdev::readWords(devAddr, AOffsetRegister+6, 1, (uint16_t *)(Data+2), I2Cdev::readTimeout, wireObj);
     }
     I2Cdev::readWords(devAddr, 0x13, 3, (uint16_t *)(Data+3), I2Cdev::readTimeout, wireObj);
-    for(uint i = 0; i < 6; i++){
+    for(int i = 0; i < 6; i++){
         offsets[i] = Data[i];
     }
     return offsets;
