@@ -87,7 +87,7 @@ uint8_t TCA6424A::readBank(uint8_t bank) {
  * @param banks Container for all bank's pin values (P00-P27)
  */
 void TCA6424A::readAll(uint8_t *banks) {
-    I2Cdev::readBytes(devAddr, TCA6424A_RA_INPUT0, 3, banks);
+    I2Cdev::readBytes(devAddr, TCA6424A_RA_INPUT0 | TCA6424A_AUTO_INCREMENT, 3, banks);
 }
 /** Get all pin logic levels from all banks.
  * Reads into individual 1-byte containers.
@@ -96,7 +96,7 @@ void TCA6424A::readAll(uint8_t *banks) {
  * @param bank2 Container for Bank 2's pin values (P20-P27)
  */
 void TCA6424A::readAll(uint8_t *bank0, uint8_t *bank1, uint8_t *bank2) {
-    I2Cdev::readBytes(devAddr, TCA6424A_RA_INPUT0, 3, buffer);
+    I2Cdev::readBytes(devAddr, TCA6424A_RA_INPUT0 | TCA6424A_AUTO_INCREMENT, 3, buffer);
     *bank0 = buffer[0];
     *bank1 = buffer[1];
     *bank2 = buffer[2];
