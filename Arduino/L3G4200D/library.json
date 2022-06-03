@@ -1,5 +1,6 @@
 {
   "name": "I2Cdevlib-L3G4200D",
+  "version": "1.0.0",
   "keywords": "accelerometer, sensor, i2cdevlib, i2c",
   "description": "The L3G4200D is a low-power three-axis angular rate sensor able to provide unprecedented stablility of zero rate level and sensitivity over temperature and time",
   "include": "Arduino/L3G4200D",
@@ -10,8 +11,7 @@
   },
   "dependencies":
   {
-    "name": "I2Cdevlib-Core",
-    "frameworks": "arduino"
+    "jrowberg/I2Cdevlib-Core": "*"
   },
   "frameworks": "arduino",
   "platforms": "*"

@@ -1,5 +1,6 @@
 {
   "name": "I2Cdevlib-IAQ2000",
+  "version": "1.0.0",
   "keywords": "co2, carbon, dioxide, sensor, i2cdevlib, i2c",
   "description": "The iAQ-2000 Indoor Air Quality Module is a sensitive, low-cost solution for detecting poor air quality",
   "include": "Arduino/IAQ2000",
@@ -10,8 +11,7 @@
   },
   "dependencies":
   {
-    "name": "I2Cdevlib-Core",
-    "frameworks": "arduino"
+    "jrowberg/I2Cdevlib-Core": "*"
   },
   "frameworks": "arduino",
   "platforms": "*"
