@@ -1,6 +1,7 @@
 {
-  "name": "I2Cdevlib-HTU21D”,
-  "keywords": “temperature, humidity, i2cdevlib, i2c",
+  "name": "I2Cdevlib-HTU21D",
+  "version": "1.0.0",
+  "keywords": "temperature, humidity, i2cdevlib, i2c",
   "description": "HTU21D is 12-Bit humidity and 14-bit temperature sensor",
   "include": "Arduino/HTU21D",
   "repository":
@@ -10,8 +11,7 @@
   },
   "dependencies":
   {
-    "name": "I2Cdevlib-Core",
-    "frameworks": "arduino"
+    "jrowberg/I2Cdevlib-Core": "*"
   },
   "frameworks": "arduino",
   "platforms": "*"

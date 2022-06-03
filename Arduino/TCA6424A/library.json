@@ -1,5 +1,6 @@
 {
   "name": "I2Cdevlib-TCA6424A",
+  "version": "1.0.0",
   "keywords": "io, expander, i2cdevlib, i2c",
   "description": "The TCA6424A is a low-voltage 24-Bit I2C and SMBus I/O expander with interrupt output, reset and configuration registers",
   "include": "Arduino/TCA6424A",
@@ -10,8 +11,7 @@
   },
   "dependencies":
   {
-    "name": "I2Cdevlib-Core",
-    "frameworks": "arduino"
+    "jrowberg/I2Cdevlib-Core": "*"
   },
   "frameworks": "arduino",
   "platforms": "*"

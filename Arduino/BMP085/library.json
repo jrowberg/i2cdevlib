@@ -1,5 +1,6 @@
 {
   "name": "I2Cdevlib-BMP085",
+  "version": "1.0.0",
   "keywords": "altimeter, altitude, barometer, pressure, temperature, sensor, i2cdevlib, i2c",
   "description": "The BMP085 is barometric pressure, temperature and altitude sensor",
   "include": "Arduino/BMP085",
@@ -10,8 +11,7 @@
   },
   "dependencies":
   {
-    "name": "I2Cdevlib-Core",
-    "frameworks": "arduino"
+    "jrowberg/I2Cdevlib-Core": "*"
   },
   "frameworks": "arduino",
   "platforms": "*"

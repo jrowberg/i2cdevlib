@@ -1,5 +1,6 @@
 {
   "name": "I2Cdevlib-DS1307",
+  "version": "1.0.0",
   "keywords": "rtc, time, clock, i2cdevlib, i2c",
   "description": "The DS1307 serial real-time clock (RTC) is a low-power, full binary-coded decimal (BCD) clock/calendar plus 56 bytes of NV SRAM",
   "include": "Arduino/DS1307",
@@ -10,8 +11,7 @@
   },
   "dependencies":
   {
-    "name": "I2Cdevlib-Core",
-    "frameworks": "arduino"
+    "jrowberg/I2Cdevlib-Core": "*"
   },
   "frameworks": "arduino",
   "platforms": "*"

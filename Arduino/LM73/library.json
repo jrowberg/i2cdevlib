@@ -1,5 +1,6 @@
 {
   "name": "I2Cdevlib-LM73",
+  "version": "1.0.0",
   "keywords": "temperature, sensor, i2cdevlib, i2c",
   "description": "The LM73 is an integrated, digital-output temperature sensor featuring an incremental Delta-Sigma ADC",
   "include": "Arduino/LM73",
@@ -10,8 +11,7 @@
   },
   "dependencies":
   {
-    "name": "I2Cdevlib-Core",
-    "frameworks": "arduino"
+    "jrowberg/I2Cdevlib-Core": "*"
   },
   "frameworks": "arduino",
   "platforms": "*"

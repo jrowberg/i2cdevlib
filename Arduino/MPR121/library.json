@@ -1,5 +1,6 @@
 {
   "name": "I2Cdevlib-MPR121",
+  "version": "1.0.0",
   "keywords": "touch, capacitance, proximity, sensor, i2cdevlib, i2c",
   "description": "The MPR121 is a 12-bit proximity capacitive touch sensor",
   "include": "Arduino/MPR121",
@@ -10,8 +11,7 @@
   },
   "dependencies":
   {
-    "name": "I2Cdevlib-Core",
-    "frameworks": "arduino"
+    "jrowberg/I2Cdevlib-Core": "*"
   },
   "frameworks": "arduino",
   "platforms": "*"

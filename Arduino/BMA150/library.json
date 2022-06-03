@@ -1,5 +1,6 @@
 {
   "name": "I2Cdevlib-BMA150",
+  "version": "1.0.0",
   "keywords": "accelerometer, sensor, i2cdevlib, i2c",
   "description": "The BMA150 is a triaxial, low-g acceleration sensor IC with digital output for consumer market applications",
   "include": "Arduino/BMA150",
@@ -10,8 +11,7 @@
   },
   "dependencies":
   {
-    "name": "I2Cdevlib-Core",
-    "frameworks": "arduino"
+    "jrowberg/I2Cdevlib-Core": "*"
   },
   "frameworks": "arduino",
   "platforms": "*"
