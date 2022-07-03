@@ -80,7 +80,7 @@ void task_display(void*){
 	    //Best result is to match with DMP refresh rate
 	    // Its last value in components/MPU6050/MPU6050_6Axis_MotionApps20.h file line 310
 	    // Now its 0x13, which means DMP is refreshed with 10Hz rate
-		vTaskDelay(5/portTICK_PERIOD_MS);
+		// vTaskDelay(5/portTICK_PERIOD_MS);
 	}
 
 	vTaskDelete(NULL);

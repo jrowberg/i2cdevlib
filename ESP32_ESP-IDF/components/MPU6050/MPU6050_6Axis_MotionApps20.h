@@ -320,6 +320,10 @@ const unsigned char dmpUpdates[MPU6050_DMP_UPDATES_SIZE] = {
     0x00,   0x60,   0x04,   0x00, 0x40, 0x00, 0x00
 };
 
+#ifndef MPU6050_DMP_FIFO_RATE_DIVISOR 
+#define MPU6050_DMP_FIFO_RATE_DIVISOR 0x00 // The New instance of the Firmware has this as the default
+#endif
+
 uint8_t MPU6050::dmpInitialize() {
     // reset device
     DEBUG_PRINTLN(F("\n\nResetting MPU6050..."));
@@ -381,6 +385,10 @@ uint8_t MPU6050::dmpInitialize() {
     DEBUG_PRINTLN(F(" bytes)"));
     if (writeProgMemoryBlock(dmpMemory, MPU6050_DMP_CODE_SIZE)) {
         DEBUG_PRINTLN(F("Success! DMP code written and verified."));
+
+        // Set the FIFO Rate Divisor int the DMP Firmware Memory
+        unsigned char dmpUpdate[] = {0x00, MPU6050_DMP_FIFO_RATE_DIVISOR};
+        writeMemoryBlock(dmpUpdate, 0x02, 0x02, 0x16); // Lets write the dmpUpdate data to the Firmware image, we have 2 bytes to write in bank 0x02 with the Offset 0x16
 
         // write DMP configuration
         // DEBUG_PRINTLN(F("Writing DMP configuration to MPU memory banks ("));
