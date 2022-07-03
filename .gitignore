@@ -8,3 +8,5 @@ PIC18/MPU6050/Examples/MPU6050_raw.X/build/
 /dsPIC30F/MPU6050/Examples/MPU6050_example.X/nbproject/private/
 /dsPIC30F/MPU6050/Examples/MPU6050_example.X/build/default/
 /dsPIC30F/MPU6050/Examples/MPU6050_example.X/dist/default/
+ESP32_ESP-IDF/build/
+ESP32_ESP-IDF/sdkconfig

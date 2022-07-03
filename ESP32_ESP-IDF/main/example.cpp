@@ -43,10 +43,12 @@ void task_display(void*){
 	mpu.dmpInitialize();
 
 	// This need to be setup individually
-	mpu.setXGyroOffset(220);
-	mpu.setYGyroOffset(76);
-	mpu.setZGyroOffset(-85);
-	mpu.setZAccelOffset(1788);
+	// mpu.setXGyroOffset(220);
+	// mpu.setYGyroOffset(76);
+	// mpu.setZGyroOffset(-85);
+	// mpu.setZAccelOffset(1788);
+    mpu.CalibrateAccel(6);
+    mpu.CalibrateGyro(6);
 
 	mpu.setDMPEnabled(true);
 
