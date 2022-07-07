@@ -13,8 +13,8 @@
 #include "MPU6050_6Axis_MotionApps20.h"
 #include "sdkconfig.h"
 
-#define PIN_SDA 22
-#define PIN_CLK 21
+#define PIN_SDA 21
+#define PIN_CLK 22
 
 Quaternion q;           // [w, x, y, z]         quaternion container
 VectorFloat gravity;    // [x, y, z]            gravity vector
@@ -43,10 +43,12 @@ void task_display(void*){
 	mpu.dmpInitialize();
 
 	// This need to be setup individually
-	mpu.setXGyroOffset(220);
-	mpu.setYGyroOffset(76);
-	mpu.setZGyroOffset(-85);
-	mpu.setZAccelOffset(1788);
+	// mpu.setXGyroOffset(220);
+	// mpu.setYGyroOffset(76);
+	// mpu.setZGyroOffset(-85);
+	// mpu.setZAccelOffset(1788);
+    mpu.CalibrateAccel(6);
+    mpu.CalibrateGyro(6);
 
 	mpu.setDMPEnabled(true);
 
@@ -78,7 +80,7 @@ void task_display(void*){
 	    //Best result is to match with DMP refresh rate
 	    // Its last value in components/MPU6050/MPU6050_6Axis_MotionApps20.h file line 310
 	    // Now its 0x13, which means DMP is refreshed with 10Hz rate
-		vTaskDelay(100/portTICK_PERIOD_MS);
+		// vTaskDelay(5/portTICK_PERIOD_MS);
 	}
 
 	vTaskDelete(NULL);
