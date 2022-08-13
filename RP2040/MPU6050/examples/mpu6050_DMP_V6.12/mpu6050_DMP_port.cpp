@@ -35,7 +35,7 @@ void dmpDataReady() {
 
 int main() {
     stdio_init_all();
-    // This example will use I2C0 on the default SDA and SCL pins (4, 5 on a Pico)
+    // This example will use I2C0 on the default SDA and SCL (pins 6, 7 on a Pico)
     i2c_init(i2c_default, 400 * 1000);
     gpio_set_function(PICO_DEFAULT_I2C_SDA_PIN, GPIO_FUNC_I2C);
     gpio_set_function(PICO_DEFAULT_I2C_SCL_PIN, GPIO_FUNC_I2C);
@@ -59,6 +59,19 @@ int main() {
 
     mpu.initialize();
     devStatus = mpu.dmpInitialize();
+
+    /* --- if you have calibration data then set the sensor offsets here --- */
+    // mpu.setXAccelOffset();
+    // mpu.setYAccelOffset();
+    // mpu.setZAccelOffset();
+    // mpu.setXGyroOffset();
+    // mpu.setYGyroOffset();
+    // mpu.setZGyroOffset();
+
+    /* --- alternatively you can try this (6 loops should be enough) --- */
+    // mpu.CalibrateAccel(6);
+    // mpu.CalibrateGyro(6);	
+	
     if (devStatus == 0) 
     {
         mpu.setDMPEnabled(true);                // turn on the DMP, now that it's ready
