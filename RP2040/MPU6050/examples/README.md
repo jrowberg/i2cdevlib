@@ -8,3 +8,8 @@ Also, if the libraries files (I2Cdev.h, I2Cdev.cpp, MPU6050.h, MPU6050.cpp, MPU6
 4. ```make```
 5. Copy the uf2 file to your Pico board, using ```cp``` or the file explorer you have.
 6. ```sudo minicom -D /dev/ttyACM0``` to watch the serial output. Use ```sudo```, otherwise minicom will fail to open the device and show no warnings. On Windows you can use PuTTY, choosing the COM port that was assigned (check the Device Manager) and a baudrate of 115200.
+
+#### Sensor calibration
+You will get better results if you measure the gyro and accelerometer offsets for your sensor *(e.g. with the accompanying calibration example)*. Set the initial offsets using `mpu.setXAccelOffset()` and friends in mpu6050_DMP_port.cpp after the call to `mpu.dmpInitialize()`.
+
+Alternatively you could call `mpu.CalibrateAccel(6)` and `mpu.CalibrateGyro(6)` in the same location (6 loops should be enough).
