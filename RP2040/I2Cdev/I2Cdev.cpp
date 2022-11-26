@@ -30,6 +30,8 @@ THE SOFTWARE.
 ===============================================
 */
 
+#include "hardware/i2c.h"
+#include "pico/cyw43_arch.h"
 #include "I2Cdev.h"
 
 /** Default constructor.
@@ -151,8 +153,8 @@ int8_t I2Cdev::readWord(uint8_t devAddr, uint8_t regAddr, uint16_t *data, uint32
 int8_t I2Cdev::readBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8_t *data, uint32_t timeout) {
     int8_t count = 0;
 
-    i2c_write_blocking(i2c_default, devAddr, &regAddr, 1, true);
-    count = i2c_read_timeout_us(i2c_default, devAddr, data, length, false, timeout * 1000);
+    I2Cdev::write(devAddr, 1, &regAddr, true );
+    count = I2Cdev::read(devAddr, length, data, timeout, false);
 
     return count;
 }
@@ -169,8 +171,8 @@ int8_t I2Cdev::readWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint1
     int8_t count = 0, j = 0;
     uint8_t data_buf[length*2];
 
-    i2c_write_blocking(i2c_default, devAddr, &regAddr, 1, true);
-    count = i2c_read_timeout_us(i2c_default, devAddr, data_buf, length*2, false, timeout * 1000);
+    I2Cdev::write(devAddr, 1, &regAddr, true );
+    count = I2Cdev::read(devAddr, length*2, data_buf, timeout, false);
     for(int i=0; i<length; i++){
         data[i] = (data_buf[j] << 8) | data_buf[j+1];
         j+2;
@@ -300,7 +302,7 @@ bool I2Cdev::writeBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8_
     for(int i=0; i<length; i++){
         data_buf[i+1] = data[i];
     }
-    status = i2c_write_blocking(i2c_default, devAddr, data_buf, length + 1, false);
+    status = I2Cdev::write(devAddr, length + 1, data_buf, false );
 
     return status;
 }
@@ -322,9 +324,78 @@ bool I2Cdev::writeWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint16
         data_buf[j+1] = data[i];
         j++;
     }
-    status = i2c_write_blocking(i2c_default, devAddr, data_buf, new_len, false);
+    status = I2Cdev::write(devAddr, new_len, data_buf, false );
 
     return status;
+}
+
+/** Actually write multiple bytes to an 8-bit device register.
+ * @param devAddr I2C slave device address
+ * @param length Number of bytes to write
+ * @param data Buffer that has information to write. First byte should have first register address to write to
+ * @param keep - true to keep master control of the bus
+ * @return Number of bytes written
+ */
+int I2Cdev::write(uint8_t devAddr, uint8_t length, uint8_t* data, bool keep ) {
+    int reLength;
+    reLength = i2c_write_blocking(i2c_default, devAddr, data, length, keep);
+    if (reLength == PICO_ERROR_GENERIC || reLength != length) {
+        printf ( "i2c_write failed\n");
+        displayError();
+    }
+
+    return reLength;
+}
+
+/** Actual read multiple bytes from an 8-bit device register.
+ * @param devAddr I2C slave device address
+ * @param length Number of bytes to read
+ * @param data Buffer to store read data in.
+ * @param timeout read timeout in milliseconds (0 to disable, leave off to use default class value in I2Cdev::readTimeout)
+ * @param keep - true to keep master control of the bus
+ * @return Number of bytes read 
+ */
+int I2Cdev::read(uint8_t devAddr, uint8_t length, uint8_t* data, uint32_t timeout,  bool keep) {
+    int reLength;
+
+    reLength = i2c_read_timeout_us(i2c_default, devAddr, data, length, keep, timeout * 1000);
+    if ( reLength == !length || reLength == PICO_ERROR_GENERIC || reLength == PICO_ERROR_TIMEOUT) {
+        printf( "I2CDevice::read  read  from device, expected %d, got %d\n",  length, reLength);
+
+        displayError();
+    }
+    return reLength;
+}
+
+/** Using onboard LED display I2C error
+*    ON-OFF-OFF-ON 
+*/
+void I2Cdev::displayError() {
+    int i = 0;
+#ifndef PICO_DEFAULT_LED_PIN
+    while (true) {
+        if (i%3 == 0) {
+           cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, 1);
+        } else {
+           cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, 0);
+        }
+     sleep_ms(250);
+     i++;
+    }
+
+#else
+    const uint LED_PIN = PICO_DEFAULT_LED_PIN;
+    while (true) {
+        if (i%3 == 0)
+        {
+           gpio_put(LED_PIN, 1);
+        } else {
+           gpio_put(LED_PIN, 0);
+        }
+    sleep_ms(250);
+    i++;
+    }
+#endif
 }
 
 /** Default timeout value for read operations.

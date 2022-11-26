@@ -65,6 +65,9 @@ class I2Cdev {
         static bool writeBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8_t *data);
         static bool writeWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint16_t *data);
 
+        static int  read(uint8_t devAddr, uint8_t length, uint8_t* data, uint32_t timeout, bool keep = false);
+        static int  write(uint8_t devAddr, uint8_t length, uint8_t* data, bool keep = true);
+        static void displayError();
         static uint32_t readTimeout;
 
 };

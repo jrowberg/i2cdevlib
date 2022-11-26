@@ -28,6 +28,7 @@ target_link_libraries(mpu6050_DMP_port pico_stdlib)
 
 # Add any user requested libraries
 target_link_libraries(mpu6050_DMP_port
+        pico_cyw43_arch_none     # we need for PICO W to access the GPIO, but we don't need anything else
         hardware_i2c
         pico_double
         )
