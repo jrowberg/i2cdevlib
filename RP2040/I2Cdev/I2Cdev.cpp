@@ -320,7 +320,7 @@ bool I2Cdev::writeWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint16
     for(int i=0; i<length; i++){
         data_buf[j] = data[i] >> 8;
         data_buf[j+1] = data[i];
-        j++;
+        j += 2;
     }
     status = i2c_write_blocking(i2c_default, devAddr, data_buf, new_len, false);
 
