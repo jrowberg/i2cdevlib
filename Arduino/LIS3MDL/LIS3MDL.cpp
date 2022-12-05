@@ -32,82 +32,6 @@
 
 #include "LIS3MDL.h"
 
-/* ============================================================================
-   I2Cdev Class Quick Primer:
-
-   The I2Cdev class provides simple methods for reading and writing from I2C
-   device registers without messing with the underlying TWI/I2C functions. You
-   just specify the device address, register address, and source or destination
-   data according to which action you are doing. Here is the list of relevant
-   function prototypes from the I2Cdev class (more info in the .cpp/.h files):
-
-    static int8_t readBit(uint8_t devAddr, uint8_t regAddr, uint8_t bitNum, uint8_t *data, uint16_t timeout=I2Cdev::readTimeout);
-    static int8_t readBitW(uint8_t devAddr, uint8_t regAddr, uint8_t bitNum, uint16_t *data, uint16_t timeout=I2Cdev::readTimeout);
-    static int8_t readBits(uint8_t devAddr, uint8_t regAddr, uint8_t bitStart, uint8_t length, uint8_t *data, uint16_t timeout=I2Cdev::readTimeout);
-    static int8_t readBitsW(uint8_t devAddr, uint8_t regAddr, uint8_t bitStart, uint8_t length, uint16_t *data, uint16_t timeout=I2Cdev::readTimeout);
-    static int8_t readByte(uint8_t devAddr, uint8_t regAddr, uint8_t *data, uint16_t timeout=I2Cdev::readTimeout);
-    static int8_t readWord(uint8_t devAddr, uint8_t regAddr, uint16_t *data, uint16_t timeout=I2Cdev::readTimeout);
-    static int8_t readBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8_t *data, uint16_t timeout=I2Cdev::readTimeout);
-    static int8_t readWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint16_t *data, uint16_t timeout=I2Cdev::readTimeout);
-
-    static bool writeBit(uint8_t devAddr, uint8_t regAddr, uint8_t bitNum, uint8_t data);
-    static bool writeBitW(uint8_t devAddr, uint8_t regAddr, uint8_t bitNum, uint16_t data);
-    static bool writeBits(uint8_t devAddr, uint8_t regAddr, uint8_t bitStart, uint8_t length, uint8_t data);
-    static bool writeBitsW(uint8_t devAddr, uint8_t regAddr, uint8_t bitStart, uint8_t length, uint16_t data);
-    static bool writeByte(uint8_t devAddr, uint8_t regAddr, uint8_t data);
-    static bool writeWord(uint8_t devAddr, uint8_t regAddr, uint16_t data);
-    static bool writeBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8_t *data);
-    static bool writeWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint16_t *data);
-
-   Note that ALL OF THESE METHODS ARE STATIC. No I2Cdev object is needed; just
-   use the static class methods.
-   
-   Also note that the first two parameters of every one of these methods are
-   the same: "devAddr" and "regAddr". For every method, you need to specify the
-   target/slave address and the register address.
-   
-   If your device uses 8-bit registers, you will want to use the following:
-       readBit, readBits, readByte, readBytes
-       writeBit, writeBits, writeByte, writeBytes
-       
-   ...but if it uses 16-bit registers, you will want to use these instead:
-       readBitW, readBitsW, readWord, readWords
-       writeBitW, writeBitsW, writeWord, writeWords
-       
-   Here's a sample of how to use a few of the methods. Note that in each case, 
-   the "buffer" variable is a uint8_t array or pointer, and the "value" variable
-   (in three of the write examples) is a uint8_t single byte. The multi-byte
-   write methods still require an array or pointer.
-
-       READ 1 BIT FROM DEVICE 0x68, REGISTER 0x02, BIT POSITION 4
-       bytesRead = I2Cdev::readBit(0x68, 0x02, 4, buffer);
-
-       READ 3 BITS FROM DEVICE 0x68, REGISTER 0x02, BIT POSITION 4
-       bytesRead = I2Cdev::readBits(0x68, 0x02, 4, 3, buffer);
-
-       READ 1 BYTE FROM DEVICE 0x68, REGISTER 0x02
-       bytesRead = I2Cdev::readByte(0x68, 0x02, buffer);
-
-       READ 2 BYTES FROM DEVICE 0x68, REGISTER 0x02 (AND 0x03 FOR 2ND BYTE)
-       bytesRead = I2Cdev::readBytes(0x68, 0x02, 2, buffer);
-
-       WRITE 1 BIT TO DEVICE 0x68, REGISTER 0x02, BIT POSITION 4
-       status = I2Cdev::writeBit(0x68, 0x02, 4, value);
-
-       WRITE 3 BITS TO DEVICE 0x68, REGISTER 0x02, BIT POSITION 4
-       status = I2Cdev::writeBits(0x68, 0x02, 4, 3, value);
-
-       WRITE 1 BYTE TO DEVICE 0x68, REGISTER 0x02
-       status = I2Cdev::writeByte(0x68, 0x02, value);
-
-       WRITE 2 BYTES TO DEVICE 0x68, REGISTER 0x02 (AND 0x03 FOR 2ND BYTE)
-       status = I2Cdev::writeBytes(0x68, 0x02, 2, buffer);
-       
-   The word-based methods are exactly the same, except they use 16-bit variables
-   instead of 8-bit ones.
-
-   ============================================================================ */
-
 /** 
  * @brief Default constructor, uses default I2C address.
  * @see LIS3MDL_DEFAULT_ADDRESS
@@ -135,14 +59,12 @@ LIS3MDL::LIS3MDL(uint8_t address) {
  * @see LIS3MDL_RA_CTRL5
  */
 bool LIS3MDL::initialize() {
-    bool _success = false;
-    _success = _success && testConnection();
-    _success = _success && I2Cdev::writeByte(devAddr, LIS3MDL_RA_CTRL1, 0b00010000) &&
-    _success = _success && I2Cdev::writeByte(devAddr, LIS3MDL_RA_CTRL2, 0b00000000) &&
-    _success = _success && I2Cdev::writeByte(devAddr, LIS3MDL_RA_CTRL3, 0b00000011) &&
-    _success = _success && I2Cdev::writeByte(devAddr, LIS3MDL_RA_CTRL4, 0b00000000) &&
-    _success = _success && I2Cdev::writeByte(devAddr, LIS3MDL_RA_CTRL5, 0b00000000);
-    return _success;
+    return  testConnection() &&
+            I2Cdev::writeByte(devAddr, LIS3MDL_RA_CTRL1, 0b00010000) &&
+            I2Cdev::writeByte(devAddr, LIS3MDL_RA_CTRL2, 0b00000000) &&
+            I2Cdev::writeByte(devAddr, LIS3MDL_RA_CTRL3, 0b00000011) &&
+            I2Cdev::writeByte(devAddr, LIS3MDL_RA_CTRL4, 0b00000000) &&
+            I2Cdev::writeByte(devAddr, LIS3MDL_RA_CTRL5, 0b00000000);
 }
 
 /** 
@@ -333,7 +255,7 @@ void LIS3MDL::setFullScale(uint8_t scale) {
  * @see LIS3MDL_FULL_SCALE_12_G
  * @see LIS3MDL_FULL_SCALE_16_G
  */
-uint8_t LIS3MDL::getDataRate() {
+uint8_t LIS3MDL::getFullScale() {
     I2Cdev::readBits(devAddr, LIS3MDL_RA_CTRL2, LIS3MDL_FS_BIT, LIS3MDL_FS_LENGTH, buffer);
     return buffer[0];
 }
@@ -396,7 +318,7 @@ void LIS3MDL::setSPIInterfaceMode(bool mode) {
  * @return the current mode (0x00-01). False (0) is the 4-wire interface
  * True (1) is the 3-wire interface
  */
-uint8_t LIS3MDL::getSPIInterfaceMode() {
+bool LIS3MDL::getSPIInterfaceMode() {
     I2Cdev::readBit(devAddr, LIS3MDL_RA_CTRL3, LIS3MDL_SIM_BIT, buffer);
     return buffer[0];
 }
@@ -479,7 +401,7 @@ void LIS3MDL::setEndianness(bool endianness) {
  * @return the current endianness (0x00-01). False (0) is LSB first
  * True (1) is MSB first
  */
-uint8_t LIS3MDL::getEndianness() {
+bool LIS3MDL::getEndianness() {
     I2Cdev::readBit(devAddr, LIS3MDL_RA_CTRL4, LIS3MDL_BLE_BIT, buffer);
     return buffer[0];
 }
@@ -534,3 +456,487 @@ bool LIS3MDL::getBlockDataUpdateEnable() {
 // ===================================
 // === STATUS REGISTERS, READ-ONLY ===
 // ===================================
+
+
+/**
+ * @brief Return the entire status register of the device
+ * 
+ * @return The entire status register
+ * @see LIS3MDL_ZYXOR_BIT
+ * @see LIS3MDL_ZOR_BIT
+ * @see LIS3MDL_YOR_BIT
+ * @see LIS3MDL_XOR_BIT
+ * @see LIS3MDL_ZYXDA_BIT
+ * @see LIS3MDL_ZDA_BIT
+ * @see LIS3MDL_YDA_BIT
+ * @see LIS3MDL_XDA_BIT
+ */
+uint8_t LIS3MDL::getStatus() {
+    I2Cdev::readByte(devAddr, LIS3MDL_RA_STATUS, buffer);
+    return buffer[0];
+}
+
+/**
+ * @brief Get the status of the X-, Y-, Z-axis overrun
+ * 
+ * @return The status of the X-, Y-, Z-axis overrun 
+ */
+bool LIS3MDL::getXYZDataOverrun() {
+    I2Cdev::readBit(devAddr, LIS3MDL_RA_STATUS, LIS3MDL_ZYXOR_BIT, buffer);
+    return buffer[0];
+}
+
+/**
+ * @brief Get the status of the Z-axis overrun
+ * 
+ * @return The status of the Z-axis overrun 
+ */
+bool LIS3MDL::getZDataOverrun() {
+    I2Cdev::readBit(devAddr, LIS3MDL_RA_STATUS, LIS3MDL_ZOR_BIT, buffer);
+    return buffer[0];
+}
+
+/**
+ * @brief Get the status of the Y-axis overrun
+ * 
+ * @return The status of the Y-axis overrun 
+ */
+bool LIS3MDL::getYDataOverrun() {
+    I2Cdev::readBit(devAddr, LIS3MDL_RA_STATUS, LIS3MDL_YOR_BIT, buffer);
+    return buffer[0];
+}
+
+/**
+ * @brief Get the status of the X-axis overrun
+ * 
+ * @return The status of the X-axis overrun 
+ */
+bool LIS3MDL::getXDataOverrun() {
+    I2Cdev::readBit(devAddr, LIS3MDL_RA_STATUS, LIS3MDL_XOR_BIT, buffer);
+    return buffer[0];
+}
+
+/**
+ * @brief Get the status of the X-, Y-, Z-axis data available
+ * 
+ * @return The status of the X-, Y-, Z-axis data available 
+ */
+bool LIS3MDL::getXYZDataAvailable() {
+    I2Cdev::readBit(devAddr, LIS3MDL_RA_STATUS, LIS3MDL_ZYXDA_BIT, buffer);
+    return buffer[0];
+}
+
+/**
+ * @brief Get the status of the Z-axis data available
+ * 
+ * @return The status of the Z-axis data available 
+ */
+bool LIS3MDL::getZDataAvailable() {
+    I2Cdev::readBit(devAddr, LIS3MDL_RA_STATUS, LIS3MDL_ZDA_BIT, buffer);
+    return buffer[0];
+}
+
+/**
+ * @brief Get the status of the Y-axis data available
+ * 
+ * @return The status of the Y-axis data available 
+ */
+bool LIS3MDL::getYDataAvailable() {
+    I2Cdev::readBit(devAddr, LIS3MDL_RA_STATUS, LIS3MDL_YDA_BIT, buffer);
+    return buffer[0];
+}
+
+/**
+ * @brief Get the status of the X-axis data available
+ * 
+ * @return The status of the X-axis data available 
+ */
+bool LIS3MDL::getXDataAvailable() {
+    I2Cdev::readBit(devAddr, LIS3MDL_RA_STATUS, LIS3MDL_XDA_BIT, buffer);
+    return buffer[0];
+}
+
+
+// ==================================
+// === OUT_* REGISTERS, READ-ONLY ===
+// ==================================
+
+
+/**
+ * @brief Get the total magnetic field detected by the device
+ * 
+ * @param x X-axis reading in mGauss
+ * @param y Y-axis reading in mGauss
+ * @param z Z-axis reading in mGauss
+ */
+void LIS3MDL::getMagneticField(uint16_t* x, uint16_t* y, uint16_t* z) {
+    *x = getMagneticFieldX();
+    *y = getMagneticFieldY();
+    *z = getMagneticFieldZ();
+}
+
+/**
+ * @brief Get the magnetic field for the X-axis
+ * 
+ * @return The strength of the magnetic field in the X-axis in mGauss
+ */
+uint16_t LIS3MDL::getMagneticFieldX() {
+    I2Cdev::readBytes(devAddr, LIS3MDL_OUT_X_L, 2, buffer);
+    uint16_t _val = !getEndianness() ? (((int16_t) buffer[1]) << 8) | buffer[0] : (((int16_t) buffer[0]) << 8) | buffer[1];
+
+    switch (getFullScale()) {
+        case LIS3MDL_FULL_SCALE_4_G:
+            return _val / 6842 * 1000;
+        case LIS3MDL_FULL_SCALE_8_G:
+            return _val / 3421 * 1000;
+        case LIS3MDL_FULL_SCALE_12_G:
+            return _val / 2281 * 1000;
+        case LIS3MDL_FULL_SCALE_16_G:
+            return _val / 1711 * 1000;
+        default:
+            return _val / 6842 * 1000;
+    };
+}
+
+/**
+ * @brief Get the magnetic field for the Y-axis
+ * 
+ * @return The strength of the magnetic field in the Y-axis in mGauss
+ */
+uint16_t LIS3MDL::getMagneticFieldY() {
+    I2Cdev::readBytes(devAddr, LIS3MDL_OUT_Y_L, 2, buffer);
+    uint16_t _val = !getEndianness() ? (((int16_t) buffer[1]) << 8) | buffer[0] : (((int16_t) buffer[0]) << 8) | buffer[1];
+
+    switch (getFullScale()) {
+        case LIS3MDL_FULL_SCALE_4_G:
+            return _val / 6842 * 1000;
+        case LIS3MDL_FULL_SCALE_8_G:
+            return _val / 3421 * 1000;
+        case LIS3MDL_FULL_SCALE_12_G:
+            return _val / 2281 * 1000;
+        case LIS3MDL_FULL_SCALE_16_G:
+            return _val / 1711 * 1000;
+        default:
+            return _val / 6842 * 1000;
+    };
+}
+
+/**
+ * @brief Get the magnetic field for the Z-axis
+ * 
+ * @return The strength of the magnetic field in the Z-axis in mGauss
+ */
+uint16_t LIS3MDL::getMagneticFieldZ() {
+    I2Cdev::readBytes(devAddr, LIS3MDL_OUT_Z_L, 2, buffer);
+    uint16_t _val = !getEndianness() ? (((int16_t) buffer[1]) << 8) | buffer[0] : (((int16_t) buffer[0]) << 8) | buffer[1];
+
+    switch (getFullScale()) {
+        case LIS3MDL_FULL_SCALE_4_G:
+            return _val / 6842 * 1000;
+        case LIS3MDL_FULL_SCALE_8_G:
+            return _val / 3421 * 1000;
+        case LIS3MDL_FULL_SCALE_12_G:
+            return _val / 2281 * 1000;
+        case LIS3MDL_FULL_SCALE_16_G:
+            return _val / 1711 * 1000;
+        default:
+            return _val / 6842 * 1000;
+    };
+}
+
+/**
+ * @brief Get the device temperature as reported by the internal sensor
+ * 
+ * @return The temperature in degrees celsius
+ */
+uint16_t LIS3MDL::getTemperature() {
+    I2Cdev::readBytes(devAddr, LIS3MDL_OUT_TEMP_OUT_L, 2, buffer);
+    uint16_t _val = !getEndianness() ? (((int16_t) buffer[1]) << 8) | buffer[0] : (((int16_t) buffer[0]) << 8) | buffer[1];
+
+    return _val / 8;
+}
+
+
+// =============================
+// === INT_CFG REGISTER, R/W ===
+// =============================
+
+
+/**
+ * @brief Enable interrupt generation for the X-axis on the device
+ * 
+ * @param en Interrupt generation for the X-axis enabled
+ */
+void LIS3MDL::enableInterruptGenerationX(bool en) {
+    I2Cdev::writeBit(devAddr, LIS3MDL_INT_CFG, LIS3MDL_XIEN_BIT, en);
+}
+
+/**
+ * @brief Get if interrupt generation for the X-axis is enabled on the device
+ * 
+ * @return true if interrupt generation for the X-axis is enabled,
+ * @return false otherwise
+ */
+bool LIS3MDL::getInterruptGenerationEnableX() {
+    I2Cdev::readBit(devAddr, LIS3MDL_INT_CFG, LIS3MDL_YIEN_BIT, buffer);
+    return buffer[0];
+}
+
+/**
+ * @brief Enable interrupt generation for the Y-axis on the device
+ * 
+ * @param en Interrupt generation for the Y-axis enabled
+ */
+void LIS3MDL::enableInterruptGenerationY(bool en) {
+    I2Cdev::writeBit(devAddr, LIS3MDL_INT_CFG, LIS3MDL_YIEN_BIT, en);
+}
+
+/**
+ * @brief Get if interrupt generation for the Y-axis is enabled on the device
+ * 
+ * @return true if interrupt generation for the Y-axis is enabled,
+ * @return false otherwise
+ */
+bool LIS3MDL::getInterruptGenerationEnableY() {
+    I2Cdev::readBit(devAddr, LIS3MDL_INT_CFG, LIS3MDL_YIEN_BIT, buffer);
+    return buffer[0];
+}
+
+/**
+ * @brief Enable interrupt generation for the Z-axis on the device
+ * 
+ * @param en Interrupt generation for the Z-axis enabled
+ */
+void LIS3MDL::enableInterruptGenerationZ(bool en) {
+    I2Cdev::writeBit(devAddr, LIS3MDL_INT_CFG, LIS3MDL_ZIEN_BIT, en);
+}
+
+/**
+ * @brief Get if interrupt generation for the Z-axis is enabled on the device
+ * 
+ * @return true if interrupt generation for the Z-axis is enabled,
+ * @return false otherwise
+ */
+bool LIS3MDL::getInterruptGenerationEnableZ() {
+    I2Cdev::readBit(devAddr, LIS3MDL_INT_CFG, LIS3MDL_ZIEN_BIT, buffer);
+    return buffer[0];
+}
+
+/**
+ * @brief Sets the interrupt generation mode
+ * 
+ * @param mode if the interrupt generation is active HIGH (true) or LOW (false)
+ */
+void LIS3MDL::setInterruptMode(bool mode) {
+    I2Cdev::writeBit(devAddr, LIS3MDL_INT_CFG, LIS3MDL_IEA_BIT, mode);
+}
+
+/**
+ * @brief Returns the current interrupt generation mode
+ * 
+ * @return the current interrupt generation mode (0x00-01). False (0) is active LOW
+ * True (1) is active HIGH
+ */
+bool LIS3MDL::getInterruptMode() {
+    I2Cdev::readBit(devAddr, LIS3MDL_INT_CFG, LIS3MDL_IEA_BIT, buffer);
+    return buffer[0];
+}
+
+/**
+ * @brief Enable interrupt latching.
+ * When enabled, the interrupt can only be cleared by reading the INT_SRC register
+ * 
+ * @param en Interrupt latching enabled
+ */
+void LIS3MDL::enableLatchIntRequest(bool en) {
+    I2Cdev::writeBit(devAddr, LIS3MDL_INT_CFG, LIS3MDL_LIR_BIT, en);
+}
+
+/**
+ * @brief Get if interrupt latch is enabled
+ * 
+ * @return true if interrupt latch is enabled,
+ * @return false otherwise
+ */
+bool LIS3MDL::getLatchIntRequestEnable() {
+    I2Cdev::readBit(devAddr, LIS3MDL_INT_CFG, LIS3MDL_LIR_BIT, buffer);
+    return buffer[0];
+}
+
+/**
+ * @brief Enable interrupt.
+ * 
+ * @param en Interrupt enabled
+ */
+void LIS3MDL::enableInterrupt(bool en) {
+    I2Cdev::writeBit(devAddr, LIS3MDL_INT_CFG, LIS3MDL_IEN_BIT, en);
+}
+
+/**
+ * @brief Get if interrupt is enabled
+ * 
+ * @return true if interrupt is enabled,
+ * @return false otherwise
+ */
+bool LIS3MDL::getInterruptEnable() {
+    I2Cdev::readBit(devAddr, LIS3MDL_INT_CFG, LIS3MDL_IEN_BIT, buffer);
+    return buffer[0];
+}
+
+
+// =============================
+// === INT_SRC REGISTER, R/W ===
+// =============================
+
+/**
+ * @brief Returns the INT_SRC register to clear the interrupt
+ * This function only needs to be called when the interrupt latch is enabled and the interrupt has been triggered
+ * By reading the INT_SRC register, the interrupt will reset
+ * 
+ * @return the INT_SRC register
+ */
+uint8_t LIS3MDL::clearInt() {
+    I2Cdev::readByte(devAddr, LIS3MDL_INT_SRC, buffer);
+    return buffer[0];
+}
+
+/**
+ * @brief Returns if the value of the X-, Y-, and Z-axis values is positive relative to the interrupt threshold
+ * True indicates the value is on the positive side.
+ * False indicates the value has not exceed the interrupt threshold or that it is on the negative side
+ */
+void LIS3MDL::getPosIntThreshold(bool *x, bool *y, bool *z) {
+    *x = getPosIntThresholdX();
+    *y = getPosIntThresholdY();
+    *z = getPosIntThresholdZ();
+}
+
+/**
+ * @brief Returns if the value of the X-axis relative to its interrupt threshold is positive.
+ * 
+ * @return if the X-axis value is positive of its interrupt threshold.
+ * @return True indicates the value is on the positive side.
+ * @return False indicates the value has not exceed the interrupt threshold or that it is on the negative side
+ */
+bool LIS3MDL::getPosIntThresholdX() {
+    I2Cdev::readBit(devAddr, LIS3MDL_INT_SRC, LIS3MDL_PTH_X_BIT, buffer);
+    return buffer[0];
+}
+
+/**
+ * @brief Returns if the value of the Y-axis relative to its interrupt threshold is positive.
+ * 
+ * @return if the Y-axis value is positive of its interrupt threshold.
+ * @return True indicates the value is on the positive side.
+ * @return False indicates the value has not exceed the interrupt threshold or that it is on the negative side
+ */
+bool LIS3MDL::getPosIntThresholdY() {
+    I2Cdev::readBit(devAddr, LIS3MDL_INT_SRC, LIS3MDL_PTH_Y_BIT, buffer);
+    return buffer[0];
+}
+
+/**
+ * @brief Returns if the value of the Z-axis relative to its interrupt threshold is positive.
+ * 
+ * @return if the Z-axis value is positive of its interrupt threshold.
+ * @return True indicates the value is on the positive side.
+ * @return False indicates the value has not exceed the interrupt threshold or that it is on the negative side
+ */
+bool LIS3MDL::getPosIntThresholdZ() {
+    I2Cdev::readBit(devAddr, LIS3MDL_INT_SRC, LIS3MDL_PTH_Z_BIT, buffer);
+    return buffer[0];
+}
+
+/**
+ * @brief Returns if the value of the X-, Y-, and Z-axis values is negative relative to the interrupt threshold
+ * True indicates the value is on the negative side.
+ * False indicates the value has not exceed the interrupt threshold or that it is on the positive side
+ */
+void LIS3MDL::getNegIntThreshold(bool *x, bool *y, bool *z) {
+    *x = getPosIntThresholdX();
+    *y = getPosIntThresholdY();
+    *z = getPosIntThresholdZ();
+}
+
+/**
+ * @brief Returns if the value of the X-axis relative to its interrupt threshold is negative.
+ * 
+ * @return if the X-axis value is negative of its interrupt threshold.
+ * @return True indicates the value is on the negative side.
+ * @return False indicates the value has not exceed the interrupt threshold or that it is on the positive side
+ */
+bool LIS3MDL::getNegIntThresholdX() {
+    I2Cdev::readBit(devAddr, LIS3MDL_INT_SRC, LIS3MDL_NTH_X_BIT, buffer);
+    return buffer[0];
+}
+
+/**
+ * @brief Returns if the value of the Y-axis relative to its interrupt threshold is negative.
+ * 
+ * @return if the Y-axis value is negative of its interrupt threshold.
+ * @return True indicates the value is on the negative side.
+ * @return False indicates the value has not exceed the interrupt threshold or that it is on the positive side
+ */
+bool LIS3MDL::getNegIntThresholdY() {
+    I2Cdev::readBit(devAddr, LIS3MDL_INT_SRC, LIS3MDL_NTH_Y_BIT, buffer);
+    return buffer[0];
+}
+
+/**
+ * @brief Returns if the value of the Z-axis relative to its interrupt threshold is negative.
+ * 
+ * @return if the Z-axis value is negative of its interrupt threshold.
+ * @return True indicates the value is on the negative side.
+ * @return False indicates the value has not exceed the interrupt threshold or that it is on the positive side
+ */
+bool LIS3MDL::getNegIntThresholdZ() {
+    I2Cdev::readBit(devAddr, LIS3MDL_INT_SRC, LIS3MDL_NTH_Z_BIT, buffer);
+    return buffer[0];
+}
+
+/**
+ * @brief Returns if the internal measurement range has overflowed on the magnetic field reading.
+ * 
+ * @return True if the internal measurement range has overflowed,
+ * @return false otherwise
+ */
+bool LIS3MDL::getInternalMeasurementRangeOverflow() {
+    I2Cdev::readBit(devAddr, LIS3MDL_INT_SRC, LIS3MDL_MROI_BIT, buffer);
+    return buffer[0];
+}
+
+/**
+ * @brief Returns if the interrupt has been triggered
+ * 
+ * @return True if the interrupt has been triggered,
+ * @return false otherwise
+ */
+bool LIS3MDL::getInterruptTriggered() {
+    I2Cdev::readBit(devAddr, LIS3MDL_INT_SRC, LIS3MDL_INT_BIT, buffer);
+    return buffer[0];
+}
+
+
+// ==============================
+// === INT_THS REGISTERS, R/W ===
+// ==============================
+
+
+/**
+ * @brief Set the interrupt threshold value for the device
+ * 
+ * @param ths The threshold at which the interrupt will be triggered, in Gauss
+ */
+void LIS3MDL::setInterruptThreshold(uint16_t ths) {
+    I2Cdev::writeBytes(devAddr, LIS3MDL_OUT_THS_L, 2, ths);
+}
+
+/**
+ * @brief Return the interrupt threshold value for the device
+ * 
+ * @return the interrupt threshold value, in Gauss
+ */
+uint16_t LIS3MDL::getInterruptThreshold() {
+    I2Cdev::readBytes(devAddr, LIS3MDL_OUT_THS_L, 2, buffer);
+    return (((int16_t) buffer[1]) << 8) | buffer[0];
+}
