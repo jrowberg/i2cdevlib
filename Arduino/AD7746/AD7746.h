@@ -176,6 +176,7 @@ class AD7746 {
         void writeConfigurationRegister(uint8_t data);
         void writeCapDacARegister(uint8_t data);
         void writeCapDacBRegister(uint8_t data);
+        void write_register(uint8_t addr,uint8_t data);
         
 
     private:
