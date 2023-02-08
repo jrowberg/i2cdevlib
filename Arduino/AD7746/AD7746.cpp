@@ -133,6 +133,6 @@ void AD7746::writeCapDacBRegister(uint8_t data) {
     I2Cdev::writeByte(devAddr, AD7746_RA_CAP_DAC_B, data);
 }
 
-void AD7746::writeAD7745Register(uint8_t addr,uint8_t data) {
+void AD7746::write_register(uint8_t addr,uint8_t data) {
     I2Cdev::writeByte(devAddr, addr, data);
 }
