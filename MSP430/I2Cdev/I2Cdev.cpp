@@ -215,7 +215,7 @@ int8_t I2Cdev::readBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8
         Serial.print("...");
     #endif
 
-    int8_t count = 0;
+    uint8_t count = 0;
     uint32_t t1 = millis();
 
     #if (I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE)
@@ -330,7 +330,7 @@ int8_t I2Cdev::readWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint1
         Serial.print("...");
     #endif
 
-    int8_t count = 0;
+    uint8_t count = 0;
     uint32_t t1 = millis();
 
     #if (I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE)

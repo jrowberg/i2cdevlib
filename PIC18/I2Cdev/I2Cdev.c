@@ -41,7 +41,7 @@ THE SOFTWARE.
  * @return Number of bytes read (-1 indicates failure)
  */
 int8_t I2Cdev_readBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8_t *data) {
-    int8_t count = 0;
+    uint8_t count = 0;
 
     // S
     IdleI2C();
@@ -104,7 +104,7 @@ int8_t I2Cdev_readByte(uint8_t devAddr, uint8_t regAddr, uint8_t *data) {
  * @return Number of words read (-1 indicates failure)
  */
 int8_t I2Cdev_readWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint16_t *data) {
-    int8_t count = 0;
+    uint8_t count = 0;
 
     // S
     IdleI2C();
