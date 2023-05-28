@@ -149,7 +149,7 @@ int8_t I2Cdev::readWord(uint8_t devAddr, uint8_t regAddr, uint16_t *data, uint32
  * @return Number of bytes read (-1 indicates failure)
  */
 int8_t I2Cdev::readBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8_t *data, uint32_t timeout) {
-    int8_t count = 0;
+    uint8_t count = 0;
 
     i2c_write_blocking(i2c_default, devAddr, &regAddr, 1, true);
     count = i2c_read_timeout_us(i2c_default, devAddr, data, length, false, timeout * 1000);
@@ -166,7 +166,7 @@ int8_t I2Cdev::readBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8
  * @return Number of words read (-1 indicates failure)
  */
 int8_t I2Cdev::readWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint16_t *data, uint32_t timeout) {
-    int8_t count = 0;
+    uint8_t count = 0;
     uint8_t data_buf[length*2];
 
     i2c_write_blocking(i2c_default, devAddr, &regAddr, 1, true);
