@@ -113,7 +113,7 @@ int8_t IAQ2000::readAllBytes(uint8_t devAddr, uint8_t length, uint8_t *data, uin
     Serial.print(" bytes...");
 #endif
     
-    int8_t count = 0;
+    uint8_t count = 0;
 
     Wire.requestFrom(devAddr, length);
     
