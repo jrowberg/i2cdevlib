@@ -37,6 +37,12 @@ THE SOFTWARE.
 */
 
 #include "MPU6050.h"
+#include <math.h>
+#include <time.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
 
 /** Specific address constructor.
  * @param address I2C address, uses default I2C address if none is specified
@@ -2762,6 +2768,14 @@ void MPU6050_Base::setFIFOTimeout(uint32_t fifoTimeout) {
 	this->fifoTimeout = fifoTimeout;
 }
 
+/** Replacement for Arduino micros().
+ * @return Number of microseconds since process start
+ */
+static uint32_t micros() {
+    struct timespec ts;
+    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ts);
+    return ts.tv_sec * 1000000 + ts.tv_nsec / 1000;
+}
 /** Get latest byte from FIFO buffer no matter how much time has passed.
  * ===                  GetCurrentFIFOPacket                    ===
  * ================================================================
@@ -3118,7 +3132,7 @@ bool MPU6050_Base::writeMemoryBlock(const uint8_t *data, uint16_t dataSize, uint
         
         if (useProgMem) {
             // write the chunk of data as specified
-            for (j = 0; j < chunkSize; j++) progBuffer[j] = pgm_read_byte(data + i + j);
+            for (j = 0; j < chunkSize; j++) progBuffer[j] = *(data + i + j);
         } else {
             // write the chunk of data as specified
             progBuffer = (uint8_t *)data + i;
@@ -3188,9 +3202,9 @@ bool MPU6050_Base::writeDMPConfigurationSet(const uint8_t *data, uint16_t dataSi
     uint8_t bank, offset, length;
     for (i = 0; i < dataSize;) {
         if (useProgMem) {
-            bank = pgm_read_byte(data + i++);
-            offset = pgm_read_byte(data + i++);
-            length = pgm_read_byte(data + i++);
+            bank = *(data + i++);
+            offset = *(data + i++);
+            length = *(data + i++);
         } else {
             bank = data[i++];
             offset = data[i++];
@@ -3208,7 +3222,7 @@ bool MPU6050_Base::writeDMPConfigurationSet(const uint8_t *data, uint16_t dataSi
             Serial.println(length);*/
             if (useProgMem) {
                 if (sizeof(progBuffer) < length) progBuffer = (uint8_t *)realloc(progBuffer, length);
-                for (j = 0; j < length; j++) progBuffer[j] = pgm_read_byte(data + i + j);
+                for (j = 0; j < length; j++) progBuffer[j] = *(data + i + j);
             } else {
                 progBuffer = (uint8_t *)data + i;
             }
@@ -3221,7 +3235,7 @@ bool MPU6050_Base::writeDMPConfigurationSet(const uint8_t *data, uint16_t dataSi
             // behavior only, and exactly why (or even whether) it has to be here
             // is anybody's guess for now.
             if (useProgMem) {
-                special = pgm_read_byte(data + i++);
+                special = *(data + i++);
             } else {
                 special = data[i++];
             }
@@ -3275,7 +3289,12 @@ void MPU6050_Base::setDMPConfig2(uint8_t config) {
     I2Cdev::writeByte(devAddr, MPU6050_RA_DMP_CFG_2, config, wireObj);
 }
 
-
+/* Replacement for Arduino map()
+ * @see https://www.arduino.cc/reference/en/language/functions/math/map/
+ */
+long map(long x, long in_min, long in_max, long out_min, long out_max) {
+    return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+}
 //***************************************************************************************
 //**********************           Calibration Routines            **********************
 //***************************************************************************************
@@ -3319,7 +3338,6 @@ void MPU6050_Base::PID(uint8_t ReadAddress, float kP,float kI, uint8_t Loops){
 	uint32_t eSum;
 	uint16_t gravity = 8192; // prevent uninitialized compiler warning
 	if (ReadAddress == 0x3B) gravity = 16384 >> getFullScaleAccelRange();
-	Serial.write('>');
 	for (int i = 0; i < 3; i++) {
 		I2Cdev::readWords(devAddr, SaveAddress + (i * shift), 1, (uint16_t *)&Data, I2Cdev::readTimeout, wireObj); // reads 1 or more 16 bit integers (Word)
 		Reading = Data;
@@ -3350,13 +3368,11 @@ void MPU6050_Base::PID(uint8_t ReadAddress, float kP,float kI, uint8_t Loops){
 			}
 			if((c == 99) && eSum > 1000){						// Error is still to great to continue 
 				c = 0;
-				Serial.write('*');
 			}
 			if((eSum * ((ReadAddress == 0x3B)?.05: 1)) < 5) eSample++;	// Successfully found offsets prepare to  advance
 			if((eSum < 100) && (c > 10) && (eSample >= 10)) break;		// Advance to next Loop
-			delay(1);
+            usleep(1000);
 		}
-		Serial.write('.');
 		kP *= .75;
 		kI *= .75;
 		for (int i = 0; i < 3; i++){
@@ -3386,12 +3402,12 @@ int16_t * MPU6050_Base::GetActiveOffsets() {
 void MPU6050_Base::PrintActiveOffsets() {
     GetActiveOffsets();
 	//	A_OFFSET_H_READ_A_OFFS(Data);
-    Serial.print((float)offsets[0], 5); Serial.print(",\t");
-    Serial.print((float)offsets[1], 5); Serial.print(",\t");
-    Serial.print((float)offsets[2], 5); Serial.print(",\t");
+    fprintf(stderr, "%.5f,\t", (float)offsets[0]);
+    fprintf(stderr, "%.5f,\t", (float)offsets[1]);
+    fprintf(stderr, "%.5f,\t", (float)offsets[2]);
 	
 	//	XG_OFFSET_H_READ_OFFS_USR(Data);
-    Serial.print((float)offsets[3], 5); Serial.print(",\t");
-    Serial.print((float)offsets[4], 5); Serial.print(",\t");
-    Serial.print((float)offsets[5], 5); Serial.print("\n\n");
+    fprintf(stderr, "%.5f,\t", (float)offsets[3]);
+    fprintf(stderr, "%.5f,\t", (float)offsets[4]);
+    fprintf(stderr, "%.5f\n\n", (float)offsets[5]);
 }
