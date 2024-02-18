@@ -72,6 +72,12 @@ MPU6050 mpu;
  * ========================================================================= */
 
 /* =========================================================================
+   NOTE: If you are experiencing Freezes in the Serial then make sure you 
+   pull down the AD0 pin and don't leave it floating. Some cheapo boards 
+   now don't do this anymore.
+ * ========================================================================= */
+
+/* =========================================================================
    NOTE: Arduino v1.0.1 with the Leonardo board generates a compile error
    when using Serial.write(buf, len). The Teapot output uses this method.
    The solution requires a modification to the Arduino USBAPI.h file, which
@@ -167,6 +173,7 @@ void setup() {
     #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
         Wire.begin();
         Wire.setClock(400000); // 400kHz I2C clock. Comment this line if having compilation difficulties
+        Wire.setWireTimeout(3000, true); //timeout value in uSec. Used to fix Serial Freezing after few secs
     #elif I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_FASTWIRE
         Fastwire::setup(400, true);
     #endif
