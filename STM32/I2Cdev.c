@@ -63,7 +63,7 @@ extern ARM_DRIVER_I2C I2CDev_Driver;
  * @param data 		Buffer to save data into
  * @return Status of read operation (0 = success, <0 = error)
  */
-int8_t I2Cdev_readBytes(uint8_t dev_addr, uint8_t reg_addr, uint8_t len, uint8_t *data) {
+int8_t I2Cdev_readBytes(uint8_t dev_addr, uint8_t reg_addr, uint16_t len, uint8_t *data) {
 	int8_t err = 0;
 	uint8_t reg_data[1] = {reg_addr};
 
@@ -97,7 +97,7 @@ int8_t 	I2Cdev_readByte(uint8_t dev_addr, uint8_t reg_addr, uint8_t *data) {
  * @param data 		Buffer to save data into
  * @return Status of read operation (true = success)
  */
-int8_t 	I2Cdev_readWords(uint8_t dev_addr, uint8_t reg_addr, uint8_t len, uint16_t *data) {
+int8_t 	I2Cdev_readWords(uint8_t dev_addr, uint8_t reg_addr, uint16_t len, uint16_t *data) {
 	int8_t err;
 	uint16_t bytes_num = len*2;
 
@@ -161,7 +161,7 @@ int8_t I2Cdev_readBit(uint8_t dev_addr, uint8_t reg_addr, uint8_t bitn, uint8_t 
  * @return Status of read operation (0 = success, <0 = error)
  */
 int8_t I2Cdev_readBits(uint8_t dev_addr, uint8_t reg_addr, uint8_t start_bit, 
-		uint8_t len, uint8_t *data) 
+		uint16_t len, uint8_t *data) 
 {
 	int8_t err;
 
@@ -203,7 +203,7 @@ int8_t 	I2Cdev_readBitW(uint8_t dev_addr, uint8_t reg_addr, uint8_t bit_n, uint1
  * @return Status of read operation (0 = success, <0 = error)
  */
 int8_t I2Cdev_readBitsW(uint8_t dev_addr, uint8_t reg_addr, uint8_t start_bit,
-		uint8_t len, uint16_t *data)
+		uint16_t len, uint16_t *data)
 {
     int8_t err;
     uint16_t w;
@@ -226,7 +226,7 @@ int8_t I2Cdev_readBitsW(uint8_t dev_addr, uint8_t reg_addr, uint8_t start_bit,
  * @param data 		Buffer to copy new data from
  * @return Status of operation (0 = success, <0 = error)
  */
-int8_t 	I2Cdev_writeBytes(uint8_t dev_addr, uint8_t reg_addr, uint8_t len, uint8_t *data) {
+int8_t 	I2Cdev_writeBytes(uint8_t dev_addr, uint8_t reg_addr, uint16_t len, uint8_t *data) {
 	int8_t err;
 	uint8_t ts_data[len+1];
 
@@ -276,7 +276,7 @@ int8_t 	I2Cdev_writeWord(uint8_t dev_addr, uint8_t reg_addr, uint16_t data) {
  * @param data 		Buffer to copy new data from
  * @return Status of operation (0 = success, <0 = error)
  */
-int8_t 	I2Cdev_writeWords(uint8_t dev_addr, uint8_t reg_addr, uint8_t len, uint16_t *data) {
+int8_t 	I2Cdev_writeWords(uint8_t dev_addr, uint8_t reg_addr, uint16_t len, uint16_t *data) {
 	uint16_t bytes_num = len*2+1;
 	uint8_t bytes[bytes_num];
 
@@ -342,7 +342,7 @@ int8_t 	I2Cdev_writeBitW(uint8_t dev_addr, uint8_t reg_addr, uint8_t bit_n, uint
  * @return Status of operation (0 = success, <0 = error)
  */
 int8_t I2Cdev_writeBits(uint8_t dev_addr, uint8_t reg_addr, uint8_t start_bit,
-		uint8_t len, uint8_t data)
+		uint16_t len, uint8_t data)
 {
     uint8_t b;
     int8_t err;
@@ -371,7 +371,7 @@ int8_t I2Cdev_writeBits(uint8_t dev_addr, uint8_t reg_addr, uint8_t start_bit,
  * @return Status of operation (0 = success, <0 = error)
  */
 int8_t I2Cdev_writeBitsW(uint8_t dev_addr, uint8_t reg_addr, uint8_t start_bit,
-		uint8_t len, uint16_t data)
+		uint16_t len, uint16_t data)
 {
     uint16_t w;
     int8_t err;
