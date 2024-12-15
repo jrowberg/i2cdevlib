@@ -680,7 +680,7 @@ uint16_t MPU6050_getFIFOCount();
 // FIFO_R_W register
 uint8_t MPU6050_getFIFOByte();
 void MPU6050_setFIFOByte(uint8_t data);
-void MPU6050_getFIFOBytes(uint8_t *data, uint8_t length);
+void MPU6050_getFIFOBytes(uint8_t *data, uint16_t length);
 
 // WHO_AM_I register
 uint8_t MPU6050_getDeviceID();

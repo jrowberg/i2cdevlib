@@ -2675,7 +2675,7 @@ uint8_t MPU6050_getFIFOByte() {
     I2Cdev_readByte(mpu6050.devAddr, MPU6050_RA_FIFO_R_W, mpu6050.buffer);
     return mpu6050.buffer[0];
 }
-void MPU6050_getFIFOBytes(uint8_t *data, uint8_t length) {
+void MPU6050_getFIFOBytes(uint8_t *data, uint16_t length) {
     I2Cdev_readBytes(mpu6050.devAddr, MPU6050_RA_FIFO_R_W, length, data);
 }
 /** Write byte to FIFO mpu6050.buffer.
