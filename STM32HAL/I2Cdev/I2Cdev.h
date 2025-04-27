@@ -47,7 +47,7 @@ typedef int bool;
 #define true 1
 #define false 0
 
-uint16_t I2Cdev_readTimeout;
+extern uint16_t I2Cdev_readTimeout;
 
 // 1000ms default read timeout (modify with "I2Cdev::readTimeout = [ms];")
 #define I2CDEV_DEFAULT_READ_TIMEOUT     1000
