@@ -10,3 +10,5 @@ PIC18/MPU6050/Examples/MPU6050_raw.X/build/
 /dsPIC30F/MPU6050/Examples/MPU6050_example.X/dist/default/
 ESP32_ESP-IDF/build/
 ESP32_ESP-IDF/sdkconfig
+/RP2040/MPU6050/examples/mpu6050_calibration
+/RP2040/MPU6050/examples/mpu6050_DMP_V6.12

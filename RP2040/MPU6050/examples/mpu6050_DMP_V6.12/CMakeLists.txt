@@ -17,8 +17,13 @@ pico_sdk_init()
 
 add_executable(mpu6050_DMP_port 
          mpu6050_DMP_port.cpp 
-         MPU6050.cpp
-         I2Cdev.cpp
+         ../../MPU6050.cpp
+         ../../../I2Cdev/I2Cdev.cpp
+        )
+
+target_include_directories(mpu6050_DMP_port PRIVATE
+         ${CMAKE_CURRENT_LIST_DIR}/../../
+         ${CMAKE_CURRENT_LIST_DIR}/../../../I2Cdev
         )
 
 # Add any user requested libraries
